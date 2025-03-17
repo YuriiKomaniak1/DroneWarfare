@@ -1,4 +1,3 @@
-// Отримуємо canvas і контекст
 const back = document.querySelector('canvas');
 const ctx = back.getContext('2d');
 const backWidth = window.innerWidth;
@@ -42,18 +41,63 @@ class Layer {
 const layer1 = new Layer(backgroundLayer1, 0.2);
 const gameObjects = [layer1];
 
-// Завантаження дрона
+// Завантаження зображення дрона
 const smallDrone = new Image();
 smallDrone.src = './assets/img/drones/smallDroneAnimation.png';
+const mediumDrone = new Image();
+mediumDrone.src = './assets/img/drones/mediumDroneAnimation.png';
+const bigDrone = new Image();
+bigDrone.src = './assets/img/drones/bigDroneAnimation.png';
 
-const spriteWidth = 250;
-const spriteHeight = 250;
-const numberOfFrames = 4;
-let frameX = 0;
-let frameY = 0;
-let droneX = backWidth; // Початкова позиція X
-let droneY = 200; // Початкова позиція Y
-let droneSpeed = 1; // Швидкість дрона
+// Масив дронів
+let drones = [];
+
+// Функція для створення дрона
+function addDrone(startX, startY, speed,image,scale) {
+    drones.push({
+        x: startX,
+        y: startY,
+        speed: speed,
+        frameX: 0,
+        img:image,
+        scale:scale
+    });
+}
+
+// Додаємо дронів з різними параметрами
+addDrone(backWidth, 100, 1,smallDrone,1);
+addDrone(backWidth + 700, 200, 0.9,smallDrone,1.1);
+addDrone(backWidth + 1800, 700, 1.1,smallDrone,0.9);
+addDrone(backWidth + 1500, 500, 0.7,mediumDrone,1.4);
+addDrone(backWidth + 900, 300, 0.65,mediumDrone,1.5);
+addDrone(backWidth + 500, 400, 0.45,bigDrone,3);
+
+function updateDrones() {
+    drones.forEach(drone => {
+        // Оновлення позиції дрона
+        drone.x -= drone.speed;
+        if (drone.x < -250) {
+            drone.x = backWidth * 1.5; // Перезапуск дрона справа
+            drone.y = Math.random() * (backHeight -250); // Нова випадкова висота
+        }
+
+        // Оновлення кадру анімації
+        let position = Math.floor(gameFrame / 5) % 4;
+        drone.frameX = position * 250;
+
+        ctx.save();
+        ctx.translate(drone.x + 125, drone.y + 125); // Центр дрона
+        ctx.rotate(Math.PI / 2);
+        ctx.drawImage(
+            drone.img,
+            drone.frameX, 0,
+            250, 250,
+            -125, -125,
+            125*drone.scale, 125*drone.scale
+        );
+        ctx.restore();
+    });
+}
 
 function animate() {
     ctx.clearRect(0, 0, backWidth, backHeight);
@@ -64,38 +108,14 @@ function animate() {
         object.draw();
     });
 
-    // Оновлюємо положення дрона
-    droneX -= droneSpeed;
-    if (droneX < -250) {
-        droneX = backWidth*2; // Перезапускаємо дрона зліва
-    }
-
-    // Анімація дрона
-    let position = Math.floor(gameFrame / 5) % numberOfFrames;
-    frameX = position * spriteWidth;
-    frameY = 0;
-
-    ctx.save();
-    ctx.translate(droneX + spriteWidth / 2, droneY + spriteHeight / 2); // Переносимо центр
-    ctx.rotate(Math.PI / 2); // Поворот на 90 градусів за годинниковою стрілкою
-    ctx.drawImage(
-        smallDrone,
-        frameX,
-        frameY,
-        spriteWidth,
-        spriteHeight,
-        -spriteWidth / 2,
-        -spriteHeight / 2,
-        spriteWidth*0.5,
-        spriteHeight*0.5
-    );
-    ctx.restore();
+    // Малюємо дронів
+    updateDrones();
 
     gameFrame++;
     requestAnimationFrame(animate);
 }
 
-// Запускаємо анімацію після завантаження фону
-backgroundLayer1.onload = function () {
+// Запускаємо анімацію після завантаження ресурсів
+smallDrone.onload = backgroundLayer1.onload = function () {
     animate();
 };
