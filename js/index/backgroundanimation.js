@@ -82,7 +82,7 @@ function updateDrones() {
         }
 
         // Оновлення кадру анімації
-        let position = Math.floor(gameFrame / 5) % 4;
+        let position = Math.floor(gameFrame / 24) % 4;
         drone.frameX = position * 250;
 
         ctx.save();
