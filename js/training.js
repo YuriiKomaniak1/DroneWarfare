@@ -1,3 +1,4 @@
+import { Minimap } from "./gameElements/minimap.js";
 import { Layer } from "./layers/layer.js";
 import { Enemy } from "./enemies/enemy.js";
 import { Bomb } from "./drones/bomb.js";
@@ -27,22 +28,32 @@ enemyRifle.src = "./assets/img/enemies/spritesheetSoldierAk.png";
 const layer1 = new Layer(gameField, canvas, 1400, 1400, keys, ctx);
 const layer2 = new Layer(trees, canvas, 1400, 1400, keys, ctx);
 let enemies = [];
-while (enemies.length < 24) {
+while (enemies.length < 18) {
   const enemy = new Enemy(
     enemyRifle,
-    Math.random() * canvas.width,
+    Math.random() * 1350,
     Math.random() * 400 - 200,
     Math.random() * 0.01 + 0.075,
     64,
     64,
     8,
     layer1,
-    ctx
+    ctx,
+
   );
   enemies.push(enemy);
 }
 const drone = new Drone(droneScope, 400, 350, canvas, ctx);
-
+const minimap = new Minimap(
+  1400,
+  1400,
+  canvas.width,
+  canvas.height,
+  drone,
+  enemies,
+  ctx,
+  layer1
+);
 const gameObjects = [layer1, layer2];
 
 let bombs = []; // Масив для бомб
@@ -104,7 +115,7 @@ function animate() {
   layer2.draw();
 
   drone.draw();
-
+  minimap.draw();
   gameFrame++;
 
   requestAnimationFrame(animate); // Викликаємо анімацію повторно
