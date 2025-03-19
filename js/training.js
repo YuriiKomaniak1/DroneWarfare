@@ -14,19 +14,20 @@ let gameFrame = 0;
 
 let gameField = new Image();
 gameField.src = "./assets/img/grounds/train1bottom.png";
-
 let trees = new Image();
 trees.src = "./assets/img/grounds/train1trees.png";
 let fragBombImage = new Image();
 fragBombImage.src = "../assets/img/bombs/fragBomb.png";
 let imageExplosion = new Image();
 imageExplosion.src = "../assets/img/bombs/smallExplosion.png";
-
 let enemyRifle = new Image();
 enemyRifle.src = "./assets/img/enemies/spritesheetSoldierAk.png";
 
 const layer1 = new Layer(gameField, canvas, 1400, 1400, keys, ctx);
 const layer2 = new Layer(trees, canvas, 1400, 1400, keys, ctx);
+const drone = new Drone(droneScope, 400, 350, canvas, ctx);
+
+
 let enemies = [];
 while (enemies.length < 18) {
   const enemy = new Enemy(
@@ -43,7 +44,6 @@ while (enemies.length < 18) {
   );
   enemies.push(enemy);
 }
-const drone = new Drone(droneScope, 400, 350, canvas, ctx);
 const minimap = new Minimap(
   1400,
   1400,
@@ -54,8 +54,6 @@ const minimap = new Minimap(
   ctx,
   layer1
 );
-const gameObjects = [layer1, layer2];
-
 let bombs = []; // Масив для бомб
 function dropBomb() {
   const bomb = new Bomb(
@@ -77,14 +75,8 @@ function dropBomb() {
   bombs.push(bomb);
 }
 setupControls(dropBomb);
-Promise.all([
-  new Promise((resolve) => (gameField.onload = resolve)),
-  new Promise((resolve) => (trees.onload = resolve)),
-  new Promise((resolve) => (droneScope.onload = resolve)),
-  new Promise((resolve) => (enemyRifle.onload = resolve)),
-]).then(() => {
-  animate();
-});
+animate();
+
 
 function animate() {
   ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); // Очищаємо канвас
