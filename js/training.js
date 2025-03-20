@@ -18,9 +18,9 @@ gameField.src = "./assets/img/grounds/train1bottom.png";
 let trees = new Image();
 trees.src = "./assets/img/grounds/train1trees.png";
 let fragBombImage = new Image();
-fragBombImage.src = "../assets/img/bombs/fragBomb.png";
+fragBombImage.src = "./assets/img/bombs/fragBomb.png";
 let imageExplosion = new Image();
-imageExplosion.src = "../assets/img/bombs/smallExplosion.png";
+imageExplosion.src = "./assets/img/bombs/smallExplosion.png";
 let enemyRifle = new Image();
 enemyRifle.src = "./assets/img/enemies/spritesheetSoldierAk.png";
 
