@@ -22,7 +22,7 @@ export class Bomb {
     this.height = spriteHeight;
     this.scale = scale;
     this.initialScale = scale;
-    this.spread = 2;
+    this.spread = 1.8    ;
     this.exploded = false;
     this.explosionscale = explosionscale;
     this.friction = 0.999;
