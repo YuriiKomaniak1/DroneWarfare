@@ -5,6 +5,7 @@ import { Bomb } from "./drones/bomb.js";
 import { Drone, droneScope } from "./drones/drone.js";
 import { checkCollision } from "./logic/bombCollisions.js";
 import { keys, setupControls } from "./logic/controls.js";
+import { checkEffect } from "./logic/enemyLogic.js";
 
 const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
@@ -27,7 +28,6 @@ const layer1 = new Layer(gameField, canvas, 1400, 1400, keys, ctx);
 const layer2 = new Layer(trees, canvas, 1400, 1400, keys, ctx);
 const drone = new Drone(droneScope, 400, 350, canvas, ctx);
 
-
 let enemies = [];
 while (enemies.length < 18) {
   const enemy = new Enemy(
@@ -39,8 +39,7 @@ while (enemies.length < 18) {
     64,
     8,
     layer1,
-    ctx,
-
+    ctx
   );
   enemies.push(enemy);
 }
@@ -77,7 +76,6 @@ function dropBomb() {
 setupControls(dropBomb);
 animate();
 
-
 function animate() {
   ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); // Очищаємо канвас
 
@@ -92,14 +90,15 @@ function animate() {
   bombs.forEach((bomb) => {
     bomb.drop();
     if (bomb.exploded && bomb.explosionFrame < 1) {
-      if (bomb.exploded) {
-        enemies.forEach((enemy) => {
-          if (checkCollision(bomb, enemy) && !enemy.dead) {
-            enemy.dead = true;
-            enemy.deathFrameIndex = 0;
-          }
-        });
-      }
+      enemies.forEach((enemy) => {
+        if (checkCollision(bomb, enemy) && !enemy.dead) {
+          enemy.dead = true;
+          enemy.deathFrameIndex = 0;
+        }
+        if (checkEffect(bomb, enemy) && !enemy.dead) {
+          enemy.crawl=true;
+        }
+      });
     }
   });
 

@@ -38,8 +38,8 @@ export class Bomb {
 
   drop() {
     if (!this.exploded) {
-      this.velocityX *= this.friction ** 1.14;
-      this.velocityY *= this.friction ** 1.14;
+      this.velocityX *= this.friction ** 1.15;
+      this.velocityY *= this.friction ** 1.15;
 
       this.baseX +=
         this.layer.speedX -
