@@ -26,7 +26,7 @@ export class Enemy {
     this.deathFrames = 4;
     this.crawlFrames = 3;
     this.deathFrameIndex = 0;
-    this.deathAnimationSpeed = 50;
+    this.deathAnimationSpeed = 12;
     this.deathTimer = 0;
     this.layer = layer;
     this.ctx = ctx;

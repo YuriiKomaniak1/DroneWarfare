@@ -34,7 +34,7 @@ while (enemies.length < 18) {
     enemyRifle,
     Math.random() * 1350,
     Math.random() * 400 - 200,
-    Math.random() * 0.01 + 0.075,
+    Math.random() * 0.02 + 0.155,
     64,
     64,
     8,

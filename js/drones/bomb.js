@@ -26,7 +26,7 @@ export class Bomb {
     this.exploded = false;
     this.explosionscale = explosionscale;
     this.friction = 0.999;
-    this.shrinkRate = 1.005;
+    this.shrinkRate = 1.01;
     this.velocityX = layer.speedX * 1; // Початкова швидкість
     this.velocityY = layer.speedY * 1;
     this.explosionFrame = 0;
@@ -38,8 +38,8 @@ export class Bomb {
 
   drop() {
     if (!this.exploded) {
-      this.velocityX *= this.friction ** 1.15;
-      this.velocityY *= this.friction ** 1.15;
+      this.velocityX *= this.friction ** 2;
+      this.velocityY *= this.friction ** 2;
 
       this.baseX +=
         this.layer.speedX -
@@ -64,7 +64,7 @@ export class Bomb {
         (this.height * this.scale) / this.initialScale
       );
     } else {
-      if (this.explosionFrame % 30 === 0) {
+      if (this.explosionFrame % 10 === 0) {
         this.frameX++;
         if (this.frameX >= this.frames) {
           this.frameX = this.frames;
