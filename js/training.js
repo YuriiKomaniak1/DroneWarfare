@@ -74,40 +74,50 @@ function dropBomb() {
   bombs.push(bomb);
 }
 setupControls(dropBomb);
-animate();
 
-function animate() {
-  ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); // Очищаємо канвас
+const FPS = 60;
+const FRAME_TIME = 1000 / FPS; 
+let lastTime = 0;
 
-  layer1.update();
-  layer1.draw();
+function animate(timestamp) {
+  const deltaTime = timestamp - lastTime;
+  if (deltaTime >= FRAME_TIME) {
+    lastTime = timestamp - (deltaTime % FRAME_TIME);
+    
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); // Очищаємо канвас
 
-  enemies.forEach((object) => {
-    object.update();
-    object.draw();
-  });
+    layer1.update();
+    layer1.draw();
 
-  bombs.forEach((bomb) => {
-    bomb.drop();
-    if (bomb.exploded && bomb.explosionFrame < 1) {
-      enemies.forEach((enemy) => {
-        if (checkCollision(bomb, enemy) && !enemy.dead) {
-          enemy.dead = true;
-          enemy.deathFrameIndex = 0;
-        }
-        if (checkEffect(bomb, enemy) && !enemy.dead) {
-          enemy.crawl=true;
-        }
-      });
-    }
-  });
+    enemies.forEach((object) => {
+      object.update();
+      object.draw();
+    });
 
-  layer2.update();
-  layer2.draw();
+    bombs.forEach((bomb) => {
+      bomb.drop();
+      if (bomb.exploded && bomb.explosionFrame < 1) {
+        enemies.forEach((enemy) => {
+          if (checkCollision(bomb, enemy) && !enemy.dead) {
+            enemy.dead = true;
+            enemy.deathFrameIndex = 0;
+          }
+          if (checkEffect(bomb, enemy) && !enemy.dead) {
+            enemy.crawl = true;
+          }
+        });
+      }
+    });
 
-  drone.draw();
-  minimap.draw();
-  gameFrame++;
+    layer2.update();
+    layer2.draw();
 
-  requestAnimationFrame(animate); // Викликаємо анімацію повторно
+    drone.draw();
+    minimap.draw();
+    gameFrame++;
+  }
+
+  requestAnimationFrame(animate);
 }
+requestAnimationFrame(animate);
+

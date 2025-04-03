@@ -18,7 +18,7 @@ export class Enemy {
     this.height = spriteHeight;
     this.frameX = Math.floor(Math.random() * frames);
     this.frameY = 3;
-    this.frameSpeed = 40;
+    this.frameSpeed = 20;
     this.frames = frames;
     this.frameTimer = 0;
     this.dead = false;
@@ -26,7 +26,7 @@ export class Enemy {
     this.deathFrames = 4;
     this.crawlFrames = 3;
     this.deathFrameIndex = 0;
-    this.deathAnimationSpeed = 12;
+    this.deathAnimationSpeed = 10;
     this.deathTimer = 0;
     this.layer = layer;
     this.ctx = ctx;
