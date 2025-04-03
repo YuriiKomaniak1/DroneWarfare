@@ -75,14 +75,14 @@ addDrone(backWidth + 500, 400, 0.45,bigDrone,3);
 function updateDrones() {
     drones.forEach(drone => {
         // Оновлення позиції дрона
-        drone.x -= drone.speed;
+        drone.x -= drone.speed*3.5;
         if (drone.x < -250) {
             drone.x = backWidth * 1.5; // Перезапуск дрона справа
             drone.y = Math.random() * (backHeight -250); // Нова випадкова висота
         }
 
         // Оновлення кадру анімації
-        let position = Math.floor(gameFrame / 24) % 4;
+        let position = Math.floor(gameFrame / 2.5) % 4;
         drone.frameX = position * 250;
 
         ctx.save();
@@ -99,7 +99,14 @@ function updateDrones() {
     });
 }
 
-function animate() {
+const FPS = 60;
+const FRAME_TIME = 1000 / FPS; 
+let lastTime = 0;
+
+function animate(timestamp) {
+  const deltaTime = timestamp - lastTime;
+  if (deltaTime >= FRAME_TIME) {
+    lastTime = timestamp - (deltaTime % FRAME_TIME);
     ctx.clearRect(0, 0, backWidth, backHeight);
 
     // Малюємо фон
@@ -112,10 +119,7 @@ function animate() {
     updateDrones();
 
     gameFrame++;
+}
     requestAnimationFrame(animate);
 }
-
-// Запускаємо анімацію після завантаження ресурсів
-smallDrone.onload = backgroundLayer1.onload = function () {
-    animate();
-};
+requestAnimationFrame(animate);
