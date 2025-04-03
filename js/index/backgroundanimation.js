@@ -38,7 +38,7 @@ class Layer {
     }
 }
 
-const layer1 = new Layer(backgroundLayer1, 0.2);
+const layer1 = new Layer(backgroundLayer1, 0.8);
 const gameObjects = [layer1];
 
 // Завантаження зображення дрона
