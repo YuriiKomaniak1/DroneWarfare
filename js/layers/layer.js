@@ -8,9 +8,9 @@ export class Layer {
       this.image = image;
       this.speedX = 0;
       this.speedY = 0;
-      this.acceleration = 0.03;
+      this.acceleration = 0.02;
       this.deceleration = 0.0075;
-      this.maxSpeed = 0.85;
+      this.maxSpeed = 0.65;
       this.keys=keys;
       this.ctx=ctx;
     }
