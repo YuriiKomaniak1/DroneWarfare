@@ -1,14 +1,5 @@
 export class Enemy {
-  constructor(
-    image,
-    x,
-    y,
-    spriteWidth,
-    spriteHeight,
-    frames,
-    layer,
-    ctx
-  ) {
+  constructor(image, x, y, spriteWidth, spriteHeight, frames, layer, ctx) {
     this.image = image;
     this.baseX = x;
     this.baseY = y;
@@ -106,13 +97,12 @@ export class Enemy {
         1 * this.height,
         this.width,
         this.height,
-        -this.width / 2, 
+        -this.width / 2,
         -this.height / 2,
         this.width,
         this.height
       );
 
-      
       this.ctx.restore();
     }
   }

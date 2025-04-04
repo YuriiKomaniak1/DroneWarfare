@@ -13,7 +13,7 @@ const backgroundLayer1 = new Image();
 backgroundLayer1.src = './assets/img/index/mainBackgroundIndex.png';
 
 // Клас для фону
-class Layer {
+class BackgroundLayer {
     constructor(image, speedModifier) {
         this.x = 0;
         this.y = 0;
@@ -38,8 +38,8 @@ class Layer {
     }
 }
 
-const layer1 = new Layer(backgroundLayer1, 0.8);
-const gameObjects = [layer1];
+const backgroundLayer1 = new BackgroundLayer(backgroundLayer1, 0.8);
+const gameObjects = [backgroundLayer1];
 
 // Завантаження зображення дрона
 const smallDrone = new Image();

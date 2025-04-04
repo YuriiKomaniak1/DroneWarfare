@@ -4,7 +4,7 @@ export function checkEffect(bomb, enemy) {
       bomb.baseY - (enemy.y + 32)
     );
     let effectStatus = false;
-    if (distance < 210) effectStatus = true;
+    if (distance < 220) effectStatus = true;
     
     return effectStatus;
   }

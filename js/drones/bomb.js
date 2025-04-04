@@ -7,10 +7,11 @@ export class Bomb {
     spriteWidth,
     spriteHeight,
     scale,
-    explosionscale,
+    explosionScale,
     frames,
     layer,
-    ctx
+    ctx,
+    type,
   ) {
     this.image = image;
     this.imageExplosion = imageExplosion;
@@ -24,7 +25,7 @@ export class Bomb {
     this.initialScale = scale;
     this.spread = 1.8    ;
     this.exploded = false;
-    this.explosionscale = explosionscale;
+    this.explosionScale = explosionScale;
     this.friction = 0.997;
     this.shrinkRate = 1.009;
     this.velocityX = layer.speedX * 1; // Початкова швидкість
@@ -34,6 +35,7 @@ export class Bomb {
     this.initialY = y;
     this.layer = layer;
     this.ctx = ctx;
+    this.type = type; // Тип бомби
   }
 
   drop() {
@@ -73,14 +75,14 @@ export class Bomb {
 
       this.ctx.drawImage(
         this.imageExplosion,
-        this.frameX * this.explosionscale,
+        this.frameX * 64,
         0,
-        this.explosionscale,
-        this.explosionscale,
-        this.baseX - 32,
-        this.baseY - 32,
-        this.explosionscale,
-        this.explosionscale
+        64,
+        64,
+        this.baseX - this.explosionScale/2,
+        this.baseY - this.explosionScale/2,
+        this.explosionScale,
+        this.explosionScale
       );
       this.baseX += this.layer.speedX;
       this.baseY += this.layer.speedY;

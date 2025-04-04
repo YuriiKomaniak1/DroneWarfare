@@ -1,17 +1,22 @@
+import { selectionState } from "./logic/selection.js";
 import { Minimap } from "./gameElements/minimap.js";
 import { Layer } from "./layers/layer.js";
 import { Enemy } from "./enemies/enemy.js";
 import { Bomb } from "./drones/bomb.js";
-import { Drone, droneScope } from "./drones/drone.js";
+import { DroneScope, droneScopeImage } from "./drones/droneScope.js";
 import { checkCollision } from "./logic/bombCollisions.js";
 import { keys, setupControls } from "./logic/controls.js";
 import { checkEffect } from "./logic/enemyLogic.js";
+import { DroneIcons } from "./gameElements/droneIcons.js";
+import { drones } from "./index/trainingDrones.js";
 
 const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
 let CANVAS_WIDTH = (canvas.width = 800);
 let CANVAS_HEIGHT = (canvas.height = 900);
 let gameFrame = 0;
+drones[0].isActive = true;
+let currentDrone = {};
 
 let gameField = new Image();
 gameField.src = "./assets/img/grounds/train1bottom.png";
@@ -19,6 +24,10 @@ let trees = new Image();
 trees.src = "./assets/img/grounds/train1trees.png";
 let fragBombImage = new Image();
 fragBombImage.src = "./assets/img/bombs/fragBomb.png";
+let heBombImage = new Image();
+heBombImage.src = "./assets/img/bombs/heBomb.png";
+let shapedBombImage = new Image();
+shapedBombImage.src = "./assets/img/bombs/shapedBomb.png";
 let imageExplosion = new Image();
 imageExplosion.src = "./assets/img/bombs/smallExplosion.png";
 let enemyRifle = new Image();
@@ -26,15 +35,21 @@ enemyRifle.src = "./assets/img/enemies/spritesheetSoldierAk.png";
 
 const layer1 = new Layer(gameField, canvas, 1400, 1400, keys, ctx);
 const layer2 = new Layer(trees, canvas, 1400, 1400, keys, ctx);
-const drone = new Drone(droneScope, 400, 350, canvas, ctx);
-
+const droneScope = new DroneScope(droneScopeImage, 350, 350, canvas, ctx);
+const droneIcon1 = new DroneIcons(canvas, ctx, 1, drones[0]);
+const droneIcon2 = new DroneIcons(canvas, ctx, 2, drones[1]);
+const droneIcon3 = new DroneIcons(canvas, ctx, 3, drones[2]);
+const droneIcon4 = new DroneIcons(canvas, ctx, 4, drones[3]);
+const droneIcon5 = new DroneIcons(canvas, ctx, 5, drones[4]);
+console.log(droneIcon1);
+const droneIcons = [droneIcon1, droneIcon2, droneIcon3, droneIcon4, droneIcon5];
 let enemies = [];
 while (enemies.length < 18) {
   const enemy = new Enemy(
     enemyRifle,
     Math.random() * 1350,
     Math.random() * 400 - 200,
-        64,
+    64,
     64,
     8,
     layer1,
@@ -47,27 +62,68 @@ const minimap = new Minimap(
   1400,
   canvas.width,
   canvas.height,
-  drone,
+  droneScope,
   enemies,
   ctx,
   layer1
 );
 let bombs = []; // Масив для бомб
 function dropBomb() {
+  if (!currentDrone) {
+    console.warn("🚨 Немає активного дрона!");
+    return;
+  }
+
+  let bombType = selectionState.selectedBombType;
+  let bombArray = null;
+  let bombImage = null;
+  let explosionScale = 64;
+
+  switch (bombType) {
+    case "frag":
+      bombArray = currentDrone.fragBombs;
+      bombImage = fragBombImage;
+      explosionScale = 64;
+      break;
+    case "he":
+      bombArray = currentDrone.heBombs;
+      bombImage = heBombImage;
+      explosionScale = 100;
+      break;
+    case "shaped":
+      bombArray = currentDrone.shapedBombs;
+      bombImage = shapedBombImage;
+      explosionScale = 30;
+      break;
+  }
+
+  if (!bombArray || bombArray.length === 0) {
+    selectionState.selectedBombIndex =
+      (selectionState.selectedBombIndex + 1) % selectionState.bombTypes.length;
+    selectionState.selectedBombType =
+      selectionState.bombTypes[selectionState.selectedBombIndex];
+    console.log(`🔄 Вибрано бомбу: ${selectionState.selectedBombType}`);
+    return;
+  }
+
+  bombArray.pop();
+
   const bomb = new Bomb(
-    fragBombImage, // Зображення бомби
-    imageExplosion, // Зображення вибуху
-    drone.x + drone.width / 2,
-    drone.y + drone.height / 2,
+    bombImage,
+    imageExplosion,
+    droneScope.x + droneScope.width / 2,
+    droneScope.y + droneScope.height / 2,
     300,
     300,
     3,
-    64,
+    explosionScale,
     10,
     layer1,
-    ctx
+    ctx,
+    bombType
   );
-  bomb.velocityX = layer1.speedX * 1; // Множник для відчуття інерції
+
+  bomb.velocityX = layer1.speedX * 1;
   bomb.velocityY = layer1.speedY * 1;
 
   bombs.push(bomb);
@@ -75,16 +131,18 @@ function dropBomb() {
 setupControls(dropBomb);
 
 const FPS = 60;
-const FRAME_TIME = 1000 / FPS; 
+const FRAME_TIME = 1000 / FPS;
 let lastTime = 0;
 
 function animate(timestamp) {
   const deltaTime = timestamp - lastTime;
   if (deltaTime >= FRAME_TIME) {
+    drones.forEach((drone, index) => {
+      drone.isActive = index === selectionState.selectedDroneIndex;
+      if (drone.isActive) currentDrone = drone;
+    });
     lastTime = timestamp - (deltaTime % FRAME_TIME);
-    
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); // Очищаємо канвас
-
     layer1.update();
     layer1.draw();
 
@@ -111,12 +169,14 @@ function animate(timestamp) {
     layer2.update();
     layer2.draw();
 
-    drone.draw();
+    droneScope.draw();
     minimap.draw();
+    droneIcons.forEach((object) => {
+      object.draw();
+    });
     gameFrame++;
   }
 
   requestAnimationFrame(animate);
 }
 requestAnimationFrame(animate);
-

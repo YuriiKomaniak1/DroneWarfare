@@ -4,7 +4,7 @@ export class Minimap {
     mapHeight,
     canvasWidth,
     canvasHeight,
-    drone,
+    droneScope,
     enemies,
     ctx,
     layer
@@ -14,7 +14,7 @@ export class Minimap {
     this.height =this.width / mapWidth * mapHeight;
     this.scaleX = this.width / mapWidth;
     this.scaleY = this.height / mapHeight;
-    this.drone = drone;
+    this.droneScope = droneScope;
     this.enemies = enemies;
     this.ctx=ctx;
     this.mapX=10;
