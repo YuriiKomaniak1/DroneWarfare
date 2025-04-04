@@ -10,7 +10,7 @@ export class Layer {
       this.speedY = 0;
       this.acceleration = 0.01;
       this.deceleration = 0.007;
-      this.maxSpeed = 0.95;
+      this.maxSpeed = 1.1;
       this.keys=keys;
       this.ctx=ctx;
     }

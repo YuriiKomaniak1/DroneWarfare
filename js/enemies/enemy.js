@@ -3,7 +3,6 @@ export class Enemy {
     image,
     x,
     y,
-    speed,
     spriteWidth,
     spriteHeight,
     frames,
@@ -13,7 +12,7 @@ export class Enemy {
     this.image = image;
     this.baseX = x;
     this.baseY = y;
-    this.speed = speed;
+    this.speed = Math.random() * 0.02 + 0.1;
     this.width = spriteWidth;
     this.height = spriteHeight;
     this.frameX = Math.floor(Math.random() * frames);
@@ -34,7 +33,7 @@ export class Enemy {
   }
 
   update() {
-    if (this.crawl) if (Math.random() > 0.9998) this.crawl = false;
+    if (this.crawl) if (Math.random() > 0.9993) this.crawl = false;
     if (!this.dead && !this.crawl) {
       this.baseY += this.speed;
       if (Math.round(this.baseX) % 1 === 0)

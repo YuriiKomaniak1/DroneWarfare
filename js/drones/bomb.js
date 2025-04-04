@@ -25,7 +25,7 @@ export class Bomb {
     this.spread = 1.8    ;
     this.exploded = false;
     this.explosionscale = explosionscale;
-    this.friction = 0.999;
+    this.friction = 0.997;
     this.shrinkRate = 1.009;
     this.velocityX = layer.speedX * 1; // Початкова швидкість
     this.velocityY = layer.speedY * 1;
