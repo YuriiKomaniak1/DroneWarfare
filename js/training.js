@@ -8,7 +8,7 @@ import { checkCollision } from "./logic/bombCollisions.js";
 import { keys, setupControls } from "./logic/controls.js";
 import { checkEffect } from "./logic/enemyLogic.js";
 import { DroneIcons } from "./gameElements/droneIcons.js";
-import { drones } from "./index/trainingDrones.js";
+import { drones } from "./drones/trainingDrones.js";
 
 const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");

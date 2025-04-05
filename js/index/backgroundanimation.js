@@ -38,8 +38,8 @@ class BackgroundLayer {
     }
 }
 
-const backgroundLayer1 = new BackgroundLayer(backgroundLayer1, 0.8);
-const gameObjects = [backgroundLayer1];
+const backGroundLayer1 = new BackgroundLayer(backgroundLayer1, 0.8);
+const gameObjects = [backGroundLayer1];
 
 // Завантаження зображення дрона
 const smallDrone = new Image();

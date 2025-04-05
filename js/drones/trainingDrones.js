@@ -1,4 +1,4 @@
-import { createSmallDrone } from "../drones/drones.js";
+import { createSmallDrone } from "./drones.js";
 let smallDroneImage = new Image();
 smallDroneImage.src = "../assets/img/drones/smallDroneAnimation.png";
 
