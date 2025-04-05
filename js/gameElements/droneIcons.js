@@ -20,6 +20,10 @@ export class DroneIcons {
   }
 
   draw() {
+    if (!this.drone.image.complete || this.drone.image.naturalWidth === 0) {
+        console.warn("🚫 Drone icon image not loaded or broken.");
+        return;
+      }
     let amount =
       this.drone.fragBombs.length +
       this.drone.heBombs.length +
