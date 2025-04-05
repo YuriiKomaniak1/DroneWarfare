@@ -1,5 +1,8 @@
+
+import { basePath } from "../utils/basePath.js";
 let smallDroneImage = new Image();
-smallDroneImage.src = "../assets/img/drones/smallDroneAnimation.png";
+smallDroneImage.src = `${basePath}assets/img/drones/smallDroneAnimation.png`;
+
 class Drone {
   constructor(image, capacity, hp, type) {
     this.image = image;
