@@ -1,6 +1,6 @@
 import { basePath } from "../utils/basePath.js";
-let smallDroneImage = new Image();
-smallDroneImage.src = `${basePath}assets/img/drones/smallDroneAnimation.png`;
+// let smallDroneImage = new Image();
+// smallDroneImage.src = `${basePath}assets/img/drones/smallDroneAnimation.png`;
 let fragBombIcon = new Image();
 fragBombIcon.src = `${basePath}assets/img/bombs/fragBombIcon.png`;
 let heBombIcon = new Image();
