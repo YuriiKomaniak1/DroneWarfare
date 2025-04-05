@@ -1,11 +1,11 @@
 let smallDroneImage = new Image();
-smallDroneImage.src = "assets/img/drones/smallDroneAnimation.png";
+smallDroneImage.src = "/DroneWarfareassets/img/drones/smallDroneAnimation.png";
 let fragBombIcon = new Image();
-fragBombIcon.src = "assets/img/bombs/fragBombIcon.png";
+fragBombIcon.src = "/DroneWarfareassets/img/bombs/fragBombIcon.png";
 let heBombIcon = new Image();
-heBombIcon.src = "assets/img/bombs/heBombIcon.png";
+heBombIcon.src = "/DroneWarfareassets/img/bombs/heBombIcon.png";
 let shapedBombIcon = new Image();
-shapedBombIcon.src = "assets/img/bombs/shapedBombIcon.png";
+shapedBombIcon.src = "/DroneWarfareassets/img/bombs/shapedBombIcon.png";
 export class DroneIcons {
   constructor(canvas, ctx, dronePosition, drone) {
     // this.image = image;
