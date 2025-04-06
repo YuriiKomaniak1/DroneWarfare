@@ -232,6 +232,7 @@ export function drawJoystickAndButtons(ctx) {
 }
 // НАЛАШТУВАННЯ сенсорного керування
 export function setupTouchControls(dropBomb, canvas) {
+  const TOUCH_EXTRA_RADIUS = 10;
   canvas.addEventListener("touchstart", (e) => {
     for (let touch of e.touches) {
       const x = touch.clientX;
@@ -244,12 +245,12 @@ export function setupTouchControls(dropBomb, canvas) {
         joystick.touchId = touch.identifier;
       }
 
-      if (Math.hypot(x - buttonDrop.x, y - buttonDrop.y) < buttonDrop.radius) {
+      if (Math.hypot(x - buttonDrop.x, y - buttonDrop.y) < buttonDrop.radius+TOUCH_EXTRA_RADIUS) {
         buttonDrop.pressed = true;
              }
 
       if (
-        Math.hypot(x - buttonSwitch.x, y - buttonSwitch.y) < buttonSwitch.radius
+        Math.hypot(x - buttonSwitch.x, y - buttonSwitch.y) < buttonSwitch.radius+TOUCH_EXTRA_RADIUS
       ) {
         buttonSwitch.pressed = true;
         
@@ -287,11 +288,11 @@ export function setupTouchControls(dropBomb, canvas) {
       const x = touch.clientX;
       const y = touch.clientY;
 
-      if (buttonDrop.pressed && Math.hypot(x - buttonDrop.x, y - buttonDrop.y) < buttonDrop.radius) {
+      if (buttonDrop.pressed && Math.hypot(x - buttonDrop.x, y - buttonDrop.y) < buttonDrop.radius+TOUCH_EXTRA_RADIUS) {
         if (dropBomb) dropBomb();
       }
 
-      if (buttonSwitch.pressed && Math.hypot(x - buttonSwitch.x, y - buttonSwitch.y) < buttonSwitch.radius) {
+      if (buttonSwitch.pressed && Math.hypot(x - buttonSwitch.x, y - buttonSwitch.y) < buttonSwitch.radius+TOUCH_EXTRA_RADIUS) {
         selectionState.selectedBombIndex =
           (selectionState.selectedBombIndex + 1) % selectionState.bombTypes.length;
         selectionState.selectedBombType =
