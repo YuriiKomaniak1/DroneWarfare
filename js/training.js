@@ -35,7 +35,7 @@ enemyRifle.src = "./assets/img/enemies/spritesheetSoldierAk.png";
 
 const layer1 = new Layer(gameField, canvas, 1400, 1400, keys, ctx);
 const layer2 = new Layer(trees, canvas, 1400, 1400, keys, ctx);
-const droneScope = new DroneScope(droneScopeImage, 350, 350, canvas, ctx);
+const droneScope = new DroneScope(droneScopeImage, canvas, ctx);
 const droneIcon1 = new DroneIcons(canvas, ctx, 1, drones[0]);
 const droneIcon2 = new DroneIcons(canvas, ctx, 2, drones[1]);
 const droneIcon3 = new DroneIcons(canvas, ctx, 3, drones[2]);

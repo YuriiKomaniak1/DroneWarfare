@@ -10,7 +10,7 @@ export class Minimap {
     layer
 
   ) {
-    this.width = 200;
+    this.width = canvasWidth/5;
     this.height =this.width / mapWidth * mapHeight;
     this.scaleX = this.width / mapWidth;
     this.scaleY = this.height / mapHeight;
@@ -18,7 +18,7 @@ export class Minimap {
     this.enemies = enemies;
     this.ctx=ctx;
     this.mapX=10;
-    this.mapY=canvasHeight-this.height-10;
+    this.mapY=10;
     this.layer=layer;
     this.canvasWidth=canvasWidth;
     this.canvasHeight=canvasHeight;
