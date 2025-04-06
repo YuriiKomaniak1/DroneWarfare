@@ -23,7 +23,7 @@ export class Enemy {
     this.deathAngle = Math.random() * 2 * Math.PI; // Випадковий кут
   }
 
-  update() {
+  update(allEnemies) {
     if (this.crawl) if (Math.random() > 0.9993) this.crawl = false;
     if (!this.dead && !this.crawl) {
       this.baseY += this.speed;
@@ -54,6 +54,26 @@ export class Enemy {
         this.deathFrameIndex = this.deathFrames;
       }
     }
+
+    // Перевірка на зіткнення з іншими ворогами
+  for (let other of allEnemies) {
+    if (this.dead||other === this || other.dead) continue;
+
+    const dx = this.baseX - other.baseX;
+    const dy = this.baseY - other.baseY;
+    const distance = Math.hypot(dx, dy);
+    const minDist = this.width * 0.8;
+
+    if (distance < minDist) {
+      // Відштовхуємо об'єкти
+      const angle = Math.atan2(dy, dx);
+      const push = (minDist - distance) / 2;
+
+      this.baseX += Math.cos(angle) * push;
+      this.baseY += Math.sin(angle) * push;
+    }
+  }
+
     this.x = this.baseX + this.layer.x;
     this.y = this.baseY + this.layer.y;
   }

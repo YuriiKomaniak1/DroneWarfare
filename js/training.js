@@ -147,7 +147,7 @@ function animate(timestamp) {
     layer1.draw();
 
     enemies.forEach((object) => {
-      object.update();
+      object.update(enemies);
       object.draw();
     });
 
