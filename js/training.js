@@ -5,6 +5,7 @@ import { Enemy } from "./enemies/enemy.js";
 import { Bomb } from "./drones/bomb.js";
 import { DroneScope, droneScopeImage } from "./drones/droneScope.js";
 import { checkCollision } from "./logic/bombCollisions.js";
+import { setupDroneSelectionByClick } from "./logic/selection.js";
 import { keys, setupControls } from "./logic/controls.js";
 import { checkEffect } from "./logic/enemyLogic.js";
 import { DroneIcons } from "./gameElements/droneIcons.js";
@@ -45,6 +46,7 @@ const droneIcon4 = new DroneIcons(canvas, ctx, 4, drones[3]);
 const droneIcon5 = new DroneIcons(canvas, ctx, 5, drones[4]);
 console.log(droneIcon1);
 const droneIcons = [droneIcon1, droneIcon2, droneIcon3, droneIcon4, droneIcon5];
+setupDroneSelectionByClick(canvas, droneIcons);
 let enemies = [];
 while (enemies.length < 18) {
   const enemy = new Enemy(

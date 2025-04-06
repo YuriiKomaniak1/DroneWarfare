@@ -21,3 +21,37 @@ document.addEventListener("keydown", (event) => {
     console.log(`🚁 Вибрано дрона #${index + 1}`);
   }
 });
+
+// Функція для вибору дрона по кліку
+export function setupDroneSelectionByClick(canvas, droneIcons) {
+  canvas.addEventListener("click", handleSelection);
+  canvas.addEventListener("touchstart", handleSelection);
+
+  function handleSelection(e) {
+    e.preventDefault();
+    let clientX, clientY;
+    if (e.type === "touchstart") {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = clientX - rect.left;
+    const mouseY = clientY - rect.top;
+
+    droneIcons.forEach((icon, index) => {
+      if (
+        mouseX >= icon.x &&
+        mouseX <= icon.x + icon.width &&
+        mouseY >= icon.y &&
+        mouseY <= icon.y + icon.height
+      ) {
+        selectionState.selectedDroneIndex = index;
+        console.log(`🚁 Вибрано дрона #${index + 1} через клік/тап`);
+      }
+    });
+  }
+}
