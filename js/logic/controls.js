@@ -89,12 +89,12 @@ export function setupDroneSelectionByClick(canvas, droneIcons) {
 }
 // СТАН ДЖОЙСТИКА І КНОПОК
 export const joystick = {
-  baseX: 100,
+  baseX: 120,
   baseY: 0,
-  baseRadius: 50,
-  stickX: 100,
+  baseRadius: 60,
+  stickX: 120,
   stickY: 0,
-  stickRadius: 20,
+  stickRadius: 24,
   active: false,
   touchId: null,
 };
@@ -102,28 +102,28 @@ export const joystick = {
 export const buttonDrop = {
   x: 0,
   y: 0,
-  radius: 40,
+  radius: 45,
   pressed: false,
 };
 
 export const buttonSwitch = {
   x: 0,
   y: 0,
-  radius: 40,
+  radius: 45,
   pressed: false,
 };
 // МАЛЮВАННЯ ДЖОЙСТИКА І КНОПОК
 export function drawJoystickAndButtons(ctx) {
-  joystick.baseY = controlCanvas.height - 100;
+  joystick.baseY = controlCanvas.height - 120;
 if (!joystick.active) {
   joystick.stickY = joystick.baseY;
 }
 
-buttonDrop.x = controlCanvas.width - 50;
-buttonDrop.y = controlCanvas.height - 50;
+buttonDrop.x = controlCanvas.width - 60;
+buttonDrop.y = controlCanvas.height - 100;
 
-buttonSwitch.x = controlCanvas.width - 150;
-buttonSwitch.y = controlCanvas.height - 50;
+buttonSwitch.x = controlCanvas.width - 160;
+buttonSwitch.y = controlCanvas.height - 100;
   
   ctx.globalAlpha = 0.6;
 

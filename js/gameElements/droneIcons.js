@@ -13,7 +13,7 @@ export class DroneIcons {
     this.width = 55;
     this.height = 90;
     this.x = canvas.width - this.width;
-    this.y = 30 + dronePosition * 110 - 110;
+    this.y = 10 + dronePosition * 110 - 110;
     this.dronePosition = dronePosition;
     this.drone = drone;
   }
