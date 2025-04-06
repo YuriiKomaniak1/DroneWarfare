@@ -12,8 +12,10 @@ import { drones } from "./drones/trainingDrones.js";
 
 const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
-let CANVAS_WIDTH = (canvas.width = 800);
-let CANVAS_HEIGHT = (canvas.height = 900);
+canvas.width = Math.min(window.innerWidth, 900);
+canvas.height = Math.min(window.innerHeight, 900);
+let CANVAS_WIDTH = canvas.width;
+let CANVAS_HEIGHT = canvas.height;
 let gameFrame = 0;
 drones[0].isActive = true;
 let currentDrone = {};
