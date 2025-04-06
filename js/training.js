@@ -4,7 +4,7 @@ import { Enemy } from "./enemies/enemy.js";
 import { Bomb } from "./drones/bomb.js";
 import { DroneScope, droneScopeImage } from "./drones/droneScope.js";
 import { checkCollision } from "./logic/bombCollisions.js";
-import { initControls, setupControls, setupDroneSelectionByClick, drawJoystickAndButtons, setupTouchControls, keys,selectionState } from "./logic/controls.js";
+import { switchToNextAvailableBomb,initControls, setupControls, setupDroneSelectionByClick, drawJoystickAndButtons, setupTouchControls, keys,selectionState } from "./logic/controls.js";
 import { checkEffect } from "./logic/enemyLogic.js";
 import { DroneIcons } from "./gameElements/droneIcons.js";
 import { drones } from "./drones/trainingDrones.js";
@@ -15,10 +15,10 @@ canvas.width = Math.min(window.innerWidth, 900);
 canvas.height = Math.min(window.innerHeight, 900);
 let CANVAS_WIDTH = canvas.width;
 let CANVAS_HEIGHT = canvas.height;
-initControls(canvas); 
+initControls(canvas,drones); 
 let gameFrame = 0;
 drones[0].isActive = true;
-let currentDrone = {};
+let currentDrone = drones[selectionState.selectedDroneIndex];
 
 let gameField = new Image();
 gameField.src = "./assets/img/grounds/train1bottom.png";
@@ -103,11 +103,7 @@ function dropBomb() {
   }
 
   if (!bombArray || bombArray.length === 0) {
-    selectionState.selectedBombIndex =
-      (selectionState.selectedBombIndex + 1) % selectionState.bombTypes.length;
-    selectionState.selectedBombType =
-      selectionState.bombTypes[selectionState.selectedBombIndex];
-    console.log(`🔄 Вибрано бомбу: ${selectionState.selectedBombType}`);
+    console.warn("🚨 Немає бомб для скидання!");
     return;
   }
 
@@ -132,6 +128,9 @@ function dropBomb() {
   bomb.velocityY = layer1.speedY * 1;
 
   bombs.push(bomb);
+  if (bombArray.length === 0) {
+    switchToNextAvailableBomb();
+  }
 }
 setupControls(dropBomb);
 setupDroneSelectionByClick(canvas, droneIcons);

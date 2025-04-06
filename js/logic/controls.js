@@ -1,8 +1,9 @@
 let controlCanvas = null;
-export function initControls(canvas) {
+let controlDrones = null;
+export function initControls(canvas,drones) {
   controlCanvas = canvas;
+  controlDrones = drones;
 }
-
 import { basePath } from "../utils/basePath.js";
 
 export const bombIcons = {
@@ -51,12 +52,7 @@ export function setupControls(dropBomb) {
     }
     // Додатково обробка Ctrl для перемикання бомб
     if (e.ctrlKey) {
-      selectionState.selectedBombIndex =
-        (selectionState.selectedBombIndex + 1) %
-        selectionState.bombTypes.length;
-      selectionState.selectedBombType =
-        selectionState.bombTypes[selectionState.selectedBombIndex];
-      console.log(`🔄 Вибрано бомбу: ${selectionState.selectedBombType}`);
+      switchToNextAvailableBomb( true);
     }
 
     // Додатково обробка клавіш 1-5 для вибору дрона
@@ -245,15 +241,18 @@ export function setupTouchControls(dropBomb, canvas) {
         joystick.touchId = touch.identifier;
       }
 
-      if (Math.hypot(x - buttonDrop.x, y - buttonDrop.y) < buttonDrop.radius+TOUCH_EXTRA_RADIUS) {
+      if (
+        Math.hypot(x - buttonDrop.x, y - buttonDrop.y) <
+        buttonDrop.radius + TOUCH_EXTRA_RADIUS
+      ) {
         buttonDrop.pressed = true;
-             }
+      }
 
       if (
-        Math.hypot(x - buttonSwitch.x, y - buttonSwitch.y) < buttonSwitch.radius+TOUCH_EXTRA_RADIUS
+        Math.hypot(x - buttonSwitch.x, y - buttonSwitch.y) <
+        buttonSwitch.radius + TOUCH_EXTRA_RADIUS
       ) {
         buttonSwitch.pressed = true;
-        
       }
     }
   });
@@ -288,16 +287,20 @@ export function setupTouchControls(dropBomb, canvas) {
       const x = touch.clientX;
       const y = touch.clientY;
 
-      if (buttonDrop.pressed && Math.hypot(x - buttonDrop.x, y - buttonDrop.y) < buttonDrop.radius+TOUCH_EXTRA_RADIUS) {
+      if (
+        buttonDrop.pressed &&
+        Math.hypot(x - buttonDrop.x, y - buttonDrop.y) <
+          buttonDrop.radius + TOUCH_EXTRA_RADIUS
+      ) {
         if (dropBomb) dropBomb();
       }
 
-      if (buttonSwitch.pressed && Math.hypot(x - buttonSwitch.x, y - buttonSwitch.y) < buttonSwitch.radius+TOUCH_EXTRA_RADIUS) {
-        selectionState.selectedBombIndex =
-          (selectionState.selectedBombIndex + 1) % selectionState.bombTypes.length;
-        selectionState.selectedBombType =
-          selectionState.bombTypes[selectionState.selectedBombIndex];
-        console.log(`🔄 Перемкнуто бомбу на: ${selectionState.selectedBombType}`);
+      if (
+        buttonSwitch.pressed &&
+        Math.hypot(x - buttonSwitch.x, y - buttonSwitch.y) <
+          buttonSwitch.radius + TOUCH_EXTRA_RADIUS
+      ) {
+        switchToNextAvailableBomb( true);
       }
 
       if (touch.identifier === joystick.touchId) {
@@ -312,4 +315,29 @@ export function setupTouchControls(dropBomb, canvas) {
     buttonDrop.pressed = false;
     buttonSwitch.pressed = false;
   });
+}
+
+
+export function switchToNextAvailableBomb(startFromNext = false) {
+  const types = selectionState.bombTypes;
+  let startIndex = selectionState.selectedBombIndex;
+  const activeDrone = controlDrones[selectionState.selectedDroneIndex];
+
+  if (startFromNext) {
+    startIndex = (startIndex + 1) % types.length; // стартуємо з наступного
+  }
+
+  for (let i = 0; i < types.length; i++) {
+    const index = (startIndex + i) % types.length;
+    const type = types[index];
+    const bombList = activeDrone[`${type}Bombs`];
+    if (bombList && bombList.length > 0) {
+      selectionState.selectedBombType = type;
+      selectionState.selectedBombIndex = index;
+      console.log(`🔄 Перемкнуто на доступну бомбу: ${type}`);
+      return;
+    }
+  }
+
+  console.warn("🚨 Усі типи бомб закінчилися!");
 }
