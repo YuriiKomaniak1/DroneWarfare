@@ -2,6 +2,19 @@ let controlCanvas = null;
 export function initControls(canvas) {
   controlCanvas = canvas;
 }
+
+import { basePath } from "../utils/basePath.js";
+
+export const bombIcons = {
+  frag: new Image(),
+  he: new Image(),
+  shaped: new Image(),
+};
+
+bombIcons.frag.src = `${basePath}assets/img/bombs/fragBombIcon.png`;
+bombIcons.he.src = `${basePath}assets/img/bombs/heBombIcon.png`;
+bombIcons.shaped.src = `${basePath}assets/img/bombs/shapedBombIcon.png`;
+
 // СТАН КЛАВІШ (клавіатура)
 export const keys = {
   up: false,
@@ -176,12 +189,29 @@ export function drawJoystickAndButtons(ctx) {
     Math.PI * 2
   );
   ctx.fill();
-  ctx.fillStyle = "white";
-  ctx.font = "24px Arial";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("💣", buttonDrop.x, buttonDrop.y);
+  const activeBombType = selectionState.selectedBombType;
+  const icon = bombIcons[activeBombType];
 
+  if (icon.complete) {
+    // Якщо картинка вже завантажена
+    const sizeX = 25;
+    const sizeY = 50;
+
+    ctx.drawImage(
+      icon,
+      buttonDrop.x - sizeX / 2,
+      buttonDrop.y - sizeY / 2,
+      sizeX,
+      sizeY
+    );
+  } else {
+    // Якщо ще не завантажена — резервне відображення тексту
+    ctx.fillStyle = "white";
+    ctx.font = "24px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("💣", buttonDrop.x, buttonDrop.y);
+  }
   // Кнопка Switch
   ctx.fillStyle = buttonSwitch.pressed
     ? "rgba(0,0,139,0.7)"
@@ -262,6 +292,21 @@ export function setupTouchControls(dropBomb, canvas) {
 
   canvas.addEventListener("touchend", (e) => {
     for (let touch of e.changedTouches) {
+      const x = touch.clientX;
+      const y = touch.clientY;
+
+      if (Math.hypot(x - buttonDrop.x, y - buttonDrop.y) < buttonDrop.radius) {
+        if (dropBomb) dropBomb();
+      }
+
+      if (Math.hypot(x - buttonSwitch.x, y - buttonSwitch.y) < buttonSwitch.radius) {
+        selectionState.selectedBombIndex =
+          (selectionState.selectedBombIndex + 1) % selectionState.bombTypes.length;
+        selectionState.selectedBombType =
+          selectionState.bombTypes[selectionState.selectedBombIndex];
+        console.log(`🔄 Перемкнуто бомбу на: ${selectionState.selectedBombType}`);
+      }
+
       if (touch.identifier === joystick.touchId) {
         joystick.active = false;
         joystick.touchId = null;
