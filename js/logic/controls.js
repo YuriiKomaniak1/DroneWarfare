@@ -246,21 +246,13 @@ export function setupTouchControls(dropBomb, canvas) {
 
       if (Math.hypot(x - buttonDrop.x, y - buttonDrop.y) < buttonDrop.radius) {
         buttonDrop.pressed = true;
-        if (dropBomb) dropBomb();
-      }
+             }
 
       if (
         Math.hypot(x - buttonSwitch.x, y - buttonSwitch.y) < buttonSwitch.radius
       ) {
         buttonSwitch.pressed = true;
-        selectionState.selectedBombIndex =
-          (selectionState.selectedBombIndex + 1) %
-          selectionState.bombTypes.length;
-        selectionState.selectedBombType =
-          selectionState.bombTypes[selectionState.selectedBombIndex];
-        console.log(
-          `🔄 Перемкнуто бомбу на: ${selectionState.selectedBombType}`
-        );
+        
       }
     }
   });
