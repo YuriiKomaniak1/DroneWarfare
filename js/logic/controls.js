@@ -146,8 +146,8 @@ buttonSwitch.y = controlCanvas.height - 50;
   ctx.fill();
 
   // Кнопка Drop
-  ctx.globalAlpha = 0.4;
-  ctx.fillStyle = buttonDrop.pressed ? "darkred" : "red";
+  ctx.globalAlpha = 0.8;
+  ctx.fillStyle = buttonDrop.pressed ? "rgba(139,0,0,0.7)" : "rgba(247, 198, 0, 0.2)";
   ctx.beginPath();
   ctx.arc(
     buttonDrop.x,
@@ -164,7 +164,7 @@ buttonSwitch.y = controlCanvas.height - 50;
   ctx.fillText("💣", buttonDrop.x, buttonDrop.y);
 
   // Кнопка Switch
-  ctx.fillStyle = buttonSwitch.pressed ? "darkblue" : "blue";
+  ctx.fillStyle = buttonSwitch.pressed ? "rgba(0,0,139,0.7)" : "rgba(0, 255, 0, 0.2)";
   ctx.beginPath();
   ctx.arc(
     buttonSwitch.x,
