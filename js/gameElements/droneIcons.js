@@ -10,10 +10,10 @@ export class DroneIcons {
     // this.image = image;
     this.canvas = canvas;
     this.ctx = ctx;
-    this.width = 60;
-    this.height = 100;
+    this.width = 55;
+    this.height = 90;
     this.x = canvas.width - this.width;
-    this.y = 50 + dronePosition * 120 - 120;
+    this.y = 30 + dronePosition * 110 - 110;
     this.dronePosition = dronePosition;
     this.drone = drone;
   }
@@ -43,7 +43,7 @@ export class DroneIcons {
         this.x + 2 + Math.min(8, (this.width - 4) / amount) * index,
         this.y + this.width + 5,
         Math.min(8, (this.width - 4) / amount),
-        30
+        26
       );
     });
     this.drone.heBombs.forEach((bomb, index) => {
@@ -55,7 +55,7 @@ export class DroneIcons {
             (index + this.drone.fragBombs.length),
         this.y + this.width + 5,
         Math.min(8, (this.width - 4) / amount),
-        30
+        26
       );
     });
 
@@ -68,8 +68,8 @@ export class DroneIcons {
             (index + this.drone.fragBombs.length + this.drone.heBombs.length),
         this.y + this.width + 5,
         Math.min(8, (this.width - 4) / amount),
-        30
-      );
+        26
+      );23
     });
     this.ctx.globalAlpha = 1;
   }
