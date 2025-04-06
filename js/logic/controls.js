@@ -287,11 +287,11 @@ export function setupTouchControls(dropBomb, canvas) {
       const x = touch.clientX;
       const y = touch.clientY;
 
-      if (Math.hypot(x - buttonDrop.x, y - buttonDrop.y) < buttonDrop.radius) {
+      if (buttonDrop.pressed && Math.hypot(x - buttonDrop.x, y - buttonDrop.y) < buttonDrop.radius) {
         if (dropBomb) dropBomb();
       }
 
-      if (Math.hypot(x - buttonSwitch.x, y - buttonSwitch.y) < buttonSwitch.radius) {
+      if (buttonSwitch.pressed && Math.hypot(x - buttonSwitch.x, y - buttonSwitch.y) < buttonSwitch.radius) {
         selectionState.selectedBombIndex =
           (selectionState.selectedBombIndex + 1) % selectionState.bombTypes.length;
         selectionState.selectedBombType =
