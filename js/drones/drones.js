@@ -24,6 +24,7 @@ class Drone {
     this.heBombWeight = 0.16;
     this.shapedBombWeight = 0.14;
     this.reloadingTime=1000*60*2;
+    this.reloadStartTime = null;
   }
 
  countBombs() {
@@ -44,9 +45,15 @@ class Drone {
   reloading(){
     if (this.isEmpty()&& this.isAlive) {
       this.isReloading = true;
+      this.reloadStartTime = Date.now();
       setTimeout(() => {
         this.isReloading = false;
+        this.reloadStartTime = null;
         this.isActive = true;
+        this.fragBombs = [...this.StartFragBombs];
+        this.heBombs = [...this.StartHEBombs];
+        this.shapedBombs = [...this.StartShapedBombs];
+
       }, this.reloadingTime);
     }    
   }

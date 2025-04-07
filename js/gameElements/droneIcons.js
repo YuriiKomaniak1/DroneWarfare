@@ -35,38 +35,61 @@ export class DroneIcons {
       this.width,
       this.width
     );
+    if (!this.drone.isReloading) {
+      this.drone.fragBombs.forEach((bomb, index) => {
+        this.ctx.drawImage(
+          fragBombIcon,
+          this.x + 2 + this.bombWidth * index,
+          this.y + this.width + 5,
+          this.bombWidth,
+          this.bombHeight
+        );
+      });
+      this.drone.heBombs.forEach((bomb, index) => {
+        this.ctx.drawImage(
+          heBombIcon,
+          this.x + 2 + this.bombWidth * (index + this.drone.fragBombs.length),
+          this.y + this.width + 5,
+          this.bombWidth,
+          this.bombHeight
+        );
+      });
 
-    this.drone.fragBombs.forEach((bomb, index) => {
-      this.ctx.drawImage(
-        fragBombIcon,
-        this.x + 2 + this.bombWidth * index,
+      this.drone.shapedBombs.forEach((bomb, index) => {
+        this.ctx.drawImage(
+          shapedBombIcon,
+          this.x +
+            2 +
+            this.bombWidth *
+              (index + this.drone.fragBombs.length + this.drone.heBombs.length),
+          this.y + this.width + 5,
+          this.bombWidth,
+          this.bombHeight
+        );
+      });
+    }
+    if (this.drone.isReloading) {
+      const now = Date.now();
+      const elapsed = now - this.drone.reloadStartTime;
+      const progress = Math.min(elapsed / this.drone.reloadingTime, 1);
+      const barWidth = (this.width - 4) * progress;
+      // Малюємо фон полоски (темний) 
+      this.ctx.fillStyle = "rgba(100, 100, 100, 1)";
+      this.ctx.fillRect(
+        this.x + 2,
         this.y + this.width + 5,
-        this.bombWidth,
+        this.width - 4,
         this.bombHeight
       );
-    });
-    this.drone.heBombs.forEach((bomb, index) => {
-      this.ctx.drawImage(
-        heBombIcon,
-        this.x + 2 + this.bombWidth * (index + this.drone.fragBombs.length),
+      // Малюємо саму полоску (яскравіша зелена)
+      this.ctx.fillStyle = "rgba(55, 230, 24, 0.8)";
+      this.ctx.fillRect(
+        this.x + 2,
         this.y + this.width + 5,
-        this.bombWidth,
+        barWidth,
         this.bombHeight
       );
-    });
-
-    this.drone.shapedBombs.forEach((bomb, index) => {
-      this.ctx.drawImage(
-        shapedBombIcon,
-        this.x +
-          2 +
-          this.bombWidth *
-            (index + this.drone.fragBombs.length + this.drone.heBombs.length),
-        this.y + this.width + 5,
-        this.bombWidth,
-        this.bombHeight
-      );
-    });
+    }
     this.ctx.globalAlpha = 1;
   }
 }

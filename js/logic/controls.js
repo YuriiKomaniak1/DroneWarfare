@@ -62,6 +62,7 @@ export function setupControls(dropBomb) {
       const index = parseInt(e.key) - 1;
       if (!controlDrones[index].isReloading) {
       selectionState.selectedDroneIndex = index;
+      switchToNextAvailableBomb(false);
       console.log(`🚁 Вибрано дрона #${index + 1}`);
     }}
   });
@@ -110,8 +111,10 @@ export function setupDroneSelectionByClick(canvas, droneIcons) {
         mouseY >= icon.y &&
         mouseY <= icon.y + icon.height
       ) {
-        selectionState.selectedDroneIndex = index;
-        console.log(`🚁 Вибрано дрона #${index + 1} через клік/тап`);
+        if (!controlDrones[index].isReloading) {
+          selectionState.selectedDroneIndex = index;
+          console.log(`🚁 Вибрано дрона #${index + 1}`);
+        }
       }
     });
   }
