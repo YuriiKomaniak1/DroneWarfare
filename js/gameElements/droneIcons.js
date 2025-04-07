@@ -10,12 +10,13 @@ export class DroneIcons {
     // this.image = image;
     this.canvas = canvas;
     this.ctx = ctx;
-    this.width = 55;
-    this.height = 90;
+    this.width = 50;
+    this.height = 80;
     this.x = canvas.width - this.width;
-    this.y = 10 + dronePosition * 110 - 110;
+    this.y = 10 + dronePosition * 90 - 90;
     this.dronePosition = dronePosition;
     this.drone = drone;
+    this.bombHeight = 22;
   }
 
   draw() {
@@ -23,7 +24,7 @@ export class DroneIcons {
       this.drone.fragBombs.length +
       this.drone.heBombs.length +
       this.drone.shapedBombs.length;
-    this.ctx.globalAlpha = this.drone.isActive ? 1 : 0.4;
+    this.ctx.globalAlpha = this.drone.isActive ? 1 : 0.5;
     this.ctx.fillStyle = "rgba(234, 234, 234, 0.3)";
     this.ctx.fillRect(this.x, this.y, this.width, this.height);
     this.ctx.drawImage(
@@ -43,7 +44,7 @@ export class DroneIcons {
         this.x + 2 + Math.min(8, (this.width - 4) / amount) * index,
         this.y + this.width + 5,
         Math.min(8, (this.width - 4) / amount),
-        26
+        this.bombHeight
       );
     });
     this.drone.heBombs.forEach((bomb, index) => {
@@ -55,7 +56,7 @@ export class DroneIcons {
             (index + this.drone.fragBombs.length),
         this.y + this.width + 5,
         Math.min(8, (this.width - 4) / amount),
-        26
+        this.bombHeight
       );
     });
 
@@ -68,8 +69,8 @@ export class DroneIcons {
             (index + this.drone.fragBombs.length + this.drone.heBombs.length),
         this.y + this.width + 5,
         Math.min(8, (this.width - 4) / amount),
-        26
-      );23
+        this.bombHeight
+      );
     });
     this.ctx.globalAlpha = 1;
   }
