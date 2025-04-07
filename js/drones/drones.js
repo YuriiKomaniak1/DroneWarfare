@@ -1,10 +1,9 @@
-
 import { canvas } from "../training.js";
 import { basePath } from "../utils/basePath.js";
 let smallDroneImage = new Image();
 smallDroneImage.src = `${basePath}assets/img/drones/smallDroneAnimation.png`;
 export function initDrones(canvas) {
-  let localCanvas=canvas;
+  let localCanvas = canvas;
 }
 class Drone {
   constructor(image, capacity, hp, type) {
@@ -18,7 +17,7 @@ class Drone {
     this.isReloading = false;
     this.isAlive = true;
     this.StartFragBombs = [];
-    this.StartHEBombs = [];  
+    this.StartHEBombs = [];
     this.StartShapedBombs = [];
     this.fragBombs = [];
     this.heBombs = [];
@@ -26,16 +25,20 @@ class Drone {
     this.fragBombWeight = 0.13;
     this.heBombWeight = 0.16;
     this.shapedBombWeight = 0.14;
-    this.reloadingTime=1000*60*2;
+    this.reloadingTime = 1000 * 60 * 1;
     this.reloadStartTime = null;
-    this.scale = 1;  // стартовий масштаб
+    this.scale = 1; // стартовий масштаб
     this.targetScale = 0.3; // цільовий масштаб при польоті
-    this.rotation = 0;  // поточний поворот
+    this.rotation = 0; // поточний поворот
     this.rotationSpeed = Math.PI / 120; // швидкість повороту
     this.shrinkRate = 0.005; // швидкість зменшення
     this.flyBackSpeed = 1.5; // швидкість польоту назад
     this.baseX = 0;
     this.baseY = 0;
+    this.frames = 4; // Кількість кадрів у спрайті
+    this.frameX = 0; // Поточний кадр
+    this.frameTimer = 0; // Лічильник часу між кадрами
+    this.frameSpeed = 5; // Затримка між кадрами
   }
   resetPosition() {
     this.scale = 1;
@@ -54,25 +57,29 @@ class Drone {
         if (this.rotation > Math.PI) this.rotation = Math.PI;
       }
       this.baseY += this.flyBackSpeed;
+      this.frameTimer++;
+      if (this.frameTimer >= this.frameSpeed) {
+        this.frameX = (this.frameX + 1) % this.frames;
+        this.frameTimer = 0;
+      }
     }
   }
   draw(ctx) {
     if (!this.isAlive) return;
     if (!this.isReloading) return;
-  
+
     ctx.save();
     ctx.translate(this.baseX, this.baseY);
     ctx.rotate(this.rotation);
     ctx.scale(this.scale, this.scale);
-    ctx.drawImage(this.image, 0, 0, 250, 250, -125, -125, 250, 250);
+    ctx.drawImage(this.image, this.frameX*250, 0, 250, 250, -125, -125, 250, 250);
     ctx.restore();
   }
 
- countBombs() {
-    return (this.fragBombs.length +
-      this.heBombs.length +
-      this.shapedBombs.length
-    )
+  countBombs() {
+    return (
+      this.fragBombs.length + this.heBombs.length + this.shapedBombs.length
+    );
   }
 
   isEmpty() {
@@ -83,8 +90,8 @@ class Drone {
     );
   }
 
-  reloading(){
-    if (this.isEmpty()&& this.isAlive) {
+  reloading() {
+    if (this.isEmpty() && this.isAlive) {
       this.isReloading = true;
       this.reloadStartTime = Date.now();
       setTimeout(() => {
@@ -94,9 +101,12 @@ class Drone {
         this.fragBombs = [...this.StartFragBombs];
         this.heBombs = [...this.StartHEBombs];
         this.shapedBombs = [...this.StartShapedBombs];
-
+        this.baseX = 0;
+        this.baseY = 0;
+        this.scale = 1.5;
+        this.rotation = 0;
       }, this.reloadingTime);
-    }    
+    }
   }
 
   addFragBomb() {
