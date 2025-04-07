@@ -17,4 +17,7 @@ drones.forEach((drone) => {
       ? drone.addHEBomb()
       : drone.addShapedBomb();
   }
+  drone.StartFragBombs = [...drone.fragBombs];
+  drone.StartHEBombs = [...drone.heBombs];
+  drone.StartShapedBombs = [...drone.shapedBombs];
 });

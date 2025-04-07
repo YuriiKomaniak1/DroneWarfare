@@ -12,14 +12,43 @@ class Drone {
     this.type = type;
     this.isAllowed = true;
     this.isActive = false;
-    this.isCharging = false;
+    this.isReloading = false;
     this.isAlive = true;
+    this.StartFragBombs = [];
+    this.StartHEBombs = [];  
+    this.StartShapedBombs = [];
     this.fragBombs = [];
     this.heBombs = [];
     this.shapedBombs = [];
     this.fragBombWeight = 0.13;
     this.heBombWeight = 0.16;
     this.shapedBombWeight = 0.14;
+    this.reloadingTime=1000*60*2;
+  }
+
+ countBombs() {
+    return (this.fragBombs.length +
+      this.heBombs.length +
+      this.shapedBombs.length
+    )
+  }
+
+  isEmpty() {
+    return (
+      this.fragBombs.length === 0 &&
+      this.heBombs.length === 0 &&
+      this.shapedBombs.length === 0
+    );
+  }
+
+  reloading(){
+    if (this.isEmpty()&& this.isAlive) {
+      this.isReloading = true;
+      setTimeout(() => {
+        this.isReloading = false;
+        this.isActive = true;
+      }, this.reloadingTime);
+    }    
   }
 
   addFragBomb() {

@@ -17,13 +17,10 @@ export class DroneIcons {
     this.dronePosition = dronePosition;
     this.drone = drone;
     this.bombHeight = 22;
+    this.bombWidth = Math.min(8, (this.width - 4) / this.drone.countBombs());
   }
 
   draw() {
-    let amount =
-      this.drone.fragBombs.length +
-      this.drone.heBombs.length +
-      this.drone.shapedBombs.length;
     this.ctx.globalAlpha = this.drone.isActive ? 1 : 0.5;
     this.ctx.fillStyle = "rgba(234, 234, 234, 0.3)";
     this.ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -38,24 +35,22 @@ export class DroneIcons {
       this.width,
       this.width
     );
+
     this.drone.fragBombs.forEach((bomb, index) => {
       this.ctx.drawImage(
         fragBombIcon,
-        this.x + 2 + Math.min(8, (this.width - 4) / amount) * index,
+        this.x + 2 + this.bombWidth * index,
         this.y + this.width + 5,
-        Math.min(8, (this.width - 4) / amount),
+        this.bombWidth,
         this.bombHeight
       );
     });
     this.drone.heBombs.forEach((bomb, index) => {
       this.ctx.drawImage(
         heBombIcon,
-        this.x +
-          2 +
-          Math.min(8, (this.width - 4) / amount) *
-            (index + this.drone.fragBombs.length),
+        this.x + 2 + this.bombWidth * (index + this.drone.fragBombs.length),
         this.y + this.width + 5,
-        Math.min(8, (this.width - 4) / amount),
+        this.bombWidth,
         this.bombHeight
       );
     });
@@ -65,10 +60,10 @@ export class DroneIcons {
         shapedBombIcon,
         this.x +
           2 +
-          Math.min(8, (this.width - 4) / amount) *
+          this.bombWidth *
             (index + this.drone.fragBombs.length + this.drone.heBombs.length),
         this.y + this.width + 5,
-        Math.min(8, (this.width - 4) / amount),
+        this.bombWidth,
         this.bombHeight
       );
     });

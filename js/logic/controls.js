@@ -60,9 +60,10 @@ export function setupControls(dropBomb) {
     // Додатково обробка клавіш 1-5 для вибору дрона
     if (e.key >= "1" && e.key <= "5") {
       const index = parseInt(e.key) - 1;
+      if (!controlDrones[index].isReloading) {
       selectionState.selectedDroneIndex = index;
       console.log(`🚁 Вибрано дрона #${index + 1}`);
-    }
+    }}
   });
 
   window.addEventListener("keyup", (e) => {
@@ -155,107 +156,115 @@ export function drawJoystickAndButtons(ctx) {
 
   ctx.globalAlpha = 0.6;
   if (joystickVisible) {
-  // Джойстик база
-  ctx.fillStyle = "gray";
-  ctx.beginPath();
-  ctx.arc(joystick.baseX, joystick.baseY, joystick.baseRadius, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Стiк
-  ctx.fillStyle = "white";
-  ctx.beginPath();
-  ctx.arc(
-    joystick.stickX,
-    joystick.stickY,
-    joystick.stickRadius,
-    0,
-    Math.PI * 2
-  );
-  ctx.fill();
-}
-  // Кнопка Drop
-  ctx.globalAlpha = 0.8;
-  ctx.fillStyle = buttonDrop.pressed
-    ? "rgba(139,0,0,0.7)"
-    : "rgba(247, 198, 0, 0.2)";
-  ctx.beginPath();
-  ctx.arc(
-    buttonDrop.x,
-    buttonDrop.y,
-    buttonDrop.pressed ? buttonDrop.radius * 1.2 : buttonDrop.radius,
-    0,
-    Math.PI * 2
-  );
-  ctx.fill();
-  const activeBombType = selectionState.selectedBombType;
-  const icon = bombIcons[activeBombType];
-
-  if (icon.complete) {
-    // Якщо картинка вже завантажена
-    const sizeX = 25;
-    const sizeY = 50;
-
-    ctx.drawImage(
-      icon,
-      buttonDrop.x - sizeX / 2,
-      buttonDrop.y - sizeY / 2,
-      sizeX,
-      sizeY
+    // Джойстик база
+    ctx.fillStyle = "gray";
+    ctx.beginPath();
+    ctx.arc(
+      joystick.baseX,
+      joystick.baseY,
+      joystick.baseRadius,
+      0,
+      Math.PI * 2
     );
-  } else {
-    // Якщо ще не завантажена — резервне відображення тексту
+    ctx.fill();
+
+    // Стiк
     ctx.fillStyle = "white";
-    ctx.font = "24px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("💣", buttonDrop.x, buttonDrop.y);
+    ctx.beginPath();
+    ctx.arc(
+      joystick.stickX,
+      joystick.stickY,
+      joystick.stickRadius,
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
   }
-// Кнопка Switch
-ctx.fillStyle = buttonSwitch.pressed
-  ? "rgba(0,0,139,0.7)" // натиснута
-  : "rgba(0, 255, 0, 0.2)"; // звичайна
-ctx.beginPath();
-ctx.arc(
-  buttonSwitch.x,
-  buttonSwitch.y,
-  buttonSwitch.pressed ? buttonSwitch.radius * 1.2 : buttonSwitch.radius,
-  0,
-  Math.PI * 2
-);
-ctx.fill();
+  if (controlDrones[selectionState.selectedDroneIndex].countBombs() > 0) {
+    // Кнопка Drop
+    ctx.globalAlpha = 0.8;
+    ctx.fillStyle = buttonDrop.pressed
+      ? "rgba(139,0,0,0.7)"
+      : "rgba(247, 198, 0, 0.2)";
+    ctx.beginPath();
+    ctx.arc(
+      buttonDrop.x,
+      buttonDrop.y,
+      buttonDrop.pressed ? buttonDrop.radius * 1.2 : buttonDrop.radius,
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
+    const activeBombType = selectionState.selectedBombType;
+    const icon = bombIcons[activeBombType];
 
-// Малюємо стрілочку заміни
-if (changeArrowImage.complete) {
-  const sizeX = 20;
-  const sizeY = 40;
-  ctx.drawImage(
-    changeArrowImage,
-    buttonSwitch.x + sizeX * 0.1, // трохи правіше від центру
-    buttonSwitch.y - sizeY / 2 + 10, 
-    sizeX,
-    sizeY
-  );
-}
+    if (icon.complete) {
+      // Якщо картинка вже завантажена
+      const sizeX = 25;
+      const sizeY = 50;
 
+      ctx.drawImage(
+        icon,
+        buttonDrop.x - sizeX / 2,
+        buttonDrop.y - sizeY / 2,
+        sizeX,
+        sizeY
+      );
+    } else {
+      // Якщо ще не завантажена — резервне відображення тексту
+      ctx.fillStyle = "white";
+      ctx.font = "24px Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("💣", buttonDrop.x, buttonDrop.y);
+    }
+    // Кнопка Switch
 
-// Малюємо іконку наступної бомби
-ctx.globalAlpha = 0.55;
-const nextBombType = switchToNextAvailableBomb(true, true);
-if (nextBombType) {
-  const nextIcon = bombIcons[nextBombType];
-if (nextIcon && nextIcon.complete) {
-  const sizeX = 18;
-  const sizeY = 36;
-  ctx.drawImage(
-    nextIcon,
-    buttonSwitch.x - sizeX * 1.1, // трохи лівіше від центру
-    buttonSwitch.y - sizeY / 2 + 10, 
-    sizeX,
-    sizeY
-  );
-}
-}
-ctx.globalAlpha = 1;
+    ctx.fillStyle = buttonSwitch.pressed
+      ? "rgba(0,0,139,0.7)" // натиснута
+      : "rgba(0, 255, 0, 0.2)"; // звичайна
+    ctx.beginPath();
+    ctx.arc(
+      buttonSwitch.x,
+      buttonSwitch.y,
+      buttonSwitch.pressed ? buttonSwitch.radius * 1.2 : buttonSwitch.radius,
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
+
+    // Малюємо стрілочку заміни
+    if (changeArrowImage.complete) {
+      const sizeX = 20;
+      const sizeY = 40;
+      ctx.drawImage(
+        changeArrowImage,
+        buttonSwitch.x + sizeX * 0.1, // трохи правіше від центру
+        buttonSwitch.y - sizeY / 2 + 10,
+        sizeX,
+        sizeY
+      );
+    }
+
+    // Малюємо іконку наступної бомби
+    ctx.globalAlpha = 0.55;
+    const nextBombType = switchToNextAvailableBomb(true, true);
+    if (nextBombType) {
+      const nextIcon = bombIcons[nextBombType];
+      if (nextIcon && nextIcon.complete) {
+        const sizeX = 18;
+        const sizeY = 36;
+        ctx.drawImage(
+          nextIcon,
+          buttonSwitch.x - sizeX * 1.1, // трохи лівіше від центру
+          buttonSwitch.y - sizeY / 2 + 10,
+          sizeX,
+          sizeY
+        );
+      }
+    }
+  }
+  ctx.globalAlpha = 1;
 }
 
 // НАЛАШТУВАННЯ сенсорного керування
@@ -350,7 +359,10 @@ export function setupTouchControls(dropBomb, canvas) {
   });
 }
 
-export function switchToNextAvailableBomb(startFromNext = false, onlyFind = false) {
+export function switchToNextAvailableBomb(
+  startFromNext = false,
+  onlyFind = false
+) {
   if (!controlDrones || !controlDrones[selectionState.selectedDroneIndex]) {
     console.warn("🚨 controlDrones або активний дрон не готовий!");
     return null;
@@ -358,7 +370,7 @@ export function switchToNextAvailableBomb(startFromNext = false, onlyFind = fals
   const types = selectionState.bombTypes;
   let startIndex = selectionState.selectedBombIndex;
   const activeDrone = controlDrones[selectionState.selectedDroneIndex];
-  
+
   if (!activeDrone) {
     console.warn("🚨 Немає активного дрона!");
     return null;

@@ -2,7 +2,7 @@ import { Minimap } from "./gameElements/minimap.js";
 import { Layer } from "./layers/layer.js";
 import { Enemy } from "./enemies/enemy.js";
 import { Bomb } from "./drones/bomb.js";
-import { DroneScope, droneScopeImage } from "./drones/droneScope.js";
+import { DroneScope, droneScopeImage } from "./gameElements/droneScope.js";
 import { checkCollision } from "./logic/bombCollisions.js";
 import { switchToNextAvailableBomb,initControls, setupControls, setupDroneSelectionByClick, drawJoystickAndButtons, setupTouchControls, keys,selectionState } from "./logic/controls.js";
 import { checkEffect } from "./logic/enemyLogic.js";
@@ -130,6 +130,8 @@ function dropBomb() {
   bombs.push(bomb);
   if (bombArray.length === 0) {
     switchToNextAvailableBomb();
+    currentDrone.reloading();
+
   }
 }
 setupControls(dropBomb);
@@ -175,7 +177,7 @@ function animate(timestamp) {
     layer2.update();
     layer2.draw();
 
-    droneScope.draw();
+    droneScope.draw(currentDrone);
     minimap.draw();
     droneIcons.forEach((object) => {
       object.draw();
