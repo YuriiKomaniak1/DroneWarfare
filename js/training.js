@@ -4,21 +4,30 @@ import { Enemy } from "./enemies/enemy.js";
 import { Bomb } from "./drones/bomb.js";
 import { DroneScope, droneScopeImage } from "./gameElements/droneScope.js";
 import { checkCollision } from "./logic/bombCollisions.js";
-import { switchToNextAvailableBomb,initControls, setupControls, setupDroneSelectionByClick, drawJoystickAndButtons, setupTouchControls, keys,selectionState } from "./logic/controls.js";
+import {
+  switchToNextAvailableBomb,
+  initControls,
+  setupControls,
+  setupDroneSelectionByClick,
+  drawJoystickAndButtons,
+  setupTouchControls,
+  keys,
+  selectionState,
+} from "./logic/controls.js";
 import { checkEffect } from "./logic/enemyLogic.js";
 import { DroneIcons } from "./gameElements/droneIcons.js";
 import { drones } from "./drones/trainingDrones.js";
+import { initDrones } from "./drones/drones.js";
 export const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
 canvas.width = Math.min(window.innerWidth, 900);
 canvas.height = Math.min(window.innerHeight, 900);
 let CANVAS_WIDTH = canvas.width;
 let CANVAS_HEIGHT = canvas.height;
-initControls(canvas,drones); 
+initControls(canvas, drones);
 let gameFrame = 0;
 drones[0].isActive = true;
 let currentDrone = drones[selectionState.selectedDroneIndex];
-
 
 let gameField = new Image();
 gameField.src = "./assets/img/grounds/train1bottom.png";
@@ -43,10 +52,10 @@ const droneIcon2 = new DroneIcons(canvas, ctx, 2, drones[1]);
 const droneIcon3 = new DroneIcons(canvas, ctx, 3, drones[2]);
 const droneIcon4 = new DroneIcons(canvas, ctx, 4, drones[3]);
 const droneIcon5 = new DroneIcons(canvas, ctx, 5, drones[4]);
+
 console.log(droneIcon1);
+initDrones(canvas);
 const droneIcons = [droneIcon1, droneIcon2, droneIcon3, droneIcon4, droneIcon5];
-
-
 
 let enemies = [];
 while (enemies.length < 18) {
@@ -131,12 +140,11 @@ function dropBomb() {
   if (bombArray.length === 0) {
     switchToNextAvailableBomb();
     currentDrone.reloading();
-
   }
 }
 setupControls(dropBomb);
 setupDroneSelectionByClick(canvas, droneIcons);
-setupTouchControls(dropBomb,canvas);
+setupTouchControls(dropBomb, canvas);
 
 const FPS = 60;
 const FRAME_TIME = 1000 / FPS;
@@ -145,11 +153,15 @@ let lastTime = 0;
 function animate(timestamp) {
   const deltaTime = timestamp - lastTime;
   if (deltaTime >= FRAME_TIME) {
-    drones.forEach((drone, index) => {
-      drone.isActive = index === selectionState.selectedDroneIndex;
-      if (drone.isActive) currentDrone = drone;
-    });
+   
     lastTime = timestamp - (deltaTime % FRAME_TIME);
+
+    drones.forEach((drone) => {
+      if (drone.isReloading && drone.baseX === 0 && drone.baseY === 0) {
+        drone.baseX = canvas.width / 2;
+        drone.baseY = canvas.height / 2;
+      }
+    });
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); // Очищаємо канвас
     layer1.update();
     layer1.draw();
@@ -176,7 +188,12 @@ function animate(timestamp) {
 
     layer2.update();
     layer2.draw();
-
+    drones.forEach((drone, index) => {
+      drone.isActive = index === selectionState.selectedDroneIndex;
+      if (drone.isActive) currentDrone = drone;
+      drone.flyToreload();
+      drone.draw(ctx);
+    });
     droneScope.draw(currentDrone);
     minimap.draw();
     droneIcons.forEach((object) => {

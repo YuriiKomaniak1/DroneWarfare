@@ -1,8 +1,11 @@
 
+import { canvas } from "../training.js";
 import { basePath } from "../utils/basePath.js";
 let smallDroneImage = new Image();
 smallDroneImage.src = `${basePath}assets/img/drones/smallDroneAnimation.png`;
-
+export function initDrones(canvas) {
+  let localCanvas=canvas;
+}
 class Drone {
   constructor(image, capacity, hp, type) {
     this.image = image;
@@ -25,6 +28,44 @@ class Drone {
     this.shapedBombWeight = 0.14;
     this.reloadingTime=1000*60*2;
     this.reloadStartTime = null;
+    this.scale = 1;  // стартовий масштаб
+    this.targetScale = 0.3; // цільовий масштаб при польоті
+    this.rotation = 0;  // поточний поворот
+    this.rotationSpeed = Math.PI / 120; // швидкість повороту
+    this.shrinkRate = 0.005; // швидкість зменшення
+    this.flyBackSpeed = 1.5; // швидкість польоту назад
+    this.baseX = 0;
+    this.baseY = 0;
+  }
+  resetPosition() {
+    this.scale = 1;
+    this.rotation = 0;
+    this.baseX = localCanvas.width / 2;
+    this.baseY = localCanvas.height / 2;
+  }
+  flyToreload() {
+    if (this.isReloading) {
+      if (this.scale > this.targetScale) {
+        this.scale -= this.shrinkRate;
+        if (this.scale < this.targetScale) this.scale = this.targetScale;
+      }
+      if (this.rotation < Math.PI) {
+        this.rotation += this.rotationSpeed;
+        if (this.rotation > Math.PI) this.rotation = Math.PI;
+      }
+      this.baseY += this.flyBackSpeed;
+    }
+  }
+  draw(ctx) {
+    if (!this.isAlive) return;
+    if (!this.isReloading) return;
+  
+    ctx.save();
+    ctx.translate(this.baseX, this.baseY);
+    ctx.rotate(this.rotation);
+    ctx.scale(this.scale, this.scale);
+    ctx.drawImage(this.image, 0, 0, 250, 250, -125, -125, 250, 250);
+    ctx.restore();
   }
 
  countBombs() {
