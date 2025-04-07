@@ -5,12 +5,12 @@ export function checkCollision(bomb, enemy) {
   );
   let hitStatus = false;
   if (bomb.type === "frag") {
-    if (distance < 30) {
+    if (distance < 20) {
       hitStatus = true;
     } else if (distance < 40 && !enemy.crawl) {
-      if (Math.random() > 0.2) hitStatus = true;
+      if (Math.random() > 0.1) hitStatus = true;
     } else if (distance < 50 && !enemy.crawl) {
-      if (Math.random() > 0.3) hitStatus = true;
+      if (Math.random() > 0.2) hitStatus = true;
     } else if (distance < 90 && !enemy.crawl) {
       if (Math.random() > 0.5) hitStatus = true;
     } else if (distance < 140 && !enemy.crawl) {

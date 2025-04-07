@@ -8,7 +8,6 @@ import { switchToNextAvailableBomb,initControls, setupControls, setupDroneSelect
 import { checkEffect } from "./logic/enemyLogic.js";
 import { DroneIcons } from "./gameElements/droneIcons.js";
 import { drones } from "./drones/trainingDrones.js";
-
 export const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
 canvas.width = Math.min(window.innerWidth, 900);
@@ -19,6 +18,7 @@ initControls(canvas,drones);
 let gameFrame = 0;
 drones[0].isActive = true;
 let currentDrone = drones[selectionState.selectedDroneIndex];
+
 
 let gameField = new Image();
 gameField.src = "./assets/img/grounds/train1bottom.png";
