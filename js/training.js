@@ -18,6 +18,12 @@ import { checkEffect } from "./logic/enemyLogic.js";
 import { DroneIcons } from "./gameElements/droneIcons.js";
 import { drones } from "./drones/trainingDrones.js";
 import { initDrones } from "./drones/drones.js";
+let obstacles = [];
+async function loadObstacles() {
+  const response = await fetch("js/levels/training/obstacles.json");
+  obstacles = await response.json();
+}
+await loadObstacles();
 export const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
 canvas.width = Math.min(window.innerWidth, 900);
@@ -44,8 +50,8 @@ imageExplosion.src = "./assets/img/bombs/smallExplosion.png";
 let enemyRifle = new Image();
 enemyRifle.src = "./assets/img/enemies/spritesheetSoldierAk.png";
 
-const layer1 = new Layer(gameField, canvas, 1400, 1400, keys, ctx);
-const layer2 = new Layer(trees, canvas, 1400, 1400, keys, ctx);
+const layer1 = new Layer(gameField, canvas, 1800, 2600, keys, ctx);
+const layer2 = new Layer(trees, canvas, 1800, 2600, keys, ctx);
 const droneScope = new DroneScope(droneScopeImage, canvas, ctx);
 const droneIcon1 = new DroneIcons(canvas, ctx, 1, drones[0]);
 const droneIcon2 = new DroneIcons(canvas, ctx, 2, drones[1]);
@@ -58,22 +64,23 @@ initDrones(canvas);
 const droneIcons = [droneIcon1, droneIcon2, droneIcon3, droneIcon4, droneIcon5];
 
 let enemies = [];
-while (enemies.length < 18) {
+while (enemies.length < 28) {
   const enemy = new Enemy(
     enemyRifle,
-    Math.random() * 1350,
-    Math.random() * 400 - 200,
+    Math.random() * 1750,
+    Math.random() * 600 - 200,
     64,
     64,
     8,
     layer1,
-    ctx
+    ctx,
+    obstacles
   );
   enemies.push(enemy);
 }
 const minimap = new Minimap(
-  1400,
-  1400,
+  1800,
+  2600,
   canvas.width,
   canvas.height,
   droneScope,
@@ -166,8 +173,10 @@ function animate(timestamp) {
     layer1.update();
     layer1.draw();
 
-    enemies.forEach((object) => {
+    enemies.forEach((object,index) => {
+      
       object.update(enemies);
+      object.checkObstaclesCollision(index);
       object.draw();
     });
 
@@ -188,6 +197,10 @@ function animate(timestamp) {
 
     layer2.update();
     layer2.draw();
+    obstacles.forEach((object) => {
+    // ctx.fillStyle = "rgba(234, 234, 234, 0.8)";
+    // ctx.fillRect(object.x+layer1.x, object.y+layer1.y, object.width, object.height);
+    });
     drones.forEach((drone, index) => {
       drone.isActive = index === selectionState.selectedDroneIndex;
       if (drone.isActive) currentDrone = drone;

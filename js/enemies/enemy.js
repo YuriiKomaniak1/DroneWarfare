@@ -1,9 +1,19 @@
 export class Enemy {
-  constructor(image, x, y, spriteWidth, spriteHeight, frames, layer, ctx) {
+  constructor(
+    image,
+    x,
+    y,
+    spriteWidth,
+    spriteHeight,
+    frames,
+    layer,
+    ctx,
+    obstacle
+  ) {
     this.image = image;
     this.baseX = x;
     this.baseY = y;
-    this.speed = Math.random() * 0.02 + 0.1;
+    this.speed = Math.random() * 0.04 + 0.32;
     this.width = spriteWidth;
     this.height = spriteHeight;
     this.frameX = Math.floor(Math.random() * frames);
@@ -21,6 +31,8 @@ export class Enemy {
     this.layer = layer;
     this.ctx = ctx;
     this.deathAngle = Math.random() * 2 * Math.PI; // Випадковий кут
+    this.obstacles = obstacle;
+    this.rotationAngle = 0;
   }
 
   update(allEnemies) {
@@ -56,41 +68,73 @@ export class Enemy {
     }
 
     // Перевірка на зіткнення з іншими ворогами
-  for (let other of allEnemies) {
-    if (this.dead||other === this || other.dead) continue;
+    for (let other of allEnemies) {
+      if (this.dead || other === this || other.dead) continue;
 
-    const dx = this.baseX - other.baseX;
-    const dy = this.baseY - other.baseY;
-    const distance = Math.hypot(dx, dy);
-    const minDist = this.width * 0.8;
+      const dx = this.baseX - other.baseX;
+      const dy = this.baseY - other.baseY;
+      const distance = Math.hypot(dx, dy);
+      const minDist = this.width * 0.8;
 
-    if (distance < minDist) {
-      // Відштовхуємо об'єкти
-      const angle = Math.atan2(dy, dx);
-      const push = (minDist - distance) / 2;
+      if (distance < minDist) {
+        // Відштовхуємо об'єкти
+        const angle = Math.atan2(dy, dx);
+        const push = (minDist - distance) / 2;
 
-      this.baseX += Math.cos(angle) * push;
-      this.baseY += Math.sin(angle) * push;
+        this.baseX += Math.cos(angle) * push;
+        this.baseY += Math.sin(angle) * push;
+      }
     }
-  }
 
     this.x = this.baseX + this.layer.x;
     this.y = this.baseY + this.layer.y;
   }
+  checkObstaclesCollision(index) {
+    let pushX = 0;
+    let pushY = 0;
+    const warningZone = 10; // Зона попередження навколо перешкоди
+
+    for (let obstacle of this.obstacles) {
+      const obstacleX = obstacle.x;
+      const obstacleY = obstacle.y - warningZone;
+      const obstacleWidth = obstacle.width;
+      const obstacleHeight = obstacle.height;
+
+      if (
+        this.baseX + this.width - 20 > obstacleX &&
+        this.baseX + 20 < obstacleX + obstacleWidth &&
+        this.baseY - 20 + this.height > obstacleY &&
+        this.baseY + 20 < obstacleY + obstacleHeight
+      ) {
+        const  direction = index % 2 === 0 ? 1 : -1;
+        this.baseY -= this.speed;
+        this.baseX += this.speed * direction;
+        this.rotationAngle += direction * 0.5
+      } else {
+       
+        this.rotationAngle *= 0.9;
+      }
+    }
+  }
 
   draw() {
     if (!this.dead && !this.crawl) {
+      this.ctx.save();
+      this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
+      this.ctx.rotate(this.rotationAngle);
       this.ctx.drawImage(
         this.image,
         this.frameX * this.width,
         this.frameY * this.height,
         this.width,
         this.height,
-        this.x,
-        this.y,
+        -this.width / 2,
+        -this.height / 2,
         this.width,
         this.height
       );
+      this.ctx.restore();
+  
     } else if (!this.dead && this.crawl) {
       this.ctx.drawImage(
         this.image,
@@ -103,14 +147,11 @@ export class Enemy {
         this.width,
         this.height
       );
+  
     } else if (this.dead) {
       this.ctx.save();
-
-      // Переміщаємо центр для обертання (відносно центру ворога)
       this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
-      this.ctx.rotate(this.deathAngle); // Обертання на випадковий кут
-
-      // Малюємо анімацію смерті з урахуванням обертання
+      this.ctx.rotate(this.deathAngle);
       this.ctx.drawImage(
         this.image,
         this.deathFrameIndex * this.width,
@@ -122,8 +163,6 @@ export class Enemy {
         this.width,
         this.height
       );
-
       this.ctx.restore();
     }
-  }
-}
+  }}
