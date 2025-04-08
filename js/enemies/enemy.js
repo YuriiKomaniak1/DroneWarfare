@@ -52,6 +52,9 @@ export class Enemy {
     // --- Логіка руху ---
     if (!this.dead) {
       if (this.crawl) {
+        if (Math.random() < 0.001) {
+          this.crawl = false;
+        }
         this.baseY += this.speed / 2;
         if (Math.round(this.baseX) % 1 === 0) {
           this.baseX += (this.speed * (Math.random() * 2 - 1)) / 2;

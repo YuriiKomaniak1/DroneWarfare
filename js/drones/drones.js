@@ -6,12 +6,11 @@ export function initDrones(canvas) {
   let localCanvas = canvas;
 }
 class Drone {
-  constructor(image, capacity, hp, type) {
+  constructor(image, capacity, hp, visibility) {
     this.image = image;
     this.capacity = capacity; // Загальна місткість
     this.remainingCapacity = capacity; // Залишкова місткість
     this.hp = hp;
-    this.type = type;
     this.isAllowed = true;
     this.isActive = false;
     this.isReloading = false;
@@ -39,6 +38,8 @@ class Drone {
     this.frameX = 0; // Поточний кадр
     this.frameTimer = 0; // Лічильник часу між кадрами
     this.frameSpeed = 5; // Затримка між кадрами
+    this.visibility = visibility;
+    this.initialVisibility = visibility;
   }
   resetPosition() {
     this.scale = 1;
@@ -119,6 +120,18 @@ class Drone {
     }
   }
 
+  cahngeVisibility() {
+    this.visibility = Math.max(
+      this.initialVisibility,
+      Math.min(this.visibility * 2, 100)
+    );
+    setTimeout(() => {
+      this.visibility = Math.max(
+        this.initialVisibility,
+        Math.min(this.visibility / 2, 100)
+      );
+    }, 20000);
+  }
   addFragBomb() {
     if (this.remainingCapacity >= this.fragBombWeight) {
       this.fragBombs.push("bomb");
@@ -140,7 +153,7 @@ class Drone {
 }
 
 export function createSmallDrone() {
-  return new Drone(smallDroneImage, 0.9, 1.8, "smallDrone");
+  return new Drone(smallDroneImage, 0.9, 1.8, 4);
 }
 // export function createMediumDrone() {
 //   return new Drone(mediumDroneImage, 2, 4, "mediumDrone");

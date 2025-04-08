@@ -171,16 +171,14 @@ function animate(timestamp) {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); // Очищаємо канвас
     layer1.update();
     layer1.draw();
-
-    enemies.forEach((object, index) => {
-      object.update(enemies);
-      object.checkObstaclesCollision(index);
-      object.draw();
-    });
-
+    console.log(currentDrone.visibility);
     bombs.forEach((bomb) => {
+      if (bomb.initialScale / bomb.scale >= 13.5) bomb.draw();
       bomb.drop();
+
       if (bomb.exploded && bomb.explosionFrame < 1) {
+        currentDrone.cahngeVisibility();
+
         enemies.forEach((enemy) => {
           if (checkCollision(bomb, enemy) && !enemy.dead) {
             enemy.dead = true;
@@ -192,13 +190,21 @@ function animate(timestamp) {
         });
       }
     });
+    enemies.forEach((object, index) => {
+      object.update(enemies);
+      object.checkObstaclesCollision(index);
+      object.draw();
+    });
 
     layer2.update();
     layer2.draw();
     // obstacles.forEach((object) => {
-    // // ctx.fillStyle = "rgba(234, 234, 234, 0.8)";
-    // // ctx.fillRect(object.x+layer1.x, object.y+layer1.y, object.width, object.height);
+    // ctx.fillStyle = "rgba(234, 234, 234, 0.8)";
+    // ctx.fillRect(object.x+layer1.x, object.y+layer1.y, object.width, object.height);
     // });
+    bombs.forEach((bomb) => {
+      if (bomb.initialScale / bomb.scale < 13.5) bomb.draw();
+    });
     drones.forEach((drone, index) => {
       drone.isActive = index === selectionState.selectedDroneIndex;
       if (drone.isActive) currentDrone = drone;

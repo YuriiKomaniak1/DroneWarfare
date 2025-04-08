@@ -57,7 +57,10 @@ export class Bomb {
       if (this.scale <= this.initialScale * 0.05) {
         this.exploded = true;
       }
-
+    }
+  }
+  draw() {
+    if (!this.exploded) {
       this.ctx.drawImage(
         this.image,
         this.baseX - (150 * this.scale) / this.initialScale,
