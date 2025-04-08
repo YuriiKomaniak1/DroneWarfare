@@ -61,10 +61,11 @@ export function setupControls(dropBomb) {
     if (e.key >= "1" && e.key <= "5") {
       const index = parseInt(e.key) - 1;
       if (!controlDrones[index].isReloading) {
-      selectionState.selectedDroneIndex = index;
-      switchToNextAvailableBomb(false);
-      console.log(`🚁 Вибрано дрона #${index + 1}`);
-    }}
+        selectionState.selectedDroneIndex = index;
+        switchToNextAvailableBomb(false);
+        console.log(`🚁 Вибрано дрона #${index + 1}`);
+      }
+    }
   });
 
   window.addEventListener("keyup", (e) => {

@@ -73,7 +73,7 @@ export class DroneIcons {
       const elapsed = now - this.drone.reloadStartTime;
       const progress = Math.min(elapsed / this.drone.reloadingTime, 1);
       const barWidth = (this.width - 4) * progress;
-      // Малюємо фон полоски (темний) 
+      // Малюємо фон полоски (темний)
       this.ctx.fillStyle = "rgba(100, 100, 100, 1)";
       this.ctx.fillRect(
         this.x + 2,

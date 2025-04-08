@@ -160,7 +160,6 @@ let lastTime = 0;
 function animate(timestamp) {
   const deltaTime = timestamp - lastTime;
   if (deltaTime >= FRAME_TIME) {
-   
     lastTime = timestamp - (deltaTime % FRAME_TIME);
 
     drones.forEach((drone) => {
@@ -173,8 +172,7 @@ function animate(timestamp) {
     layer1.update();
     layer1.draw();
 
-    enemies.forEach((object,index) => {
-      
+    enemies.forEach((object, index) => {
       object.update(enemies);
       object.checkObstaclesCollision(index);
       object.draw();

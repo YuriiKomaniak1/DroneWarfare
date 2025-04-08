@@ -42,13 +42,13 @@ export class Enemy {
   update(allEnemies) {
     if (!this.oldPositions) this.oldPositions = []; // Якщо ще немає масиву
     const memoryFrames = 10; // Скільки кадрів пам'ятати для розрахунку кута
-  
+
     // --- Збереження поточної позиції ---
     this.oldPositions.push({ x: this.baseX, y: this.baseY });
     if (this.oldPositions.length > memoryFrames) {
       this.oldPositions.shift(); // Видалити найстарішу позицію
     }
-  
+
     // --- Логіка руху ---
     if (!this.dead) {
       if (this.crawl) {
@@ -62,7 +62,7 @@ export class Enemy {
           this.baseX += this.speed * (Math.random() * 2 - 1);
         }
       }
-  
+
       // --- Анімація ---
       this.frameTimer++;
       if (this.frameTimer >= this.frameSpeed) {
@@ -84,16 +84,16 @@ export class Enemy {
         this.deathFrameIndex = this.deathFrames;
       }
     }
-  
+
     // --- Взаємодія з іншими ворогами ---
     for (let other of allEnemies) {
       if (this.dead || other === this || other.dead) continue;
-  
+
       const dx = this.baseX - other.baseX;
       const dy = this.baseY - other.baseY;
       const distance = Math.hypot(dx, dy);
       const minDist = this.width * 0.5;
-  
+
       if (distance < minDist) {
         const angle = Math.atan2(dy, dx);
         const push = (minDist - distance) / 2;
@@ -101,19 +101,19 @@ export class Enemy {
         this.baseY += Math.sin(angle) * push;
       }
     }
-  
+
     // --- Розрахунок кута повороту ---
     if (this.oldPositions.length > 0) {
       const oldest = this.oldPositions[0];
       const deltaX = this.baseX - oldest.x;
       const deltaY = this.baseY - oldest.y;
-  
+
       if (Math.abs(deltaX) > 0.01 || Math.abs(deltaY) > 0.01) {
         const targetAngle = Math.atan2(deltaY, deltaX) - Math.PI / 2;
         this.rotationAngle += (targetAngle - this.rotationAngle) * 0.05; // Плавне наближення
       }
     }
-  
+
     // --- Оновлення візуальної позиції ---
     this.x = this.baseX + this.layer.x;
     this.y = this.baseY + this.layer.y;

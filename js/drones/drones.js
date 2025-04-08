@@ -72,7 +72,17 @@ class Drone {
     ctx.translate(this.baseX, this.baseY);
     ctx.rotate(this.rotation);
     ctx.scale(this.scale, this.scale);
-    ctx.drawImage(this.image, this.frameX*250, 0, 250, 250, -125, -125, 250, 250);
+    ctx.drawImage(
+      this.image,
+      this.frameX * 250,
+      0,
+      250,
+      250,
+      -125,
+      -125,
+      250,
+      250
+    );
     ctx.restore();
   }
 

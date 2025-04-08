@@ -11,7 +11,7 @@ export class Bomb {
     frames,
     layer,
     ctx,
-    type,
+    type
   ) {
     this.image = image;
     this.imageExplosion = imageExplosion;
@@ -23,7 +23,7 @@ export class Bomb {
     this.height = spriteHeight;
     this.scale = scale;
     this.initialScale = scale;
-    this.spread = 1.8    ;
+    this.spread = 1.8;
     this.exploded = false;
     this.explosionScale = explosionScale;
     this.friction = 0.997;
@@ -79,8 +79,8 @@ export class Bomb {
         0,
         64,
         64,
-        this.baseX - this.explosionScale/2,
-        this.baseY - this.explosionScale/2,
+        this.baseX - this.explosionScale / 2,
+        this.baseY - this.explosionScale / 2,
         this.explosionScale,
         this.explosionScale
       );

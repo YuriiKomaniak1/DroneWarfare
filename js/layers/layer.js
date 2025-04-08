@@ -1,7 +1,7 @@
 export class Layer {
-  constructor(image,canvas,mapWidth,mapheight,keys,ctx) {
-    this.canvas=canvas;
-    this.x = canvas.width / 2 - mapWidth/2;
+  constructor(image, canvas, mapWidth, mapheight, keys, ctx) {
+    this.canvas = canvas;
+    this.x = canvas.width / 2 - mapWidth / 2;
     this.y = canvas.height - mapheight;
     this.width = mapWidth;
     this.height = mapheight;
@@ -11,14 +11,17 @@ export class Layer {
     this.acceleration = 0.01;
     this.deceleration = 0.007;
     this.maxSpeed = 1.3;
-    this.keys=keys;
-    this.ctx=ctx;
+    this.keys = keys;
+    this.ctx = ctx;
   }
 
   update() {
     if (this.keys.up && this.y < this.canvas.height / 2) {
       this.speedY += this.acceleration;
-    } else if (this.keys.down && this.y > this.canvas.height / 2 - this.height) {
+    } else if (
+      this.keys.down &&
+      this.y > this.canvas.height / 2 - this.height
+    ) {
       this.speedY -= this.acceleration;
     } else {
       this.speedY *= 1 - this.deceleration;
@@ -64,7 +67,6 @@ export class Layer {
     this.x += this.speedX;
     this.y += this.speedY;
   }
-
 
   draw() {
     this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
