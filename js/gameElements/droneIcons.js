@@ -18,6 +18,7 @@ export class DroneIcons {
     this.drone = drone;
     this.bombHeight = 22;
     this.bombWidth = Math.min(8, (this.width - 4) / this.drone.countBombs());
+    this.statusBarWidth = 10;
   }
 
   draw() {
@@ -91,5 +92,38 @@ export class DroneIcons {
       );
     }
     this.ctx.globalAlpha = 1;
+    if (this.drone.isActive && !this.drone.isReloading) {
+      const hpBarHeight = (this.drone.hp / this.drone.initialHP) * this.height;
+      const visibilityBarHeight = (this.drone.visibility / 100) * this.height;
+      this.ctx.fillStyle = "rgba(100, 100, 100, 0.5)";
+      this.ctx.fillRect(
+        this.x - this.statusBarWidth,
+        this.y + this.height,
+        this.statusBarWidth,
+        -this.height
+      );
+      this.ctx.fillStyle = "rgba(93, 252, 0, 0.5)";
+      this.ctx.fillRect(
+        this.x - this.statusBarWidth,
+        this.y + this.height,
+        this.statusBarWidth,
+        -hpBarHeight
+      );
+
+      this.ctx.fillStyle = "rgba(100, 100, 100, 0.5)";
+      this.ctx.fillRect(
+        this.x - this.statusBarWidth * 2,
+        this.y + this.height,
+        this.statusBarWidth,
+        -this.height
+      );
+      this.ctx.fillStyle = "rgba(252, 4, 4, 0.5)";
+      this.ctx.fillRect(
+        this.x - this.statusBarWidth * 2,
+        this.y + this.height,
+        this.statusBarWidth,
+        -visibilityBarHeight
+      );
+    }
   }
 }

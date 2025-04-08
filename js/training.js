@@ -14,7 +14,11 @@ import {
   keys,
   selectionState,
 } from "./logic/controls.js";
-import { checkEffect } from "./logic/enemyLogic.js";
+import {
+  checkEffect,
+  checkVisibility,
+  checkDistance,
+} from "./logic/enemyLogic.js";
 import { DroneIcons } from "./gameElements/droneIcons.js";
 import { drones } from "./drones/trainingDrones.js";
 import { initDrones } from "./drones/drones.js";
@@ -68,7 +72,7 @@ while (enemies.length < 36) {
   const enemy = new Enemy(
     enemyRifle,
     Math.random() * 1750,
-    Math.random() * 600 - 200,
+    Math.random() * 1600 - 200,
     64,
     64,
     8,
@@ -171,14 +175,12 @@ function animate(timestamp) {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); // Очищаємо канвас
     layer1.update();
     layer1.draw();
-    console.log(currentDrone.visibility);
     bombs.forEach((bomb) => {
       if (bomb.initialScale / bomb.scale >= 13.5) bomb.draw();
       bomb.drop();
 
       if (bomb.exploded && bomb.explosionFrame < 1) {
         currentDrone.cahngeVisibility();
-
         enemies.forEach((enemy) => {
           if (checkCollision(bomb, enemy) && !enemy.dead) {
             enemy.dead = true;
@@ -190,10 +192,17 @@ function animate(timestamp) {
         });
       }
     });
-    enemies.forEach((object, index) => {
-      object.update(enemies);
-      object.checkObstaclesCollision(index);
-      object.draw();
+    enemies.forEach((enemy, index) => {
+      if (checkVisibility(currentDrone, enemy, canvas)) {
+        enemy.isFiring = true;
+      }
+      if (enemy.isFiring && checkDistance(enemy, canvas) > enemy.fireDistance) {
+        enemy.isFiring = false;
+      }
+      enemy.update(enemies);
+      enemy.checkObstaclesCollision(index);
+      enemy.draw();
+      enemy.fire(currentDrone, layer1);
     });
 
     layer2.update();
@@ -207,7 +216,15 @@ function animate(timestamp) {
     });
     drones.forEach((drone, index) => {
       drone.isActive = index === selectionState.selectedDroneIndex;
-      if (drone.isActive) currentDrone = drone;
+      if (drone.isActive) {
+        if (currentDrone && typeof currentDrone.visibility !== "undefined") {
+          const visibility = currentDrone.visibility;
+          currentDrone = drone;
+          currentDrone.visibility = visibility;
+        } else {
+          currentDrone = drone;
+        }
+      }
       drone.flyToreload();
       drone.draw(ctx);
     });

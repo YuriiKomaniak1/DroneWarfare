@@ -23,8 +23,13 @@ export class Enemy {
     this.frameTimer = 0;
     this.dead = false;
     this.crawl = false;
+    this.isFiring = false;
     this.deathFrames = 4;
     this.crawlFrames = 3;
+    this.fireFrames = 4;
+    this.fireDistance = 260;
+    this.fireRate = 5;
+    this.fireTimer = 0;
     this.deathFrameIndex = 0;
     this.deathAnimationSpeed = 10;
     this.deathTimer = 0;
@@ -59,6 +64,7 @@ export class Enemy {
         if (Math.round(this.baseX) % 1 === 0) {
           this.baseX += (this.speed * (Math.random() * 2 - 1)) / 2;
         }
+      } else if (this.isFiring) {
       } else {
         this.baseY += this.speed;
         if (Math.round(this.baseX) % 1 === 0) {
@@ -71,6 +77,8 @@ export class Enemy {
       if (this.frameTimer >= this.frameSpeed) {
         if (this.crawl) {
           this.frameX = (this.frameX + 1) % this.crawlFrames;
+        } else if (this.isFiring) {
+          this.frameX = (this.frameX + 1) % this.fireFrames;
         } else {
           this.frameX = (this.frameX + 1) % this.frames;
         }
@@ -147,7 +155,7 @@ export class Enemy {
   }
 
   draw() {
-    if (!this.dead && !this.crawl) {
+    if (!this.dead && !this.crawl && !this.isFiring) {
       this.ctx.save();
       this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
       this.ctx.rotate(this.rotationAngle);
@@ -163,7 +171,7 @@ export class Enemy {
         this.height
       );
       this.ctx.restore();
-    } else if (!this.dead && this.crawl) {
+    } else if (!this.dead && this.crawl && !this.isFiring) {
       this.ctx.save();
       this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
       this.ctx.rotate(this.rotationAngle);
@@ -171,6 +179,22 @@ export class Enemy {
         this.image,
         this.frameX * this.width,
         0 * this.height,
+        this.width,
+        this.height,
+        -this.width / 2,
+        -this.height / 2,
+        this.width,
+        this.height
+      );
+      this.ctx.restore();
+    } else if (!this.dead && this.isFiring) {
+      this.ctx.save();
+      this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
+      this.ctx.rotate(this.rotationAngle);
+      this.ctx.drawImage(
+        this.image,
+        this.frameX * this.width,
+        2 * this.height,
         this.width,
         this.height,
         -this.width / 2,
@@ -195,6 +219,21 @@ export class Enemy {
         this.height
       );
       this.ctx.restore();
+    }
+  }
+  fire(drone, layer) {
+    if (this.isFiring) this.fireTimer++;
+
+    console.log((0.008 * (layer.speedX + layer.speedY)) / (2 * layer.maxSpeed));
+    if (this.fireTimer >= 60 / this.fireRate) {
+      if (
+        Math.random() * 1000 <
+          5 - (4 * (layer.speedX + layer.speedY)) / (2 * layer.maxSpeed) &&
+        drone.hp >= 1
+      ) {
+        --drone.hp;
+      }
+      this.fireTimer = 0;
     }
   }
 }

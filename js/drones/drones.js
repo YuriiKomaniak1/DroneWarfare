@@ -11,6 +11,7 @@ class Drone {
     this.capacity = capacity; // Загальна місткість
     this.remainingCapacity = capacity; // Залишкова місткість
     this.hp = hp;
+    this.initialHP = hp;
     this.isAllowed = true;
     this.isActive = false;
     this.isReloading = false;
@@ -153,7 +154,7 @@ class Drone {
 }
 
 export function createSmallDrone() {
-  return new Drone(smallDroneImage, 0.9, 1.8, 4);
+  return new Drone(smallDroneImage, 0.9, 2, 4);
 }
 // export function createMediumDrone() {
 //   return new Drone(mediumDroneImage, 2, 4, "mediumDrone");
