@@ -64,7 +64,7 @@ initDrones(canvas);
 const droneIcons = [droneIcon1, droneIcon2, droneIcon3, droneIcon4, droneIcon5];
 
 let enemies = [];
-while (enemies.length < 28) {
+while (enemies.length < 36) {
   const enemy = new Enemy(
     enemyRifle,
     Math.random() * 1750,
@@ -197,10 +197,10 @@ function animate(timestamp) {
 
     layer2.update();
     layer2.draw();
-    obstacles.forEach((object) => {
-    // ctx.fillStyle = "rgba(234, 234, 234, 0.8)";
-    // ctx.fillRect(object.x+layer1.x, object.y+layer1.y, object.width, object.height);
-    });
+    // obstacles.forEach((object) => {
+    // // ctx.fillStyle = "rgba(234, 234, 234, 0.8)";
+    // // ctx.fillRect(object.x+layer1.x, object.y+layer1.y, object.width, object.height);
+    // });
     drones.forEach((drone, index) => {
       drone.isActive = index === selectionState.selectedDroneIndex;
       if (drone.isActive) currentDrone = drone;
