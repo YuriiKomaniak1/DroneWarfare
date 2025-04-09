@@ -59,7 +59,7 @@ bigDrone.src = "./assets/img/drones/bigDroneAnimation.png";
 let drones = [];
 
 // Функція для створення дрона
-function addDrone(startX, startY, speed, image, scale) {
+function addDrone(startX, startY, speed, image, scale, frameX, frameY) {
   drones.push({
     x: startX,
     y: startY,
@@ -67,16 +67,18 @@ function addDrone(startX, startY, speed, image, scale) {
     frameX: 0,
     img: image,
     scale: scale,
+    frameWidth: frameX,
+    frameHeight: frameY,
   });
 }
 
 // Додаємо дронів з різними параметрами
-addDrone(backWidth, 100, 1, smallDrone, 1);
-addDrone(backWidth + 700, 200, 0.9, smallDrone, 1.1);
-addDrone(backWidth + 1800, 700, 1.1, smallDrone, 0.9);
-addDrone(backWidth + 1500, 500, 0.7, mediumDrone, 1.4);
-addDrone(backWidth + 900, 300, 0.65, mediumDrone, 1.5);
-addDrone(backWidth + 500, 400, 0.45, bigDrone, 3);
+addDrone(backWidth, 100, 1, smallDrone, 1, 2, 352, 301);
+addDrone(backWidth + 700, 200, 0.9, smallDrone, 1.3, 352, 301);
+addDrone(backWidth + 1800, 700, 1.1, smallDrone, 1.1, 352, 301);
+addDrone(backWidth + 1500, 500, 0.7, mediumDrone, 1.4, 250, 250);
+addDrone(backWidth + 900, 300, 0.65, mediumDrone, 1.5, 250, 250);
+addDrone(backWidth + 500, 400, 0.45, bigDrone, 3, 250, 250);
 
 function updateDrones() {
   drones.forEach((drone) => {
@@ -89,17 +91,17 @@ function updateDrones() {
 
     // Оновлення кадру анімації
     let position = Math.floor(gameFrame / 2.5) % 4;
-    drone.frameX = position * 250;
+    drone.frameX = position * drone.frameWidth;
 
     ctx.save();
     ctx.translate(drone.x + 125, drone.y + 125); // Центр дрона
-    ctx.rotate(Math.PI / 2);
+    ctx.rotate(-Math.PI / 2);
     ctx.drawImage(
       drone.img,
       drone.frameX,
       0,
-      250,
-      250,
+      drone.frameWidth,
+      drone.frameHeight,
       -125,
       -125,
       125 * drone.scale,

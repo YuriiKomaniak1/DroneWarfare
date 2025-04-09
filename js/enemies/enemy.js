@@ -24,9 +24,10 @@ export class Enemy {
     this.dead = false;
     this.crawl = false;
     this.isFiring = false;
-    this.deathFrames = 4;
-    this.crawlFrames = 3;
-    this.fireFrames = 4;
+    this.deathFrames = 3;
+    this.deadframe = Math.ceil(Math.random() * 4 + 2);
+    this.crawlFrames = 5;
+    this.fireFrames = 6;
     this.fireDistance = 260;
     this.fireRate = 5;
     this.fireTimer = 0;
@@ -92,7 +93,7 @@ export class Enemy {
         this.deathTimer = 0;
       }
       if (this.deathFrameIndex >= this.deathFrames) {
-        this.deathFrameIndex = this.deathFrames;
+        this.deathFrameIndex = this.deadframe;
       }
     }
 
@@ -187,7 +188,7 @@ export class Enemy {
         this.height
       );
       this.ctx.restore();
-    } else if (!this.dead && this.isFiring) {
+    } else if (!this.dead && this.isFiring && !this.crawl) {
       this.ctx.save();
       this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
       this.ctx.rotate(this.rotationAngle);
@@ -222,9 +223,8 @@ export class Enemy {
     }
   }
   fire(drone, layer) {
+    if (this.dead || !drone.isAlive || drone.isReloading) this.isFiring = false;
     if (this.isFiring) this.fireTimer++;
-
-    console.log((0.008 * (layer.speedX + layer.speedY)) / (2 * layer.maxSpeed));
     if (this.fireTimer >= 60 / this.fireRate) {
       if (
         Math.random() * 1000 <

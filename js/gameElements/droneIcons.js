@@ -25,18 +25,20 @@ export class DroneIcons {
     this.ctx.globalAlpha = this.drone.isActive ? 1 : 0.5;
     this.ctx.fillStyle = "rgba(234, 234, 234, 0.3)";
     this.ctx.fillRect(this.x, this.y, this.width, this.height);
-    this.ctx.drawImage(
-      this.drone.image,
-      0,
-      0,
-      250,
-      250,
-      this.x,
-      this.y,
-      this.width,
-      this.width
-    );
-    if (!this.drone.isReloading) {
+    if (this.drone.isAlive) {
+      this.ctx.drawImage(
+        this.drone.image,
+        this.drone.frameWidth,
+        0,
+        this.drone.frameWidth,
+        this.drone.frameHeight,
+        this.x,
+        this.y,
+        this.width,
+        this.width
+      );
+    }
+    if (!this.drone.isReloading && this.drone.isAlive) {
       this.drone.fragBombs.forEach((bomb, index) => {
         this.ctx.drawImage(
           fragBombIcon,

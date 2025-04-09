@@ -13,7 +13,7 @@ export class DroneScope {
   update() {}
 
   draw(currentDrone) {
-    if (currentDrone.countBombs() > 0) {
+    if (currentDrone.countBombs() > 0 && currentDrone.isActive) {
       this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
   }

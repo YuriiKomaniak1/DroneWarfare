@@ -1,17 +1,20 @@
-import { canvas } from "../training.js";
+let localLayer = null;
 import { basePath } from "../utils/basePath.js";
 let smallDroneImage = new Image();
 smallDroneImage.src = `${basePath}assets/img/drones/smallDroneAnimation.png`;
-export function initDrones(canvas) {
-  let localCanvas = canvas;
+export function initDrones(layer) {
+  localLayer = layer;
 }
 class Drone {
-  constructor(image, capacity, hp, visibility) {
+  constructor(image, capacity, hp, visibility, frameWidth, frameHeight) {
     this.image = image;
+    this.frameWidth = frameWidth;
+    this.frameHeight = frameHeight;
     this.capacity = capacity; // Загальна місткість
     this.remainingCapacity = capacity; // Залишкова місткість
     this.hp = hp;
     this.initialHP = hp;
+    this.destructionScale = 1;
     this.isAllowed = true;
     this.isActive = false;
     this.isReloading = false;
@@ -25,7 +28,7 @@ class Drone {
     this.fragBombWeight = 0.13;
     this.heBombWeight = 0.16;
     this.shapedBombWeight = 0.14;
-    this.reloadingTime = 1000 * 60 * 4;
+    this.reloadingTime = 1000 * 60 * 1;
     this.reloadStartTime = null;
     this.scale = 1; // стартовий масштаб
     this.targetScale = 0.3; // цільовий масштаб при польоті
@@ -38,7 +41,7 @@ class Drone {
     this.frames = 4; // Кількість кадрів у спрайті
     this.frameX = 0; // Поточний кадр
     this.frameTimer = 0; // Лічильник часу між кадрами
-    this.frameSpeed = 5; // Затримка між кадрами
+    this.frameSpeed = 3; // Затримка між кадрами
     this.visibility = visibility;
     this.initialVisibility = visibility;
   }
@@ -49,16 +52,18 @@ class Drone {
     this.baseY = localCanvas.height / 2;
   }
   flyToreload() {
-    if (this.isReloading) {
+    if (this.isReloading && this.isAlive) {
       if (this.scale > this.targetScale) {
         this.scale -= this.shrinkRate;
         if (this.scale < this.targetScale) this.scale = this.targetScale;
+      } else {
       }
       if (this.rotation < Math.PI) {
         this.rotation += this.rotationSpeed;
         if (this.rotation > Math.PI) this.rotation = Math.PI;
       }
-      this.baseY += this.flyBackSpeed;
+      this.baseY += this.flyBackSpeed + localLayer.speedY;
+      this.baseX += localLayer.speedX;
       this.frameTimer++;
       if (this.frameTimer >= this.frameSpeed) {
         this.frameX = (this.frameX + 1) % this.frames;
@@ -67,25 +72,56 @@ class Drone {
     }
   }
   draw(ctx) {
-    if (!this.isAlive) return;
-    if (!this.isReloading) return;
+    if (this.isReloading) {
+      droneDraw(ctx, this, 0, this.scale);
+    }
+    if (!this.isAlive) {
+      droneDraw(ctx, this, this.frameHeight, this.destructionScale);
+    }
+    function droneDraw(ctx, drone, frameY, scale) {
+      ctx.save();
 
-    ctx.save();
-    ctx.translate(this.baseX, this.baseY);
-    ctx.rotate(this.rotation);
-    ctx.scale(this.scale, this.scale);
-    ctx.drawImage(
-      this.image,
-      this.frameX * 250,
-      0,
-      250,
-      250,
-      -125,
-      -125,
-      250,
-      250
-    );
-    ctx.restore();
+      if (!drone.isAlive && drone.fixedX !== null && drone.fixedY !== null) {
+        // Якщо мертвий — малюємо зафіксоване положення
+        ctx.translate(drone.fixedX, drone.fixedY);
+      } else {
+        // Якщо живий — стандартне положення
+        ctx.translate(drone.baseX, drone.baseY);
+      }
+
+      ctx.rotate(drone.rotation);
+      ctx.scale(scale, scale);
+      ctx.drawImage(
+        drone.image,
+        drone.frameX * drone.frameWidth,
+        frameY,
+        drone.frameWidth,
+        drone.frameHeight,
+        -drone.frameWidth / 2,
+        -drone.frameHeight / 2,
+        drone.frameWidth,
+        drone.frameHeight
+      );
+      ctx.restore();
+    }
+    function droneDraw(ctx, drone, frameY, scale) {
+      ctx.save();
+      ctx.translate(drone.baseX, drone.baseY);
+      ctx.rotate(drone.rotation);
+      ctx.scale(scale, scale);
+      ctx.drawImage(
+        drone.image,
+        drone.frameX * drone.frameWidth,
+        frameY,
+        drone.frameWidth,
+        drone.frameHeight,
+        -drone.frameWidth / 2,
+        -drone.frameHeight / 2,
+        drone.frameWidth,
+        drone.frameHeight
+      );
+      ctx.restore();
+    }
   }
 
   countBombs() {
@@ -102,8 +138,8 @@ class Drone {
     );
   }
 
-  reloading() {
-    if (this.isEmpty() && this.isAlive) {
+  reloading(forseReload = false) {
+    if ((this.isEmpty() && this.isAlive) || forseReload) {
       this.isReloading = true;
       this.reloadStartTime = Date.now();
       setTimeout(() => {
@@ -117,21 +153,49 @@ class Drone {
         this.baseY = 0;
         this.scale = 1.5;
         this.rotation = 0;
+        this.hp = this.initialHP;
       }, this.reloadingTime);
+    }
+  }
+
+  destruction() {
+    if (this.hp <= 0) {
+      this.isAlive = false;
+      this.isReloading = false;
+      this.isActive = false;
+    }
+    if (!this.isAlive) {
+      if (this.destructionScale < 0.9) {
+        this.baseX += localLayer.speedX;
+        this.baseY += localLayer.speedY;
+      }
+      if (this.destructionScale > 0.06) {
+        this.destructionScale *= 1 - this.shrinkRate;
+        this.rotation += this.rotationSpeed;
+        this.frameTimer++;
+        if (this.frameTimer >= this.frameSpeed) {
+          this.frameX = (this.frameX + 1) % this.frames;
+          this.frameTimer = 0;
+        }
+      } else {
+        // після зменшення - просто рухаємо по карті
+        // this.baseX += localLayer.speedX;
+        // this.baseY += localLayer.speedY;
+      }
     }
   }
 
   cahngeVisibility() {
     this.visibility = Math.max(
       this.initialVisibility,
-      Math.min(this.visibility * 2, 100)
+      Math.min(this.visibility + this.initialVisibility * 2, 100)
     );
     setTimeout(() => {
       this.visibility = Math.max(
         this.initialVisibility,
         Math.min(this.visibility / 2, 100)
       );
-    }, 20000);
+    }, 25000);
   }
   addFragBomb() {
     if (this.remainingCapacity >= this.fragBombWeight) {
@@ -154,7 +218,7 @@ class Drone {
 }
 
 export function createSmallDrone() {
-  return new Drone(smallDroneImage, 0.9, 2, 4);
+  return new Drone(smallDroneImage, 0.9, 2, 4, 352, 301);
 }
 // export function createMediumDrone() {
 //   return new Drone(mediumDroneImage, 2, 4, "mediumDrone");

@@ -9,18 +9,18 @@ export function checkEffect(bomb, enemy) {
   return effectStatus;
 }
 
-export function checkVisibility(drone, enemy, canvas) {
+export function checkVisibility(drone, enemy, canvas, gameFrame) {
   const distance = checkDistance(enemy, canvas);
   let effectStatus = false;
-
-  if (
-    distance < enemy.fireDistance &&
-    !enemy.crawl &&
-    Math.random() * 2000 < drone.visibility
-  ) {
-    effectStatus = true;
+  if (gameFrame % 60 === 0) {
+    if (
+      distance < enemy.fireDistance &&
+      !enemy.crawl &&
+      Math.random() * 100 < drone.visibility
+    ) {
+      effectStatus = true;
+    }
   }
-
   return effectStatus;
 }
 

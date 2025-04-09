@@ -64,7 +64,7 @@ const droneIcon4 = new DroneIcons(canvas, ctx, 4, drones[3]);
 const droneIcon5 = new DroneIcons(canvas, ctx, 5, drones[4]);
 
 console.log(droneIcon1);
-initDrones(canvas);
+initDrones(layer1);
 const droneIcons = [droneIcon1, droneIcon2, droneIcon3, droneIcon4, droneIcon5];
 
 let enemies = [];
@@ -72,7 +72,7 @@ while (enemies.length < 36) {
   const enemy = new Enemy(
     enemyRifle,
     Math.random() * 1750,
-    Math.random() * 1600 - 200,
+    Math.random() * 600 - 200,
     64,
     64,
     8,
@@ -94,7 +94,7 @@ const minimap = new Minimap(
 );
 let bombs = []; // Масив для бомб
 function dropBomb() {
-  if (!currentDrone) {
+  if (!currentDrone.isActive) {
     console.warn("🚨 Немає активного дрона!");
     return;
   }
@@ -167,7 +167,10 @@ function animate(timestamp) {
     lastTime = timestamp - (deltaTime % FRAME_TIME);
 
     drones.forEach((drone) => {
-      if (drone.isReloading && drone.baseX === 0 && drone.baseY === 0) {
+      if (
+        (drone.isReloading && drone.baseX === 0 && drone.baseY === 0) ||
+        (!drone.isAlive && drone.baseX === 0 && drone.baseY === 0)
+      ) {
         drone.baseX = canvas.width / 2;
         drone.baseY = canvas.height / 2;
       }
@@ -188,13 +191,16 @@ function animate(timestamp) {
           }
           if (checkEffect(bomb, enemy) && !enemy.dead) {
             enemy.crawl = true;
+            enemy.frameX = 0;
+            enemy.isFiring = false;
           }
         });
       }
     });
     enemies.forEach((enemy, index) => {
-      if (checkVisibility(currentDrone, enemy, canvas)) {
+      if (checkVisibility(currentDrone, enemy, canvas, gameFrame)) {
         enemy.isFiring = true;
+        enemy.frameX = 0;
       }
       if (enemy.isFiring && checkDistance(enemy, canvas) > enemy.fireDistance) {
         enemy.isFiring = false;
@@ -214,17 +220,21 @@ function animate(timestamp) {
     bombs.forEach((bomb) => {
       if (bomb.initialScale / bomb.scale < 13.5) bomb.draw();
     });
+    const selectedDrone = drones[selectionState.selectedDroneIndex];
+    if (currentDrone && currentDrone !== selectedDrone) {
+      selectedDrone.visibility = currentDrone.visibility;
+      currentDrone.reloading(true);
+      if (currentDrone.baseX === 0 && currentDrone.baseY === 0) {
+        currentDrone.baseX = canvas.width / 2;
+        currentDrone.baseY = canvas.height / 2;
+      } // Старий дрон летить на зарядку
+    }
+    currentDrone = selectedDrone;
     drones.forEach((drone, index) => {
-      drone.isActive = index === selectionState.selectedDroneIndex;
-      if (drone.isActive) {
-        if (currentDrone && typeof currentDrone.visibility !== "undefined") {
-          const visibility = currentDrone.visibility;
-          currentDrone = drone;
-          currentDrone.visibility = visibility;
-        } else {
-          currentDrone = drone;
-        }
-      }
+      drone.destruction();
+      drone.isActive =
+        (index === selectionState.selectedDroneIndex && drone.isAlive) ||
+        drone.isReloading;
       drone.flyToreload();
       drone.draw(ctx);
     });
