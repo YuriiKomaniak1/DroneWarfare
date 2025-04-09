@@ -1,7 +1,7 @@
 export const menuButtons = []; // Масив для збереження кнопок
 let hoveredButtonIndex = null;
 let pressedButtonIndex = null;
-import { openTrainingModal } from "../../training.js";
+
 export function drawMenuButtons(ctx, canvas, minimap) {
   const labels = ["Навчання", "Вороги", "Меню"];
   const buttonWidth = minimap.width;
@@ -60,7 +60,7 @@ function drawRoundedRect(ctx, x, y, width, height, radius) {
   ctx.fill();
 }
 
-export function handleMenuClick(e, canvas) {
+export function handleMenuClick(e, canvas, openTrainingModal) {
   e.preventDefault();
   const { mouseX, mouseY } = getMousePosition(e, canvas);
 

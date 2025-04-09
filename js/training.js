@@ -83,8 +83,12 @@ let CANVAS_HEIGHT = canvas.height;
 initControls(canvas, drones);
 canvas.addEventListener("mousemove", (e) => handleMenuHover(e, canvas));
 canvas.addEventListener("touchmove", (e) => handleMenuHover(e, canvas));
-canvas.addEventListener("click", (e) => handleMenuClick(e, canvas));
-canvas.addEventListener("touchstart", (e) => handleMenuClick(e, canvas));
+canvas.addEventListener("click", (e) =>
+  handleMenuClick(e, canvas, openTrainingModal)
+);
+canvas.addEventListener("touchstart", (e) =>
+  handleMenuClick(e, canvas, openTrainingModal)
+);
 let gameFrame = 0;
 drones[0].isActive = true;
 let currentDrone = drones[selectionState.selectedDroneIndex];
