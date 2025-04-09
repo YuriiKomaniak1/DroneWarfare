@@ -1,11 +1,14 @@
+export const menuButtons = []; // Масив для збереження кнопок
+
 export function drawMenuButtons(ctx, canvas, minimap) {
   const labels = ["Навчання", "Вороги", "Меню"];
-  const buttonWidth = minimap.width; // Ширина як у мінікарти
-  console.log("minimap.width", minimap.width);
+  const buttonWidth = minimap.width;
   const buttonHeight = 36;
-  const gap = 20; // Відстань між кнопками
-  const startX = minimap.mapX; // Центр по ширині
-  const startY = minimap.mapY + gap + minimap.height; // Від низу трохи підняти
+  const gap = 20;
+  const startX = minimap.mapX;
+  const startY = minimap.mapY + gap + minimap.height;
+
+  menuButtons.length = 0; // Очищаємо перед кожним малюванням
 
   ctx.save();
   ctx.font = "16px Arial";
@@ -17,20 +20,23 @@ export function drawMenuButtons(ctx, canvas, minimap) {
     const x = startX;
     const y = startY + index * (buttonHeight + gap);
 
+    // Зберігаємо координати кнопки
+    menuButtons.push({ x, y, width: buttonWidth, height: buttonHeight, label });
+
     // Малюємо прямокутник із закругленими кутами
     drawRoundedRect(ctx, x, y, buttonWidth, buttonHeight, 10);
 
-    // Малюємо текст в середині
-    ctx.fillStyle = "rgba(0, 0, 0, 1)"; // Чорний текст
+    // Малюємо текст всередині
+    ctx.fillStyle = "rgba(0, 0, 0, 1)";
     ctx.fillText(label, x + buttonWidth / 2, y + buttonHeight / 2);
 
-    ctx.fillStyle = "rgba(177, 232, 59, 0.25)"; // Відновлюємо білий колір для наступного прямокутника
+    ctx.fillStyle = "rgba(177, 232, 59, 0.25)";
   });
 
   ctx.restore();
 }
 
-// Функція малювання закругленого прямокутника
+// Функція для закругленого прямокутника
 function drawRoundedRect(ctx, x, y, width, height, radius) {
   ctx.beginPath();
   ctx.moveTo(x + radius, y);

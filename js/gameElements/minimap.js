@@ -9,7 +9,7 @@ export class Minimap {
     ctx,
     layer
   ) {
-    this.width = Math.max(canvasWidth / 5, 140);
+    this.width = Math.max(canvasWidth / 5, 100);
     this.height = (this.width / mapWidth) * mapHeight;
     this.scaleX = this.width / mapWidth;
     this.scaleY = this.height / mapHeight;
