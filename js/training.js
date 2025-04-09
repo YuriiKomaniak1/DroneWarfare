@@ -22,12 +22,24 @@ import {
 import { DroneIcons } from "./gameElements/droneIcons.js";
 import { drones } from "./drones/trainingDrones.js";
 import { initDrones } from "./drones/drones.js";
+import { drawMenuButtons } from "./levels/training/trainingButtons.js";
+
 let obstacles = [];
 async function loadObstacles() {
   const response = await fetch("js/levels/training/obstacles.json");
   obstacles = await response.json();
 }
 await loadObstacles();
+const modal = document.getElementById("modal__greeting");
+const startButton = document.getElementById("trainingStartButton");
+
+window.addEventListener("load", () => {
+  modal.style.visibility = "visible";
+});
+
+startButton.addEventListener("click", () => {
+  modal.style.visibility = "hidden";
+});
 export const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
 canvas.width = Math.min(window.innerWidth, 900);
@@ -165,7 +177,6 @@ function animate(timestamp) {
   const deltaTime = timestamp - lastTime;
   if (deltaTime >= FRAME_TIME) {
     lastTime = timestamp - (deltaTime % FRAME_TIME);
-
     drones.forEach((drone) => {
       if (
         (drone.isReloading && drone.baseX === 0 && drone.baseY === 0) ||
@@ -244,6 +255,7 @@ function animate(timestamp) {
       object.draw();
     });
     drawJoystickAndButtons(ctx);
+    drawMenuButtons(ctx, canvas, minimap);
     gameFrame++;
   }
 

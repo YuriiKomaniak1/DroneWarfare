@@ -35,7 +35,7 @@ class Drone {
     this.rotation = 0; // поточний поворот
     this.rotationSpeed = Math.PI / 120; // швидкість повороту
     this.shrinkRate = 0.005; // швидкість зменшення
-    this.flyBackSpeed = 1.5; // швидкість польоту назад
+    this.flyBackSpeed = 1; // швидкість польоту назад
     this.baseX = 0;
     this.baseY = 0;
     this.frames = 4; // Кількість кадрів у спрайті
