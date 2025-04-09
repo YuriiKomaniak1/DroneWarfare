@@ -31,20 +31,43 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  background: var(--modal-window-background-color);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   visibility: hidden; /* Ховаємо спочатку */
 }
+.modal {
+  visibility: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--modal-window-background-color);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 #modal__greeting-content {
-  background: white;
+  background: var(--modal-window-main-color);
   padding: 20px 40px;
   border-radius: 10px;
+  border-radius: 5px;
   text-align: center;
-  max-width: 400px;
+  max-width: 500px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.modal-content {
+  background: var(--modal-window-main-color);
+  padding: 20px;
+  border-radius: 5px;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
 }
 
 #trainingStartButton {
@@ -52,11 +75,31 @@ body {
   padding: 10px 20px;
   font-size: 16px;
   border: none;
-  background-color: #28a745;
-  color: white;
+  background-color: var(--modal-buttons-color);
+  color: var(--modal-buttons-text-color);
   border-radius: 5px;
   cursor: pointer;
 }
-#startButton:hover {
-  background-color: #218838;
+#trainingStartButton:hover {
+  background-color: var(--modal-buttons-hover-color);
+}
+.training-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.training-buttons button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  background-color: var(--modal-buttons-color);
+  color: var(--modal-buttons-text-color);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.training-buttons button:hover {
+  background-color: var(--modal-buttons-hover-color);
 }

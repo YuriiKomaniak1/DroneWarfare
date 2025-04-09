@@ -22,7 +22,15 @@ import {
 import { DroneIcons } from "./gameElements/droneIcons.js";
 import { drones } from "./drones/trainingDrones.js";
 import { initDrones } from "./drones/drones.js";
-import { drawMenuButtons } from "./levels/training/trainingButtons.js";
+import {
+  drawMenuButtons,
+  handleMenuClick,
+  handleMenuHover,
+} from "./levels/training/trainingButtons.js";
+import {
+  trainingSections,
+  updateTrainingText,
+} from "./levels/training/trainingInfo.js";
 
 let obstacles = [];
 async function loadObstacles() {
@@ -32,7 +40,33 @@ async function loadObstacles() {
 await loadObstacles();
 const modal = document.getElementById("modal__greeting");
 const startButton = document.getElementById("trainingStartButton");
+const trainingModal = document.getElementById("trainingModal");
+const trainingText = document.getElementById("trainingText");
+const prevSection = document.getElementById("prevSection");
+const nextSection = document.getElementById("nextSection");
+const resumeGame = document.getElementById("resumeGame");
+let currentSection = 0;
+prevSection.addEventListener("click", () => {
+  currentSection--;
+  if (currentSection < 0) currentSection = 0;
+  updateTrainingText(trainingText, currentSection);
+});
 
+nextSection.addEventListener("click", () => {
+  currentSection++;
+  if (currentSection >= trainingSections.length) currentSection = 0;
+  updateTrainingText(trainingText, currentSection);
+});
+
+resumeGame.addEventListener("click", () => {
+  trainingModal.style.visibility = "hidden";
+});
+
+// Функція відкриття модалки
+export function openTrainingModal() {
+  trainingModal.style.visibility = "visible";
+  updateTrainingText(trainingText, currentSection);
+}
 window.addEventListener("load", () => {
   modal.style.visibility = "visible";
 });
@@ -47,6 +81,10 @@ canvas.height = Math.min(window.innerHeight, 900);
 let CANVAS_WIDTH = canvas.width;
 let CANVAS_HEIGHT = canvas.height;
 initControls(canvas, drones);
+canvas.addEventListener("mousemove", (e) => handleMenuHover(e, canvas));
+canvas.addEventListener("touchmove", (e) => handleMenuHover(e, canvas));
+canvas.addEventListener("click", (e) => handleMenuClick(e, canvas));
+canvas.addEventListener("touchstart", (e) => handleMenuClick(e, canvas));
 let gameFrame = 0;
 drones[0].isActive = true;
 let currentDrone = drones[selectionState.selectedDroneIndex];
