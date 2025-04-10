@@ -67,6 +67,10 @@ body {
   border-radius: 5px;
   width: 90%;
   max-width: 500px;
+  text-align: left;
+}
+
+h2 {
   text-align: center;
 }
 
