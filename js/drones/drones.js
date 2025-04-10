@@ -1,5 +1,5 @@
-let localLayer = null;
 import { basePath } from "../utils/basePath.js";
+let localLayer = null;
 let smallDroneImage = new Image();
 smallDroneImage.src = `${basePath}assets/img/drones/smallDroneAnimation.png`;
 export function initDrones(layer) {
@@ -28,7 +28,7 @@ class Drone {
     this.fragBombWeight = 0.13;
     this.heBombWeight = 0.16;
     this.shapedBombWeight = 0.14;
-    this.reloadingTime = 1000 * 60 * 1;
+    this.reloadingTime = 1000 * 60 * 4;
     this.reloadStartTime = null;
     this.scale = 1; // стартовий масштаб
     this.targetScale = 0.3; // цільовий масштаб при польоті

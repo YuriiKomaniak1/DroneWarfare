@@ -1,3 +1,12 @@
+let fragBombImage = new Image();
+fragBombImage.src = "../assets/img/bombs/fragBomb.png";
+let heBombImage = new Image();
+heBombImage.src = "../assets/img/bombs/heBomb.png";
+let shapedBombImage = new Image();
+shapedBombImage.src = "../assets/img/bombs/shapedBomb.png";
+let imageExplosion = new Image();
+imageExplosion.src = "../assets/img/bombs/smallExplosion.png";
+import { switchToNextAvailableBomb } from "../logic/controls.js";
 export class Bomb {
   constructor(
     image,
@@ -14,6 +23,8 @@ export class Bomb {
     type
   ) {
     this.image = image;
+    this.imageWidth = 64;
+    this.imageHeight = 64;
     this.imageExplosion = imageExplosion;
     this.baseX = x;
     this.baseY = y;
@@ -78,10 +89,10 @@ export class Bomb {
 
       this.ctx.drawImage(
         this.imageExplosion,
-        this.frameX * 64,
+        this.frameX * this.imageWidth,
         0,
-        64,
-        64,
+        this.imageWidth,
+        this.imageHeight,
         this.baseX - this.explosionScale / 2,
         this.baseY - this.explosionScale / 2,
         this.explosionScale,
@@ -92,5 +103,103 @@ export class Bomb {
 
       this.explosionFrame++;
     }
+  }
+  checkCollision(enemy) {
+    const distance = Math.hypot(
+      this.baseX - (enemy.x + 32),
+      this.baseY - (enemy.y + 32)
+    );
+    let hitStatus = false;
+    if (this.type === "frag") {
+      if (distance < 20) {
+        hitStatus = true;
+      } else if (distance < 40 && !enemy.crawl) {
+        if (Math.random() > 0.1) hitStatus = true;
+      } else if (distance < 50 && !enemy.crawl) {
+        if (Math.random() > 0.2) hitStatus = true;
+      } else if (distance < 90 && !enemy.crawl) {
+        if (Math.random() > 0.5) hitStatus = true;
+      } else if (distance < 140 && !enemy.crawl) {
+        if (Math.random() > 0.85) hitStatus = true;
+      }
+    } else if (this.type === "he") {
+      if (distance < 50) {
+        hitStatus = true;
+      }
+    } else if (this.type === "shaped") {
+      if (distance < 15) {
+        hitStatus = true;
+      }
+    }
+
+    return hitStatus;
+  }
+}
+
+export function dropBomb(
+  currentDrone,
+  selectionState,
+  layer1,
+  ctx,
+  droneScope,
+  bombs
+) {
+  if (!currentDrone.isActive) {
+    console.warn("🚨 Немає активного дрона!");
+    return;
+  }
+
+  let bombType = selectionState.selectedBombType;
+  let bombArray = null;
+  let bombImage = null;
+  let explosionScale = 64;
+
+  switch (bombType) {
+    case "frag":
+      bombArray = currentDrone.fragBombs;
+      bombImage = fragBombImage;
+      explosionScale = 64;
+      break;
+    case "he":
+      bombArray = currentDrone.heBombs;
+      bombImage = heBombImage;
+      explosionScale = 100;
+      break;
+    case "shaped":
+      bombArray = currentDrone.shapedBombs;
+      bombImage = shapedBombImage;
+      explosionScale = 30;
+      break;
+  }
+
+  if (!bombArray || bombArray.length === 0) {
+    console.warn("🚨 Немає бомб для скидання!");
+    return;
+  }
+
+  bombArray.pop();
+
+  const bomb = new Bomb(
+    bombImage,
+    imageExplosion,
+    droneScope.x + droneScope.width / 2,
+    droneScope.y + droneScope.height / 2,
+    300,
+    300,
+    3,
+    explosionScale,
+    10,
+    layer1,
+    ctx,
+    bombType
+  );
+
+  bomb.velocityX = layer1.speedX * 1;
+  bomb.velocityY = layer1.speedY * 1;
+
+  bombs.push(bomb);
+  if (bombArray.length === 0) {
+    switchToNextAvailableBomb();
+    currentDrone.reloading();
   }
 }

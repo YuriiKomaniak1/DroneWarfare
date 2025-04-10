@@ -1,45 +1,38 @@
+let riflemanImage = new Image();
+riflemanImage.src = "./assets/img/enemies/spritesheetSoldierAk.png";
 export class Enemy {
-  constructor(
-    image,
-    x,
-    y,
-    spriteWidth,
-    spriteHeight,
-    frames,
-    layer,
-    ctx,
-    obstacle
-  ) {
+  constructor(image, x, y, layer, ctx, obstacle, fireDistance, fireRate, type) {
     this.image = image;
+    this.type = this.type;
     this.baseX = x;
     this.baseY = y;
+    this.prevX = x;
+    this.prevY = y;
+    this.layer = layer;
+    this.ctx = ctx;
     this.speed = Math.random() * 0.07 + 0.11;
-    this.width = spriteWidth;
-    this.height = spriteHeight;
-    this.frameX = Math.floor(Math.random() * frames);
-    this.frameY = 3;
+    this.width = 64;
+    this.height = 64;
+    this.runframeY = 3;
     this.frameSpeed = 20;
-    this.frames = frames;
-    this.frameTimer = 0;
-    this.dead = false;
-    this.crawl = false;
-    this.isFiring = false;
-    this.deathFrames = 3;
-    this.deadframe = Math.ceil(Math.random() * 4 + 2);
+    this.runFrames = 8;
     this.crawlFrames = 5;
     this.fireFrames = 6;
-    this.fireDistance = 260;
-    this.fireRate = 5;
-    this.fireTimer = 0;
+    this.deathFrames = 3;
     this.deathFrameIndex = 0;
     this.deathAnimationSpeed = 10;
     this.deathTimer = 0;
-    this.layer = layer;
-    this.ctx = ctx;
     this.deathAngle = Math.random() * 2 * Math.PI; // Випадковий кут
+    this.frameX = Math.floor(Math.random() * this.runFrames);
+    this.frameTimer = 0;
+    this.deadframe = Math.ceil(Math.random() * 4 + 2);
+    this.dead = false;
+    this.crawl = false;
+    this.isFiring = false;
+    this.fireDistance = fireDistance;
+    this.fireRate = fireRate;
+    this.fireTimer = 0;
     this.obstacles = obstacle;
-    this.prevX = x;
-    this.prevY = y;
     this.rotationAngle = 0;
     this.oldPositions = []; // Масив з історією положення
     this.positionMemory = 15; // Кількість кадрів для затримки
@@ -62,15 +55,11 @@ export class Enemy {
           this.crawl = false;
         }
         this.baseY += this.speed / 2;
-        if (Math.round(this.baseX) % 1 === 0) {
-          this.baseX += (this.speed * (Math.random() * 2 - 1)) / 2;
-        }
+        this.baseX += (this.speed * (Math.random() * 2 - 1)) / 2;
       } else if (this.isFiring) {
       } else {
         this.baseY += this.speed;
-        if (Math.round(this.baseX) % 1 === 0) {
-          this.baseX += this.speed * (Math.random() * 2 - 1);
-        }
+        this.baseX += this.speed * (Math.random() * 2 - 1);
       }
 
       // --- Анімація ---
@@ -81,7 +70,7 @@ export class Enemy {
         } else if (this.isFiring) {
           this.frameX = (this.frameX + 1) % this.fireFrames;
         } else {
-          this.frameX = (this.frameX + 1) % this.frames;
+          this.frameX = (this.frameX + 1) % this.runFrames;
         }
         this.frameTimer = 0;
       }
@@ -132,9 +121,81 @@ export class Enemy {
   }
 
   checkObstaclesCollision(index) {
-    let pushX = 0;
-    let pushY = 0;
     const warningZone = 10; // Зона попередження навколо перешкоди
+    const forwardDistance = 150; // Дальність прямої перевірки
+    const sideDistance = 100; // Довжина відхилення під 45 градусів
+    const angleOffset = Math.PI / 4; // 45 градусів в радіанах
+
+    let forwardBlocked = false;
+    let leftBlocked = false;
+    let rightBlocked = false;
+
+    // Перевірка попереду
+    const forwardX = this.baseX;
+    const forwardY = this.baseY + forwardDistance;
+
+    // Перевірка під кутом вправо
+    const rightX = this.baseX + Math.cos(angleOffset) * sideDistance;
+    const rightY = this.baseY + Math.sin(angleOffset) * sideDistance;
+
+    // Перевірка під кутом вліво
+    const leftX = this.baseX + Math.cos(-angleOffset) * sideDistance;
+    const leftY = this.baseY + Math.sin(-angleOffset) * sideDistance;
+
+    for (let obstacle of this.obstacles) {
+      const obstacleX = obstacle.x;
+      const obstacleY = obstacle.y - warningZone;
+      const obstacleWidth = obstacle.width;
+      const obstacleHeight = obstacle.height;
+
+      // Перевірка попереду
+      if (
+        forwardX + this.width - 20 > obstacleX &&
+        forwardX + 20 < obstacleX + obstacleWidth &&
+        forwardY - 20 + this.height > obstacleY &&
+        forwardY + 20 < obstacleY + obstacleHeight
+      ) {
+        forwardBlocked = true;
+      }
+
+      // Перевірка вправо
+      if (
+        rightX + this.width - 20 > obstacleX &&
+        rightX + 20 < obstacleX + obstacleWidth &&
+        rightY - 20 + this.height > obstacleY &&
+        rightY + 20 < obstacleY + obstacleHeight
+      ) {
+        rightBlocked = true;
+      }
+
+      // Перевірка вліво
+      if (
+        leftX + this.width - 20 > obstacleX &&
+        leftX + 20 < obstacleX + obstacleWidth &&
+        leftY - 20 + this.height > obstacleY &&
+        leftY + 20 < obstacleY + obstacleHeight
+      ) {
+        leftBlocked = true;
+      }
+    }
+
+    // Якщо попереду перешкода — обираємо напрямок
+    if (forwardBlocked) {
+      if (!leftBlocked && rightBlocked) {
+        // Ліво вільне
+        this.baseX += this.speed * -1 * (0.6 + Math.random() * 0.5);
+        this.baseY += this.speed;
+      } else if (!rightBlocked && leftBlocked) {
+        // Право вільне
+        this.baseX += this.speed * (0.6 + Math.random() * 0.5);
+        this.baseY += this.speed;
+      } else {
+        // Обидва варіанти або заблоковані або вільні - випадково по індексу
+        const direction = index % 2 === 0 ? -1 : 1;
+        this.baseX += this.speed * direction;
+        this.baseY += this.speed;
+      }
+    }
 
     for (let obstacle of this.obstacles) {
       const obstacleX = obstacle.x;
@@ -163,7 +224,7 @@ export class Enemy {
       this.ctx.drawImage(
         this.image,
         this.frameX * this.width,
-        this.frameY * this.height,
+        this.runframeY * this.height,
         this.width,
         this.height,
         -this.width / 2,
@@ -236,4 +297,18 @@ export class Enemy {
       this.fireTimer = 0;
     }
   }
+}
+
+export function createRifleman(x, y, layer1, ctx, obstacles) {
+  return new Enemy(
+    riflemanImage,
+    x,
+    y,
+    layer1,
+    ctx,
+    obstacles,
+    260,
+    5,
+    "rifleman"
+  );
 }

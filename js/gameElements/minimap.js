@@ -55,7 +55,7 @@ export class Minimap {
         tempY < this.mapY + this.height
       ) {
         if (!enemy.dead) {
-          this.ctx.fillRect(tempX, tempY, 4, 4);
+          this.ctx.fillRect(tempX, tempY, 3, 3);
         }
       }
     });
