@@ -16,7 +16,7 @@ export function checkVisibility(drone, enemy, canvas, gameFrame) {
     if (
       distance < enemy.fireDistance &&
       !enemy.crawl &&
-      Math.random() * 100 < drone.visibility
+      Math.random() * 200 < drone.visibility
     ) {
       effectStatus = true;
     }

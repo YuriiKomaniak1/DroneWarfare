@@ -169,7 +169,7 @@ class Drone {
         this.baseX += localLayer.speedX;
         this.baseY += localLayer.speedY;
       }
-      if (this.destructionScale > 0.06) {
+      if (this.destructionScale > 0.082) {
         this.destructionScale *= 1 - this.shrinkRate;
         this.rotation += this.rotationSpeed;
         this.frameTimer++;
