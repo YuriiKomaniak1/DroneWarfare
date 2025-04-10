@@ -1,9 +1,22 @@
 let riflemanImage = new Image();
-riflemanImage.src = "./assets/img/enemies/spritesheetSoldierAk.png";
+riflemanImage.src = "./assets/img/enemies/rifleman.png";
+let machinegunnerImage = new Image();
+machinegunnerImage.src = "./assets/img/enemies/machinegunner.png";
 export class Enemy {
-  constructor(image, x, y, layer, ctx, obstacle, fireDistance, fireRate, type) {
+  constructor(
+    image,
+    x,
+    y,
+    layer,
+    ctx,
+    obstacle,
+    fireDistance,
+    fireRate,
+    type,
+    droneSpottingChanse
+  ) {
     this.image = image;
-    this.type = this.type;
+    this.type = type;
     this.baseX = x;
     this.baseY = y;
     this.prevX = x;
@@ -35,7 +48,8 @@ export class Enemy {
     this.obstacles = obstacle;
     this.rotationAngle = 0;
     this.oldPositions = []; // Масив з історією положення
-    this.positionMemory = 15; // Кількість кадрів для затримки
+    this.positionMemory = 15;
+    this.droneSpottingChanse = droneSpottingChanse; // Кількість кадрів для затримки
   }
 
   update(allEnemies) {
@@ -309,6 +323,44 @@ export function createRifleman(x, y, layer1, ctx, obstacles) {
     obstacles,
     260,
     5,
-    "rifleman"
+    "rifleman",
+    1
   );
+}
+export function createMachinegunner(x, y, layer1, ctx, obstacles) {
+  return new Enemy(
+    machinegunnerImage,
+    x,
+    y,
+    layer1,
+    ctx,
+    obstacles,
+    300,
+    10,
+    "machinegunner",
+    2
+  );
+}
+
+export function createRifleSquad(x, y, layer1, ctx, obstacles) {
+  const squad = [];
+  for (let i = 0; i < 5; i++) {
+    const rifleman = createRifleman(
+      x + Math.random() * 150 - 75,
+      y + Math.random() * 50 - 25,
+      layer1,
+      ctx,
+      obstacles
+    );
+    squad.push(rifleman);
+  }
+  const machinegunner = createMachinegunner(
+    x + Math.random() * 150 - 75,
+    y + Math.random() * 50 - 25,
+    layer1,
+    ctx,
+    obstacles
+  );
+  squad.push(machinegunner);
+  return squad;
 }

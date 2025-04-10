@@ -1,6 +1,6 @@
 import { Minimap } from "./gameElements/minimap.js";
 import { Layer } from "./layers/layer.js";
-import { createRifleman } from "./enemies/enemy.js";
+import { createRifleman, createMachinegunner } from "./enemies/enemy.js";
 import { dropBomb } from "./drones/bomb.js";
 import { DroneScope, droneScopeImage } from "./gameElements/droneScope.js";
 import {
@@ -24,6 +24,7 @@ import {
   drawMenuButtons,
   handleMenuClick,
   handleMenuHover,
+  closeEnemiesModal,
 } from "./levels/training/trainingButtons.js";
 import {
   trainingSections,
@@ -44,6 +45,7 @@ const trainingText = document.getElementById("trainingText");
 const prevSection = document.getElementById("prevSection");
 const nextSection = document.getElementById("nextSection");
 const resumeGame = document.getElementById("resumeGame");
+const hideEnemiesModal = document.getElementById("hideEnemiesModal");
 export const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
 canvas.width = Math.min(window.innerWidth, 900);
@@ -78,6 +80,9 @@ nextSection.addEventListener("click", () => {
   updateTrainingText(trainingText, currentSection);
 });
 
+hideEnemiesModal.addEventListener("click", () => {
+  enemiesModal.style.visibility = "hidden";
+});
 resumeGame.addEventListener("click", () => {
   trainingModal.style.visibility = "hidden";
 });
@@ -105,7 +110,18 @@ canvas.addEventListener("touchstart", (e) =>
   handleMenuClick(e, canvas, openTrainingModal)
 );
 
-while (enemies.length < 36) {
+while (enemies.length < 5) {
+  const enemy = createMachinegunner(
+    Math.random() * 1750,
+    Math.random() * 600 - 200,
+    layer1,
+    ctx,
+    obstacles
+  );
+
+  enemies.push(enemy);
+}
+while (enemies.length < 35) {
   const enemy = createRifleman(
     Math.random() * 1750,
     Math.random() * 600 - 200,
@@ -126,6 +142,7 @@ const minimap = new Minimap(
   ctx,
   layer1
 );
+console.log(enemies);
 
 setupControls(() => {
   dropBomb(currentDrone, selectionState, layer1, ctx, droneScope, bombs);

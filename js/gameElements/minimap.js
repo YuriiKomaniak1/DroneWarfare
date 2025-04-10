@@ -44,7 +44,6 @@ export class Minimap {
     );
 
     // вороги
-    this.ctx.fillStyle = "red";
     this.enemies.forEach((enemy) => {
       let tempX = this.mapX + (enemy.x - this.layer.x) * this.scaleX;
       let tempY = this.mapY + (enemy.y - this.layer.y) * this.scaleY;
@@ -55,7 +54,14 @@ export class Minimap {
         tempY < this.mapY + this.height
       ) {
         if (!enemy.dead) {
-          this.ctx.fillRect(tempX, tempY, 3, 3);
+          if (enemy.type === "rifleman") {
+            this.ctx.fillStyle = "rgb(255, 0, 0)";
+            this.ctx.fillRect(tempX, tempY, 3, 3);
+          }
+          if (enemy.type === "machinegunner") {
+            this.ctx.fillStyle = "rgb(123, 2, 2)";
+            this.ctx.fillRect(tempX, tempY, 4, 4);
+          }
         }
       }
     });

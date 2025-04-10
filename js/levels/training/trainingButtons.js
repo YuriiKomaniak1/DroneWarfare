@@ -23,7 +23,7 @@ export function drawMenuButtons(ctx, canvas, minimap) {
 
     menuButtons.push({ x, y, width: buttonWidth, height: buttonHeight, label });
 
-    // 🎯 ВИБІР КОЛЬОРУ КНОПКИ:
+    //  ВИБІР КОЛЬОРУ КНОПКИ:
     let bgColor = "rgba(177, 232, 59, 0.25)";
     if (hoveredButtonIndex === index) {
       bgColor = "rgba(177, 232, 59, 0.5)";
@@ -120,5 +120,12 @@ function openEnemiesModal() {
   const modal = document.getElementById("enemiesModal");
   if (modal) {
     modal.style.visibility = "visible";
+  }
+}
+
+export function closeEnemiesModal() {
+  const modal = document.getElementById("enemiesModal");
+  if (modal) {
+    modal.style.visibility = "hidden";
   }
 }

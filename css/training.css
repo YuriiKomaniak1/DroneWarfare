@@ -38,8 +38,13 @@ body {
   z-index: 1000;
   visibility: hidden; /* Ховаємо спочатку */
 }
-.modal {
+#trainingModal {
   visibility: hidden;
+}
+#enemiesModal {
+  visibility: hidden;
+}
+.modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -106,4 +111,14 @@ h2 {
 
 .training-buttons button:hover {
   background-color: var(--modal-buttons-hover-color);
+}
+
+#enemiesButtons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+
+  gap: 15px;
 }
