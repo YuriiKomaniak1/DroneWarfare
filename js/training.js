@@ -1,6 +1,6 @@
 import { Minimap } from "./gameElements/minimap.js";
 import { Layer } from "./layers/layer.js";
-import { createRifleman, createMachinegunner } from "./enemies/enemy.js";
+import { createRifleSquad } from "./enemies/enemy.js";
 import { dropBomb } from "./drones/bomb.js";
 import { DroneScope, droneScopeImage } from "./gameElements/droneScope.js";
 import {
@@ -24,7 +24,6 @@ import {
   drawMenuButtons,
   handleMenuClick,
   handleMenuHover,
-  closeEnemiesModal,
 } from "./levels/training/trainingButtons.js";
 import {
   trainingSections,
@@ -46,6 +45,7 @@ const prevSection = document.getElementById("prevSection");
 const nextSection = document.getElementById("nextSection");
 const resumeGame = document.getElementById("resumeGame");
 const hideEnemiesModal = document.getElementById("hideEnemiesModal");
+const squad = document.getElementById("squad");
 export const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
 canvas.width = Math.min(window.innerWidth, 900);
@@ -109,29 +109,19 @@ canvas.addEventListener("click", (e) =>
 canvas.addEventListener("touchstart", (e) =>
   handleMenuClick(e, canvas, openTrainingModal)
 );
-
-while (enemies.length < 5) {
-  const enemy = createMachinegunner(
+squad.addEventListener("click", () => {
+  const squad = createRifleSquad(
     Math.random() * 1750,
-    Math.random() * 600 - 200,
+    Math.random() * 300,
+    100,
+    300,
     layer1,
     ctx,
     obstacles
   );
+  enemies.push(...squad);
+});
 
-  enemies.push(enemy);
-}
-while (enemies.length < 35) {
-  const enemy = createRifleman(
-    Math.random() * 1750,
-    Math.random() * 600 - 200,
-    layer1,
-    ctx,
-    obstacles
-  );
-
-  enemies.push(enemy);
-}
 const minimap = new Minimap(
   1800,
   2600,

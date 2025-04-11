@@ -4,7 +4,6 @@ let machinegunnerImage = new Image();
 machinegunnerImage.src = "./assets/img/enemies/machinegunner.png";
 export class Enemy {
   constructor(
-    image,
     x,
     y,
     layer,
@@ -15,8 +14,11 @@ export class Enemy {
     type,
     droneSpottingChanse
   ) {
-    this.image = image;
-    this.type = type;
+    this.image = riflemanImage;
+    this.type = "rifleman";
+    this.fireDistance = 260;
+    this.fireRate = 5;
+    this.droneSpottingChanse = 1;
     this.baseX = x;
     this.baseY = y;
     this.prevX = x;
@@ -26,6 +28,7 @@ export class Enemy {
     this.speed = Math.random() * 0.07 + 0.11;
     this.width = 64;
     this.height = 64;
+    this.type = type;
     this.runframeY = 3;
     this.frameSpeed = 20;
     this.runFrames = 8;
@@ -135,6 +138,7 @@ export class Enemy {
   }
 
   checkObstaclesCollision(index) {
+    if (this.dead) return;
     const warningZone = 10; // Зона попередження навколо перешкоди
     const forwardDistance = 150; // Дальність прямої перевірки
     const sideDistance = 100; // Довжина відхилення під 45 градусів
@@ -195,19 +199,20 @@ export class Enemy {
 
     // Якщо попереду перешкода — обираємо напрямок
     if (forwardBlocked) {
+      const actualSpeed = this.crawl ? this.speed / 2 : this.speed;
       if (!leftBlocked && rightBlocked) {
         // Ліво вільне
-        this.baseX += this.speed * -1 * (0.6 + Math.random() * 0.5);
-        this.baseY += this.speed;
+        this.baseX += actualSpeed * -1 * (0.6 + Math.random() * 0.5);
+        this.baseY += actualSpeed;
       } else if (!rightBlocked && leftBlocked) {
         // Право вільне
-        this.baseX += this.speed * (0.6 + Math.random() * 0.5);
-        this.baseY += this.speed;
+        this.baseX += actualSpeed * (0.6 + Math.random() * 0.5);
+        this.baseY += actualSpeed;
       } else {
         // Обидва варіанти або заблоковані або вільні - випадково по індексу
         const direction = index % 2 === 0 ? -1 : 1;
-        this.baseX += this.speed * direction;
-        this.baseY += this.speed;
+        this.baseX += actualSpeed * direction;
+        this.baseY += actualSpeed;
       }
     }
 
@@ -312,55 +317,59 @@ export class Enemy {
     }
   }
 }
-
-export function createRifleman(x, y, layer1, ctx, obstacles) {
-  return new Enemy(
-    riflemanImage,
-    x,
-    y,
-    layer1,
-    ctx,
-    obstacles,
-    260,
-    5,
-    "rifleman",
-    1
-  );
+export class Rifleman extends Enemy {
+  constructor(x, y, layer, ctx, obstacles) {
+    super(x, y, layer, ctx, obstacles);
+    this.image = riflemanImage;
+    this.type = "rifleman";
+    this.fireDistance = 260;
+    this.fireRate = 5;
+    this.droneSpottingChanse = 1;
+  }
 }
-export function createMachinegunner(x, y, layer1, ctx, obstacles) {
-  return new Enemy(
-    machinegunnerImage,
-    x,
-    y,
-    layer1,
-    ctx,
-    obstacles,
-    300,
-    10,
-    "machinegunner",
-    2
-  );
+export class Machinegunner extends Enemy {
+  constructor(x, y, layer, ctx, obstacles) {
+    super(x, y, layer, ctx, obstacles);
+    this.image = machinegunnerImage;
+    this.type = "machinegunner";
+    this.fireDistance = 350;
+    this.fireRate = 15;
+    this.droneSpottingChanse = 2;
+  }
 }
 
-export function createRifleSquad(x, y, layer1, ctx, obstacles) {
+export function createRifleSquad(
+  x,
+  y,
+  spreadX,
+  spreadY,
+  layer1,
+  ctx,
+  obstacles
+) {
   const squad = [];
+
   for (let i = 0; i < 5; i++) {
-    const rifleman = createRifleman(
-      x + Math.random() * 150 - 75,
-      y + Math.random() * 50 - 25,
+    squad.push(
+      new Rifleman(
+        x + Math.random() * 120 - 60,
+        y + Math.random() * 300 - 155,
+        layer1,
+        ctx,
+        obstacles
+      )
+    );
+  }
+
+  squad.push(
+    new Machinegunner(
+      x + Math.random() * 120 - 60,
+      y + Math.random() * 300 - 155,
       layer1,
       ctx,
       obstacles
-    );
-    squad.push(rifleman);
-  }
-  const machinegunner = createMachinegunner(
-    x + Math.random() * 150 - 75,
-    y + Math.random() * 50 - 25,
-    layer1,
-    ctx,
-    obstacles
+    )
   );
-  squad.push(machinegunner);
+
   return squad;
 }

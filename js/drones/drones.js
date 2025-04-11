@@ -28,7 +28,7 @@ class Drone {
     this.fragBombWeight = 0.13;
     this.heBombWeight = 0.16;
     this.shapedBombWeight = 0.14;
-    this.reloadingTime = 1000 * 60 * 4;
+    this.reloadingTime = 1000 * 60 * 3;
     this.reloadStartTime = null;
     this.scale = 1; // стартовий масштаб
     this.targetScale = 0.3; // цільовий масштаб при польоті
@@ -188,7 +188,7 @@ class Drone {
   cahngeVisibility() {
     this.visibility = Math.max(
       this.initialVisibility,
-      Math.min(this.visibility + this.initialVisibility * 2, 100)
+      Math.min(this.visibility + this.initialVisibility * 4, 100)
     );
     setTimeout(() => {
       this.visibility = Math.max(
