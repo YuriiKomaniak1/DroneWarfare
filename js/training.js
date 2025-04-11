@@ -187,7 +187,7 @@ function animate(timestamp) {
       if (enemy.isFiring && checkDistance(enemy, canvas) > enemy.fireDistance) {
         enemy.isFiring = false;
       }
-      enemy.update(enemies);
+      enemy.update(enemies, canvas);
       enemy.checkObstaclesCollision(index);
       enemy.draw();
       enemy.fire(currentDrone, layer1);

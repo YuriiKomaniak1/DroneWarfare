@@ -55,7 +55,7 @@ export class Enemy {
     this.droneSpottingChanse = droneSpottingChanse; // Кількість кадрів для затримки
   }
 
-  update(allEnemies) {
+  update(allEnemies, canvas) {
     if (!this.oldPositions) this.oldPositions = []; // Якщо ще немає масиву
     const memoryFrames = 10; // Скільки кадрів пам'ятати для розрахунку кута
 
@@ -121,14 +121,26 @@ export class Enemy {
     }
 
     // --- Розрахунок кута повороту ---
-    if (this.oldPositions.length > 0) {
-      const oldest = this.oldPositions[0];
-      const deltaX = this.baseX - oldest.x;
-      const deltaY = this.baseY - oldest.y;
+    if (this.isFiring) {
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
 
-      if (Math.abs(deltaX) > 0.01 || Math.abs(deltaY) > 0.01) {
-        const targetAngle = Math.atan2(deltaY, deltaX) - Math.PI / 2;
-        this.rotationAngle += (targetAngle - this.rotationAngle) * 0.05; // Плавне наближення
+      const dx = centerX - (this.baseX + this.layer.x + this.width / 2);
+      const dy = centerY - (this.baseY + this.layer.y + this.height / 2);
+
+      const targetAngle = Math.atan2(dy, dx) - Math.PI / 2;
+      this.rotationAngle += (targetAngle - this.rotationAngle) * 0.1; // Плавна зміна кута
+    } else {
+      // Звичайне обертання за рухом
+      if (this.oldPositions.length > 0) {
+        const oldest = this.oldPositions[0];
+        const deltaX = this.baseX - oldest.x;
+        const deltaY = this.baseY - oldest.y;
+
+        if (Math.abs(deltaX) > 0.01 || Math.abs(deltaY) > 0.01) {
+          const targetAngle = Math.atan2(deltaY, deltaX) - Math.PI / 2;
+          this.rotationAngle += (targetAngle - this.rotationAngle) * 0.05; // Плавніше при русі
+        }
       }
     }
 

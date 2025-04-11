@@ -388,7 +388,7 @@ export function switchToNextAvailableBomb(
   for (let i = 0; i < types.length; i++) {
     const index = (startIndex + i) % types.length;
     const type = types[index];
-    const bombList = activeDrone[`${type}Bombs`];
+    const bombList = activeDrone.bombStorage[type];
     if (bombList && bombList.length > 0) {
       if (!onlyFind) {
         selectionState.selectedBombType = type;

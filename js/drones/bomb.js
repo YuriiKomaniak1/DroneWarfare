@@ -8,6 +8,8 @@ let imageExplosion = new Image();
 imageExplosion.src = "../assets/img/bombs/smallExplosion.png";
 import { switchToNextAvailableBomb } from "../logic/controls.js";
 export class Bomb {
+  static weight = 0.1; // За замовчуванням
+  static type = "default"; // Тип за замовчуванням
   constructor(x, y, layer, ctx) {
     this.x = x;
     this.y = y;
@@ -25,7 +27,6 @@ export class Bomb {
     this.explosionFrame = 0;
     this.imageWidth = 64;
     this.imageHeight = 64;
-    this.type = "default";
     this.spread = 1.8;
     this.exploded = false;
     this.friction = 0.997;
@@ -99,11 +100,12 @@ export class Bomb {
   }
 }
 export class FragBomb extends Bomb {
+  static weight = 0.13;
+  static type = "frag";
   constructor(x, y, layer, ctx) {
     super(x, y, layer, ctx);
     this.image = fragBombImage;
     this.imageExplosion = imageExplosion;
-    this.type = "frag";
     this.explosionScale = 64;
   }
 
@@ -130,11 +132,12 @@ export class FragBomb extends Bomb {
 
 // Осколково-фугасна бомба
 export class HeBomb extends Bomb {
+  static weight = 0.16;
+  static type = "he";
   constructor(x, y, layer, ctx) {
     super(x, y, layer, ctx);
     this.image = heBombImage;
     this.imageExplosion = imageExplosion;
-    this.type = "he";
     this.explosionScale = 100;
   }
 
@@ -149,6 +152,8 @@ export class HeBomb extends Bomb {
 
 // Кумулятивна бомба
 export class ShapedBomb extends Bomb {
+  static weight = 0.14;
+  static type = "shaped";
   constructor(x, y, layer, ctx) {
     super(x, y, layer, ctx);
     this.image = shapedBombImage;
@@ -186,15 +191,15 @@ export function dropBomb(
 
   switch (selectionState.selectedBombType) {
     case "frag":
-      bombArray = currentDrone.fragBombs;
+      bombArray = currentDrone.bombStorage.frag;
       newBomb = new FragBomb(x, y, layer1, ctx);
       break;
     case "he":
-      bombArray = currentDrone.heBombs;
+      bombArray = currentDrone.bombStorage.he;
       newBomb = new HeBomb(x, y, layer1, ctx);
       break;
     case "shaped":
-      bombArray = currentDrone.shapedBombs;
+      bombArray = currentDrone.bombStorage.shaped;
       newBomb = new ShapedBomb(x, y, layer1, ctx);
       break;
   }

@@ -19,15 +19,16 @@ class Drone {
     this.isActive = false;
     this.isReloading = false;
     this.isAlive = true;
-    this.StartFragBombs = [];
-    this.StartHEBombs = [];
-    this.StartShapedBombs = [];
-    this.fragBombs = [];
-    this.heBombs = [];
-    this.shapedBombs = [];
-    this.fragBombWeight = 0.13;
-    this.heBombWeight = 0.16;
-    this.shapedBombWeight = 0.14;
+    this.initialBombStorage = {
+      frag: [],
+      he: [],
+      shaped: [],
+    };
+    this.bombStorage = {
+      frag: [],
+      he: [],
+      shaped: [],
+    };
     this.reloadingTime = 1000 * 60 * 3;
     this.reloadStartTime = null;
     this.scale = 1; // стартовий масштаб
@@ -125,17 +126,14 @@ class Drone {
   }
 
   countBombs() {
-    return (
-      this.fragBombs.length + this.heBombs.length + this.shapedBombs.length
+    return Object.values(this.bombStorage).reduce(
+      (sum, bombs) => sum + bombs.length,
+      0
     );
   }
 
   isEmpty() {
-    return (
-      this.fragBombs.length === 0 &&
-      this.heBombs.length === 0 &&
-      this.shapedBombs.length === 0
-    );
+    return this.countBombs() === 0;
   }
 
   reloading(forseReload = false) {
@@ -146,9 +144,7 @@ class Drone {
         this.isReloading = false;
         this.reloadStartTime = null;
         this.isActive = true;
-        this.fragBombs = [...this.StartFragBombs];
-        this.heBombs = [...this.StartHEBombs];
-        this.shapedBombs = [...this.StartShapedBombs];
+        this.bombStorage = this.initialBombStorage;
         this.baseX = 0;
         this.baseY = 0;
         this.scale = 1.5;
@@ -197,22 +193,13 @@ class Drone {
       );
     }, 25000);
   }
-  addFragBomb() {
-    if (this.remainingCapacity >= this.fragBombWeight) {
-      this.fragBombs.push("bomb");
-      this.remainingCapacity -= this.fragBombWeight;
-    }
-  }
-  addHEBomb() {
-    if (this.remainingCapacity >= this.heBombWeight) {
-      this.heBombs.push("bomb");
-      this.remainingCapacity -= this.heBombWeight;
-    }
-  }
-  addShapedBomb() {
-    if (this.remainingCapacity >= this.shapedBombWeight) {
-      this.shapedBombs.push("bomb");
-      this.remainingCapacity -= this.shapedBombWeight;
+  addBomb(BombClass) {
+    const weight = BombClass.weight;
+    const type = BombClass.type;
+
+    if (this.remainingCapacity >= weight) {
+      this.bombStorage[type].push("bomb");
+      this.remainingCapacity -= weight;
     }
   }
 }

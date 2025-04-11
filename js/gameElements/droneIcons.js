@@ -25,6 +25,7 @@ export class DroneIcons {
     this.ctx.globalAlpha = this.drone.isActive ? 1 : 0.5;
     this.ctx.fillStyle = "rgba(234, 234, 234, 0.3)";
     this.ctx.fillRect(this.x, this.y, this.width, this.height);
+
     if (this.drone.isAlive) {
       this.ctx.drawImage(
         this.drone.image,
@@ -38,45 +39,36 @@ export class DroneIcons {
         this.width
       );
     }
-    if (!this.drone.isReloading && this.drone.isAlive) {
-      this.drone.fragBombs.forEach((bomb, index) => {
-        this.ctx.drawImage(
-          fragBombIcon,
-          this.x + 2 + this.bombWidth * index,
-          this.y + this.width + 5,
-          this.bombWidth,
-          this.bombHeight
-        );
-      });
-      this.drone.heBombs.forEach((bomb, index) => {
-        this.ctx.drawImage(
-          heBombIcon,
-          this.x + 2 + this.bombWidth * (index + this.drone.fragBombs.length),
-          this.y + this.width + 5,
-          this.bombWidth,
-          this.bombHeight
-        );
-      });
 
-      this.drone.shapedBombs.forEach((bomb, index) => {
-        this.ctx.drawImage(
-          shapedBombIcon,
-          this.x +
-            2 +
-            this.bombWidth *
-              (index + this.drone.fragBombs.length + this.drone.heBombs.length),
-          this.y + this.width + 5,
-          this.bombWidth,
-          this.bombHeight
-        );
+    if (!this.drone.isReloading && this.drone.isAlive) {
+      const bombTypes = [
+        { type: "frag", icon: fragBombIcon },
+        { type: "he", icon: heBombIcon },
+        { type: "shaped", icon: shapedBombIcon },
+      ];
+
+      let currentOffset = 0;
+
+      bombTypes.forEach(({ type, icon }) => {
+        const bombs = this.drone.bombStorage[type];
+        bombs.forEach((bomb, index) => {
+          this.ctx.drawImage(
+            icon,
+            this.x + 2 + this.bombWidth * (currentOffset + index),
+            this.y + this.width + 5,
+            this.bombWidth,
+            this.bombHeight
+          );
+        });
+        currentOffset += bombs.length;
       });
     }
+
     if (this.drone.isReloading) {
       const now = Date.now();
       const elapsed = now - this.drone.reloadStartTime;
       const progress = Math.min(elapsed / this.drone.reloadingTime, 1);
       const barWidth = (this.width - 4) * progress;
-      // Малюємо фон полоски (темний)
       this.ctx.fillStyle = "rgba(100, 100, 100, 1)";
       this.ctx.fillRect(
         this.x + 2,
@@ -84,7 +76,6 @@ export class DroneIcons {
         this.width - 4,
         this.bombHeight
       );
-      // Малюємо саму полоску (яскравіша зелена)
       this.ctx.fillStyle = "rgba(55, 230, 24, 0.8)";
       this.ctx.fillRect(
         this.x + 2,
@@ -93,7 +84,9 @@ export class DroneIcons {
         this.bombHeight
       );
     }
+
     this.ctx.globalAlpha = 1;
+
     if (this.drone.isActive && !this.drone.isReloading) {
       const hpBarHeight = (this.drone.hp / this.drone.initialHP) * this.height;
       const visibilityBarHeight = (this.drone.visibility / 100) * this.height;
