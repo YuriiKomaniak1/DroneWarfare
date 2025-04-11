@@ -8,45 +8,30 @@ let imageExplosion = new Image();
 imageExplosion.src = "../assets/img/bombs/smallExplosion.png";
 import { switchToNextAvailableBomb } from "../logic/controls.js";
 export class Bomb {
-  constructor(
-    image,
-    imageExplosion,
-    x,
-    y,
-    spriteWidth,
-    spriteHeight,
-    scale,
-    explosionScale,
-    frames,
-    layer,
-    ctx,
-    type
-  ) {
-    this.image = image;
-    this.imageWidth = 64;
-    this.imageHeight = 64;
-    this.imageExplosion = imageExplosion;
-    this.baseX = x;
-    this.baseY = y;
-    this.frameX = 0;
-    this.frames = frames;
-    this.width = spriteWidth;
-    this.height = spriteHeight;
-    this.scale = scale;
-    this.initialScale = scale;
-    this.spread = 1.8;
-    this.exploded = false;
-    this.explosionScale = explosionScale;
-    this.friction = 0.997;
-    this.shrinkRate = 1.009;
-    this.velocityX = layer.speedX * 1; // Початкова швидкість
-    this.velocityY = layer.speedY * 1;
-    this.explosionFrame = 0;
-    this.initialX = x;
-    this.initialY = y;
+  constructor(x, y, layer, ctx) {
+    this.x = x;
+    this.y = y;
     this.layer = layer;
     this.ctx = ctx;
-    this.type = type; // Тип бомби
+    this.image = null;
+    this.imageExplosion = null;
+    this.width = 300;
+    this.height = 300;
+    this.scale = 3;
+    this.initialScale = 3;
+    this.explosionScale = 64;
+    this.frames = 10;
+    this.frameX = 0;
+    this.explosionFrame = 0;
+    this.imageWidth = 64;
+    this.imageHeight = 64;
+    this.type = "default";
+    this.spread = 1.8;
+    this.exploded = false;
+    this.friction = 0.997;
+    this.shrinkRate = 1.009;
+    this.velocityX = layer.speedX;
+    this.velocityY = layer.speedY;
   }
 
   drop() {
@@ -54,11 +39,11 @@ export class Bomb {
       this.velocityX *= this.friction ** 2;
       this.velocityY *= this.friction ** 2;
 
-      this.baseX +=
+      this.x +=
         this.layer.speedX -
         this.velocityX +
         (Math.random() * this.spread - this.spread / 2);
-      this.baseY +=
+      this.y +=
         this.layer.speedY -
         this.velocityY +
         (Math.random() * this.spread - this.spread / 2);
@@ -74,8 +59,8 @@ export class Bomb {
     if (!this.exploded) {
       this.ctx.drawImage(
         this.image,
-        this.baseX - (150 * this.scale) / this.initialScale,
-        this.baseY - (150 * this.scale) / this.initialScale,
+        this.x - (150 * this.scale) / this.initialScale,
+        this.y - (150 * this.scale) / this.initialScale,
         (this.width * this.scale) / this.initialScale,
         (this.height * this.scale) / this.initialScale
       );
@@ -93,46 +78,91 @@ export class Bomb {
         0,
         this.imageWidth,
         this.imageHeight,
-        this.baseX - this.explosionScale / 2,
-        this.baseY - this.explosionScale / 2,
+        this.x - this.explosionScale / 2,
+        this.y - this.explosionScale / 2,
         this.explosionScale,
         this.explosionScale
       );
-      this.baseX += this.layer.speedX;
-      this.baseY += this.layer.speedY;
+      this.x += this.layer.speedX;
+      this.y += this.layer.speedY;
 
       this.explosionFrame++;
     }
   }
+
   checkCollision(enemy) {
     const distance = Math.hypot(
-      this.baseX - (enemy.x + 32),
-      this.baseY - (enemy.y + 32)
+      this.x - (enemy.x + 32),
+      this.y - (enemy.y + 32)
+    );
+    return distance < 50; // базова перевірка
+  }
+}
+export class FragBomb extends Bomb {
+  constructor(x, y, layer, ctx) {
+    super(x, y, layer, ctx);
+    this.image = fragBombImage;
+    this.imageExplosion = imageExplosion;
+    this.type = "frag";
+    this.explosionScale = 64;
+  }
+
+  checkCollision(enemy) {
+    const distance = Math.hypot(
+      this.x - (enemy.x + 32),
+      this.y - (enemy.y + 32)
     );
     let hitStatus = false;
-    if (this.type === "frag") {
-      if (distance < 20) {
-        hitStatus = true;
-      } else if (distance < 40 && !enemy.crawl) {
-        if (Math.random() > 0.1) hitStatus = true;
-      } else if (distance < 50 && !enemy.crawl) {
-        if (Math.random() > 0.2) hitStatus = true;
-      } else if (distance < 90 && !enemy.crawl) {
-        if (Math.random() > 0.5) hitStatus = true;
-      } else if (distance < 140 && !enemy.crawl) {
-        if (Math.random() > 0.85) hitStatus = true;
-      }
-    } else if (this.type === "he") {
-      if (distance < 50) {
-        hitStatus = true;
-      }
-    } else if (this.type === "shaped") {
-      if (distance < 15) {
-        hitStatus = true;
-      }
+    if (distance < 20) {
+      hitStatus = true;
+    } else if (distance < 40 && !enemy.crawl) {
+      if (Math.random() > 0.1) hitStatus = true;
+    } else if (distance < 50 && !enemy.crawl) {
+      if (Math.random() > 0.2) hitStatus = true;
+    } else if (distance < 90 && !enemy.crawl) {
+      if (Math.random() > 0.5) hitStatus = true;
+    } else if (distance < 140 && !enemy.crawl) {
+      if (Math.random() > 0.85) hitStatus = true;
     }
-
     return hitStatus;
+  }
+}
+
+// Осколково-фугасна бомба
+export class HeBomb extends Bomb {
+  constructor(x, y, layer, ctx) {
+    super(x, y, layer, ctx);
+    this.image = heBombImage;
+    this.imageExplosion = imageExplosion;
+    this.type = "he";
+    this.explosionScale = 100;
+  }
+
+  checkCollision(enemy) {
+    const distance = Math.hypot(
+      this.x - (enemy.x + 32),
+      this.y - (enemy.y + 32)
+    );
+    return distance < 50;
+  }
+}
+
+// Кумулятивна бомба
+export class ShapedBomb extends Bomb {
+  constructor(x, y, layer, ctx) {
+    super(x, y, layer, ctx);
+    this.image = shapedBombImage;
+    this.imageExplosion = imageExplosion;
+    this.type = "shaped";
+    this.explosionScale = 30;
+  }
+
+  checkCollision(enemy) {
+    const distance = Math.hypot(
+      this.x - (enemy.x + 32),
+      this.y - (enemy.y + 32)
+    );
+    return distance < 15;
   }
 }
 
@@ -149,26 +179,23 @@ export function dropBomb(
     return;
   }
 
-  let bombType = selectionState.selectedBombType;
   let bombArray = null;
-  let bombImage = null;
-  let explosionScale = 64;
+  let newBomb = null;
+  const x = droneScope.x + droneScope.width / 2;
+  const y = droneScope.y + droneScope.height / 2;
 
-  switch (bombType) {
+  switch (selectionState.selectedBombType) {
     case "frag":
       bombArray = currentDrone.fragBombs;
-      bombImage = fragBombImage;
-      explosionScale = 64;
+      newBomb = new FragBomb(x, y, layer1, ctx);
       break;
     case "he":
       bombArray = currentDrone.heBombs;
-      bombImage = heBombImage;
-      explosionScale = 100;
+      newBomb = new HeBomb(x, y, layer1, ctx);
       break;
     case "shaped":
       bombArray = currentDrone.shapedBombs;
-      bombImage = shapedBombImage;
-      explosionScale = 30;
+      newBomb = new ShapedBomb(x, y, layer1, ctx);
       break;
   }
 
@@ -178,26 +205,8 @@ export function dropBomb(
   }
 
   bombArray.pop();
+  bombs.push(newBomb);
 
-  const bomb = new Bomb(
-    bombImage,
-    imageExplosion,
-    droneScope.x + droneScope.width / 2,
-    droneScope.y + droneScope.height / 2,
-    300,
-    300,
-    3,
-    explosionScale,
-    10,
-    layer1,
-    ctx,
-    bombType
-  );
-
-  bomb.velocityX = layer1.speedX * 1;
-  bomb.velocityY = layer1.speedY * 1;
-
-  bombs.push(bomb);
   if (bombArray.length === 0) {
     switchToNextAvailableBomb();
     currentDrone.reloading();

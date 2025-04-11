@@ -1,7 +1,7 @@
 export function checkEffect(bomb, enemy) {
   const distance = Math.hypot(
-    bomb.baseX - (enemy.x + enemy.width / 2),
-    bomb.baseY - (enemy.y + enemy.height / 2)
+    bomb.x - (enemy.x + enemy.width / 2),
+    bomb.y - (enemy.y + enemy.height / 2)
   );
   let effectStatus = false;
   if (distance < 220) effectStatus = true;
