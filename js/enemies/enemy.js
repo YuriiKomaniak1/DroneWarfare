@@ -151,98 +151,115 @@ export class Enemy {
 
   checkObstaclesCollision(index) {
     if (this.dead || this.isFiring) return;
-    const warningZone = 10; // Зона попередження навколо перешкоди
-    const forwardDistance = 150; // Дальність прямої перевірки
-    const sideDistance = 100; // Довжина відхилення під 45 градусів
-    const angleOffset = Math.PI / 4; // 45 градусів в радіанах
-
+    const forwardDistance = 150;
+    const checkStep = 10;
+    const detectionRadius = 10;
+    const pushPower = 1.5;
+    const angle = this.rotation - Math.PI / 2;
     let forwardBlocked = false;
-    let leftBlocked = false;
-    let rightBlocked = false;
 
-    // Перевірка попереду
-    const forwardX = this.baseX;
-    const forwardY = this.baseY + forwardDistance;
+    // Перевірка по променю вперед
+    for (let d = 0; d < forwardDistance; d += checkStep) {
+      const checkX = this.baseX + Math.cos(angle) * d;
+      const checkY = this.baseY + Math.sin(angle) * d;
 
-    // Перевірка під кутом вправо
-    const rightX = this.baseX + Math.cos(angleOffset) * sideDistance;
-    const rightY = this.baseY + Math.sin(angleOffset) * sideDistance;
+      for (let obstacle of this.obstacles) {
+        const obstacleX = obstacle.x;
+        const obstacleY = obstacle.y;
+        const obstacleWidth = obstacle.width;
+        const obstacleHeight = obstacle.height;
 
-    // Перевірка під кутом вліво
-    const leftX = this.baseX + Math.cos(-angleOffset) * sideDistance;
-    const leftY = this.baseY + Math.sin(-angleOffset) * sideDistance;
-
-    for (let obstacle of this.obstacles) {
-      const obstacleX = obstacle.x;
-      const obstacleY = obstacle.y - warningZone;
-      const obstacleWidth = obstacle.width;
-      const obstacleHeight = obstacle.height;
-
-      // Перевірка попереду
-      if (
-        forwardX + this.width - 20 > obstacleX &&
-        forwardX + 20 < obstacleX + obstacleWidth &&
-        forwardY - 20 + this.height > obstacleY &&
-        forwardY + 20 < obstacleY + obstacleHeight
-      ) {
-        forwardBlocked = true;
+        if (
+          checkX + detectionRadius > obstacleX &&
+          checkX - detectionRadius < obstacleX + obstacleWidth &&
+          checkY + detectionRadius > obstacleY &&
+          checkY - detectionRadius < obstacleY + obstacleHeight
+        ) {
+          forwardBlocked = true;
+          break;
+        }
       }
-
-      // Перевірка вправо
-      if (
-        rightX + this.width - 20 > obstacleX &&
-        rightX + 20 < obstacleX + obstacleWidth &&
-        rightY - 20 + this.height > obstacleY &&
-        rightY + 20 < obstacleY + obstacleHeight
-      ) {
-        rightBlocked = true;
-      }
-
-      // Перевірка вліво
-      if (
-        leftX + this.width - 20 > obstacleX &&
-        leftX + 20 < obstacleX + obstacleWidth &&
-        leftY - 20 + this.height > obstacleY &&
-        leftY + 20 < obstacleY + obstacleHeight
-      ) {
-        leftBlocked = true;
-      }
+      if (forwardBlocked) break; // якщо вже заблоковано — далі не перевіряємо
     }
 
-    // Якщо попереду перешкода — обираємо напрямок
     if (forwardBlocked) {
-      const actualSpeed = this.crawl ? this.speed / 2 : this.speed;
-      if (!leftBlocked && rightBlocked) {
-        // Ліво вільне
-        this.baseX += actualSpeed * -1 * (0.6 + Math.random() * 0.5);
-        this.baseY += actualSpeed;
-      } else if (!rightBlocked && leftBlocked) {
-        // Право вільне
-        this.baseX += actualSpeed * (0.6 + Math.random() * 0.5);
-        this.baseY += actualSpeed;
+      // Вибір куди ухилятися: вліво або вправо
+      const leftAngle = angle - Math.PI / 2;
+      const rightAngle = angle + Math.PI / 2;
+
+      let leftFree = true;
+      let rightFree = true;
+
+      // Перевірити ліво
+      for (let d = 0; d < forwardDistance / 2; d += checkStep) {
+        const checkX = this.baseX + Math.cos(leftAngle) * d;
+        const checkY = this.baseY + Math.sin(leftAngle) * d;
+
+        for (let obstacle of this.obstacles) {
+          if (
+            checkX + detectionRadius > obstacle.x &&
+            checkX - detectionRadius < obstacle.x + obstacle.width &&
+            checkY + detectionRadius > obstacle.y &&
+            checkY - detectionRadius < obstacle.y + obstacle.height
+          ) {
+            leftFree = false;
+            break;
+          }
+        }
+        if (!leftFree) break;
+      }
+
+      // Перевірити право
+      for (let d = 0; d < forwardDistance / 2; d += checkStep) {
+        const checkX = this.baseX + Math.cos(rightAngle) * d;
+        const checkY = this.baseY + Math.sin(rightAngle) * d;
+
+        for (let obstacle of this.obstacles) {
+          if (
+            checkX + detectionRadius > obstacle.x &&
+            checkX - detectionRadius < obstacle.x + obstacle.width &&
+            checkY + detectionRadius > obstacle.y &&
+            checkY - detectionRadius < obstacle.y + obstacle.height
+          ) {
+            rightFree = false;
+            break;
+          }
+        }
+        if (!rightFree) break;
+      }
+
+      // Вибрати сторону ухилення
+      if (leftFree && !rightFree) {
+        this.baseX += Math.cos(leftAngle) * this.speed;
+        this.baseY += Math.sin(leftAngle) * this.speed;
+      } else if (rightFree && !leftFree) {
+        this.baseX += Math.cos(rightAngle) * this.speed;
+        this.baseY += Math.sin(rightAngle) * this.speed;
       } else {
-        // Обидва варіанти або заблоковані або вільні - випадково по індексу
-        const direction = index % 2 === 0 ? -1 : 1;
-        this.baseX += actualSpeed * direction;
-        this.baseY += actualSpeed;
+        // Якщо обидві сторони зайняті — уповільнення
+        this.speed *= 0.9;
       }
     }
 
+    // --- Відштовхування, якщо заїхав у перешкоду
     for (let obstacle of this.obstacles) {
-      const obstacleX = obstacle.x;
-      const obstacleY = obstacle.y - warningZone;
-      const obstacleWidth = obstacle.width;
-      const obstacleHeight = obstacle.height;
+      const centerX = obstacle.x + obstacle.width / 2;
+      const centerY = obstacle.y + obstacle.height / 2;
+
+      const dx = this.baseX - centerX;
+      const dy = this.baseY - centerY;
+      const distance = Math.hypot(dx, dy);
 
       if (
-        this.baseX + this.width - 20 > obstacleX &&
-        this.baseX + 20 < obstacleX + obstacleWidth &&
-        this.baseY - 20 + this.height > obstacleY &&
-        this.baseY + 20 < obstacleY + obstacleHeight
+        this.baseX + this.width / 2 > obstacle.x &&
+        this.baseX - this.width / 2 < obstacle.x + obstacle.width &&
+        this.baseY + this.height / 2 > obstacle.y &&
+        this.baseY - this.height / 2 < obstacle.y + obstacle.height
       ) {
-        const direction = index % 2 === 0 ? -1 : 1;
-        this.baseY -= this.speed;
-        this.baseX += this.speed * direction;
+        const nx = dx / distance; // Нормалізуємо вектор
+        const ny = dy / distance;
+        this.baseX += nx * pushPower;
+        this.baseY += ny * pushPower;
       }
     }
   }

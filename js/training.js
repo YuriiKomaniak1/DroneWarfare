@@ -30,14 +30,22 @@ import {
   trainingSections,
   updateTrainingText,
 } from "./levels/training/trainingInfo.js";
+import {
+  NavigationGrid,
+  findPath,
+  drawNavigationGrid,
+} from "./logic/navigation.js";
+
 let bombs = [];
 let obstacles = [];
 let enemies = [];
+let vehicles = [];
 async function loadObstacles() {
   const response = await fetch("js/levels/training/obstacles.json");
   obstacles = await response.json();
 }
 await loadObstacles();
+const navGrid = new NavigationGrid(1800, 2600, 15, obstacles);
 const modal = document.getElementById("modal__greeting");
 const startButton = document.getElementById("trainingStartButton");
 const trainingModal = document.getElementById("trainingModal");
@@ -47,6 +55,7 @@ const nextSection = document.getElementById("nextSection");
 const resumeGame = document.getElementById("resumeGame");
 const hideEnemiesModal = document.getElementById("hideEnemiesModal");
 const squad = document.getElementById("squad");
+const squadTruck = document.getElementById("squadTruck");
 export const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
 canvas.width = Math.min(window.innerWidth, 900);
@@ -55,9 +64,9 @@ let currentSection = 0;
 let gameFrame = 0;
 drones[0].isActive = true;
 let currentDrone = drones[selectionState.selectedDroneIndex];
-let gameField = new Image();
+const gameField = new Image();
 gameField.src = "./assets/img/grounds/train1bottom.png";
-let trees = new Image();
+const trees = new Image();
 trees.src = "./assets/img/grounds/train1trees.png";
 const layer1 = new Layer(gameField, canvas, 1800, 2600, keys, ctx);
 const layer2 = new Layer(trees, canvas, 1800, 2600, keys, ctx);
@@ -110,6 +119,25 @@ canvas.addEventListener("click", (e) =>
 canvas.addEventListener("touchstart", (e) =>
   handleMenuClick(e, canvas, openTrainingModal)
 );
+squadTruck.addEventListener("click", () => {
+  const startX = 600;
+  const startY = 100;
+  const targetX = 500;
+  const targetY = 2500;
+
+  let truck = new Ural(startX, startY, layer1, ctx, obstacles, []);
+
+  // === Шукаємо шлях один раз при створенні ===
+  truck.path = findPath(
+    navGrid,
+    { x: startX, y: startY },
+    { x: targetX, y: targetY }
+  );
+  truck.currentPathIndex = 0;
+
+  vehicles.push(truck);
+  console.log(vehicles[0].path);
+});
 squad.addEventListener("click", () => {
   const squad = createRifleSquad(
     Math.random() * 1750,
@@ -130,10 +158,10 @@ const minimap = new Minimap(
   canvas.height,
   droneScope,
   enemies,
+  vehicles,
   ctx,
   layer1
 );
-console.log(enemies);
 
 setupControls(() => {
   dropBomb(currentDrone, selectionState, layer1, ctx, droneScope, bombs);
@@ -193,6 +221,10 @@ function animate(timestamp) {
       enemy.draw();
       enemy.fire(currentDrone, layer1);
     });
+    vehicles.forEach((vehicle, index) => {
+      vehicle.update();
+      vehicle.draw();
+    });
 
     layer2.update();
     layer2.draw();
@@ -217,6 +249,7 @@ function animate(timestamp) {
       drone.flyToreload();
       drone.draw(ctx);
     });
+    drawNavigationGrid(navGrid, ctx, layer1);
     droneScope.draw(currentDrone);
     minimap.draw();
     droneIcons.forEach((object) => {

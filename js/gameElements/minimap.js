@@ -6,6 +6,7 @@ export class Minimap {
     canvasHeight,
     droneScope,
     enemies,
+    vehicles,
     ctx,
     layer
   ) {
@@ -21,6 +22,7 @@ export class Minimap {
     this.layer = layer;
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
+    this.vehicles = vehicles;
   }
   draw() {
     // Фон мінікарти
@@ -65,6 +67,24 @@ export class Minimap {
         }
       }
     });
+    this.vehicles.forEach((vehicle) => {
+      let tempX = this.mapX + (vehicle.x - this.layer.x) * this.scaleX;
+      let tempY = this.mapY + (vehicle.y - this.layer.y) * this.scaleY;
+      if (
+        tempX > this.mapX &&
+        tempX < this.mapX + this.width &&
+        tempY > this.mapY &&
+        tempY < this.mapY + this.height
+      ) {
+        if (!vehicle.isDestroyed) {
+          if (vehicle.type === "ural") {
+            this.ctx.fillStyle = "rgb(238, 117, 117)";
+            this.ctx.fillRect(tempX, tempY, 3, 6);
+          }
+        }
+      }
+    });
+
     // рамка
     this.ctx.strokeStyle = "white";
     this.ctx.strokeRect(this.mapX, this.mapY, this.width, this.height);

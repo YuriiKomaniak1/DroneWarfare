@@ -9,10 +9,13 @@ vehicleFireImage.src = "./assets/img/effects/vehicleFire.png";
 
 export class Vehicle {
   static type = "default"; // Тип за замовчуванням
-  constructor(x, y, layer, ctx) {
+  constructor(x, y, layer, ctx, obstacles, waypoints) {
     this.image = uralZImage;
-    this.x = x;
-    this.y = y;
+    this.baseX = x;
+    this.baseY = y;
+    this.x = 0;
+    this.y = 0;
+    this.scale = 0.75;
     this.width = 90;
     this.height = 224;
 
@@ -30,7 +33,7 @@ export class Vehicle {
     this.isExploded = false;
     this.isMoving = true;
     this.burningFrame = Math.ceil(Math.random() * 3) + 3;
-    this.speed = 1.5; //
+    this.speed = 0.5; //
     this.originalSpeed = this.speed;
     this.rotation = 0;
     this.waypoints = waypoints;
@@ -40,36 +43,43 @@ export class Vehicle {
     this.stoppedFrame = Math.ceil(Math.random() * 3);
     this.explodedFrame = Math.ceil(Math.random() * 4) + 3;
     this.moveFrame = 0;
+    this.obstacles = obstacles;
+    this.path = [];
+    this.currentPathIndex = 0;
   }
 
   update() {
     if (!this.isMoving) return;
-    if (this.waypoints.length === 0) return;
-
-    const target = this.waypoints[this.currentWaypointIndex];
-    const dx = target.x - this.x;
-    const dy = target.y - this.y;
-    const distance = Math.hypot(dx, dy);
-
-    if (distance < 5) {
-      // Зменшуємо швидкість перед зупинкою
-      this.speed *= 0.95;
-      if (this.speed < 0.2) {
-        this.currentWaypointIndex++;
-        this.speed = this.originalSpeed;
-        if (this.currentWaypointIndex >= this.waypoints.length) {
-          this.isStopped = true;
-        }
-      }
+    if (this.path.length === 0 || this.currentPathIndex >= this.path.length) {
+      this.isStopped = true;
+      this.isMoving = false;
       return;
     }
 
-    const angle = Math.atan2(dy, dx);
-    this.rotation = angle + Math.PI / 2;
-    const randomShakeX = (Math.random() - 0.5) * this.shakeIntensity;
-    const randomShakeY = (Math.random() - 0.5) * this.shakeIntensity;
-    this.x += Math.cos(angle) * this.speed + randomShakeX;
-    this.y += Math.sin(angle) * this.speed + randomShakeY;
+    const target = this.path[this.currentPathIndex];
+    const dx = target.x - this.baseX;
+    const dy = target.y - this.baseY;
+    const distance = Math.hypot(dx, dy);
+
+    if (distance < 5) {
+      // Досягли точки
+      this.currentPathIndex++;
+      this.speed = this.originalSpeed;
+      if (this.currentPathIndex >= this.path.length) {
+        this.isStopped = true;
+        return;
+      }
+    } else {
+      const angle = Math.atan2(dy, dx);
+      this.rotation = angle + Math.PI * 1.5;
+      const randomShakeX = (Math.random() - 0.5) * this.shakeIntensity;
+      const randomShakeY = (Math.random() - 0.5) * this.shakeIntensity;
+      this.baseX += Math.cos(angle) * this.speed + randomShakeX;
+      this.baseY += Math.sin(angle) * this.speed + randomShakeY;
+    }
+
+    this.x = this.baseX + this.layer.x;
+    this.y = this.baseY + this.layer.y;
   }
   draw() {
     //промальовка техніки
@@ -87,22 +97,25 @@ export class Vehicle {
       currentFrame * this.height,
       this.width,
       this.height,
-      -this.width / 2,
-      -this.height / 2,
-      this.width,
-      this.height
+      (-this.width * this.scale) / 2,
+      (-this.height * this.scale) / 2,
+      this.width * this.scale,
+      this.height * this.scale
     );
     this.ctx.restore();
   }
 }
 
-export class Ural extends Enemy {
-  constructor(x, y, layer, ctx, obstacles) {
-    super(x, y, layer, ctx, obstacles);
+export class Ural extends Vehicle {
+  constructor(x, y, layer, ctx, obstacles, waypoints) {
+    super(x, y, layer, ctx, obstacles, waypoints);
     this.image = uralZImage;
     this.x = x;
     this.y = y;
     this.width = 90;
     this.height = 224;
+    this.type = "ural";
+    this.scale = 0.75;
+    this.speed = 0.3;
   }
 }
