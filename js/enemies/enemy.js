@@ -1,6 +1,6 @@
-let riflemanImage = new Image();
+const riflemanImage = new Image();
 riflemanImage.src = "./assets/img/enemies/rifleman.png";
-let machinegunnerImage = new Image();
+const machinegunnerImage = new Image();
 machinegunnerImage.src = "./assets/img/enemies/machinegunner.png";
 export class Enemy {
   constructor(
@@ -150,7 +150,7 @@ export class Enemy {
   }
 
   checkObstaclesCollision(index) {
-    if (this.dead) return;
+    if (this.dead || this.isFiring) return;
     const warningZone = 10; // Зона попередження навколо перешкоди
     const forwardDistance = 150; // Дальність прямої перевірки
     const sideDistance = 100; // Довжина відхилення під 45 градусів
@@ -344,7 +344,7 @@ export class Machinegunner extends Enemy {
     super(x, y, layer, ctx, obstacles);
     this.image = machinegunnerImage;
     this.type = "machinegunner";
-    this.fireDistance = 350;
+    this.fireDistance = 380;
     this.fireRate = 15;
     this.droneSpottingChanse = 2;
   }

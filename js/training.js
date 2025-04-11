@@ -1,6 +1,7 @@
 import { Minimap } from "./gameElements/minimap.js";
 import { Layer } from "./layers/layer.js";
 import { createRifleSquad } from "./enemies/enemy.js";
+import { Ural } from "./enemies/vehicle.js";
 import { dropBomb } from "./drones/bomb.js";
 import { DroneScope, droneScopeImage } from "./gameElements/droneScope.js";
 import {
