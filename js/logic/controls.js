@@ -100,6 +100,7 @@ export function setupDroneSelectionByClick(canvas, droneIcons) {
       clientX = e.clientX;
       clientY = e.clientY;
     }
+    2;
 
     const rect = canvas.getBoundingClientRect();
     const mouseX = clientX - rect.left;
