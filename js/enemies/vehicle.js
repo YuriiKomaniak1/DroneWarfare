@@ -9,7 +9,7 @@ vehicleFireImage.src = "./assets/img/effects/vehicleFire.png";
 
 export class Vehicle {
   static type = "default"; // Тип за замовчуванням
-  constructor(x, y, layer, ctx, obstacles, waypoints) {
+  constructor(x, y, layer, ctx, waypoints) {
     this.image = uralZImage;
     this.baseX = x;
     this.baseY = y;
@@ -33,7 +33,7 @@ export class Vehicle {
     this.isExploded = false;
     this.isMoving = true;
     this.burningFrame = Math.ceil(Math.random() * 3) + 3;
-    this.speed = 0.5; //
+    this.speed = 0.5;
     this.originalSpeed = this.speed;
     this.rotation = 0;
     this.waypoints = waypoints;
@@ -43,9 +43,9 @@ export class Vehicle {
     this.stoppedFrame = Math.ceil(Math.random() * 3);
     this.explodedFrame = Math.ceil(Math.random() * 4) + 3;
     this.moveFrame = 0;
-    this.obstacles = obstacles;
     this.path = [];
     this.currentPathIndex = 0;
+    this.cc = 0;
   }
 
   update() {
@@ -71,6 +71,8 @@ export class Vehicle {
       }
     } else {
       const angle = Math.atan2(dy, dx);
+      //   this.cc++;
+      //   if (this.cc % 60 === 0) console.log(distance, this.currentPathIndex);
       this.rotation = angle + Math.PI * 1.5;
       const randomShakeX = (Math.random() - 0.5) * this.shakeIntensity;
       const randomShakeY = (Math.random() - 0.5) * this.shakeIntensity;
@@ -107,8 +109,8 @@ export class Vehicle {
 }
 
 export class Ural extends Vehicle {
-  constructor(x, y, layer, ctx, obstacles, waypoints) {
-    super(x, y, layer, ctx, obstacles, waypoints);
+  constructor(x, y, layer, ctx, waypoints) {
+    super(x, y, layer, ctx, waypoints);
     this.image = uralZImage;
     this.x = x;
     this.y = y;

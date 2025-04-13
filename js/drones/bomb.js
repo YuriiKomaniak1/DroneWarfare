@@ -1,11 +1,12 @@
+import { basePath } from "../utils/basePath.js";
 let fragBombImage = new Image();
-fragBombImage.src = "../assets/img/bombs/fragBomb.png";
+fragBombImage.src = `${basePath}assets/img/bombs/fragBomb.png`;
 let heBombImage = new Image();
-heBombImage.src = "../assets/img/bombs/heBomb.png";
+heBombImage.src = `${basePath}assets/img/bombs/heBomb.png`;
 let shapedBombImage = new Image();
-shapedBombImage.src = "../assets/img/bombs/shapedBomb.png";
+shapedBombImage.src = `${basePath}assets/img/bombs/shapedBomb.png`;
 let imageExplosion = new Image();
-imageExplosion.src = "../assets/img/bombs/smallExplosion.png";
+imageExplosion.src = `${basePath}assets/img/bombs/smallExplosion.png`;
 import { switchToNextAvailableBomb } from "../logic/controls.js";
 export class Bomb {
   static weight = 0.1; // За замовчуванням
@@ -110,10 +111,7 @@ export class FragBomb extends Bomb {
   }
 
   checkCollision(enemy) {
-    const distance = Math.hypot(
-      this.x - (enemy.x + 32),
-      this.y - (enemy.y + 32)
-    );
+    const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     let hitStatus = false;
     if (distance < 20) {
       hitStatus = true;
@@ -142,10 +140,7 @@ export class HeBomb extends Bomb {
   }
 
   checkCollision(enemy) {
-    const distance = Math.hypot(
-      this.x - (enemy.x + 32),
-      this.y - (enemy.y + 32)
-    );
+    const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     return distance < 50;
   }
 }
@@ -163,10 +158,7 @@ export class ShapedBomb extends Bomb {
   }
 
   checkCollision(enemy) {
-    const distance = Math.hypot(
-      this.x - (enemy.x + 32),
-      this.y - (enemy.y + 32)
-    );
+    const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     return distance < 15;
   }
 }

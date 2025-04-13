@@ -1,6 +1,6 @@
 import { Minimap } from "./gameElements/minimap.js";
 import { Layer } from "./layers/layer.js";
-import { createRifleSquad } from "./enemies/enemy.js";
+import { createRifleSquad, Rifleman } from "./enemies/enemy.js";
 import { Ural } from "./enemies/vehicle.js";
 import { dropBomb } from "./drones/bomb.js";
 import { DroneScope, droneScopeImage } from "./gameElements/droneScope.js";
@@ -120,35 +120,65 @@ canvas.addEventListener("touchstart", (e) =>
   handleMenuClick(e, canvas, openTrainingModal)
 );
 squadTruck.addEventListener("click", () => {
-  const startX = 600;
-  const startY = 100;
-  const targetX = 500;
+  const startX = 1200;
+  const startY = 600;
+  const targetX = 800;
   const targetY = 2500;
 
-  let truck = new Ural(startX, startY, layer1, ctx, obstacles, []);
+  let truck = new Ural(startX, startY, layer1, ctx, []);
+  let enemy = new Rifleman(startX, startY, layer1, ctx, []);
 
-  // === Шукаємо шлях один раз при створенні ===
-  truck.path = findPath(
+  // // === Шукаємо шлях один раз при створенні ===
+  // truck.path = findPath(
+  //   navGrid,
+  //   { x: startX, y: startY },
+  //   { x: targetX, y: targetY }
+  // );
+  // truck.currentPathIndex = 0;
+
+  // vehicles.push(truck);
+  console.log("Перевірка в squadTruck.addEventListener:");
+  console.log("startX:", startX, "startY:", startY);
+  console.log(
+    "isBlocked стартової точки:",
+    navGrid.isBlocked(
+      Math.floor(startX / navGrid.cellSize),
+      Math.floor(startY / navGrid.cellSize)
+    )
+  );
+  console.log(
+    "isBlocked цільової точки:",
+    navGrid.isBlocked(
+      Math.floor(targetX / navGrid.cellSize),
+      Math.floor(targetY / navGrid.cellSize)
+    )
+  );
+  console.log("navGrid:", navGrid);
+  enemy.path = findPath(
     navGrid,
     { x: startX, y: startY },
     { x: targetX, y: targetY }
   );
-  truck.currentPathIndex = 0;
+  enemy.currentPathIndex = 0;
+  console.log(enemy.path);
 
-  vehicles.push(truck);
-  console.log(vehicles[0].path);
+  enemies.push(enemy);
 });
 squad.addEventListener("click", () => {
   const squad = createRifleSquad(
-    Math.random() * 1750,
-    Math.random() * 300,
+    Math.random() * 1200 + 200,
+    Math.random() * 300 + 100,
+    400,
     100,
-    300,
     layer1,
     ctx,
-    obstacles
+    navGrid,
+    1500,
+    2600
   );
+
   enemies.push(...squad);
+  console.log(enemies);
 });
 
 const minimap = new Minimap(
@@ -217,7 +247,6 @@ function animate(timestamp) {
         enemy.isFiring = false;
       }
       enemy.update(enemies, canvas);
-      enemy.checkObstaclesCollision(index);
       enemy.draw();
       enemy.fire(currentDrone, layer1);
     });

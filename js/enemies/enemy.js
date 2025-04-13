@@ -2,18 +2,9 @@ const riflemanImage = new Image();
 riflemanImage.src = "./assets/img/enemies/rifleman.png";
 const machinegunnerImage = new Image();
 machinegunnerImage.src = "./assets/img/enemies/machinegunner.png";
+import { findPath } from "../logic/navigation.js";
 export class Enemy {
-  constructor(
-    x,
-    y,
-    layer,
-    ctx,
-    obstacle,
-    fireDistance,
-    fireRate,
-    type,
-    droneSpottingChanse
-  ) {
+  constructor(x, y, layer, ctx, path) {
     this.image = riflemanImage;
     this.type = "rifleman";
     this.fireDistance = 260;
@@ -21,14 +12,13 @@ export class Enemy {
     this.droneSpottingChanse = 1;
     this.baseX = x;
     this.baseY = y;
-    this.prevX = x;
-    this.prevY = y;
     this.layer = layer;
+    this.x = this.baseX + this.layer.x;
+    this.y = this.baseY + this.layer.y;
     this.ctx = ctx;
     this.speed = Math.random() * 0.07 + 0.11;
     this.width = 64;
     this.height = 64;
-    this.type = type;
     this.runframeY = 3;
     this.frameSpeed = 20;
     this.runFrames = 8;
@@ -45,52 +35,57 @@ export class Enemy {
     this.dead = false;
     this.crawl = false;
     this.isFiring = false;
-    this.fireDistance = fireDistance;
-    this.fireRate = fireRate;
+    this.fireDistance = 1;
+    this.fireRate = 1;
     this.fireTimer = 0;
-    this.obstacles = obstacle;
     this.rotationAngle = 0;
     this.oldPositions = []; // Масив з історією положення
     this.positionMemory = 15;
-    this.droneSpottingChanse = droneSpottingChanse; // Кількість кадрів для затримки
+    this.droneSpottingChanse = 1;
+    this.path = path; // Маршрут
+    this.currentPathIndex = 0;
   }
 
   update(allEnemies, canvas) {
-    if (!this.oldPositions) this.oldPositions = []; // Якщо ще немає масиву
-    const memoryFrames = 10; // Скільки кадрів пам'ятати для розрахунку кута
-
-    // --- Збереження поточної позиції ---
-    this.oldPositions.push({ x: this.baseX, y: this.baseY });
-    if (this.oldPositions.length > memoryFrames) {
-      this.oldPositions.shift(); // Видалити найстарішу позицію
+    if (this.path.length === 0 || this.currentPathIndex >= this.path.length) {
+      return;
     }
+    let speedModifier = 1;
+    if (this.crawl) {
+      speedModifier = 0.4;
+      if (Math.random() < 0.002) this.crawl = false;
+    }
+    if (!this.dead && !this.isFiring) {
+      const target = this.path[this.currentPathIndex];
+      const dx = target.x - this.baseX;
+      const dy = target.y - this.baseY;
+      const distance = Math.hypot(dx, dy);
 
-    // --- Логіка руху ---
-    if (!this.dead) {
-      if (this.crawl) {
-        if (Math.random() < 0.001) {
-          this.crawl = false;
+      if (distance < 5) {
+        this.currentPathIndex++;
+        if (this.currentPathIndex >= this.path.length) {
+          return;
         }
-        this.baseY += this.speed / 2;
-        this.baseX += (this.speed * (Math.random() * 2 - 1)) / 2;
-      } else if (this.isFiring) {
       } else {
-        this.baseY += this.speed;
-        this.baseX += this.speed * (Math.random() * 2 - 1);
+        const angle = Math.atan2(dy, dx);
+        this.rotationAngle = angle - Math.PI / 2;
+        this.baseX += Math.cos(angle) * this.speed * speedModifier;
+        this.baseY += Math.sin(angle) * this.speed * speedModifier;
       }
-
-      // --- Анімація ---
-      this.frameTimer++;
-      if (this.frameTimer >= this.frameSpeed) {
-        if (this.crawl) {
-          this.frameX = (this.frameX + 1) % this.crawlFrames;
-        } else if (this.isFiring) {
-          this.frameX = (this.frameX + 1) % this.fireFrames;
-        } else {
-          this.frameX = (this.frameX + 1) % this.runFrames;
-        }
-        this.frameTimer = 0;
+    }
+    this.x = this.baseX + this.layer.x;
+    this.y = this.baseY + this.layer.y;
+    // --- Анімація руху ---
+    this.frameTimer++;
+    if (this.frameTimer >= this.frameSpeed) {
+      if (this.crawl) {
+        this.frameX = (this.frameX + 1) % this.crawlFrames;
+      } else if (this.isFiring) {
+        this.frameX = (this.frameX + 1) % this.fireFrames;
+      } else {
+        this.frameX = (this.frameX + 1) % this.runFrames;
       }
+      this.frameTimer = 0;
     } else {
       // --- Анімація смерті ---
       this.deathTimer++;
@@ -103,14 +98,14 @@ export class Enemy {
       }
     }
 
-    // --- Взаємодія з іншими ворогами ---
+    // --- Взаємодія з іншими ворогами (штовхання) ---
     for (let other of allEnemies) {
       if (this.dead || other === this || other.dead) continue;
 
       const dx = this.baseX - other.baseX;
       const dy = this.baseY - other.baseY;
       const distance = Math.hypot(dx, dy);
-      const minDist = this.width * 0.5;
+      const minDist = this.width * 0.4;
 
       if (distance < minDist) {
         const angle = Math.atan2(dy, dx);
@@ -119,8 +114,6 @@ export class Enemy {
         this.baseY += Math.sin(angle) * push;
       }
     }
-
-    // --- Розрахунок кута повороту ---
     if (this.isFiring) {
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
@@ -143,131 +136,12 @@ export class Enemy {
         }
       }
     }
-
-    // --- Оновлення візуальної позиції ---
-    this.x = this.baseX + this.layer.x;
-    this.y = this.baseY + this.layer.y;
-  }
-
-  checkObstaclesCollision(index) {
-    if (this.dead || this.isFiring) return;
-    const forwardDistance = 150;
-    const checkStep = 10;
-    const detectionRadius = 10;
-    const pushPower = 1.5;
-    const angle = this.rotation - Math.PI / 2;
-    let forwardBlocked = false;
-
-    // Перевірка по променю вперед
-    for (let d = 0; d < forwardDistance; d += checkStep) {
-      const checkX = this.baseX + Math.cos(angle) * d;
-      const checkY = this.baseY + Math.sin(angle) * d;
-
-      for (let obstacle of this.obstacles) {
-        const obstacleX = obstacle.x;
-        const obstacleY = obstacle.y;
-        const obstacleWidth = obstacle.width;
-        const obstacleHeight = obstacle.height;
-
-        if (
-          checkX + detectionRadius > obstacleX &&
-          checkX - detectionRadius < obstacleX + obstacleWidth &&
-          checkY + detectionRadius > obstacleY &&
-          checkY - detectionRadius < obstacleY + obstacleHeight
-        ) {
-          forwardBlocked = true;
-          break;
-        }
-      }
-      if (forwardBlocked) break; // якщо вже заблоковано — далі не перевіряємо
-    }
-
-    if (forwardBlocked) {
-      // Вибір куди ухилятися: вліво або вправо
-      const leftAngle = angle - Math.PI / 2;
-      const rightAngle = angle + Math.PI / 2;
-
-      let leftFree = true;
-      let rightFree = true;
-
-      // Перевірити ліво
-      for (let d = 0; d < forwardDistance / 2; d += checkStep) {
-        const checkX = this.baseX + Math.cos(leftAngle) * d;
-        const checkY = this.baseY + Math.sin(leftAngle) * d;
-
-        for (let obstacle of this.obstacles) {
-          if (
-            checkX + detectionRadius > obstacle.x &&
-            checkX - detectionRadius < obstacle.x + obstacle.width &&
-            checkY + detectionRadius > obstacle.y &&
-            checkY - detectionRadius < obstacle.y + obstacle.height
-          ) {
-            leftFree = false;
-            break;
-          }
-        }
-        if (!leftFree) break;
-      }
-
-      // Перевірити право
-      for (let d = 0; d < forwardDistance / 2; d += checkStep) {
-        const checkX = this.baseX + Math.cos(rightAngle) * d;
-        const checkY = this.baseY + Math.sin(rightAngle) * d;
-
-        for (let obstacle of this.obstacles) {
-          if (
-            checkX + detectionRadius > obstacle.x &&
-            checkX - detectionRadius < obstacle.x + obstacle.width &&
-            checkY + detectionRadius > obstacle.y &&
-            checkY - detectionRadius < obstacle.y + obstacle.height
-          ) {
-            rightFree = false;
-            break;
-          }
-        }
-        if (!rightFree) break;
-      }
-
-      // Вибрати сторону ухилення
-      if (leftFree && !rightFree) {
-        this.baseX += Math.cos(leftAngle) * this.speed;
-        this.baseY += Math.sin(leftAngle) * this.speed;
-      } else if (rightFree && !leftFree) {
-        this.baseX += Math.cos(rightAngle) * this.speed;
-        this.baseY += Math.sin(rightAngle) * this.speed;
-      } else {
-        // Якщо обидві сторони зайняті — уповільнення
-        this.speed *= 0.9;
-      }
-    }
-
-    // --- Відштовхування, якщо заїхав у перешкоду
-    for (let obstacle of this.obstacles) {
-      const centerX = obstacle.x + obstacle.width / 2;
-      const centerY = obstacle.y + obstacle.height / 2;
-
-      const dx = this.baseX - centerX;
-      const dy = this.baseY - centerY;
-      const distance = Math.hypot(dx, dy);
-
-      if (
-        this.baseX + this.width / 2 > obstacle.x &&
-        this.baseX - this.width / 2 < obstacle.x + obstacle.width &&
-        this.baseY + this.height / 2 > obstacle.y &&
-        this.baseY - this.height / 2 < obstacle.y + obstacle.height
-      ) {
-        const nx = dx / distance; // Нормалізуємо вектор
-        const ny = dy / distance;
-        this.baseX += nx * pushPower;
-        this.baseY += ny * pushPower;
-      }
-    }
   }
 
   draw() {
     if (!this.dead && !this.crawl && !this.isFiring) {
       this.ctx.save();
-      this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
+      this.ctx.translate(this.x, this.y);
       this.ctx.rotate(this.rotationAngle);
       this.ctx.drawImage(
         this.image,
@@ -283,7 +157,7 @@ export class Enemy {
       this.ctx.restore();
     } else if (!this.dead && this.crawl && !this.isFiring) {
       this.ctx.save();
-      this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
+      this.ctx.translate(this.x, this.y);
       this.ctx.rotate(this.rotationAngle);
       this.ctx.drawImage(
         this.image,
@@ -299,7 +173,7 @@ export class Enemy {
       this.ctx.restore();
     } else if (!this.dead && this.isFiring && !this.crawl) {
       this.ctx.save();
-      this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
+      this.ctx.translate(this.x, this.y);
       this.ctx.rotate(this.rotationAngle);
       this.ctx.drawImage(
         this.image,
@@ -315,7 +189,7 @@ export class Enemy {
       this.ctx.restore();
     } else if (this.dead) {
       this.ctx.save();
-      this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
+      this.ctx.translate(this.x, this.y);
       this.ctx.rotate(this.deathAngle);
       this.ctx.drawImage(
         this.image,
@@ -347,8 +221,8 @@ export class Enemy {
   }
 }
 export class Rifleman extends Enemy {
-  constructor(x, y, layer, ctx, obstacles) {
-    super(x, y, layer, ctx, obstacles);
+  constructor(x, y, layer, ctx, path) {
+    super(x, y, layer, ctx, path);
     this.image = riflemanImage;
     this.type = "rifleman";
     this.fireDistance = 260;
@@ -357,11 +231,11 @@ export class Rifleman extends Enemy {
   }
 }
 export class Machinegunner extends Enemy {
-  constructor(x, y, layer, ctx, obstacles) {
-    super(x, y, layer, ctx, obstacles);
+  constructor(x, y, layer, ctx, path) {
+    super(x, y, layer, ctx, path);
     this.image = machinegunnerImage;
     this.type = "machinegunner";
-    this.fireDistance = 380;
+    this.fireDistance = 350;
     this.fireRate = 15;
     this.droneSpottingChanse = 2;
   }
@@ -372,33 +246,45 @@ export function createRifleSquad(
   y,
   spreadX,
   spreadY,
-  layer1,
+  layer,
   ctx,
-  obstacles
+  navGrid,
+  targetX,
+  targetY
 ) {
   const squad = [];
 
   for (let i = 0; i < 5; i++) {
-    squad.push(
-      new Rifleman(
-        x + Math.random() * 120 - 60,
-        y + Math.random() * 300 - 155,
-        layer1,
-        ctx,
-        obstacles
-      )
+    let localSpreadX = Math.floor(Math.random() * spreadX - spreadX / 2);
+    let localSpreadY = Math.floor(Math.random() * spreadY - spreadY / 2);
+    const startX = x + localSpreadX;
+    const startY = y + localSpreadY;
+
+    const path = findPath(
+      navGrid,
+      { x: startX, y: startY },
+      { x: targetX, y: targetY }
     );
+    const rifleman = new Rifleman(startX, startY, layer, ctx, []);
+    rifleman.path = path;
+    rifleman.currentPathIndex = 0;
+    squad.push(rifleman);
   }
 
-  squad.push(
-    new Machinegunner(
-      x + Math.random() * 120 - 60,
-      y + Math.random() * 300 - 155,
-      layer1,
-      ctx,
-      obstacles
-    )
+  const startX = x + Math.floor(Math.random() * spreadX - spreadX / 2);
+  const startY = y + Math.floor(Math.random() * spreadY - spreadY / 2);
+  const path = findPath(
+    navGrid,
+    { x: startX, y: startY },
+    { x: targetX, y: targetY }
   );
+
+  const machinegunner = new Machinegunner(startX, startY, layer, ctx, []);
+
+  machinegunner.path = path;
+  machinegunner.currentPathIndex = 0;
+  console.log(machinegunner);
+  squad.push(machinegunner);
 
   return squad;
 }

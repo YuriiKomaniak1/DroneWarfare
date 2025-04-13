@@ -48,21 +48,23 @@ export function findPath(grid, startPos, endPos) {
     x: Math.floor(startPos.x / grid.cellSize),
     y: Math.floor(startPos.y / grid.cellSize),
     g: 0,
-    h: heuristic(startPos, endPos),
+    h: 0, // Ми порахуємо правильно після
     f: 0,
     parent: null,
+    ignoreBlocked: true,
   };
-  start.f = start.g + start.h;
 
   const end = {
     x: Math.floor(endPos.x / grid.cellSize),
     y: Math.floor(endPos.y / grid.cellSize),
   };
 
+  start.h = heuristic(start, end); // <--- Ось правильно
+  start.f = start.g + start.h;
+
   openSet.push(start);
 
   while (openSet.length > 0) {
-    // Найдешевший вузол
     openSet.sort((a, b) => a.f - b.f);
     const current = openSet.shift();
 
@@ -120,8 +122,15 @@ function getNeighbors(node, grid) {
   for (const [dx, dy] of dirs) {
     const x = node.x + dx;
     const y = node.y + dy;
-    if (!grid.isBlocked(x, y)) {
-      neighbors.push({ x, y });
+
+    const isBlocked = grid.isBlocked(x, y);
+
+    if (!isBlocked || (node.ignoreBlocked && x === node.x && y === node.y)) {
+      neighbors.push({
+        x,
+        y,
+        ignoreBlocked: false, // ВАЖЛИВО: всі сусіди мають ignoreBlocked = false
+      });
     }
   }
   return neighbors;
@@ -136,6 +145,7 @@ function reconstructPath(node, cellSize) {
     });
     node = node.parent;
   }
+
   return path;
 }
 
