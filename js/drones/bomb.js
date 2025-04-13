@@ -1,12 +1,12 @@
-import { basePath } from "../utils/basePath.js";
+import { basePath } from "../utils/basePath.js`;
 let fragBombImage = new Image();
-fragBombImage.src = "../assets/img/bombs/fragBomb.png";
+fragBombImage.src = `${basePath}/assets/img/bombs/fragBomb.png`;
 let heBombImage = new Image();
-heBombImage.src = "../assets/img/bombs/heBomb.png";
+heBombImage.src = ``${basePath}/assets/img/bombs/heBomb.png`;
 let shapedBombImage = new Image();
-shapedBombImage.src = "../assets/img/bombs/shapedBomb.png";
+shapedBombImage.src = ``${basePath}/assets/img/bombs/shapedBomb.png`;
 let imageExplosion = new Image();
-imageExplosion.src = "../assets/img/bombs/smallExplosion.png";
+imageExplosion.src = ``${basePath}/assets/img/bombs/smallExplosion.png`;
 import { switchToNextAvailableBomb } from "../logic/controls.js";
 export class Bomb {
   static weight = 0.1; // За замовчуванням
