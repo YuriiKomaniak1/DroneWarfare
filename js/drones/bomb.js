@@ -1,4 +1,4 @@
-import { basePath } from "../utils/basePath.js`;
+import { basePath } from "../utils/basePath.js";
 let fragBombImage = new Image();
 fragBombImage.src = `${basePath}assets/img/bombs/fragBomb.png`;
 let heBombImage = new Image();
