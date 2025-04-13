@@ -2,6 +2,8 @@ const riflemanImage = new Image();
 riflemanImage.src = "./assets/img/enemies/rifleman.png";
 const machinegunnerImage = new Image();
 machinegunnerImage.src = "./assets/img/enemies/machinegunner.png";
+const grenadierImage = new Image();
+grenadierImage.src = "./assets/img/enemies/grenadier.png";
 import { findPath } from "../logic/navigation.js";
 export class Enemy {
   constructor(x, y, layer, ctx, path) {
@@ -44,6 +46,7 @@ export class Enemy {
     this.droneSpottingChanse = 1;
     this.path = path; // Маршрут
     this.currentPathIndex = 0;
+    this.shakeIntensity = 0.3;
   }
 
   update(allEnemies, canvas) {
@@ -69,8 +72,12 @@ export class Enemy {
       } else {
         const angle = Math.atan2(dy, dx);
         this.rotationAngle = angle - Math.PI / 2;
-        this.baseX += Math.cos(angle) * this.speed * speedModifier;
-        this.baseY += Math.sin(angle) * this.speed * speedModifier;
+        const randomShakeX = (Math.random() - 0.5) * this.shakeIntensity;
+        const randomShakeY = (Math.random() - 0.5) * this.shakeIntensity;
+        this.baseX +=
+          Math.cos(angle) * this.speed * speedModifier + randomShakeX;
+        this.baseY +=
+          Math.sin(angle) * this.speed * speedModifier + randomShakeY;
       }
     }
     this.x = this.baseX + this.layer.x;
@@ -105,7 +112,7 @@ export class Enemy {
       const dx = this.baseX - other.baseX;
       const dy = this.baseY - other.baseY;
       const distance = Math.hypot(dx, dy);
-      const minDist = this.width * 0.4;
+      const minDist = this.width * 0.32;
 
       if (distance < minDist) {
         const angle = Math.atan2(dy, dx);
@@ -230,6 +237,16 @@ export class Rifleman extends Enemy {
     this.droneSpottingChanse = 1;
   }
 }
+export class Grenadier extends Enemy {
+  constructor(x, y, layer, ctx, path) {
+    super(x, y, layer, ctx, path);
+    this.image = grenadierImage;
+    this.type = "grenadier";
+    this.fireDistance = 260;
+    this.fireRate = 4;
+    this.droneSpottingChanse = 1;
+  }
+}
 export class Machinegunner extends Enemy {
   constructor(x, y, layer, ctx, path) {
     super(x, y, layer, ctx, path);
@@ -253,39 +270,30 @@ export function createRifleSquad(
   targetY
 ) {
   const squad = [];
-
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 6; i++) {
+    pushSquadMember(Rifleman);
+  }
+  pushSquadMember(Machinegunner);
+  pushSquadMember(Grenadier);
+  function pushSquadMember(Class) {
     let localSpreadX = Math.floor(Math.random() * spreadX - spreadX / 2);
     let localSpreadY = Math.floor(Math.random() * spreadY - spreadY / 2);
     const startX = x + localSpreadX;
     const startY = y + localSpreadY;
-
     const path = findPath(
       navGrid,
       { x: startX, y: startY },
-      { x: targetX + localSpreadX, y: targetY + localSpreadY }
+      { x: targetX + localSpreadX, y: targetY + localSpreadY },
+      { widthCells: 1, heightCells: 1 }
     );
-    const rifleman = new Rifleman(startX, startY, layer, ctx, []);
-    rifleman.path = path;
-    rifleman.currentPathIndex = 0;
-    squad.push(rifleman);
+
+    const enemy = new Class(startX, startY, layer, ctx, []);
+
+    enemy.path = path;
+    enemy.currentPathIndex = 0;
+
+    squad.push(enemy);
   }
-  let localSpreadX = Math.floor(Math.random() * spreadX - spreadX / 2);
-  let localSpreadY = Math.floor(Math.random() * spreadY - spreadY / 2);
-  const startX = x + localSpreadX;
-  const startY = y + localSpreadY;
-  const path = findPath(
-    navGrid,
-    { x: startX, y: startY },
-    { x: targetX + localSpreadX, y: targetY + localSpreadY }
-  );
-
-  const machinegunner = new Machinegunner(startX, startY, layer, ctx, []);
-
-  machinegunner.path = path;
-  machinegunner.currentPathIndex = 0;
-  console.log(machinegunner);
-  squad.push(machinegunner);
 
   return squad;
 }

@@ -38,7 +38,7 @@ export class Vehicle {
     this.rotation = 0;
     this.waypoints = waypoints;
     this.currentWaypointIndex = 0;
-    this.shakeIntensity = 0.5;
+    this.shakeIntensity = 0.2;
     this.smokeTimer = 0;
     this.stoppedFrame = Math.ceil(Math.random() * 3);
     this.explodedFrame = Math.ceil(Math.random() * 4) + 3;

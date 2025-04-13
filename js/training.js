@@ -46,6 +46,8 @@ async function loadObstacles() {
 }
 await loadObstacles();
 const navGrid = new NavigationGrid(1800, 2600, 15, obstacles);
+const vehicleNavGrid = new NavigationGrid(1800, 2600, 40, obstacles);
+
 const modal = document.getElementById("modal__greeting");
 const startButton = document.getElementById("trainingStartButton");
 const trainingModal = document.getElementById("trainingModal");
@@ -120,49 +122,25 @@ canvas.addEventListener("touchstart", (e) =>
   handleMenuClick(e, canvas, openTrainingModal)
 );
 squadTruck.addEventListener("click", () => {
-  const startX = 1200;
-  const startY = 600;
-  const targetX = 800;
-  const targetY = 2500;
+  let coordX = Math.random() * 1200 + 200;
+  let coordY = Math.random() * 300 + 100;
+  const startX = coordX;
+  const startY = coordY;
+  const targetX = coordX;
+  const targetY = 2600 - startY;
 
   let truck = new Ural(startX, startY, layer1, ctx, []);
-  let enemy = new Rifleman(startX, startY, layer1, ctx, []);
 
-  // // === Шукаємо шлях один раз при створенні ===
-  // truck.path = findPath(
-  //   navGrid,
-  //   { x: startX, y: startY },
-  //   { x: targetX, y: targetY }
-  // );
-  // truck.currentPathIndex = 0;
-
-  // vehicles.push(truck);
-  console.log("Перевірка в squadTruck.addEventListener:");
-  console.log("startX:", startX, "startY:", startY);
-  console.log(
-    "isBlocked стартової точки:",
-    navGrid.isBlocked(
-      Math.floor(startX / navGrid.cellSize),
-      Math.floor(startY / navGrid.cellSize)
-    )
-  );
-  console.log(
-    "isBlocked цільової точки:",
-    navGrid.isBlocked(
-      Math.floor(targetX / navGrid.cellSize),
-      Math.floor(targetY / navGrid.cellSize)
-    )
-  );
-  console.log("navGrid:", navGrid);
-  enemy.path = findPath(
-    navGrid,
+  // === Шукаємо шлях один раз при створенні ===
+  truck.path = findPath(
+    vehicleNavGrid,
     { x: startX, y: startY },
-    { x: targetX, y: targetY }
+    { x: targetX, y: targetY },
+    { widthCells: 2, heightCells: 3 }
   );
-  enemy.currentPathIndex = 0;
-  console.log(enemy.path);
+  truck.currentPathIndex = 0;
 
-  enemies.push(enemy);
+  vehicles.push(truck);
 });
 squad.addEventListener("click", () => {
   let coordX = Math.random() * 1200 + 200;
@@ -280,7 +258,7 @@ function animate(timestamp) {
       drone.flyToreload();
       drone.draw(ctx);
     });
-    drawNavigationGrid(navGrid, ctx, layer1);
+    drawNavigationGrid(vehicleNavGrid, ctx, layer1);
     droneScope.draw(currentDrone);
     minimap.draw();
     droneIcons.forEach((object) => {
