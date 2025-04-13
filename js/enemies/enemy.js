@@ -263,20 +263,21 @@ export function createRifleSquad(
     const path = findPath(
       navGrid,
       { x: startX, y: startY },
-      { x: targetX, y: targetY }
+      { x: targetX + localSpreadX, y: targetY + localSpreadY }
     );
     const rifleman = new Rifleman(startX, startY, layer, ctx, []);
     rifleman.path = path;
     rifleman.currentPathIndex = 0;
     squad.push(rifleman);
   }
-
-  const startX = x + Math.floor(Math.random() * spreadX - spreadX / 2);
-  const startY = y + Math.floor(Math.random() * spreadY - spreadY / 2);
+  let localSpreadX = Math.floor(Math.random() * spreadX - spreadX / 2);
+  let localSpreadY = Math.floor(Math.random() * spreadY - spreadY / 2);
+  const startX = x + localSpreadX;
+  const startY = y + localSpreadY;
   const path = findPath(
     navGrid,
     { x: startX, y: startY },
-    { x: targetX, y: targetY }
+    { x: targetX + localSpreadX, y: targetY + localSpreadY }
   );
 
   const machinegunner = new Machinegunner(startX, startY, layer, ctx, []);

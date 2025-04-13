@@ -165,16 +165,18 @@ squadTruck.addEventListener("click", () => {
   enemies.push(enemy);
 });
 squad.addEventListener("click", () => {
+  let coordX = Math.random() * 1200 + 200;
+  let coordY = Math.random() * 300 + 100;
   const squad = createRifleSquad(
-    Math.random() * 1200 + 200,
-    Math.random() * 300 + 100,
+    coordX,
+    coordY,
     400,
     100,
     layer1,
     ctx,
     navGrid,
-    1500,
-    2600
+    coordX,
+    coordY + 2000
   );
 
   enemies.push(...squad);

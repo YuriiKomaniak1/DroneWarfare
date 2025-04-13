@@ -1,8 +1,10 @@
 export class NavigationGrid {
   constructor(mapWidth, mapHeight, cellSize, obstacles) {
     this.cellSize = cellSize;
-    this.cols = Math.ceil(mapWidth / cellSize);
-    this.rows = Math.ceil(mapHeight / cellSize);
+    this.cols = Math.ceil((mapWidth * 1.2) / cellSize); // +20%
+    this.rows = Math.ceil((mapHeight * 1.2) / cellSize); // +20%
+    this.offsetX = Math.floor((this.cols * cellSize - mapWidth) / 2); // Зсув карти
+    this.offsetY = Math.floor((this.rows * cellSize - mapHeight) / 2);
 
     // Ініціалізуємо пусту сітку
     this.grid = Array.from({ length: this.rows }, (_, y) =>
@@ -44,22 +46,34 @@ export function findPath(grid, startPos, endPos) {
   const openSet = [];
   const closedSet = new Set();
 
-  const start = {
-    x: Math.floor(startPos.x / grid.cellSize),
-    y: Math.floor(startPos.y / grid.cellSize),
+  let start = {
+    x: Math.floor((startPos.x + grid.offsetX) / grid.cellSize),
+    y: Math.floor((startPos.y + grid.offsetY) / grid.cellSize),
     g: 0,
-    h: 0, // Ми порахуємо правильно після
+    h: 0,
     f: 0,
     parent: null,
-    ignoreBlocked: true,
+    ignoreBlocked: true, // Старт ігноруємо навіть якщо заблокований
   };
 
-  const end = {
-    x: Math.floor(endPos.x / grid.cellSize),
-    y: Math.floor(endPos.y / grid.cellSize),
+  let end = {
+    x: Math.floor((endPos.x + grid.offsetX) / grid.cellSize),
+    y: Math.floor((endPos.y + grid.offsetY) / grid.cellSize),
   };
 
-  start.h = heuristic(start, end); // <--- Ось правильно
+  // Перевірка чи ціль заблокована
+  if (grid.isBlocked(end.x, end.y)) {
+    console.warn("🎯 Ціль заблокована, шукаємо найближчу вільну...");
+    const newEnd = findNearestFreeCell(end, grid);
+    if (newEnd) {
+      end = newEnd;
+    } else {
+      console.error("🚫 Немає вільної цілі поблизу.");
+      return [];
+    }
+  }
+
+  start.h = heuristic(start, end);
   start.f = start.g + start.h;
 
   openSet.push(start);
@@ -100,11 +114,48 @@ export function findPath(grid, startPos, endPos) {
     }
   }
 
-  return []; // Немає шляху
+  return [];
+}
+
+// Знаходження найближчої вільної клітинки
+function findNearestFreeCell(target, grid) {
+  const queue = [{ x: target.x, y: target.y }];
+  const visited = new Set();
+  visited.add(`${target.x},${target.y}`);
+
+  const directions = [
+    [0, -1],
+    [1, 0],
+    [0, 1],
+    [-1, 0],
+    [-1, -1],
+    [1, -1],
+    [1, 1],
+    [-1, 1],
+  ];
+
+  while (queue.length > 0) {
+    const { x, y } = queue.shift();
+
+    if (!grid.isBlocked(x, y)) {
+      return { x, y };
+    }
+
+    for (const [dx, dy] of directions) {
+      const newX = x + dx;
+      const newY = y + dy;
+      const key = `${newX},${newY}`;
+      if (grid.isInside(newX, newY) && !visited.has(key)) {
+        visited.add(key);
+        queue.push({ x: newX, y: newY });
+      }
+    }
+  }
+  return null; // Якщо не знайшли нічого
 }
 
 function heuristic(a, b) {
-  return Math.abs(a.x - b.x) + Math.abs(a.y - b.y); // Манхеттенська евристика
+  return Math.abs(a.x - b.x) + Math.abs(a.y - b.y); // Манхеттен
 }
 
 function getNeighbors(node, grid) {
@@ -112,11 +163,11 @@ function getNeighbors(node, grid) {
     [0, -1],
     [1, 0],
     [0, 1],
-    [-1, 0], // Вверх, право, вниз, вліво
+    [-1, 0],
     [-1, -1],
     [1, -1],
     [1, 1],
-    [-1, 1], // Діагоналі
+    [-1, 1],
   ];
   const neighbors = [];
   for (const [dx, dy] of dirs) {
@@ -129,23 +180,22 @@ function getNeighbors(node, grid) {
       neighbors.push({
         x,
         y,
-        ignoreBlocked: false, // ВАЖЛИВО: всі сусіди мають ignoreBlocked = false
+        ignoreBlocked: false,
       });
     }
   }
   return neighbors;
 }
 
-function reconstructPath(node, cellSize) {
+function reconstructPath(node, cellSize, offsetX = 0, offsetY = 0) {
   const path = [];
   while (node) {
     path.unshift({
-      x: node.x * cellSize + cellSize / 2,
-      y: node.y * cellSize + cellSize / 2,
+      x: node.x * cellSize + cellSize / 2 - offsetX,
+      y: node.y * cellSize + cellSize / 2 - offsetY,
     });
     node = node.parent;
   }
-
   return path;
 }
 
