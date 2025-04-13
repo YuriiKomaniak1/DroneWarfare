@@ -92,12 +92,36 @@ export class Bomb {
     }
   }
 
+  distanceToVehicle(explosionRadius, vehicle) {
+    const nearestX = Math.max(
+      vehicle.x - (vehicle.width * vehicle.scale) / 2,
+      Math.min(this.x, vehicle.x + (vehicle.width * vehicle.scale) / 2)
+    );
+    const nearestY = Math.max(
+      vehicle.y - (vehicle.height * vehicle.scale) / 2,
+      Math.min(this.y, vehicle.y + (vehicle.height * vehicle.scale) / 2)
+    );
+
+    const dx = this.x - nearestX;
+    const dy = this.y - nearestY;
+
+    return dx * dx + dy * dy <= explosionRadius * explosionRadius;
+  }
+
   checkCollision(enemy) {
     const distance = Math.hypot(
       this.x - (enemy.x + 32),
       this.y - (enemy.y + 32)
     );
     return distance < 50; // базова перевірка
+  }
+  checkVehicleCollision(vehicle) {
+    if (distanceToVehicle(10, vehicle)) {
+      vehicle.isStopped = true;
+      vehicle.isMoving = false;
+      console.log(vehicle.isStopped);
+      return vehicle;
+    }
   }
 }
 export class FragBomb extends Bomb {
@@ -126,9 +150,17 @@ export class FragBomb extends Bomb {
     }
     return hitStatus;
   }
+  checkVehicleCollision(vehicle) {
+    if (this.distanceToVehicle(10, vehicle)) {
+      vehicle.isBurning = true;
+      vehicle.isMoving = false;
+      console.log(vehicle);
+      return vehicle;
+    }
+  }
 }
 
-// Осколково-фугасна бомба
+// фУГАСНА БОМБА
 export class HeBomb extends Bomb {
   static weight = 0.16;
   static type = "he";
