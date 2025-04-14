@@ -1,10 +1,10 @@
 export class NavigationGrid {
   constructor(mapWidth, mapHeight, cellSize, obstacles) {
     this.cellSize = cellSize;
-    this.cols = Math.ceil((mapWidth * 1.2) / cellSize); // +20%
-    this.rows = Math.ceil((mapHeight * 1.2) / cellSize); // +20%
-    this.offsetX = Math.floor((this.cols * cellSize - mapWidth) / 2); // Зсув карти
-    this.offsetY = Math.floor((this.rows * cellSize - mapHeight) / 2);
+    this.cols = Math.ceil(mapWidth / cellSize); // Точно по карті
+    this.rows = Math.ceil(mapHeight / cellSize); // Точно по карті
+    this.offsetX = 0; // Без зсувів
+    this.offsetY = 0; // Без зсувів
 
     // Ініціалізуємо пусту сітку
     this.grid = Array.from({ length: this.rows }, (_, y) =>
@@ -14,6 +14,7 @@ export class NavigationGrid {
         blocked: false,
       }))
     );
+
     // Помічаємо перешкоди
     obstacles.forEach((ob) => {
       const startX = Math.floor(ob.x / cellSize);
@@ -210,10 +211,8 @@ export function drawNavigationGrid(grid, ctx, layer) {
       const posX = cell.x * grid.cellSize + layer.x;
       const posY = cell.y * grid.cellSize + layer.y;
 
-      // Малюємо рамку клітинки
       ctx.strokeRect(posX, posY, grid.cellSize, grid.cellSize);
 
-      // Якщо заблокована — зафарбовуємо напівпрозорим кольором
       if (cell.blocked) {
         ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
         ctx.fillRect(posX, posY, grid.cellSize, grid.cellSize);

@@ -4,9 +4,11 @@ const machinegunnerImage = new Image();
 machinegunnerImage.src = "./assets/img/enemies/machinegunner.png";
 const grenadierImage = new Image();
 grenadierImage.src = "./assets/img/enemies/grenadier.png";
+const skullImage = new Image();
+grenadierImage.src = "./assets/img/enemies/skull.png";
 import { findPath } from "../logic/navigation.js";
 export class Enemy {
-  constructor(x, y, layer, ctx, path) {
+  constructor(x, y, layer, ctx, path, vehicle = 0) {
     this.image = riflemanImage;
     this.type = "rifleman";
     this.fireDistance = 260;
@@ -47,185 +49,225 @@ export class Enemy {
     this.path = path; // Маршрут
     this.currentPathIndex = 0;
     this.shakeIntensity = 0.3;
+    this.vehicle = vehicle;
+    this.showSkull = true;
+    this.skullOffset = Math.random() * 60 - 30;
+    this.skullTimer = 0;
   }
 
   update(allEnemies, canvas) {
-    if (this.path.length === 0 || this.currentPathIndex >= this.path.length) {
-      return;
-    }
-    let speedModifier = 1;
-    if (this.crawl) {
-      speedModifier = 0.4;
-      if (Math.random() < 0.002) this.crawl = false;
-    }
-    if (!this.dead && !this.isFiring) {
-      const target = this.path[this.currentPathIndex];
-      const dx = target.x - this.baseX;
-      const dy = target.y - this.baseY;
-      const distance = Math.hypot(dx, dy);
-
-      if (distance < 5) {
-        this.currentPathIndex++;
-        if (this.currentPathIndex >= this.path.length) {
-          return;
-        }
-      } else {
-        const angle = Math.atan2(dy, dx);
-        this.rotationAngle = angle - Math.PI / 2;
-        const randomShakeX = (Math.random() - 0.5) * this.shakeIntensity;
-        const randomShakeY = (Math.random() - 0.5) * this.shakeIntensity;
-        this.baseX +=
-          Math.cos(angle) * this.speed * speedModifier + randomShakeX;
-        this.baseY +=
-          Math.sin(angle) * this.speed * speedModifier + randomShakeY;
+    if (this.vehicle === null) {
+      if (this.path.length === 0 || this.currentPathIndex >= this.path.length) {
+        return;
       }
+      let speedModifier = 1;
+      if (this.crawl) {
+        speedModifier = 0.4;
+        if (Math.random() < 0.002) this.crawl = false;
+      }
+      if (!this.dead && !this.isFiring) {
+        const target = this.path[this.currentPathIndex];
+        const dx = target.x - this.baseX;
+        const dy = target.y - this.baseY;
+        const distance = Math.hypot(dx, dy);
+
+        if (distance < 5) {
+          this.currentPathIndex++;
+          if (this.currentPathIndex >= this.path.length) {
+            return;
+          }
+        } else {
+          const angle = Math.atan2(dy, dx);
+          this.rotationAngle = angle - Math.PI / 2;
+          const randomShakeX = (Math.random() - 0.5) * this.shakeIntensity;
+          const randomShakeY = (Math.random() - 0.5) * this.shakeIntensity;
+          this.baseX +=
+            Math.cos(angle) * this.speed * speedModifier + randomShakeX;
+          this.baseY +=
+            Math.sin(angle) * this.speed * speedModifier + randomShakeY;
+        }
+      }
+      this.x = this.baseX + this.layer.x;
+      this.y = this.baseY + this.layer.y;
+      // --- Анімація руху ---
+      this.frameTimer++;
+      if (this.frameTimer >= this.frameSpeed) {
+        if (this.crawl) {
+          this.frameX = (this.frameX + 1) % this.crawlFrames;
+        } else if (this.isFiring) {
+          this.frameX = (this.frameX + 1) % this.fireFrames;
+        } else {
+          this.frameX = (this.frameX + 1) % this.runFrames;
+        }
+        this.frameTimer = 0;
+      } else {
+        // --- Анімація смерті ---
+        this.deathTimer++;
+        if (this.deathTimer >= this.deathAnimationSpeed) {
+          this.deathFrameIndex++;
+          this.deathTimer = 0;
+        }
+        if (this.deathFrameIndex >= this.deathFrames) {
+          this.deathFrameIndex = this.deadframe;
+        }
+      }
+
+      // --- Взаємодія з іншими ворогами (штовхання) ---
+      for (let other of allEnemies) {
+        if (this.dead || other === this || other.dead) continue;
+
+        const dx = this.baseX - other.baseX;
+        const dy = this.baseY - other.baseY;
+        const distance = Math.hypot(dx, dy);
+        const minDist = this.width * 0.22;
+
+        if (distance < minDist) {
+          const angle = Math.atan2(dy, dx);
+          const push = (minDist - distance) / 2;
+          this.baseX += Math.cos(angle) * push;
+          this.baseY += Math.sin(angle) * push;
+        }
+      }
+      if (this.isFiring) {
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+
+        const dx = centerX - (this.baseX + this.layer.x + this.width / 2);
+        const dy = centerY - (this.baseY + this.layer.y + this.height / 2);
+
+        const targetAngle = Math.atan2(dy, dx) - Math.PI / 2;
+        this.rotationAngle += (targetAngle - this.rotationAngle) * 0.1; // Плавна зміна кута
+      } else {
+        // Звичайне обертання за рухом
+        if (this.oldPositions.length > 0) {
+          const oldest = this.oldPositions[0];
+          const deltaX = this.baseX - oldest.x;
+          const deltaY = this.baseY - oldest.y;
+
+          if (Math.abs(deltaX) > 0.01 || Math.abs(deltaY) > 0.01) {
+            const targetAngle = Math.atan2(deltaY, deltaX) - Math.PI / 2;
+            this.rotationAngle += (targetAngle - this.rotationAngle) * 0.05; // Плавніше при русі
+          }
+        }
+      }
+    } else {
+      this.baseX = this.vehicle.baseX;
+      this.baseY = this.vehicle.baseY;
     }
     this.x = this.baseX + this.layer.x;
     this.y = this.baseY + this.layer.y;
-    // --- Анімація руху ---
-    this.frameTimer++;
-    if (this.frameTimer >= this.frameSpeed) {
-      if (this.crawl) {
-        this.frameX = (this.frameX + 1) % this.crawlFrames;
-      } else if (this.isFiring) {
-        this.frameX = (this.frameX + 1) % this.fireFrames;
-      } else {
-        this.frameX = (this.frameX + 1) % this.runFrames;
-      }
-      this.frameTimer = 0;
-    } else {
-      // --- Анімація смерті ---
-      this.deathTimer++;
-      if (this.deathTimer >= this.deathAnimationSpeed) {
-        this.deathFrameIndex++;
-        this.deathTimer = 0;
-      }
-      if (this.deathFrameIndex >= this.deathFrames) {
-        this.deathFrameIndex = this.deadframe;
-      }
-    }
-
-    // --- Взаємодія з іншими ворогами (штовхання) ---
-    for (let other of allEnemies) {
-      if (this.dead || other === this || other.dead) continue;
-
-      const dx = this.baseX - other.baseX;
-      const dy = this.baseY - other.baseY;
-      const distance = Math.hypot(dx, dy);
-      const minDist = this.width * 0.32;
-
-      if (distance < minDist) {
-        const angle = Math.atan2(dy, dx);
-        const push = (minDist - distance) / 2;
-        this.baseX += Math.cos(angle) * push;
-        this.baseY += Math.sin(angle) * push;
-      }
-    }
-    if (this.isFiring) {
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-
-      const dx = centerX - (this.baseX + this.layer.x + this.width / 2);
-      const dy = centerY - (this.baseY + this.layer.y + this.height / 2);
-
-      const targetAngle = Math.atan2(dy, dx) - Math.PI / 2;
-      this.rotationAngle += (targetAngle - this.rotationAngle) * 0.1; // Плавна зміна кута
-    } else {
-      // Звичайне обертання за рухом
-      if (this.oldPositions.length > 0) {
-        const oldest = this.oldPositions[0];
-        const deltaX = this.baseX - oldest.x;
-        const deltaY = this.baseY - oldest.y;
-
-        if (Math.abs(deltaX) > 0.01 || Math.abs(deltaY) > 0.01) {
-          const targetAngle = Math.atan2(deltaY, deltaX) - Math.PI / 2;
-          this.rotationAngle += (targetAngle - this.rotationAngle) * 0.05; // Плавніше при русі
-        }
-      }
-    }
   }
 
   draw() {
-    if (!this.dead && !this.crawl && !this.isFiring) {
-      this.ctx.save();
-      this.ctx.translate(this.x, this.y);
-      this.ctx.rotate(this.rotationAngle);
-      this.ctx.drawImage(
-        this.image,
-        this.frameX * this.width,
-        this.runframeY * this.height,
-        this.width,
-        this.height,
-        -this.width / 2,
-        -this.height / 2,
-        this.width,
-        this.height
-      );
-      this.ctx.restore();
-    } else if (!this.dead && this.crawl && !this.isFiring) {
-      this.ctx.save();
-      this.ctx.translate(this.x, this.y);
-      this.ctx.rotate(this.rotationAngle);
-      this.ctx.drawImage(
-        this.image,
-        this.frameX * this.width,
-        0 * this.height,
-        this.width,
-        this.height,
-        -this.width / 2,
-        -this.height / 2,
-        this.width,
-        this.height
-      );
-      this.ctx.restore();
-    } else if (!this.dead && this.isFiring && !this.crawl) {
-      this.ctx.save();
-      this.ctx.translate(this.x, this.y);
-      this.ctx.rotate(this.rotationAngle);
-      this.ctx.drawImage(
-        this.image,
-        this.frameX * this.width,
-        2 * this.height,
-        this.width,
-        this.height,
-        -this.width / 2,
-        -this.height / 2,
-        this.width,
-        this.height
-      );
-      this.ctx.restore();
-    } else if (this.dead) {
-      this.ctx.save();
-      this.ctx.translate(this.x, this.y);
-      this.ctx.rotate(this.deathAngle);
-      this.ctx.drawImage(
-        this.image,
-        this.deathFrameIndex * this.width,
-        1 * this.height,
-        this.width,
-        this.height,
-        -this.width / 2,
-        -this.height / 2,
-        this.width,
-        this.height
-      );
-      this.ctx.restore();
-    }
-  }
-  fire(drone, layer) {
-    if (this.dead || !drone.isAlive || drone.isReloading) this.isFiring = false;
-    if (this.isFiring) this.fireTimer++;
-    if (this.fireTimer >= 60 / this.fireRate) {
-      if (
-        Math.random() * 1000 <
-          5 - (4 * (layer.speedX + layer.speedY)) / (2 * layer.maxSpeed) &&
-        drone.hp >= 1
-      ) {
-        --drone.hp;
+    if (this.vehicle === null) {
+      if (!this.dead && !this.crawl && !this.isFiring) {
+        this.ctx.save();
+        this.ctx.translate(this.x, this.y);
+        this.ctx.rotate(this.rotationAngle);
+        this.ctx.drawImage(
+          this.image,
+          this.frameX * this.width,
+          this.runframeY * this.height,
+          this.width,
+          this.height,
+          -this.width / 2,
+          -this.height / 2,
+          this.width,
+          this.height
+        );
+        this.ctx.restore();
+      } else if (!this.dead && this.crawl && !this.isFiring) {
+        this.ctx.save();
+        this.ctx.translate(this.x, this.y);
+        this.ctx.rotate(this.rotationAngle);
+        this.ctx.drawImage(
+          this.image,
+          this.frameX * this.width,
+          0 * this.height,
+          this.width,
+          this.height,
+          -this.width / 2,
+          -this.height / 2,
+          this.width,
+          this.height
+        );
+        this.ctx.restore();
+      } else if (!this.dead && this.isFiring && !this.crawl) {
+        this.ctx.save();
+        this.ctx.translate(this.x, this.y);
+        this.ctx.rotate(this.rotationAngle);
+        this.ctx.drawImage(
+          this.image,
+          this.frameX * this.width,
+          2 * this.height,
+          this.width,
+          this.height,
+          -this.width / 2,
+          -this.height / 2,
+          this.width,
+          this.height
+        );
+        this.ctx.restore();
+      } else if (this.dead) {
+        this.ctx.save();
+        this.ctx.translate(this.x, this.y);
+        this.ctx.rotate(this.deathAngle);
+        this.ctx.drawImage(
+          this.image,
+          this.deathFrameIndex * this.width,
+          1 * this.height,
+          this.width,
+          this.height,
+          -this.width / 2,
+          -this.height / 2,
+          this.width,
+          this.height
+        );
+        this.ctx.restore();
       }
-      this.fireTimer = 0;
     }
   }
+  skullDraw() {
+    if (this.dead && this.vehicle)
+      setInterval(() => {
+        this.showSkull = false;
+      }, 3000);
+
+    if ((this.showSkull = true)) {
+      this.ctx.save();
+      ctx.globalAlpha = (180 - this.skullTimer) / 180;
+      this.ctx.translate(this.x, this.y);
+      this.ctx.drawImage(
+        this.scullImage,
+        -156 / 2 + this.skullOffset,
+        -242 / 2 + this.skullOffset,
+        156,
+        242
+      );
+      this.skullTimer++;
+      ctx.globalAlpha = 1;
+      this.ctx.restore();
+    }
+  }
+
+  fire(drone, layer) {
+    if (!this.vehicle) {
+      if (this.dead || !drone.isAlive || drone.isReloading)
+        this.isFiring = false;
+      if (this.isFiring) this.fireTimer++;
+      if (this.fireTimer >= 60 / this.fireRate) {
+        if (
+          Math.random() * 1000 <
+            5 - (4 * (layer.speedX + layer.speedY)) / (2 * layer.maxSpeed) &&
+          drone.hp >= 1
+        ) {
+          --drone.hp;
+        }
+        this.fireTimer = 0;
+      }
+    }
+  }
+  2;
 }
 export class Rifleman extends Enemy {
   constructor(x, y, layer, ctx, path) {
@@ -270,30 +312,40 @@ export function createRifleSquad(
   targetY
 ) {
   const squad = [];
-  for (let i = 0; i < 6; i++) {
-    pushSquadMember(Rifleman);
-  }
-  pushSquadMember(Machinegunner);
-  pushSquadMember(Grenadier);
+
   function pushSquadMember(Class) {
-    let localSpreadX = Math.floor(Math.random() * spreadX - spreadX / 2);
-    let localSpreadY = Math.floor(Math.random() * spreadY - spreadY / 2);
+    const localSpreadX = Math.floor(Math.random() * spreadX - spreadX / 2);
+    const localSpreadY = Math.floor(Math.random() * spreadY - spreadY / 2);
+
     const startX = x + localSpreadX;
     const startY = y + localSpreadY;
+
     const path = findPath(
       navGrid,
       { x: startX, y: startY },
-      { x: targetX + localSpreadX, y: targetY + localSpreadY },
-      { widthCells: 1, heightCells: 1 }
+      { x: targetX + localSpreadX, y: targetY + localSpreadY }
     );
 
-    const enemy = new Class(startX, startY, layer, ctx, []);
+    const enemy = new Class(startX, startY, layer, ctx, path);
 
+    enemy.baseX = startX;
+    enemy.baseY = startY;
+    enemy.x = startX + layer.x;
+    enemy.y = startY + layer.y;
     enemy.path = path;
     enemy.currentPathIndex = 0;
+    enemy.vehicle = null; // Немає транспорту
 
     squad.push(enemy);
   }
+
+  // Спочатку створюємо стрільців
+  for (let i = 0; i < 6; i++) {
+    pushSquadMember(Rifleman);
+  }
+  // Потім кулеметника і гранатометника
+  pushSquadMember(Machinegunner);
+  pushSquadMember(Grenadier);
 
   return squad;
 }

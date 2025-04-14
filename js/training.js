@@ -122,28 +122,30 @@ canvas.addEventListener("touchstart", (e) =>
   handleMenuClick(e, canvas, openTrainingModal)
 );
 squadTruck.addEventListener("click", () => {
-  let coordX = Math.random() * 40 + 1000;
-  let coordY = Math.random() * 40 + 2000;
+  let coordX = 1500;
+  let coordY = 1800;
   const startX = coordX;
   const startY = coordY;
-  const targetX = coordX + 200;
-  const targetY = 2400;
+  const targetX = coordX - 200;
+  const targetY = 2600;
 
-  let truck = new Ural(startX, startY, layer1, ctx, []);
+  let waypoints = [
+    { x: startX, y: startY },
+
+    { x: targetX, y: targetY },
+  ];
+  let truck = new Ural(startX, startY, layer1, ctx, waypoints, vehicleNavGrid);
 
   // === Шукаємо шлях один раз при створенні ===
-  truck.path = findPath(
-    vehicleNavGrid,
-    { x: startX, y: startY },
-    { x: targetX, y: targetY }
-  );
+  truck.path = findPath(vehicleNavGrid, waypoints[0], waypoints[1]);
   truck.currentPathIndex = 0;
+  truck.embark(enemies, navGrid);
 
   vehicles.push(truck);
 });
 squad.addEventListener("click", () => {
   let coordX = Math.random() * 1200 + 200;
-  let coordY = Math.random() * 1800 + 100;
+  let coordY = Math.random() * 1000 - 100;
   const squad = createRifleSquad(
     coordX,
     coordY,
@@ -233,7 +235,7 @@ function animate(timestamp) {
       enemy.fire(currentDrone, layer1);
     });
     vehicles.forEach((vehicle, index) => {
-      vehicle.update();
+      vehicle.update(vehicleNavGrid);
       vehicle.draw();
     });
 
@@ -260,7 +262,7 @@ function animate(timestamp) {
       drone.flyToreload();
       drone.draw(ctx);
     });
-    // drawNavigationGrid(vehicleNavGrid, ctx, layer1);
+    drawNavigationGrid(navGrid, ctx, layer1);
     droneScope.draw(currentDrone);
     minimap.draw();
     droneIcons.forEach((object) => {

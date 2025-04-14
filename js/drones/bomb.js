@@ -118,6 +118,7 @@ export class Bomb {
   checkVehicleCollision(vehicle) {
     if (distanceToVehicle(10, vehicle)) {
       vehicle.isStopped = true;
+      vehicle.bailOut();
       vehicle.isMoving = false;
       console.log(vehicle.isStopped);
       return vehicle;
@@ -137,26 +138,35 @@ export class FragBomb extends Bomb {
   checkCollision(enemy) {
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     let hitStatus = false;
-    if (distance < 20) {
-      hitStatus = true;
-    } else if (distance < 40 && !enemy.crawl) {
-      if (Math.random() > 0.1) hitStatus = true;
-    } else if (distance < 50 && !enemy.crawl) {
-      if (Math.random() > 0.2) hitStatus = true;
-    } else if (distance < 90 && !enemy.crawl) {
-      if (Math.random() > 0.5) hitStatus = true;
-    } else if (distance < 140 && !enemy.crawl) {
-      if (Math.random() > 0.85) hitStatus = true;
+    if (enemy.vehicle === null) {
+      if (distance < 20) {
+        hitStatus = true;
+      } else if (distance < 40 && !enemy.crawl) {
+        if (Math.random() > 0.2) hitStatus = true;
+      } else if (distance < 50 && !enemy.crawl) {
+        if (Math.random() > 0.3) hitStatus = true;
+      } else if (distance < 90 && !enemy.crawl) {
+        if (Math.random() > 0.4) hitStatus = true;
+      } else if (distance < 140 && !enemy.crawl) {
+        if (Math.random() > 0.9) hitStatus = true;
+      }
     }
     return hitStatus;
   }
   checkVehicleCollision(vehicle) {
-    if (this.distanceToVehicle(10, vehicle)) {
+    if (this.distanceToVehicle(0, vehicle) && Math.random() > 0.1) {
       vehicle.isBurning = true;
-      vehicle.isMoving = false;
-      console.log(vehicle);
-      return vehicle;
+    } else if (this.distanceToVehicle(5, vehicle) && Math.random() > 0.3) {
+      vehicle.isStopped = true;
+    } else if (this.distanceToVehicle(60, vehicle) && Math.random() > 0.12) {
+      vehicle.isStopped = true;
     }
+    if (vehicle.isBurning || vehicle.isStopped) {
+      vehicle.bailOut();
+      vehicle.isMoving = false;
+    }
+
+    return vehicle;
   }
 }
 

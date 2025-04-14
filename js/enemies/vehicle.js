@@ -6,10 +6,11 @@ const vehicleExplosionImage = new Image();
 vehicleExplosionImage.src = "./assets/img/effects/vehicleExplosion.png";
 const vehicleFireImage = new Image();
 vehicleFireImage.src = "./assets/img/effects/vehicleFire.png";
-
+import { Rifleman, createRifleSquad } from "./enemy.js";
+import { findPath } from "../logic/navigation.js";
 export class Vehicle {
   static type = "default"; // Тип за замовчуванням
-  constructor(x, y, layer, ctx, waypoints) {
+  constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
     this.image = uralZImage;
     this.baseX = x;
     this.baseY = y;
@@ -34,7 +35,7 @@ export class Vehicle {
     this.vehiclefireOffsetX = 0;
     this.vehiclefireOffsetY = 0;
     this.vehiclefireImageWidth = 250;
-    this.burningTime = Math.random() * 5000 + 5000;
+    this.burningTime = Math.random() * 10000 + 10000;
     this.fireScale = 0.18;
     this.explosionScale = 0.8;
     this.explosionTimer = 0;
@@ -58,13 +59,17 @@ export class Vehicle {
     this.moveFrame = 0;
     this.path = [];
     this.currentPathIndex = 0;
+    this.driver = null;
+    this.cargo = [];
+    this.navigaionsGrid = navigaionsGrid;
   }
 
   update() {
     if (this.path.length === 0 || this.currentPathIndex >= this.path.length) {
-      this.isMoving = false;
+      this.currentWaypointIndex++;
+      this.setPathToWaypoint(); // Перехід до наступного вейпоінта
+      return;
     }
-
     if (this.isMoving) {
       const target = this.path[this.currentPathIndex];
       const dx = target.x - this.baseX;
@@ -73,10 +78,6 @@ export class Vehicle {
 
       if (distance < 10) {
         this.currentPathIndex++;
-        this.speed = 0;
-        if (this.currentPathIndex >= this.path.length) {
-          this.isMoving = false;
-        }
       } else {
         const angle = Math.atan2(dy, dx);
         this.rotation = angle + Math.PI * 1.5;
@@ -210,11 +211,94 @@ export class Vehicle {
       this.ctx.restore();
     }
   }
+  embark(enemies, navGrid) {
+    // Спочатку водія
+    const driver = new Rifleman(
+      this.baseX,
+      this.baseY,
+      this.layer,
+      this.ctx,
+      [] // без маршруту спочатку
+    );
+    driver.vehicle = this;
+    driver.path = [];
+    enemies.push(driver);
+    this.driver = driver;
+
+    // Тепер піхота
+    const squad = createRifleSquad(
+      this.baseX,
+      this.baseY,
+      0, // без розкиду при посадці
+      0,
+      this.layer,
+      this.ctx,
+      navGrid,
+      this.baseX,
+      this.baseY
+    );
+    squad.forEach((enemy) => {
+      enemy.vehicle = this;
+      enemy.path = [];
+      enemies.push(enemy);
+    });
+
+    this.cargo = [...squad];
+  }
+  bailOut() {
+    if (this.driver) this.cargo.unshift(this.driver);
+
+    this.cargo.forEach((enemy, index) => {
+      const side = index % 2 === 0 ? -1 : 1;
+      const distanceFromTruck = 50 + Math.random() * 70;
+      const angleOffset = (Math.random() - 0.5) * (Math.PI / 4);
+      const angleFromTruck =
+        this.rotation - Math.PI / 2 + side * (Math.PI / 2) + angleOffset;
+
+      const offsetX = distanceFromTruck * Math.cos(angleFromTruck);
+      const offsetY = distanceFromTruck * Math.sin(angleFromTruck);
+
+      const delay = Math.random() * (this.burningTime * 0.8);
+
+      setTimeout(() => {
+        enemy.baseX = this.baseX + offsetX;
+        enemy.baseY = this.baseY + offsetY;
+        enemy.x = enemy.baseX + this.layer.x;
+        enemy.y = enemy.baseY + this.layer.y;
+
+        enemy.vehicle = null;
+        enemy.path = findPath(
+          this.navigaionsGrid,
+          { x: enemy.baseX, y: enemy.baseY },
+          {
+            x: this.waypoints[this.waypoints.length - 1].x,
+            y: this.waypoints[this.waypoints.length - 1].y,
+          }
+        );
+        enemy.currentPathIndex = 0;
+      }, delay);
+    });
+  }
+
+  setPathToWaypoint() {
+    if (this.currentWaypointIndex < this.waypoints.length) {
+      const nextWaypoint = this.waypoints[this.currentWaypointIndex];
+      this.path = findPath(
+        this.navigaionsGrid,
+        { x: this.baseX, y: this.baseY },
+        nextWaypoint
+      );
+      this.currentPathIndex = 0;
+      this.isMoving = true;
+    } else {
+      this.isMoving = false; // Всі вейпоінти пройдено
+    }
+  }
 }
 
 export class Ural extends Vehicle {
-  constructor(x, y, layer, ctx, waypoints) {
-    super(x, y, layer, ctx, waypoints);
+  constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
+    super(x, y, layer, ctx, waypoints, navigaionsGrid);
     this.image = uralZImage;
     this.x = x;
     this.y = y;
