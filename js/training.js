@@ -1,7 +1,7 @@
 import { Minimap } from "./gameElements/minimap.js";
 import { Layer } from "./layers/layer.js";
 import { createRifleSquad, Rifleman } from "./enemies/enemy.js";
-import { Gaz66, Ural } from "./enemies/vehicle.js";
+import { Gaz66, Ural, BMP2 } from "./enemies/vehicle.js";
 import { dropBomb } from "./drones/bomb.js";
 import { DroneScope, droneScopeImage } from "./gameElements/droneScope.js";
 import {
@@ -58,6 +58,7 @@ const resumeGame = document.getElementById("resumeGame");
 const hideEnemiesModal = document.getElementById("hideEnemiesModal");
 const squad = document.getElementById("squad");
 const squadTruck = document.getElementById("squadTruck");
+const squadBMP = document.getElementById("squadBMP");
 export const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
 canvas.width = Math.min(window.innerWidth, 900);
@@ -150,6 +151,29 @@ squadTruck.addEventListener("click", () => {
   truck.embark(enemies, navGrid);
 
   vehicles.push(truck);
+});
+squadBMP.addEventListener("click", () => {
+  let coordX = 1500;
+  let coordY = 1800;
+  const startX = coordX;
+  const startY = coordY;
+  const targetX = coordX - 200;
+  const targetY = 2600;
+
+  let waypoints = [
+    { x: startX, y: startY },
+
+    { x: targetX, y: targetY },
+  ];
+
+  let bmp = new BMP2(startX, startY, layer1, ctx, waypoints, vehicleNavGrid);
+
+  // === Шукаємо шлях один раз при створенні ===
+  bmp.path = findPath(vehicleNavGrid, waypoints[0], waypoints[1]);
+  bmp.currentPathIndex = 0;
+  bmp.embark(enemies, navGrid);
+
+  vehicles.push(bmp);
 });
 squad.addEventListener("click", () => {
   let coordX = Math.random() * 1200 + 200;

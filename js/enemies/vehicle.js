@@ -24,7 +24,12 @@ export class Vehicle {
   static type = "default"; // Тип за замовчуванням
   constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
     this.image = uralZImage;
-    this.turretimage;
+    this.turretImage = bmp2turret;
+    this.turretWidth = 200;
+    this.hasTurret = false;
+    this.turretOffsetX = 1;
+    this.turretOffsetY = 1;
+    this.turretScale = 1;
     this.baseX = x;
     this.baseY = y;
     this.x = 0;
@@ -159,6 +164,35 @@ export class Vehicle {
       this.height * this.scale
     );
     this.ctx.restore();
+    // малюємо башту
+    if (this.hasTurret) {
+      this.ctx.save();
+      this.ctx.translate(this.x, this.y);
+      // this.ctx.rotate(this.rotation);
+      const turretFrame = this.isDestroyed
+        ? 2
+        : this.isStopped || this.isBurning
+        ? 1
+        : 0;
+
+      // Відстань від центру башти
+      const exhaustOffsetX = this.width * this.scale * this.turretOffsetX;
+      const exhaustOffsetY = this.height * this.scale * this.turretOffsetY;
+
+      this.ctx.translate(exhaustOffsetX, exhaustOffsetY); // зміщуємо до труби
+      this.ctx.drawImage(
+        this.turretImage,
+        turretFrame * this.turretWidth,
+        0,
+        this.turretWidth,
+        this.turretWidth,
+        (-this.turretWidth * this.turretScale) / 2,
+        (-this.turretWidth * this.turretScale) / 2,
+        this.turretWidth * this.turretScale,
+        this.turretWidth * this.turretScale
+      );
+      this.ctx.restore();
+    }
 
     // малюємо вихлоп
     if (this.isMoving) {
@@ -343,5 +377,30 @@ export class Gaz66 extends Vehicle {
     this.speed = 0.4;
     this.gassmokeoffsetY = -0.7;
     this.smokeScale = 0.45;
+  }
+}
+
+export class BMP2 extends Vehicle {
+  constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
+    super(x, y, layer, ctx, waypoints, navigaionsGrid);
+    this.image = Math.random() > 0.4 ? bmp2ZImage : bmp2VImage;
+    this.turretImage = bmp2turret;
+    this.x = x;
+    this.y = y;
+    this.width = 100;
+    this.height = 200;
+    this.type = "gaz66";
+    this.scale = 0.8;
+    this.speed = 0.3;
+    this.gassmokeoffsetY = -0.7;
+    this.gassmokeoffsetX = 0.6;
+    this.smokeScale = 0.6;
+    this.armor = 4;
+    this.turretOffsetX = 0;
+    this.turretOffsetY = 0;
+    this.hasTurret = true;
+    this.turretscale = 0.95;
+    this.vehiclefireOffsetX = 0;
+    this.vehiclefireOffsetY = -0.1;
   }
 }
