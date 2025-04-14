@@ -6,6 +6,12 @@ const gaz66ZImage = new Image();
 gaz66ZImage.src = "./assets/img/vehicles/gaz66Z.png";
 const gaz66VImage = new Image();
 gaz66VImage.src = "./assets/img/vehicles/gaz66V.png";
+const bmp2ZImage = new Image();
+bmp2ZImage.src = "./assets/img/vehicles/bmp2Z.png";
+const bmp2VImage = new Image();
+bmp2VImage.src = "./assets/img/vehicles/bmp2V.png";
+const bmp2turret = new Image();
+bmp2turret.src = "./assets/img/vehicles/bmp2turret.png";
 const gasSmokeImage = new Image();
 gasSmokeImage.src = "./assets/img/effects/gasSmoke.png";
 const vehicleExplosionImage = new Image();
@@ -18,6 +24,7 @@ export class Vehicle {
   static type = "default"; // Тип за замовчуванням
   constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
     this.image = uralZImage;
+    this.turretimage;
     this.baseX = x;
     this.baseY = y;
     this.x = 0;
