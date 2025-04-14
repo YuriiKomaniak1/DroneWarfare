@@ -34,6 +34,7 @@ export class Bomb {
     this.shrinkRate = 1.009;
     this.velocityX = layer.speedX;
     this.velocityY = layer.speedY;
+    this.armorPenetration = 0;
   }
 
   drop() {
@@ -138,7 +139,7 @@ export class FragBomb extends Bomb {
   checkCollision(enemy) {
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     let hitStatus = false;
-    if (enemy.vehicle === null) {
+    if (!enemy.vehicle) {
       if (distance < 20) {
         hitStatus = true;
       } else if (distance < 40 && !enemy.crawl) {
@@ -150,23 +151,32 @@ export class FragBomb extends Bomb {
       } else if (distance < 140 && !enemy.crawl) {
         if (Math.random() > 0.9) hitStatus = true;
       }
+    } else if (enemy.vehicle.armor === 0) {
+      console.log(enemy);
+      if (distance < 40) {
+        if (Math.random() > 0.85) hitStatus = true;
+      } else if (distance < 50) {
+        if (Math.random() > 0.9) hitStatus = true;
+      } else if (distance < 90) {
+        if (Math.random() > 0.95) hitStatus = true;
+      }
     }
     return hitStatus;
   }
   checkVehicleCollision(vehicle) {
-    if (this.distanceToVehicle(0, vehicle) && Math.random() > 0.1) {
-      vehicle.isBurning = true;
-    } else if (this.distanceToVehicle(5, vehicle) && Math.random() > 0.3) {
-      vehicle.isStopped = true;
-    } else if (this.distanceToVehicle(60, vehicle) && Math.random() > 0.12) {
-      vehicle.isStopped = true;
-    }
-    if (vehicle.isBurning || vehicle.isStopped) {
-      vehicle.bailOut();
-      vehicle.isMoving = false;
-    }
+    if (vehicle.armor === 0) {
+      if (this.distanceToVehicle(0, vehicle) && Math.random() > 0.9) {
+        vehicle.isBurning = true;
+      } else if (this.distanceToVehicle(30, vehicle) && Math.random() > 0.8) {
+        vehicle.isStopped = true;
+      }
+      if (vehicle.isBurning || vehicle.isStopped) {
+        vehicle.bailOut();
+        vehicle.isMoving = false;
+      }
 
-    return vehicle;
+      return vehicle;
+    }
   }
 }
 
@@ -182,8 +192,30 @@ export class HeBomb extends Bomb {
   }
 
   checkCollision(enemy) {
+    let hitStatus = false;
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
-    return distance < 50;
+    if (!enemy.vehicle) {
+      hitStatus = distance < 50;
+    } else if (enemy.vehicle.armor === 0) {
+      if (distance < 50) {
+        if (Math.random() > 0.6) hitStatus = true;
+      }
+    }
+    return hitStatus;
+  }
+  checkVehicleCollision(vehicle) {
+    if (vehicle.armor === 0) {
+      if (this.distanceToVehicle(0, vehicle)) {
+        vehicle.isBurning = true;
+      } else if (this.distanceToVehicle(40, vehicle) && Math.random() > 0.2) {
+        vehicle.isStopped = true;
+      }
+      if (vehicle.isBurning || vehicle.isStopped) {
+        vehicle.bailOut();
+        vehicle.isMoving = false;
+      }
+      return vehicle;
+    }
   }
 }
 
@@ -197,14 +229,35 @@ export class ShapedBomb extends Bomb {
     this.imageExplosion = imageExplosion;
     this.type = "shaped";
     this.explosionScale = 30;
+    this.armorPenetration = 0.9;
   }
 
   checkCollision(enemy) {
+    let hitStatus = false;
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
-    return distance < 15;
+    if (!enemy.vehicle) {
+      hitStatus = distance < 15;
+    }
+    return hitStatus;
+  }
+  checkVehicleCollision(vehicle) {
+    if (this.distanceToVehicle(0, vehicle)) {
+      let success = true;
+      for (let i = 0; i < vehicle.armor; i++) {
+        if (Math.random() > this.armorPenetration) {
+          success = false;
+          break;
+        }
+      }
+      if (success) {
+        vehicle.isBurning = true;
+        vehicle.bailOut();
+        vehicle.isMoving = false;
+      }
+      return vehicle;
+    }
   }
 }
-
 export function dropBomb(
   currentDrone,
   selectionState,

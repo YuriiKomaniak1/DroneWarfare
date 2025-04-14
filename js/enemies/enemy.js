@@ -5,11 +5,12 @@ machinegunnerImage.src = "./assets/img/enemies/machinegunner.png";
 const grenadierImage = new Image();
 grenadierImage.src = "./assets/img/enemies/grenadier.png";
 const skullImage = new Image();
-grenadierImage.src = "./assets/img/enemies/skull.png";
+skullImage.src = "./assets/img/enemies/skull.png";
 import { findPath } from "../logic/navigation.js";
 export class Enemy {
   constructor(x, y, layer, ctx, path, vehicle = 0) {
     this.image = riflemanImage;
+    this.skullImage = skullImage;
     this.type = "rifleman";
     this.fireDistance = 260;
     this.fireRate = 5;
@@ -20,7 +21,7 @@ export class Enemy {
     this.x = this.baseX + this.layer.x;
     this.y = this.baseY + this.layer.y;
     this.ctx = ctx;
-    this.speed = Math.random() * 0.07 + 0.11;
+    this.speed = Math.random() * 0.07 + 0.16;
     this.width = 64;
     this.height = 64;
     this.runframeY = 3;
@@ -51,7 +52,7 @@ export class Enemy {
     this.shakeIntensity = 0.3;
     this.vehicle = vehicle;
     this.showSkull = true;
-    this.skullOffset = Math.random() * 60 - 30;
+    this.skullOffset = Math.random() * 90 - 45;
     this.skullTimer = 0;
   }
 
@@ -149,6 +150,17 @@ export class Enemy {
             this.rotationAngle += (targetAngle - this.rotationAngle) * 0.05; // Плавніше при русі
           }
         }
+        if (
+          this.dead &&
+          this.vehicle &&
+          this.showSkull &&
+          !this.skullTimerStarted
+        ) {
+          this.skullTimerStarted = true;
+          setTimeout(() => {
+            this.showSkull = false;
+          }, 5000); // 3 секунди і зникне повністю
+        }
       }
     } else {
       this.baseX = this.vehicle.baseX;
@@ -228,24 +240,20 @@ export class Enemy {
     }
   }
   skullDraw() {
-    if (this.dead && this.vehicle)
-      setInterval(() => {
-        this.showSkull = false;
-      }, 3000);
-
-    if ((this.showSkull = true)) {
+    if (this.dead && this.vehicle && this.showSkull) {
       this.ctx.save();
-      ctx.globalAlpha = (180 - this.skullTimer) / 180;
       this.ctx.translate(this.x, this.y);
+      const alpha = Math.max(0, (300 - this.skullTimer) / 300);
+      this.ctx.globalAlpha = alpha;
       this.ctx.drawImage(
-        this.scullImage,
-        -156 / 2 + this.skullOffset,
-        -242 / 2 + this.skullOffset,
-        156,
-        242
+        this.skullImage,
+        -156 / 6 + this.skullOffset,
+        -242 / 6 + this.skullOffset,
+        156 / 3,
+        242 / 3
       );
       this.skullTimer++;
-      ctx.globalAlpha = 1;
+      this.ctx.globalAlpha = 1;
       this.ctx.restore();
     }
   }

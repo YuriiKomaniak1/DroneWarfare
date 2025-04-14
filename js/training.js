@@ -1,7 +1,7 @@
 import { Minimap } from "./gameElements/minimap.js";
 import { Layer } from "./layers/layer.js";
 import { createRifleSquad, Rifleman } from "./enemies/enemy.js";
-import { Ural } from "./enemies/vehicle.js";
+import { Gaz66, Ural } from "./enemies/vehicle.js";
 import { dropBomb } from "./drones/bomb.js";
 import { DroneScope, droneScopeImage } from "./gameElements/droneScope.js";
 import {
@@ -134,7 +134,15 @@ squadTruck.addEventListener("click", () => {
 
     { x: targetX, y: targetY },
   ];
-  let truck = new Ural(startX, startY, layer1, ctx, waypoints, vehicleNavGrid);
+  let TruckClass = Math.random() > 0.9 ? Ural : Gaz66;
+  let truck = new TruckClass(
+    startX,
+    startY,
+    layer1,
+    ctx,
+    waypoints,
+    vehicleNavGrid
+  );
 
   // === Шукаємо шлях один раз при створенні ===
   truck.path = findPath(vehicleNavGrid, waypoints[0], waypoints[1]);
@@ -235,12 +243,15 @@ function animate(timestamp) {
       enemy.fire(currentDrone, layer1);
     });
     vehicles.forEach((vehicle, index) => {
-      vehicle.update(vehicleNavGrid);
+      vehicle.update(vehicles);
       vehicle.draw();
     });
 
     layer2.update();
     layer2.draw();
+    enemies.forEach((enemy) => {
+      enemy.skullDraw();
+    });
     bombs.forEach((bomb) => {
       if (bomb.initialScale / bomb.scale < 13.5) bomb.draw();
     });
@@ -262,7 +273,7 @@ function animate(timestamp) {
       drone.flyToreload();
       drone.draw(ctx);
     });
-    drawNavigationGrid(navGrid, ctx, layer1);
+    // drawNavigationGrid(navGrid, ctx, layer1);
     droneScope.draw(currentDrone);
     minimap.draw();
     droneIcons.forEach((object) => {

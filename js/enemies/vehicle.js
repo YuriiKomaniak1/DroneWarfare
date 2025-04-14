@@ -1,5 +1,11 @@
 const uralZImage = new Image();
 uralZImage.src = "./assets/img/vehicles/uralZ.png";
+const uralVImage = new Image();
+uralVImage.src = "./assets/img/vehicles/uralV.png";
+const gaz66ZImage = new Image();
+gaz66ZImage.src = "./assets/img/vehicles/gaz66Z.png";
+const gaz66VImage = new Image();
+gaz66VImage.src = "./assets/img/vehicles/gaz66V.png";
 const gasSmokeImage = new Image();
 gasSmokeImage.src = "./assets/img/effects/gasSmoke.png";
 const vehicleExplosionImage = new Image();
@@ -62,12 +68,20 @@ export class Vehicle {
     this.driver = null;
     this.cargo = [];
     this.navigaionsGrid = navigaionsGrid;
+    this.armor = 0;
   }
 
-  update() {
+  update(vehicles) {
     if (this.path.length === 0 || this.currentPathIndex >= this.path.length) {
       this.currentWaypointIndex++;
       this.setPathToWaypoint(); // Перехід до наступного вейпоінта
+      if (!this.isMoving && !this.isStopped && !this.isDestroyed) {
+        const index = vehicles.indexOf(this);
+        if (index > -1) {
+          vehicles.splice(index, 1);
+        }
+        return;
+      }
       return;
     }
     if (this.isMoving) {
@@ -88,11 +102,9 @@ export class Vehicle {
       }
     }
     if (this.isBurning) {
-      console.log("hit");
       setTimeout(() => {
         this.isDestroyed = true;
         this.isBurning = false;
-        console.log("done");
       }, this.burningTime);
     }
 
@@ -249,34 +261,36 @@ export class Vehicle {
     if (this.driver) this.cargo.unshift(this.driver);
 
     this.cargo.forEach((enemy, index) => {
-      const side = index % 2 === 0 ? -1 : 1;
-      const distanceFromTruck = 50 + Math.random() * 70;
-      const angleOffset = (Math.random() - 0.5) * (Math.PI / 4);
-      const angleFromTruck =
-        this.rotation - Math.PI / 2 + side * (Math.PI / 2) + angleOffset;
+      if (!enemy.dead) {
+        const side = index % 2 === 0 ? -1 : 1;
+        const distanceFromTruck = 40 + Math.random() * 70;
+        const angleOffset = (Math.random() - 0.5) * (Math.PI / 4);
+        const angleFromTruck =
+          this.rotation - Math.PI / 2 + side * (Math.PI / 2) + angleOffset;
 
-      const offsetX = distanceFromTruck * Math.cos(angleFromTruck);
-      const offsetY = distanceFromTruck * Math.sin(angleFromTruck);
+        const offsetX = distanceFromTruck * Math.cos(angleFromTruck);
+        const offsetY = distanceFromTruck * Math.sin(angleFromTruck);
 
-      const delay = Math.random() * (this.burningTime * 0.8);
+        const delay = Math.random() * (this.burningTime * 0.8);
 
-      setTimeout(() => {
-        enemy.baseX = this.baseX + offsetX;
-        enemy.baseY = this.baseY + offsetY;
-        enemy.x = enemy.baseX + this.layer.x;
-        enemy.y = enemy.baseY + this.layer.y;
+        setTimeout(() => {
+          enemy.baseX = this.baseX + offsetX;
+          enemy.baseY = this.baseY + offsetY;
+          enemy.x = enemy.baseX + this.layer.x;
+          enemy.y = enemy.baseY + this.layer.y;
 
-        enemy.vehicle = null;
-        enemy.path = findPath(
-          this.navigaionsGrid,
-          { x: enemy.baseX, y: enemy.baseY },
-          {
-            x: this.waypoints[this.waypoints.length - 1].x,
-            y: this.waypoints[this.waypoints.length - 1].y,
-          }
-        );
-        enemy.currentPathIndex = 0;
-      }, delay);
+          enemy.vehicle = null;
+          enemy.path = findPath(
+            this.navigaionsGrid,
+            { x: enemy.baseX, y: enemy.baseY },
+            {
+              x: this.waypoints[this.waypoints.length - 1].x,
+              y: this.waypoints[this.waypoints.length - 1].y,
+            }
+          );
+          enemy.currentPathIndex = 0;
+        }, delay);
+      }
     });
   }
 
@@ -299,13 +313,28 @@ export class Vehicle {
 export class Ural extends Vehicle {
   constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
     super(x, y, layer, ctx, waypoints, navigaionsGrid);
-    this.image = uralZImage;
+    this.image = Math.random() > 0.4 ? uralZImage : uralVImage;
     this.x = x;
     this.y = y;
     this.width = 90;
     this.height = 224;
     this.type = "ural";
     this.scale = 0.75;
-    this.speed = 0.3;
+    this.speed = 0.4;
+  }
+}
+export class Gaz66 extends Vehicle {
+  constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
+    super(x, y, layer, ctx, waypoints, navigaionsGrid);
+    this.image = Math.random() > 0.4 ? gaz66ZImage : gaz66VImage;
+    this.x = x;
+    this.y = y;
+    this.width = 90;
+    this.height = 170;
+    this.type = "gaz66";
+    this.scale = 0.75;
+    this.speed = 0.4;
+    this.gassmokeoffsetY = -0.7;
+    this.smokeScale = 0.45;
   }
 }
