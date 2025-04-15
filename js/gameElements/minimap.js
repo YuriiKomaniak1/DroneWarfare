@@ -77,9 +77,13 @@ export class Minimap {
         tempY < this.mapY + this.height
       ) {
         if (!vehicle.isDestroyed) {
-          if (vehicle.type === "ural") {
+          if (vehicle.type === "ural" || vehicle.type === "gaz66") {
             this.ctx.fillStyle = "rgb(238, 117, 117)";
             this.ctx.fillRect(tempX, tempY, 3, 6);
+          }
+          if (vehicle.type === "bmp2") {
+            this.ctx.fillStyle = "hsl(0, 86.40%, 51.00%)";
+            this.ctx.fillRect(tempX, tempY, 4, 6);
           }
         }
       }

@@ -331,7 +331,7 @@ export function createRifleSquad(
     const path = findPath(
       navGrid,
       { x: startX, y: startY },
-      { x: targetX + localSpreadX, y: targetY + localSpreadY }
+      { x: targetX + localSpreadX, y: targetY }
     );
 
     const enemy = new Class(startX, startY, layer, ctx, path);

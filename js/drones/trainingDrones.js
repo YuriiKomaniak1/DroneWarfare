@@ -15,9 +15,9 @@ drones.forEach((drone) => {
     drone.remainingCapacity >=
     Math.min(FragBomb.weight, HeBomb.weight, ShapedBomb.weight)
   ) {
-    Math.random() > 0.4
+    Math.random() > 0.5
       ? drone.addBomb(FragBomb)
-      : Math.random() > 0.15
+      : Math.random() > 0.4
       ? drone.addBomb(HeBomb)
       : drone.addBomb(ShapedBomb);
   }

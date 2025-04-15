@@ -123,11 +123,11 @@ canvas.addEventListener("touchstart", (e) =>
   handleMenuClick(e, canvas, openTrainingModal)
 );
 squadTruck.addEventListener("click", () => {
-  let coordX = 1500;
-  let coordY = 1800;
+  let coordX = Math.random() * 1300 + 300;
+  let coordY = Math.random() * 100 + 100;
   const startX = coordX;
   const startY = coordY;
-  const targetX = coordX - 200;
+  const targetX = coordX;
   const targetY = 2600;
 
   let waypoints = [
@@ -153,11 +153,11 @@ squadTruck.addEventListener("click", () => {
   vehicles.push(truck);
 });
 squadBMP.addEventListener("click", () => {
-  let coordX = 1500;
-  let coordY = 1800;
+  let coordX = Math.random() * 1300 + 300;
+  let coordY = Math.random() * 100 + 100;
   const startX = coordX;
   const startY = coordY;
-  const targetX = coordX - 200;
+  const targetX = coordX;
   const targetY = 2600;
 
   let waypoints = [
@@ -177,7 +177,7 @@ squadBMP.addEventListener("click", () => {
 });
 squad.addEventListener("click", () => {
   let coordX = Math.random() * 1200 + 200;
-  let coordY = Math.random() * 1000 - 100;
+  let coordY = Math.random() * 100 + 100;
   const squad = createRifleSquad(
     coordX,
     coordY,
@@ -187,7 +187,7 @@ squad.addEventListener("click", () => {
     ctx,
     navGrid,
     coordX,
-    coordY + 2000
+    2600
   );
 
   enemies.push(...squad);

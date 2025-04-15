@@ -81,9 +81,15 @@ export class Vehicle {
     this.cargo = [];
     this.navigaionsGrid = navigaionsGrid;
     this.armor = 0;
+    this.score = 100;
+    this.scored = false;
   }
 
-  update(vehicles) {
+  update(vehicles, score) {
+    if (this.dead && !this.scored) {
+      score += this.score;
+      this.scored = true;
+    }
     if (this.path.length === 0 || this.currentPathIndex >= this.path.length) {
       this.currentWaypointIndex++;
       this.setPathToWaypoint(); // Перехід до наступного вейпоінта
@@ -315,8 +321,18 @@ export class Vehicle {
         const delay = Math.random() * (this.burningTime * 0.8);
 
         setTimeout(() => {
-          enemy.baseX = this.baseX + offsetX;
-          enemy.baseY = this.baseY + offsetY;
+          const rawX = this.baseX + offsetX;
+          const rawY = this.baseY + offsetY;
+
+          const safeSpot = this.getNearestWalkableTile(
+            rawX,
+            rawY,
+            this.navigaionsGrid
+          );
+          if (!safeSpot) return; // якщо взагалі немає куди висадити
+
+          enemy.baseX = safeSpot.x;
+          enemy.baseY = safeSpot.y;
           enemy.x = enemy.baseX + this.layer.x;
           enemy.y = enemy.baseY + this.layer.y;
 
@@ -349,6 +365,38 @@ export class Vehicle {
       this.isMoving = false; // Всі вейпоінти пройдено
     }
   }
+  getNearestWalkableTile(x, y, navGrid, maxRadius = 100) {
+    const step = 10; // Крок у пікселях
+    const directions = [
+      [0, 0],
+      [1, 0],
+      [-1, 0],
+      [0, 1],
+      [0, -1],
+      [1, 1],
+      [-1, -1],
+      [1, -1],
+      [-1, 1],
+    ];
+
+    for (let r = 0; r <= maxRadius; r += step) {
+      for (let [dx, dy] of directions) {
+        const testX = x + dx * r;
+        const testY = y + dy * r;
+
+        const path = findPath(
+          navGrid,
+          { x: testX, y: testY },
+          { x: testX + 1, y: testY + 1 }
+        );
+        if (path.length > 0) {
+          return { x: testX, y: testY };
+        }
+      }
+    }
+
+    return null; // нічого не знайдено
+  }
 }
 
 export class Ural extends Vehicle {
@@ -362,6 +410,7 @@ export class Ural extends Vehicle {
     this.type = "ural";
     this.scale = 0.75;
     this.speed = 0.4;
+    this.score = 200;
   }
 }
 export class Gaz66 extends Vehicle {
@@ -377,6 +426,7 @@ export class Gaz66 extends Vehicle {
     this.speed = 0.4;
     this.gassmokeoffsetY = -0.7;
     this.smokeScale = 0.45;
+    this.score = 180;
   }
 }
 
@@ -389,7 +439,7 @@ export class BMP2 extends Vehicle {
     this.y = y;
     this.width = 100;
     this.height = 200;
-    this.type = "gaz66";
+    this.type = "bmp2";
     this.scale = 0.8;
     this.speed = 0.3;
     this.gassmokeoffsetY = -0.7;
@@ -402,5 +452,6 @@ export class BMP2 extends Vehicle {
     this.turretscale = 0.95;
     this.vehiclefireOffsetX = 0;
     this.vehiclefireOffsetY = -0.1;
+    this.score = 400;
   }
 }
