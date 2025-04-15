@@ -18,6 +18,7 @@ import {
   checkVisibility,
   checkDistance,
 } from "./logic/enemyLogic.js";
+import { drawScore } from "./logic/score.js";
 import { DroneIcons } from "./gameElements/droneIcons.js";
 import { drones } from "./drones/trainingDrones.js";
 import { initDrones } from "./drones/drones.js";
@@ -47,7 +48,8 @@ async function loadObstacles() {
 await loadObstacles();
 const navGrid = new NavigationGrid(1800, 2600, 15, obstacles);
 const vehicleNavGrid = new NavigationGrid(1800, 2600, 40, obstacles);
-
+const score = {};
+score.count = 0;
 const modal = document.getElementById("modal__greeting");
 const startButton = document.getElementById("trainingStartButton");
 const trainingModal = document.getElementById("trainingModal");
@@ -79,7 +81,6 @@ const droneIcon2 = new DroneIcons(canvas, ctx, 2, drones[1]);
 const droneIcon3 = new DroneIcons(canvas, ctx, 3, drones[2]);
 const droneIcon4 = new DroneIcons(canvas, ctx, 4, drones[3]);
 const droneIcon5 = new DroneIcons(canvas, ctx, 5, drones[4]);
-
 const droneIcons = [droneIcon1, droneIcon2, droneIcon3, droneIcon4, droneIcon5];
 prevSection.addEventListener("click", () => {
   currentSection--;
@@ -135,7 +136,7 @@ squadTruck.addEventListener("click", () => {
 
     { x: targetX, y: targetY },
   ];
-  let TruckClass = Math.random() > 0.9 ? Ural : Gaz66;
+  let TruckClass = Math.random() > 0.45 ? Ural : Gaz66;
   let truck = new TruckClass(
     startX,
     startY,
@@ -262,12 +263,12 @@ function animate(timestamp) {
       if (enemy.isFiring && checkDistance(enemy, canvas) > enemy.fireDistance) {
         enemy.isFiring = false;
       }
-      enemy.update(enemies, canvas);
+      enemy.update(enemies, canvas, score);
       enemy.draw();
       enemy.fire(currentDrone, layer1);
     });
     vehicles.forEach((vehicle, index) => {
-      vehicle.update(vehicles);
+      vehicle.update(vehicles, score);
       vehicle.draw();
     });
 
@@ -305,6 +306,7 @@ function animate(timestamp) {
     });
     drawJoystickAndButtons(ctx);
     drawMenuButtons(ctx, canvas, minimap);
+    drawScore(ctx, score.count, canvas);
     gameFrame++;
   }
 

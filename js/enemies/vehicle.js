@@ -86,8 +86,8 @@ export class Vehicle {
   }
 
   update(vehicles, score) {
-    if (this.dead && !this.scored) {
-      score += this.score;
+    if (this.isBurning && !this.scored) {
+      score.count += this.score;
       this.scored = true;
     }
     if (this.path.length === 0 || this.currentPathIndex >= this.path.length) {

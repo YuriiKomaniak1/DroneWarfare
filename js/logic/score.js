@@ -1,5 +1,5 @@
 export function drawScore(ctx, score, canvas) {
-  const fontSize = 22;
+  const fontSize = 18;
   const text = `SCORE: ${score}`;
 
   ctx.save();

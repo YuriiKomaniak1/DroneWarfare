@@ -54,9 +54,15 @@ export class Enemy {
     this.showSkull = true;
     this.skullOffset = Math.random() * 90 - 45;
     this.skullTimer = 0;
+    this.score = 50;
+    this.scored = false;
   }
 
-  update(allEnemies, canvas) {
+  update(allEnemies, canvas, score) {
+    if (!this.scored && this.dead) {
+      score.count += this.score;
+      this.scored = true;
+    }
     if (this.vehicle === null) {
       if (this.path.length === 0 || this.currentPathIndex >= this.path.length) {
         return;
@@ -285,6 +291,7 @@ export class Rifleman extends Enemy {
     this.fireDistance = 260;
     this.fireRate = 5;
     this.droneSpottingChanse = 1;
+    this.score = 50;
   }
 }
 export class Grenadier extends Enemy {
@@ -295,6 +302,7 @@ export class Grenadier extends Enemy {
     this.fireDistance = 260;
     this.fireRate = 4;
     this.droneSpottingChanse = 1;
+    this.score = 100;
   }
 }
 export class Machinegunner extends Enemy {
@@ -305,6 +313,7 @@ export class Machinegunner extends Enemy {
     this.fireDistance = 350;
     this.fireRate = 15;
     this.droneSpottingChanse = 2;
+    this.score = 100;
   }
 }
 
