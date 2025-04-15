@@ -123,58 +123,69 @@ canvas.addEventListener("click", (e) =>
 canvas.addEventListener("touchstart", (e) =>
   handleMenuClick(e, canvas, openTrainingModal)
 );
+let coords = [
+  60, 180, 300, 420, 540, 660, 780, 900, 1020, 1140, 1260, 1380, 1500, 1620,
+  1740,
+];
 squadTruck.addEventListener("click", () => {
-  let coordX = Math.random() * 1300 + 300;
-  let coordY = Math.random() * 100 + 100;
-  const startX = coordX;
-  const startY = coordY;
-  const targetX = coordX;
-  const targetY = 2600;
+  if (coords.length > 0) {
+    let index = Math.floor(Math.random() * coords.length);
 
-  let waypoints = [
-    { x: startX, y: startY },
+    const startX = coords[index];
+    const startY = Math.random() * 300 + 100;
+    const targetX = coords[index];
+    const targetY = 2600;
+    coords.splice(index, 1);
 
-    { x: targetX, y: targetY },
-  ];
-  let TruckClass = Math.random() > 0.45 ? Ural : Gaz66;
-  let truck = new TruckClass(
-    startX,
-    startY,
-    layer1,
-    ctx,
-    waypoints,
-    vehicleNavGrid
-  );
+    let waypoints = [
+      { x: startX, y: startY },
 
-  // === Шукаємо шлях один раз при створенні ===
-  truck.path = findPath(vehicleNavGrid, waypoints[0], waypoints[1]);
-  truck.currentPathIndex = 0;
-  truck.embark(enemies, navGrid);
+      { x: targetX, y: targetY },
+    ];
+    let TruckClass = Math.random() > 0.45 ? Ural : Gaz66;
+    let truck = new TruckClass(
+      startX,
+      startY,
+      layer1,
+      ctx,
+      waypoints,
+      vehicleNavGrid
+    );
 
-  vehicles.push(truck);
+    // === Шукаємо шлях один раз при створенні ===
+    truck.path = findPath(vehicleNavGrid, waypoints[0], waypoints[1]);
+    truck.currentPathIndex = 0;
+    truck.embark(enemies, navGrid);
+
+    vehicles.push(truck);
+  }
 });
+
 squadBMP.addEventListener("click", () => {
-  let coordX = Math.random() * 1300 + 300;
-  let coordY = Math.random() * 100 + 100;
-  const startX = coordX;
-  const startY = coordY;
-  const targetX = coordX;
-  const targetY = 2600;
+  if (coords.length > 0) {
+    let index = Math.floor(Math.random() * coords.length);
 
-  let waypoints = [
-    { x: startX, y: startY },
+    const startX = coords[index];
+    const startY = Math.random() * 300 + 100;
+    const targetX = coords[index];
+    const targetY = 2600;
+    coords.splice(index, 1);
 
-    { x: targetX, y: targetY },
-  ];
+    let waypoints = [
+      { x: startX, y: startY },
 
-  let bmp = new BMP2(startX, startY, layer1, ctx, waypoints, vehicleNavGrid);
+      { x: targetX, y: targetY },
+    ];
 
-  // === Шукаємо шлях один раз при створенні ===
-  bmp.path = findPath(vehicleNavGrid, waypoints[0], waypoints[1]);
-  bmp.currentPathIndex = 0;
-  bmp.embark(enemies, navGrid);
+    let bmp = new BMP2(startX, startY, layer1, ctx, waypoints, vehicleNavGrid);
 
-  vehicles.push(bmp);
+    // === Шукаємо шлях один раз при створенні ===
+    bmp.path = findPath(vehicleNavGrid, waypoints[0], waypoints[1]);
+    bmp.currentPathIndex = 0;
+    bmp.embark(enemies, navGrid);
+
+    vehicles.push(bmp);
+  }
 });
 squad.addEventListener("click", () => {
   let coordX = Math.random() * 1200 + 200;

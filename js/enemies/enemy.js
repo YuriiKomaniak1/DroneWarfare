@@ -65,6 +65,10 @@ export class Enemy {
     }
     if (this.vehicle === null) {
       if (this.path.length === 0 || this.currentPathIndex >= this.path.length) {
+        const index = allEnemies.indexOf(this);
+        if (index > -1) {
+          allEnemies.splice(index, 1);
+        }
         return;
       }
       let speedModifier = 1;
