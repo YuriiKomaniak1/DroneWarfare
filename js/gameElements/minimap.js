@@ -1,27 +1,16 @@
 export class Minimap {
-  constructor(
-    mapWidth,
-    mapHeight,
-    canvasWidth,
-    canvasHeight,
-    droneScope,
-    enemies,
-    vehicles,
-    ctx,
-    layer
-  ) {
-    this.width = Math.max(canvasWidth / 5, 100);
+  constructor(mapWidth, mapHeight, canvas, enemies, vehicles, ctx, layer) {
+    this.width = Math.max(canvas.width / 5, 100);
     this.height = (this.width / mapWidth) * mapHeight;
     this.scaleX = this.width / mapWidth;
     this.scaleY = this.height / mapHeight;
-    this.droneScope = droneScope;
     this.enemies = enemies;
     this.ctx = ctx;
     this.mapX = 10;
     this.mapY = 10;
     this.layer = layer;
-    this.canvasWidth = canvasWidth;
-    this.canvasHeight = canvasHeight;
+    this.canvasWidth = canvas.width;
+    this.canvasHeight = canvas.height;
     this.vehicles = vehicles;
   }
   draw() {
@@ -56,7 +45,7 @@ export class Minimap {
         tempY < this.mapY + this.height
       ) {
         if (!enemy.dead) {
-          if (enemy.type === "rifleman") {
+          if (enemy.type === "rifleman" || enemy.type === "grenadier") {
             this.ctx.fillStyle = "rgb(255, 0, 0)";
             this.ctx.fillRect(tempX, tempY, 3, 3);
           }
