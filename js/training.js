@@ -222,7 +222,9 @@ setupControls(() => {
   dropBomb(currentDrone, selectionState, layer1, ctx, droneScope, bombs);
 });
 setupDroneSelectionByClick(canvas, droneIcons);
-setupTouchControls(dropBomb, canvas);
+setupTouchControls(() => {
+  dropBomb(currentDrone, selectionState, layer1, ctx, droneScope, bombs);
+}, canvas);
 
 const FPS = 60;
 const FRAME_TIME = 1000 / FPS;
