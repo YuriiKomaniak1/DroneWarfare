@@ -182,10 +182,19 @@ export class Vehicle {
         : 0;
 
       // Відстань від центру башти
-      const exhaustOffsetX = this.width * this.scale * this.turretOffsetX;
-      const exhaustOffsetY = this.height * this.scale * this.turretOffsetY;
+      // Відстань від центру до башти у локальних координатах
+      const localOffsetX = this.width * this.scale * this.turretOffsetX;
+      const localOffsetY = this.height * this.scale * this.turretOffsetY;
 
-      this.ctx.translate(exhaustOffsetX, exhaustOffsetY); // зміщуємо до труби
+      // Обчислюємо глобальні координати зміщення з урахуванням обертання корпусу
+      const globalOffsetX =
+        localOffsetX * Math.cos(this.rotation) -
+        localOffsetY * Math.sin(this.rotation);
+      const globalOffsetY =
+        localOffsetX * Math.sin(this.rotation) +
+        localOffsetY * Math.cos(this.rotation);
+
+      this.ctx.translate(globalOffsetX, globalOffsetY);
       this.ctx.drawImage(
         this.turretImage,
         turretFrame * this.turretWidth,
@@ -441,14 +450,14 @@ export class BMP2 extends Vehicle {
     this.height = 200;
     this.type = "bmp2";
     this.scale = 0.68;
-    this.turretScale = 0.68;
+    this.turretScale = 0.73;
     this.speed = 0.3;
     this.gassmokeoffsetY = -0.7;
     this.gassmokeoffsetX = 0.6;
     this.smokeScale = 0.6;
     this.armor = 4;
     this.turretOffsetX = 0;
-    this.turretOffsetY = 0;
+    this.turretOffsetY = -0.07;
     this.hasTurret = true;
     this.turretscale = 0.95;
     this.vehiclefireOffsetX = 0;
