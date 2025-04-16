@@ -24,6 +24,12 @@ const guntruckVImage = new Image();
 guntruckVImage.src = "./assets/img/vehicles/guntruckV.png";
 const guntruckturret = new Image();
 guntruckturret.src = "./assets/img/vehicles/guntruckturret.png";
+const tigrZImage = new Image();
+tigrZImage.src = "./assets/img/vehicles/tigrZ.png";
+const tigrVImage = new Image();
+tigrVImage.src = "./assets/img/vehicles/tigrV.png";
+const tigrturret = new Image();
+tigrturret.src = "./assets/img/vehicles/tigrturret.png";
 const gasSmokeImage = new Image();
 gasSmokeImage.src = "./assets/img/effects/gasSmoke.png";
 const vehicleExplosionImage = new Image();
@@ -168,7 +174,6 @@ export class Vehicle {
 
       if (this.turretFrameTimer >= this.fireFramespeed) {
         this.turretFrame = (this.turretFrame + 1) % this.fireFrames;
-        this.frameTimer = 0;
         this.turretFrameTimer = 0;
       }
     }
@@ -629,5 +634,35 @@ export class Guntruck extends Vehicle {
     this.droneSpottingChanse = 4;
     this.fireDistance = 400;
     this.fireRate = 40;
+  }
+}
+
+export class Tigr extends Vehicle {
+  constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
+    super(x, y, layer, ctx, waypoints, navigaionsGrid);
+    this.image = Math.random() > 0.4 ? tigrZImage : tigrVImage;
+    this.turretImage = tigrturret;
+    this.x = x;
+    this.y = y;
+    this.width = 100;
+    this.height = 200;
+    this.type = "tigr";
+    this.scale = 0.6;
+    this.turretScale = 0.95;
+    this.speed = 0.44;
+    this.gassmokeoffsetY = -0.7;
+    this.gassmokeoffsetX = 0.7;
+    this.smokeScale = 0.3;
+    this.armor = 1;
+    this.turretOffsetX = 0;
+    this.turretOffsetY = -0.08;
+    this.hasGunner = true;
+    this.hasTurret = true;
+    this.vehiclefireOffsetX = 0;
+    this.vehiclefireOffsetY = 0;
+    this.score = 350;
+    this.droneSpottingChanse = 2;
+    this.fireDistance = 320;
+    this.fireRate = 15;
   }
 }

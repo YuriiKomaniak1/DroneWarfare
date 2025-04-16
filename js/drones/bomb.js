@@ -210,12 +210,18 @@ export class HeBomb extends Bomb {
       } else if (this.distanceToVehicle(40, vehicle) && Math.random() > 0.2) {
         vehicle.isStopped = true;
       }
-      if (vehicle.isBurning || vehicle.isStopped) {
-        vehicle.bailOut();
-        vehicle.isMoving = false;
-      }
-      return vehicle;
+    } else if (
+      this.distanceToVehicle(15, vehicle) &&
+      Math.random() > 0.5 + vehicle.armor / 10
+    ) {
+      vehicle.isStopped = true;
     }
+
+    if (vehicle.isBurning || vehicle.isStopped) {
+      vehicle.bailOut();
+      vehicle.isMoving = false;
+    }
+    return vehicle;
   }
 }
 

@@ -1,7 +1,7 @@
 import { Minimap } from "./gameElements/minimap.js";
 import { Layer } from "./layers/layer.js";
 import { createRifleSquad, Rifleman } from "./enemies/enemy.js";
-import { Gaz66, Ural, BMP2, BMP1, Guntruck } from "./enemies/vehicle.js";
+import { Gaz66, Ural, BMP2, BMP1, Guntruck, Tigr } from "./enemies/vehicle.js";
 import { initControls, keys } from "./logic/controls.js";
 import { DroneIcons } from "./gameElements/droneIcons.js";
 import { drones } from "./drones/trainingDrones.js";
@@ -42,6 +42,7 @@ const squad = document.getElementById("squad");
 const squadTruck = document.getElementById("squadTruck");
 const squadBMP = document.getElementById("squadBMP");
 const guntruck = document.getElementById("guntruck");
+const tigr = document.getElementById("tigr");
 const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
 canvas.width = Math.min(window.innerWidth, 900);
@@ -107,6 +108,9 @@ let coords = [
   60, 180, 300, 420, 540, 660, 780, 900, 1020, 1140, 1260, 1380, 1500, 1620,
   1740,
 ];
+tigr.addEventListener("click", () => {
+  addVehicle(Tigr, 2, 1, 0);
+});
 guntruck.addEventListener("click", () => {
   addVehicle(Guntruck, 1, 0, 0);
 });
