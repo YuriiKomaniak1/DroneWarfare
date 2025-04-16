@@ -408,7 +408,7 @@ export class Ural extends Vehicle {
     this.width = 90;
     this.height = 224;
     this.type = "ural";
-    this.scale = 0.75;
+    this.scale = 0.7;
     this.speed = 0.4;
     this.score = 200;
   }
@@ -422,7 +422,7 @@ export class Gaz66 extends Vehicle {
     this.width = 90;
     this.height = 170;
     this.type = "gaz66";
-    this.scale = 0.75;
+    this.scale = 0.7;
     this.speed = 0.4;
     this.gassmokeoffsetY = -0.7;
     this.smokeScale = 0.45;
@@ -440,7 +440,8 @@ export class BMP2 extends Vehicle {
     this.width = 100;
     this.height = 200;
     this.type = "bmp2";
-    this.scale = 0.8;
+    this.scale = 0.68;
+    this.turretScale = 0.68;
     this.speed = 0.3;
     this.gassmokeoffsetY = -0.7;
     this.gassmokeoffsetX = 0.6;
