@@ -1,7 +1,7 @@
 import { Minimap } from "./gameElements/minimap.js";
 import { Layer } from "./layers/layer.js";
 import { createRifleSquad, Rifleman } from "./enemies/enemy.js";
-import { Gaz66, Ural, BMP2, BMP1 } from "./enemies/vehicle.js";
+import { Gaz66, Ural, BMP2, BMP1, Guntruck } from "./enemies/vehicle.js";
 import { initControls, keys } from "./logic/controls.js";
 import { DroneIcons } from "./gameElements/droneIcons.js";
 import { drones } from "./drones/trainingDrones.js";
@@ -41,6 +41,7 @@ const hideEnemiesModal = document.getElementById("hideEnemiesModal");
 const squad = document.getElementById("squad");
 const squadTruck = document.getElementById("squadTruck");
 const squadBMP = document.getElementById("squadBMP");
+const guntruck = document.getElementById("guntruck");
 const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
 canvas.width = Math.min(window.innerWidth, 900);
@@ -106,23 +107,26 @@ let coords = [
   60, 180, 300, 420, 540, 660, 780, 900, 1020, 1140, 1260, 1380, 1500, 1620,
   1740,
 ];
+guntruck.addEventListener("click", () => {
+  addVehicle(Guntruck, 1, 0, 0);
+});
 squadTruck.addEventListener("click", () => {
   if (Math.random() > 0.45) {
-    addVehicle(Ural);
+    addVehicle(Ural, 6, 1, 1);
   } else {
-    addVehicle(Gaz66);
+    addVehicle(Gaz66, 6, 1, 1);
   }
 });
 
 squadBMP.addEventListener("click", () => {
   if (Math.random() > 0.5) {
-    addVehicle(BMP2);
+    addVehicle(BMP2, 4, 1, 1);
   } else {
-    addVehicle(BMP1);
+    addVehicle(BMP1, 4, 1, 1);
   }
 });
 
-function addVehicle(Class) {
+function addVehicle(Class, riflemans, mashinegunners, grenadiers) {
   if (coords.length > 0) {
     let index = Math.floor(Math.random() * coords.length);
     const startX = coords[index];
@@ -139,7 +143,7 @@ function addVehicle(Class) {
     // === Шукаємо шлях один раз при створенні ===
     bmp.path = findPath(vehicleNavGrid, waypoints[0], waypoints[1]);
     bmp.currentPathIndex = 0;
-    bmp.embark(enemies, navGrid);
+    bmp.embark(enemies, navGrid, riflemans, mashinegunners, grenadiers);
     vehicles.push(bmp);
   }
 }
@@ -155,7 +159,10 @@ squad.addEventListener("click", () => {
     ctx,
     navGrid,
     startX,
-    2600
+    2600,
+    6,
+    1,
+    1
   );
   enemies.push(...squad);
   console.log(enemies);

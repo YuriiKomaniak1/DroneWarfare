@@ -74,6 +74,10 @@ export class Minimap {
             this.ctx.fillStyle = "hsl(0, 86.40%, 51.00%)";
             this.ctx.fillRect(tempX, tempY, 4, 6);
           }
+          if (vehicle.type === "guntruck") {
+            this.ctx.fillStyle = "rgb(123, 2, 2)";
+            this.ctx.fillRect(tempX, tempY, 4, 7);
+          }
         }
       }
     });

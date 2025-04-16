@@ -23,6 +23,19 @@ export function checkVisibility(drone, enemy, canvas, gameFrame) {
   }
   return effectStatus;
 }
+export function checkVehicleVisibility(drone, vehicle, canvas, gameFrame) {
+  const distance = checkDistance(vehicle, canvas);
+  let effectStatus = false;
+  if (gameFrame % 60 === 0) {
+    if (
+      distance < vehicle.fireDistance &&
+      Math.random() * 150 < drone.visibility * vehicle.droneSpottingChanse
+    ) {
+      effectStatus = true;
+    }
+  }
+  return effectStatus;
+}
 
 export function checkDistance(enemy, canvas) {
   return Math.hypot(

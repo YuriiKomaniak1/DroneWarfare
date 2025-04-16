@@ -18,6 +18,12 @@ const bmp1VImage = new Image();
 bmp1VImage.src = "./assets/img/vehicles/bmp1V.png";
 const bmp1turret = new Image();
 bmp1turret.src = "./assets/img/vehicles/bmp1turret.png";
+const guntruckZImage = new Image();
+guntruckZImage.src = "./assets/img/vehicles/guntruckZ.png";
+const guntruckVImage = new Image();
+guntruckVImage.src = "./assets/img/vehicles/guntruckV.png";
+const guntruckturret = new Image();
+guntruckturret.src = "./assets/img/vehicles/guntruckturret.png";
 const gasSmokeImage = new Image();
 gasSmokeImage.src = "./assets/img/effects/gasSmoke.png";
 const vehicleExplosionImage = new Image();
@@ -33,6 +39,7 @@ export class Vehicle {
     this.turretImage = bmp2turret;
     this.turretWidth = 200;
     this.hasTurret = false;
+    this.hasGunner = false;
     this.turretOffsetX = 1;
     this.turretOffsetY = 1;
     this.turretScale = 1;
@@ -54,7 +61,7 @@ export class Vehicle {
     this.gassmokeframeSpeed = 8;
     this.gassmokeoffsetX = 0.5;
     this.gassmokeoffsetY = -0.1;
-    this.vehiclefireFrames = 9;
+    this.vehiclefireFrames = 8;
     this.vehiclefireframeSpeed = 7;
     this.vehiclefireOffsetX = 0;
     this.vehiclefireOffsetY = 0;
@@ -84,14 +91,25 @@ export class Vehicle {
     this.path = [];
     this.currentPathIndex = 0;
     this.driver = null;
+    this.gunner = null;
     this.cargo = [];
     this.navigaionsGrid = navigaionsGrid;
     this.armor = 0;
     this.score = 100;
     this.scored = false;
+    this.fireDistance = 260;
+    this.fireRate = 5;
+    this.isFiring = false;
+    this.fireTimer = 0;
+    this.fireFrames = 6;
+    this.fireFramespeed = 6;
+    this.turretRotationAngle = 0;
+    this.turretFrame = 0;
+    this.turretFrameTimer = 0;
+    this.droneSpottingChanse = 1;
   }
 
-  update(vehicles, score) {
+  update(vehicles, canvas, score) {
     if (this.isBurning && !this.scored) {
       score.count += this.score;
       this.scored = true;
@@ -138,9 +156,23 @@ export class Vehicle {
       : this.gassmokeframeSpeed;
 
     if (this.frameTimer >= framespeed) {
-      this.frameX = (this.frameX + 1) % framespeed;
+      if (this.isBurning) {
+        this.frameX = (this.frameX + 1) % this.vehiclefireFrames;
+      } else {
+        this.frameX = (this.frameX + 1) % this.gasSmokeFrames;
+      }
       this.frameTimer = 0;
     }
+    if (this.isFiring) {
+      this.turretFrameTimer++;
+
+      if (this.turretFrameTimer >= this.fireFramespeed) {
+        this.turretFrame = (this.turretFrame + 1) % this.fireFrames;
+        this.frameTimer = 0;
+        this.turretFrameTimer = 0;
+      }
+    }
+
     if (this.isDestroyed) {
       this.explosionTimer++;
       if (this.explosionTimer % 8 === 0) {
@@ -150,7 +182,20 @@ export class Vehicle {
         }
       }
     }
+    if (this.isFiring) {
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
 
+      const dx = centerX - (this.baseX + this.layer.x);
+      const dy = centerY - (this.baseY + this.layer.y);
+
+      const targetAngle = Math.atan2(dy, dx) - Math.PI / 2;
+      this.turretRotationAngle +=
+        (targetAngle - this.turretRotationAngle) * 0.1; // Плавна зміна кута
+    }
+    if (!this.isFiring) {
+      this.turretFrame = 0;
+    }
     this.x = this.baseX + this.layer.x;
     this.y = this.baseY + this.layer.y;
   }
@@ -200,18 +245,34 @@ export class Vehicle {
         localOffsetX * Math.sin(this.rotation) +
         localOffsetY * Math.cos(this.rotation);
 
-      this.ctx.translate(globalOffsetX, globalOffsetY);
-      this.ctx.drawImage(
-        this.turretImage,
-        turretFrame * this.turretWidth,
-        0,
-        this.turretWidth,
-        this.turretWidth,
-        (-this.turretWidth * this.turretScale) / 2,
-        (-this.turretWidth * this.turretScale) / 2,
-        this.turretWidth * this.turretScale,
-        this.turretWidth * this.turretScale
-      );
+      if (this.isFiring && this.isMoving) {
+        this.ctx.translate(globalOffsetX, globalOffsetY);
+        this.ctx.rotate(this.turretRotationAngle);
+        this.ctx.drawImage(
+          this.turretImage,
+          this.turretFrame * this.turretWidth,
+          1 * this.turretWidth,
+          this.turretWidth,
+          this.turretWidth,
+          (-this.turretWidth * this.turretScale) / 2,
+          (-this.turretWidth * this.turretScale) / 2,
+          this.turretWidth * this.turretScale,
+          this.turretWidth * this.turretScale
+        );
+      } else {
+        this.ctx.translate(globalOffsetX, globalOffsetY);
+        this.ctx.drawImage(
+          this.turretImage,
+          turretFrame * this.turretWidth,
+          0,
+          this.turretWidth,
+          this.turretWidth,
+          (-this.turretWidth * this.turretScale) / 2,
+          (-this.turretWidth * this.turretScale) / 2,
+          this.turretWidth * this.turretScale,
+          this.turretWidth * this.turretScale
+        );
+      }
       this.ctx.restore();
     }
 
@@ -285,7 +346,32 @@ export class Vehicle {
       this.ctx.restore();
     }
   }
-  embark(enemies, navGrid) {
+  fire(drone, layer) {
+    if (this.hasGunner) {
+      if (
+        !this.gunner.vehicle ||
+        this.gunner.dead ||
+        !this.isMoving ||
+        !drone.isAlive ||
+        drone.isReloading
+      ) {
+        this.isFiring = false;
+        this.turretFrame = 0;
+      }
+      if (this.isFiring) this.fireTimer++;
+      if (this.fireTimer >= 60 / this.fireRate) {
+        if (
+          Math.random() * 1000 <
+            5 - (4 * (layer.speedX + layer.speedY)) / (2 * layer.maxSpeed) &&
+          drone.hp >= 1
+        ) {
+          --drone.hp;
+        }
+        this.fireTimer = 0;
+      }
+    }
+  }
+  embark(enemies, navGrid, riflemans, mashinegunners, grenadiers) {
     // Спочатку водія
     const driver = new Rifleman(
       this.baseX,
@@ -294,11 +380,25 @@ export class Vehicle {
       this.ctx,
       [] // без маршруту спочатку
     );
+
     driver.vehicle = this;
     driver.path = [];
     enemies.push(driver);
     this.driver = driver;
+    if (this.hasGunner) {
+      const gunner = new Rifleman(
+        this.baseX,
+        this.baseY,
+        this.layer,
+        this.ctx,
+        [] // без маршруту спочатку
+      );
 
+      gunner.vehicle = this;
+      gunner.path = [];
+      enemies.push(gunner);
+      this.gunner = gunner;
+    }
     // Тепер піхота
     const squad = createRifleSquad(
       this.baseX,
@@ -309,7 +409,10 @@ export class Vehicle {
       this.ctx,
       navGrid,
       this.baseX,
-      this.baseY
+      this.baseY,
+      riflemans,
+      mashinegunners,
+      grenadiers
     );
     squad.forEach((enemy) => {
       enemy.vehicle = this;
@@ -321,9 +424,11 @@ export class Vehicle {
   }
   bailOut() {
     if (this.driver) this.cargo.unshift(this.driver);
+    if (this.gunner) this.cargo.unshift(this.gunner);
 
     this.cargo.forEach((enemy, index) => {
-      if (!enemy.dead) {
+      if (!enemy.dead && !enemy.hasBailedOut) {
+        enemy.hasBailedOut = true;
         const side = index % 2 === 0 ? -1 : 1;
         const distanceFromTruck = 40 + Math.random() * 70;
         const angleOffset = (Math.random() - 0.5) * (Math.PI / 4);
@@ -336,6 +441,7 @@ export class Vehicle {
         const delay = Math.random() * (this.burningTime * 0.8);
 
         setTimeout(() => {
+          if (enemy.dead) return;
           const rawX = this.baseX + offsetX;
           const rawY = this.baseY + offsetY;
 
@@ -380,7 +486,7 @@ export class Vehicle {
       this.isMoving = false; // Всі вейпоінти пройдено
     }
   }
-  getNearestWalkableTile(x, y, navGrid, maxRadius = 100) {
+  getNearestWalkableTile(x, y, navGrid, maxRadius = 120) {
     const step = 10; // Крок у пікселях
     const directions = [
       [0, 0],
@@ -459,7 +565,7 @@ export class BMP2 extends Vehicle {
     this.turretScale = 0.73;
     this.speed = 0.3;
     this.gassmokeoffsetY = -0.7;
-    this.gassmokeoffsetX = 0.6;
+    this.gassmokeoffsetX = 0.7;
     this.smokeScale = 0.6;
     this.armor = 4;
     this.turretOffsetX = 0;
@@ -485,7 +591,7 @@ export class BMP1 extends Vehicle {
     this.turretScale = 0.68;
     this.speed = 0.3;
     this.gassmokeoffsetY = -0.7;
-    this.gassmokeoffsetX = 0.6;
+    this.gassmokeoffsetX = 0.7;
     this.smokeScale = 0.6;
     this.armor = 3;
     this.turretOffsetX = -0.05;
@@ -494,5 +600,34 @@ export class BMP1 extends Vehicle {
     this.vehiclefireOffsetX = -0;
     this.vehiclefireOffsetY = -0.1;
     this.score = 350;
+  }
+}
+export class Guntruck extends Vehicle {
+  constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
+    super(x, y, layer, ctx, waypoints, navigaionsGrid);
+    this.image = Math.random() > 0.4 ? guntruckZImage : guntruckVImage;
+    this.turretImage = guntruckturret;
+    this.x = x;
+    this.y = y;
+    this.width = 50;
+    this.height = 97;
+    this.type = "guntruck";
+    this.scale = 0.88;
+    this.turretScale = 0.88;
+    this.speed = 0.5;
+    this.gassmokeoffsetY = -0.7;
+    this.gassmokeoffsetX = 0.7;
+    this.smokeScale = 0.3;
+    this.armor = 0;
+    this.turretOffsetX = -0.05;
+    this.turretOffsetY = -0.18;
+    this.hasGunner = true;
+    this.hasTurret = true;
+    this.vehiclefireOffsetX = -0;
+    this.vehiclefireOffsetY = -0.1;
+    this.score = 350;
+    this.droneSpottingChanse = 4;
+    this.fireDistance = 400;
+    this.fireRate = 40;
   }
 }

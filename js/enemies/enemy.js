@@ -56,6 +56,7 @@ export class Enemy {
     this.skullTimer = 0;
     this.score = 50;
     this.scored = false;
+    this.hasBailedOut = false;
   }
 
   update(allEnemies, canvas, score) {
@@ -285,7 +286,6 @@ export class Enemy {
       }
     }
   }
-  2;
 }
 export class Rifleman extends Enemy {
   constructor(x, y, layer, ctx, path) {
@@ -330,7 +330,10 @@ export function createRifleSquad(
   ctx,
   navGrid,
   targetX,
-  targetY
+  targetY,
+  riflemans,
+  mashinegunners,
+  grenadiers
 ) {
   const squad = [];
 
@@ -360,13 +363,15 @@ export function createRifleSquad(
     squad.push(enemy);
   }
 
-  // Спочатку створюємо стрільців
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < riflemans; i++) {
     pushSquadMember(Rifleman);
   }
-  // Потім кулеметника і гранатометника
-  pushSquadMember(Machinegunner);
-  pushSquadMember(Grenadier);
+  for (let i = 0; i < mashinegunners; i++) {
+    pushSquadMember(Machinegunner);
+  }
+  for (let i = 0; i < grenadiers; i++) {
+    pushSquadMember(Grenadier);
+  }
 
   return squad;
 }

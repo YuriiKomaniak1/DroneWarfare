@@ -1,4 +1,9 @@
-import { checkEffect, checkVisibility, checkDistance } from "./enemyLogic.js";
+import {
+  checkEffect,
+  checkVisibility,
+  checkDistance,
+  checkVehicleVisibility,
+} from "./enemyLogic.js";
 import { drawScore } from "./score.js";
 import {
   selectionState,
@@ -93,8 +98,22 @@ export function createAnimationLoop(
         enemy.fire(currentDrone, layer1);
       });
       vehicles.forEach((vehicle, index) => {
-        vehicle.update(vehicles, score);
+        if (vehicle.hasGunner) {
+          if (
+            checkVehicleVisibility(currentDrone, vehicle, canvas, gameFrame)
+          ) {
+            vehicle.isFiring = true;
+          }
+          if (
+            vehicle.isFiring &&
+            checkDistance(vehicle, canvas) > vehicle.fireDistance
+          ) {
+            vehicle.isFiring = false;
+          }
+        }
+        vehicle.update(vehicles, canvas, score);
         vehicle.draw();
+        vehicle.fire(currentDrone, layer1);
       });
 
       layer2.update();
