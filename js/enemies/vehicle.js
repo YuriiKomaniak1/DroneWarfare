@@ -12,6 +12,12 @@ const bmp2VImage = new Image();
 bmp2VImage.src = "./assets/img/vehicles/bmp2V.png";
 const bmp2turret = new Image();
 bmp2turret.src = "./assets/img/vehicles/bmp2turret.png";
+const bmp1ZImage = new Image();
+bmp1ZImage.src = "./assets/img/vehicles/bmp1Z.png";
+const bmp1VImage = new Image();
+bmp1VImage.src = "./assets/img/vehicles/bmp1V.png";
+const bmp1turret = new Image();
+bmp1turret.src = "./assets/img/vehicles/bmp1turret.png";
 const gasSmokeImage = new Image();
 gasSmokeImage.src = "./assets/img/effects/gasSmoke.png";
 const vehicleExplosionImage = new Image();
@@ -459,9 +465,34 @@ export class BMP2 extends Vehicle {
     this.turretOffsetX = 0;
     this.turretOffsetY = -0.07;
     this.hasTurret = true;
-    this.turretscale = 0.95;
     this.vehiclefireOffsetX = 0;
     this.vehiclefireOffsetY = -0.1;
     this.score = 400;
+  }
+}
+
+export class BMP1 extends Vehicle {
+  constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
+    super(x, y, layer, ctx, waypoints, navigaionsGrid);
+    this.image = Math.random() > 0.4 ? bmp1ZImage : bmp1VImage;
+    this.turretImage = bmp1turret;
+    this.x = x;
+    this.y = y;
+    this.width = 100;
+    this.height = 200;
+    this.type = "bmp1";
+    this.scale = 0.68;
+    this.turretScale = 0.68;
+    this.speed = 0.3;
+    this.gassmokeoffsetY = -0.7;
+    this.gassmokeoffsetX = 0.6;
+    this.smokeScale = 0.6;
+    this.armor = 3;
+    this.turretOffsetX = -0.05;
+    this.turretOffsetY = -0.08;
+    this.hasTurret = true;
+    this.vehiclefireOffsetX = -0;
+    this.vehiclefireOffsetY = -0.1;
+    this.score = 350;
   }
 }

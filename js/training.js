@@ -1,7 +1,7 @@
 import { Minimap } from "./gameElements/minimap.js";
 import { Layer } from "./layers/layer.js";
 import { createRifleSquad, Rifleman } from "./enemies/enemy.js";
-import { Gaz66, Ural, BMP2 } from "./enemies/vehicle.js";
+import { Gaz66, Ural, BMP2, BMP1 } from "./enemies/vehicle.js";
 import { initControls, keys } from "./logic/controls.js";
 import { DroneIcons } from "./gameElements/droneIcons.js";
 import { drones } from "./drones/trainingDrones.js";
@@ -115,8 +115,13 @@ squadTruck.addEventListener("click", () => {
 });
 
 squadBMP.addEventListener("click", () => {
-  addVehicle(BMP2);
+  if (Math.random() > 0.5) {
+    addVehicle(BMP2);
+  } else {
+    addVehicle(BMP1);
+  }
 });
+
 function addVehicle(Class) {
   if (coords.length > 0) {
     let index = Math.floor(Math.random() * coords.length);
