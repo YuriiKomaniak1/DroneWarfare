@@ -103,7 +103,7 @@ export class Vehicle {
     this.armor = 0;
     this.score = 100;
     this.scored = false;
-    this.fireDistance = 260;
+    this.fireDistance = 280;
     this.fireRate = 5;
     this.isFiring = false;
     this.fireTimer = 0;
