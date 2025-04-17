@@ -61,26 +61,7 @@ export function createAnimationLoop(
       layer1.update();
       layer1.draw();
       bombs.forEach((bomb) => {
-        if (bomb.initialScale / bomb.scale >= 13.5) bomb.draw();
-        bomb.drop();
-
-        if (bomb.exploded && bomb.explosionFrame < 1) {
-          currentDrone.cahngeVisibility();
-          enemies.forEach((enemy) => {
-            if (bomb.checkCollision(enemy) && !enemy.dead) {
-              enemy.dead = true;
-              enemy.deathFrameIndex = 0;
-            }
-            if (checkEffect(bomb, enemy) && !enemy.dead) {
-              enemy.crawl = true;
-              enemy.frameX = 0;
-              enemy.isFiring = false;
-            }
-          });
-          vehicles.forEach((vehicle) => {
-            bomb.checkVehicleCollision(vehicle);
-          });
-        }
+        if (bomb.frameX === bomb.frames) bomb.draw();
       });
       enemies.forEach((enemy, index) => {
         if (checkVisibility(currentDrone, enemy, canvas, gameFrame)) {
@@ -115,7 +96,32 @@ export function createAnimationLoop(
         vehicle.draw();
         vehicle.fire(currentDrone, layer1);
       });
+      bombs.forEach((bomb) => {
+        if (
+          bomb.initialScale / bomb.scale >= 13.5 &&
+          bomb.frameX !== bomb.frames
+        )
+          bomb.draw();
+        bomb.drop();
 
+        if (bomb.exploded && bomb.explosionFrame < 1) {
+          currentDrone.cahngeVisibility();
+          enemies.forEach((enemy) => {
+            if (bomb.checkCollision(enemy) && !enemy.dead) {
+              enemy.dead = true;
+              enemy.deathFrameIndex = 0;
+            }
+            if (checkEffect(bomb, enemy) && !enemy.dead) {
+              enemy.crawl = true;
+              enemy.frameX = 0;
+              enemy.isFiring = false;
+            }
+          });
+          vehicles.forEach((vehicle) => {
+            bomb.checkVehicleCollision(vehicle);
+          });
+        }
+      });
       layer2.update();
       layer2.draw();
       enemies.forEach((enemy) => {
