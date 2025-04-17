@@ -52,7 +52,7 @@ export class Enemy {
     this.shakeIntensity = 0.3;
     this.vehicle = vehicle;
     this.showSkull = true;
-    this.skullOffset = Math.random() * 90 - 45;
+    this.skullOffset = Math.random() * 60 - 30;
     this.skullTimer = 0;
     this.score = 50;
     this.scored = false;
@@ -258,10 +258,10 @@ export class Enemy {
       this.ctx.globalAlpha = alpha;
       this.ctx.drawImage(
         this.skullImage,
-        -156 / 6 + this.skullOffset,
-        -242 / 6 + this.skullOffset,
-        156 / 3,
-        242 / 3
+        -156 / 10 + this.skullOffset,
+        -242 / 10 + this.skullOffset,
+        156 / 5,
+        242 / 5
       );
       this.skullTimer++;
       this.ctx.globalAlpha = 1;
