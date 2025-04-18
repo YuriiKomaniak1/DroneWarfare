@@ -115,9 +115,9 @@ export class Vehicle {
     this.droneSpottingChanse = 1;
   }
 
-  update(vehicles, canvas, score) {
-    if (this.isBurning && !this.scored) {
-      score.count += this.score;
+  update(vehicles, canvas, gameState, training) {
+    if (this.isBurning && !this.scored && !training) {
+      gameState.score += this.score;
       this.scored = true;
     }
     if (this.path.length === 0 || this.currentPathIndex >= this.path.length) {

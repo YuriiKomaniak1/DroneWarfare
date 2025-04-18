@@ -5,7 +5,7 @@ let heBombIcon = new Image();
 heBombIcon.src = `${basePath}assets/img/bombs/heBombIcon.png`;
 let shapedBombIcon = new Image();
 shapedBombIcon.src = `${basePath}assets/img/bombs/shapedBombIcon.png`;
-export class DroneIcons {
+class DroneIcons {
   constructor(canvas, ctx, dronePosition, drone) {
     // this.image = image;
     this.canvas = canvas;
@@ -121,4 +121,13 @@ export class DroneIcons {
       );
     }
   }
+}
+export function createDroneIcons(drones, canvas, ctx) {
+  const droneIcons = [];
+  for (let i = 0; i < 5; i++) {
+    if (drones[i]) {
+      droneIcons[i] = new DroneIcons(canvas, ctx, i + 1, drones[i]);
+    }
+  }
+  return droneIcons;
 }

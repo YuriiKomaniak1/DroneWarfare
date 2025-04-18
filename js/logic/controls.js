@@ -1,12 +1,6 @@
-let controlCanvas = null;
-let controlDrones = null;
+import { drones } from "./gamestate.js";
 let joystickVisible = false;
-export function initControls(canvas, drones) {
-  controlCanvas = canvas;
-  controlDrones = drones;
-}
 import { basePath } from "../utils/basePath.js";
-
 export const bombIcons = {
   frag: new Image(),
   he: new Image(),
@@ -60,7 +54,7 @@ export function setupControls(dropBomb) {
     // Додатково обробка клавіш 1-5 для вибору дрона
     if (e.key >= "1" && e.key <= "5") {
       const index = parseInt(e.key) - 1;
-      if (!controlDrones[index].isReloading) {
+      if (drones[index] && !drones[index].isReloading) {
         selectionState.selectedDroneIndex = index;
         switchToNextAvailableBomb(false);
         console.log(`🚁 Вибрано дрона #${index + 1}`);
@@ -113,7 +107,7 @@ export function setupDroneSelectionByClick(canvas, droneIcons) {
         mouseY >= icon.y &&
         mouseY <= icon.y + icon.height
       ) {
-        if (!controlDrones[index].isReloading) {
+        if (!drones[index].isReloading) {
           selectionState.selectedDroneIndex = index;
           console.log(`🚁 Вибрано дрона #${index + 1}`);
         }
@@ -147,17 +141,17 @@ export const buttonSwitch = {
   pressed: false,
 };
 // МАЛЮВАННЯ ДЖОЙСТИКА І КНОПОК
-export function drawJoystickAndButtons(ctx) {
-  joystick.baseY = controlCanvas.height - 150;
+export function drawJoystickAndButtons(ctx, canvas) {
+  joystick.baseY = canvas.height - 150;
   if (!joystick.active) {
     joystick.stickY = joystick.baseY;
   }
 
-  buttonDrop.x = controlCanvas.width - 160;
-  buttonDrop.y = controlCanvas.height - 100;
+  buttonDrop.x = canvas.width - 160;
+  buttonDrop.y = canvas.height - 100;
 
-  buttonSwitch.x = controlCanvas.width - 60;
-  buttonSwitch.y = controlCanvas.height - 100;
+  buttonSwitch.x = canvas.width - 60;
+  buttonSwitch.y = canvas.height - 100;
 
   ctx.globalAlpha = 0.6;
   if (joystickVisible) {
@@ -185,7 +179,7 @@ export function drawJoystickAndButtons(ctx) {
     );
     ctx.fill();
   }
-  if (controlDrones[selectionState.selectedDroneIndex].countBombs() > 0) {
+  if (drones[selectionState.selectedDroneIndex].countBombs() > 0) {
     // Кнопка Drop
     ctx.globalAlpha = 0.8;
     ctx.fillStyle = buttonDrop.pressed
@@ -368,13 +362,13 @@ export function switchToNextAvailableBomb(
   startFromNext = false,
   onlyFind = false
 ) {
-  if (!controlDrones || !controlDrones[selectionState.selectedDroneIndex]) {
-    console.warn("🚨 controlDrones або активний дрон не готовий!");
+  if (!drones || !drones[selectionState.selectedDroneIndex]) {
+    console.warn("🚨 drones або активний дрон не готовий!");
     return null;
   }
   const types = selectionState.bombTypes;
   let startIndex = selectionState.selectedBombIndex;
-  const activeDrone = controlDrones[selectionState.selectedDroneIndex];
+  const activeDrone = drones[selectionState.selectedDroneIndex];
 
   if (!activeDrone) {
     console.warn("🚨 Немає активного дрона!");

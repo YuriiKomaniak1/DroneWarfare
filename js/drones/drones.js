@@ -1,10 +1,6 @@
 import { basePath } from "../utils/basePath.js";
-let localLayer = null;
 let smallDroneImage = new Image();
 smallDroneImage.src = `${basePath}assets/img/drones/smallDroneAnimation.png`;
-export function initDrones(layer) {
-  localLayer = layer;
-}
 class Drone {
   constructor(image, capacity, hp, visibility, frameWidth, frameHeight) {
     this.image = image;
@@ -52,7 +48,7 @@ class Drone {
     this.baseX = localCanvas.width / 2;
     this.baseY = localCanvas.height / 2;
   }
-  flyToreload() {
+  flyToreload(layer) {
     if (this.isReloading && this.isAlive) {
       if (this.scale > this.targetScale) {
         this.scale -= this.shrinkRate;
@@ -63,8 +59,8 @@ class Drone {
         this.rotation += this.rotationSpeed;
         if (this.rotation > Math.PI) this.rotation = Math.PI;
       }
-      this.baseY += this.flyBackSpeed + localLayer.speedY;
-      this.baseX += localLayer.speedX;
+      this.baseY += this.flyBackSpeed + layer.speedY;
+      this.baseX += layer.speedX;
       this.frameTimer++;
       if (this.frameTimer >= this.frameSpeed) {
         this.frameX = (this.frameX + 1) % this.frames;
@@ -154,7 +150,7 @@ class Drone {
     }
   }
 
-  destruction() {
+  destruction(layer) {
     if (this.hp <= 0) {
       this.isAlive = false;
       this.isReloading = false;
@@ -162,8 +158,8 @@ class Drone {
     }
     if (!this.isAlive) {
       if (this.destructionScale < 0.9) {
-        this.baseX += localLayer.speedX;
-        this.baseY += localLayer.speedY;
+        this.baseX += layer.speedX;
+        this.baseY += layer.speedY;
       }
       if (this.destructionScale > 0.082) {
         this.destructionScale *= 1 - this.shrinkRate;
@@ -174,9 +170,6 @@ class Drone {
           this.frameTimer = 0;
         }
       } else {
-        // після зменшення - просто рухаємо по карті
-        // this.baseX += localLayer.speedX;
-        // this.baseY += localLayer.speedY;
       }
     }
   }

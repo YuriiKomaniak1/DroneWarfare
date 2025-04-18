@@ -1,8 +1,5 @@
 import { createSmallDrone } from "./drones.js";
 import { FragBomb, HeBomb, ShapedBomb } from "./bomb.js";
-import { basePath } from "../utils/basePath.js";
-let smallDroneImage = new Image();
-smallDroneImage.src = `${basePath}assets/img/drones/smallDroneAnimation.png`;
 
 let drone1 = createSmallDrone();
 let drone2 = createSmallDrone();

@@ -59,9 +59,9 @@ export class Enemy {
     this.hasBailedOut = false;
   }
 
-  update(allEnemies, canvas, score) {
-    if (!this.scored && this.dead) {
-      score.count += this.score;
+  update(allEnemies, canvas, gameState, training) {
+    if (!this.scored && this.dead && !training) {
+      gameState.score += this.score;
       this.scored = true;
     }
     if (this.vehicle === null) {

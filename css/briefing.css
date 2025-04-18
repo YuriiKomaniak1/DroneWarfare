@@ -1,0 +1,41 @@
+body {
+  background-color: #111;
+  color: white;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+}
+
+#briefing-text-container {
+  background-color: #222;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 2px solid #444;
+  max-width: 900px;
+  margin-inline: auto;
+}
+
+#drone-canvas-container {
+  margin-bottom: 20px;
+}
+
+#button-panel {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+button {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #555;
+}

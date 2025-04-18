@@ -1,14 +1,14 @@
 export class Minimap {
-  constructor(mapWidth, mapHeight, canvas, enemies, vehicles, ctx, layer) {
+  constructor(canvas, enemies, vehicles, ctx, layer) {
+    this.layer = layer;
     this.width = Math.max(canvas.width / 5, 100);
-    this.height = (this.width / mapWidth) * mapHeight;
-    this.scaleX = this.width / mapWidth;
-    this.scaleY = this.height / mapHeight;
+    this.height = (this.width / this.layer.width) * this.layer.height;
+    this.scaleX = this.width / this.layer.width;
+    this.scaleY = this.height / this.layer.height;
     this.enemies = enemies;
     this.ctx = ctx;
     this.mapX = 10;
     this.mapY = 10;
-    this.layer = layer;
     this.canvasWidth = canvas.width;
     this.canvasHeight = canvas.height;
     this.vehicles = vehicles;

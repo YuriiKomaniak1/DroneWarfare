@@ -1,8 +1,8 @@
 export class NavigationGrid {
-  constructor(mapWidth, mapHeight, cellSize, obstacles) {
+  constructor(layer, cellSize, obstacles) {
     this.cellSize = cellSize;
-    this.cols = Math.ceil(mapWidth / cellSize); // Точно по карті
-    this.rows = Math.ceil(mapHeight / cellSize); // Точно по карті
+    this.cols = Math.ceil(layer.width / cellSize); // Точно по карті
+    this.rows = Math.ceil(layer.height / cellSize); // Точно по карті
     this.offsetX = 0; // Без зсувів
     this.offsetY = 0; // Без зсувів
 

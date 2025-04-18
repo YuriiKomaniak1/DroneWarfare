@@ -4,7 +4,7 @@ import {
   checkDistance,
   checkVehicleVisibility,
 } from "./enemyLogic.js";
-import { drawScore } from "./score.js";
+import { gameState } from "./gamestate.js";
 import {
   selectionState,
   setupControls,
@@ -16,29 +16,33 @@ import { dropBomb } from "../drones/bomb.js";
 import { drawNavigationGrid } from "./navigation.js";
 import { drawMenuButtons } from "../levels/training/trainingButtons.js";
 import { DroneScope } from "../gameElements/droneScope.js";
+import { Minimap } from "../gameElements/minimap.js";
+import { drones } from "./gamestate.js";
+import { createDroneIcons } from "../gameElements/droneIcons.js";
 export function createAnimationLoop(
-  drones,
   canvas,
   layer1,
   layer2,
   ctx,
-  bombs,
   enemies,
   vehicles,
-  minimap,
-  droneIcons,
-  score
+  training = false
 ) {
   const FPS = 60;
   const FRAME_TIME = 1000 / FPS;
   let lastTime = 0;
   let gameFrame = 0;
+  let bombs = [];
   let currentDrone = drones[selectionState.selectedDroneIndex];
+  drones[0].isActive = true;
   const droneScope = new DroneScope(canvas, ctx);
-
+  const minimap = new Minimap(canvas, enemies, vehicles, ctx, layer1);
+  console.log(drones);
+  const droneIcons = createDroneIcons(drones, canvas, ctx);
+  console.log(droneIcons);
   setupControls(() => {
     dropBomb(currentDrone, selectionState, layer1, ctx, droneScope, bombs);
-  });
+  }, drones);
   setupDroneSelectionByClick(canvas, droneIcons);
   setupTouchControls(() => {
     dropBomb(currentDrone, selectionState, layer1, ctx, droneScope, bombs);
@@ -49,12 +53,14 @@ export function createAnimationLoop(
     if (deltaTime >= FRAME_TIME) {
       lastTime = timestamp - (deltaTime % FRAME_TIME);
       drones.forEach((drone) => {
-        if (
-          (drone.isReloading && drone.baseX === 0 && drone.baseY === 0) ||
-          (!drone.isAlive && drone.baseX === 0 && drone.baseY === 0)
-        ) {
-          drone.baseX = canvas.width / 2;
-          drone.baseY = canvas.height / 2;
+        if (drone) {
+          if (
+            (drone.isReloading && drone.baseX === 0 && drone.baseY === 0) ||
+            (!drone.isAlive && drone.baseX === 0 && drone.baseY === 0)
+          ) {
+            drone.baseX = canvas.width / 2;
+            drone.baseY = canvas.height / 2;
+          }
         }
       });
       ctx.clearRect(0, 0, canvas.width, canvas.height); // Очищаємо канвас
@@ -74,7 +80,7 @@ export function createAnimationLoop(
         ) {
           enemy.isFiring = false;
         }
-        enemy.update(enemies, canvas, score);
+        enemy.update(enemies, canvas, gameState, training);
         enemy.draw();
         enemy.fire(currentDrone, layer1);
       });
@@ -92,7 +98,7 @@ export function createAnimationLoop(
             vehicle.isFiring = false;
           }
         }
-        vehicle.update(vehicles, canvas, score);
+        vehicle.update(vehicles, canvas, gameState, training);
         vehicle.draw();
         vehicle.fire(currentDrone, layer1);
       });
@@ -141,12 +147,14 @@ export function createAnimationLoop(
       }
       currentDrone = selectedDrone;
       drones.forEach((drone, index) => {
-        drone.destruction();
-        drone.isActive =
-          (index === selectionState.selectedDroneIndex && drone.isAlive) ||
-          drone.isReloading;
-        drone.flyToreload();
-        drone.draw(ctx);
+        if (drone) {
+          drone.destruction(layer1);
+          drone.isActive =
+            (index === selectionState.selectedDroneIndex && drone.isAlive) ||
+            drone.isReloading;
+          drone.flyToreload(layer1);
+          drone.draw(ctx);
+        }
       });
       // drawNavigationGrid(navGrid, ctx, layer1);
       droneScope.draw(currentDrone);
@@ -154,9 +162,9 @@ export function createAnimationLoop(
       droneIcons.forEach((object) => {
         object.draw();
       });
-      drawJoystickAndButtons(ctx);
-      drawMenuButtons(ctx, canvas, minimap);
-      drawScore(ctx, score.count, canvas);
+      drawJoystickAndButtons(ctx, canvas, drones);
+      drawMenuButtons(ctx, canvas, minimap, training);
+      if (!training) gameState.drawScore(ctx, canvas);
       gameFrame++;
     }
 
