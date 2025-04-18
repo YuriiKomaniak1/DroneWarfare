@@ -14,10 +14,13 @@
   --modal-buttons-text-color: rgb(186, 186, 171);
   --modal-buttons-color: rgb(16, 96, 9);
   --modal-buttons-hover-color: rgb(22, 135, 12);
-  --modal-window-background-color: rgba(0, 0, 0, 0.7);
-  --modal-window-main-color: rgb(197, 196, 193);
-  --menu-background-color: rgb(16, 96, 9);
+  --modal-window-background-color: rgba(0, 0, 0, 0.5);
+  --modal-window-main-color: rgb(168, 167, 162);
+  --menu-background-color: rgba(67, 83, 66, 0.7);
   --canvas-background-color: rgb(124, 158, 121);
+  --briefing-color: rgb(126, 103, 85);
+  --briefing-button-color: #333;
+  --briefing-button-hover-color: #555;
 
   font-family: "Montserrat", sans-serif;
 }
@@ -45,5 +48,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
+}
+
+h2,
+h3 {
   text-align: center;
 }

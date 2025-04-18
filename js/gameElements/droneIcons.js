@@ -1,10 +1,18 @@
 import { basePath } from "../utils/basePath.js";
-let fragBombIcon = new Image();
+export let fragBombIcon = new Image();
 fragBombIcon.src = `${basePath}assets/img/bombs/fragBombIcon.png`;
-let heBombIcon = new Image();
+export let heBombIcon = new Image();
 heBombIcon.src = `${basePath}assets/img/bombs/heBombIcon.png`;
-let shapedBombIcon = new Image();
+export let shapedBombIcon = new Image();
 shapedBombIcon.src = `${basePath}assets/img/bombs/shapedBombIcon.png`;
+export const changeArrowImage = new Image();
+changeArrowImage.src = `${basePath}assets/img/bombs/changeArrow.png`;
+
+export const bombTypes = [
+  { type: "frag", icon: fragBombIcon },
+  { type: "he", icon: heBombIcon },
+  { type: "shaped", icon: shapedBombIcon },
+];
 class DroneIcons {
   constructor(canvas, ctx, dronePosition, drone) {
     // this.image = image;
@@ -41,14 +49,7 @@ class DroneIcons {
     }
 
     if (!this.drone.isReloading && this.drone.isAlive) {
-      const bombTypes = [
-        { type: "frag", icon: fragBombIcon },
-        { type: "he", icon: heBombIcon },
-        { type: "shaped", icon: shapedBombIcon },
-      ];
-
       let currentOffset = 0;
-
       bombTypes.forEach(({ type, icon }) => {
         const bombs = this.drone.bombStorage[type];
         bombs.forEach((bomb, index) => {

@@ -25,7 +25,7 @@ class Drone {
       he: [],
       shaped: [],
     };
-    this.reloadingTime = 1000 * 60 * 2;
+    this.reloadingTime = 1000 * 60 * 1;
     this.reloadStartTime = null;
     this.scale = 1; // стартовий масштаб
     this.targetScale = 0.3; // цільовий масштаб при польоті
@@ -140,7 +140,7 @@ class Drone {
         this.isReloading = false;
         this.reloadStartTime = null;
         this.isActive = true;
-        this.bombStorage = this.initialBombStorage;
+        this.bombStorage = this.cloneBombStorage(this.initialBombStorage);
         this.baseX = 0;
         this.baseY = 0;
         this.scale = 1.5;
@@ -194,6 +194,13 @@ class Drone {
       this.bombStorage[type].push("bomb");
       this.remainingCapacity -= weight;
     }
+  }
+  cloneBombStorage(storage) {
+    return {
+      frag: [...storage.frag],
+      he: [...storage.he],
+      shaped: [...storage.shaped],
+    };
   }
 }
 

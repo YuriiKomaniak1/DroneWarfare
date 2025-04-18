@@ -19,6 +19,7 @@ import { DroneScope } from "../gameElements/droneScope.js";
 import { Minimap } from "../gameElements/minimap.js";
 import { drones } from "./gamestate.js";
 import { createDroneIcons } from "../gameElements/droneIcons.js";
+import { keys } from "../logic/controls.js";
 export function createAnimationLoop(
   canvas,
   layer1,
@@ -37,9 +38,7 @@ export function createAnimationLoop(
   drones[0].isActive = true;
   const droneScope = new DroneScope(canvas, ctx);
   const minimap = new Minimap(canvas, enemies, vehicles, ctx, layer1);
-  console.log(drones);
   const droneIcons = createDroneIcons(drones, canvas, ctx);
-  console.log(droneIcons);
   setupControls(() => {
     dropBomb(currentDrone, selectionState, layer1, ctx, droneScope, bombs);
   }, drones);
@@ -64,7 +63,7 @@ export function createAnimationLoop(
         }
       });
       ctx.clearRect(0, 0, canvas.width, canvas.height); // Очищаємо канвас
-      layer1.update();
+      layer1.update(keys);
       layer1.draw();
       bombs.forEach((bomb) => {
         if (bomb.frameX === bomb.frames) bomb.draw();
@@ -128,7 +127,7 @@ export function createAnimationLoop(
           });
         }
       });
-      layer2.update();
+      layer2.update(keys);
       layer2.draw();
       enemies.forEach((enemy) => {
         enemy.skullDraw();

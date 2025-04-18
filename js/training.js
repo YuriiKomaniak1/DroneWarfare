@@ -1,7 +1,6 @@
 import { Layer } from "./layers/layer.js";
 import { createRifleSquad } from "./enemies/enemy.js";
 import { Gaz66, Ural, BMP2, BMP1, Guntruck, Tigr } from "./enemies/vehicle.js";
-import { keys } from "./logic/controls.js";
 import {
   handleMenuClick,
   handleMenuHover,
@@ -45,8 +44,8 @@ const gameField = new Image();
 gameField.src = "./assets/img/grounds/train1bottom.png";
 const trees = new Image();
 trees.src = "./assets/img/grounds/train1trees.png";
-const layer1 = new Layer(gameField, canvas, 1800, 2600, keys, ctx);
-const layer2 = new Layer(trees, canvas, 1800, 2600, keys, ctx);
+const layer1 = new Layer(gameField, canvas, 1800, 2600, ctx);
+const layer2 = new Layer(trees, canvas, 1800, 2600, ctx);
 const navGrid = new NavigationGrid(layer1, 15, obstacles);
 const vehicleNavGrid = new NavigationGrid(layer1, 40, obstacles);
 prevSection.addEventListener("click", () => {

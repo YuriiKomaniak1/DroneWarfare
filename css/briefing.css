@@ -1,14 +1,30 @@
+@import "global.css";
 body {
-  background-color: #111;
-  color: white;
-  font-family: Arial, sans-serif;
   margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--menu-background-color);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+  background-color: var(--briefing-color);
   padding: 20px;
-  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
 }
 
 #briefing-text-container {
-  background-color: #222;
+  background-color: var(--modal-window-main-color);
   padding: 20px;
   margin-bottom: 20px;
   border: 2px solid #444;
@@ -25,10 +41,17 @@ body {
   justify-content: center;
   gap: 20px;
 }
+#droneCanvas {
+  border: 2px solid #444;
+  background-color: var(--modal-window-main-color);
+  display: block;
+  max-width: 900px;
+  width: 100%;
+}
 
-button {
-  background-color: #333;
-  color: white;
+.briefing-button {
+  background-color: var(--briefing-button-color);
+  color: var(--modal-window-main-color);
   border: none;
   padding: 12px 20px;
   font-size: 16px;
@@ -36,6 +59,6 @@ button {
   border-radius: 4px;
 }
 
-button:hover {
-  background-color: #555;
+.briefing-button {
+  background-color: var(--briefing-button-hover-color);
 }

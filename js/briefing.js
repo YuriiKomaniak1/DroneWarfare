@@ -1,5 +1,6 @@
-import { briefingText } from "./levels/briefingText";
-import { drones } from "./logic/gamestate";
+import { briefingText } from "./levels/briefingText.js";
+import { BriefingDrones } from "./gameElements/BriefingDroneIcons.js";
+import { drones } from "./logic/gamestate.js";
 
 const missionKey = "mission1"; // Сюди підставляється поточна місія
 document.getElementById("briefing-text").innerHTML = briefingText[missionKey];
@@ -7,24 +8,36 @@ document.getElementById("briefing-text").innerHTML = briefingText[missionKey];
 // Малюємо дронів та боєзапас
 const canvas = document.getElementById("droneCanvas");
 const ctx = canvas.getContext("2d");
+canvas.height = canvas.width / 4;
 
-const drones = [
-  { image: "assets/img/drones/smallDrone.png", bombs: 3 },
-  { image: "assets/img/drones/heavyDrone.png", bombs: 2 },
-  // ...
-];
+const droneIcons = [];
 
-drones.forEach((drone, i) => {
-  const img = new Image();
-  img.src = drone.image;
-  img.onload = () => {
-    const x = 40 + i * 170;
-    ctx.drawImage(img, x, 40, 100, 100);
-    ctx.fillStyle = "white";
-    ctx.fillText(`💣 ${drone.bombs}`, x + 25, 160);
-    ctx.fillStyle = "#444";
-    ctx.fillRect(x + 10, 170, 80, 30);
-    ctx.fillStyle = "white";
-    ctx.fillText("Спорядити", x + 18, 190);
-  };
-});
+for (let i = 0; i < 5; i++) {
+  const spase = canvas.width / 21;
+  const iconWidth = canvas.width / 7;
+  let x = spase + i * (iconWidth + spase);
+  droneIcons[i] = new BriefingDrones(
+    canvas,
+    ctx,
+    i + 1,
+    drones[i],
+    iconWidth,
+    x,
+    10
+  );
+}
+let lastTime = 0;
+function animate(timestamp) {
+  const deltaTime = timestamp - lastTime;
+  const FPS = 60;
+  const FRAME_TIME = 1000 / FPS;
+  if (deltaTime >= FRAME_TIME) {
+    lastTime = timestamp - (deltaTime % FRAME_TIME);
+
+    droneIcons.forEach((object) => {
+      object.draw();
+    });
+  }
+  requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate); // Запускаємо цикл

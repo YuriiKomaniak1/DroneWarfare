@@ -1,9 +1,9 @@
 import { basePath } from "../utils/basePath.js";
-let fragBombImage = new Image();
+export let fragBombImage = new Image();
 fragBombImage.src = `${basePath}assets/img/bombs/fragBomb.png`;
-let heBombImage = new Image();
+export let heBombImage = new Image();
 heBombImage.src = `${basePath}assets/img/bombs/heBomb.png`;
-let shapedBombImage = new Image();
+export let shapedBombImage = new Image();
 shapedBombImage.src = `${basePath}assets/img/bombs/shapedBomb.png`;
 let imageExplosion = new Image();
 imageExplosion.src = `${basePath}assets/img/bombs/smallExplosion.png`;
@@ -152,7 +152,6 @@ export class FragBomb extends Bomb {
         if (Math.random() > 0.9) hitStatus = true;
       }
     } else if (enemy.vehicle.armor === 0) {
-      console.log(enemy);
       if (distance < 40) {
         if (Math.random() > 0.85) hitStatus = true;
       } else if (distance < 50) {

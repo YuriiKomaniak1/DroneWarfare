@@ -1,17 +1,17 @@
 import { drones } from "./gamestate.js";
+import {
+  fragBombIcon,
+  heBombIcon,
+  shapedBombIcon,
+  changeArrowImage,
+} from "../gameElements/droneIcons.js";
 let joystickVisible = false;
-import { basePath } from "../utils/basePath.js";
-export const bombIcons = {
-  frag: new Image(),
-  he: new Image(),
-  shaped: new Image(),
+const bombIcons = {
+  frag: fragBombIcon,
+  he: heBombIcon,
+  shaped: shapedBombIcon,
 };
 
-bombIcons.frag.src = `${basePath}assets/img/bombs/fragBombIcon.png`;
-bombIcons.he.src = `${basePath}assets/img/bombs/heBombIcon.png`;
-bombIcons.shaped.src = `${basePath}assets/img/bombs/shapedBombIcon.png`;
-export const changeArrowImage = new Image();
-changeArrowImage.src = `${basePath}assets/img/bombs/changeArrow.png`;
 // СТАН КЛАВІШ (клавіатура)
 export const keys = {
   up: false,
