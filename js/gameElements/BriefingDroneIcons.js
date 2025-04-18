@@ -1,5 +1,5 @@
 import { basePath } from "../utils/basePath.js";
-import { bombTypes } from "../gameElements/droneIcons.js";
+import { bombTypes } from "./droneIcons.js";
 const empty = new Image();
 empty.src = `${basePath}assets/img/drones/empty.png`;
 export class BriefingDrones {
