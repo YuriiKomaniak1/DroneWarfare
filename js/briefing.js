@@ -1,5 +1,5 @@
 import { briefingText } from "./levels/briefingText.js";
-import { BriefingDrones } from "./gameElements/BriefingDroneIcons.js";
+import { BriefingDrones } from "./gameElements/briefingDroneIcons.js";
 import { drones } from "./logic/gamestate.js";
 
 const missionKey = "mission1"; // Сюди підставляється поточна місія
@@ -8,24 +8,44 @@ document.getElementById("briefing-text").innerHTML = briefingText[missionKey];
 // Малюємо дронів та боєзапас
 const canvas = document.getElementById("droneCanvas");
 const ctx = canvas.getContext("2d");
-canvas.height = canvas.width / 4;
+canvas.height = canvas.width / 3.8;
 
+document.getElementById("back-button").addEventListener("click", () => {
+  window.location.href = "index.html";
+});
 const droneIcons = [];
-
 for (let i = 0; i < 5; i++) {
   const spase = canvas.width / 21;
   const iconWidth = canvas.width / 7;
   let x = spase + i * (iconWidth + spase);
-  droneIcons[i] = new BriefingDrones(
-    canvas,
-    ctx,
-    i + 1,
-    drones[i],
-    iconWidth,
-    x,
-    10
-  );
+  droneIcons[i] = new BriefingDrones(canvas, ctx, drones[i], iconWidth, x, 10);
 }
+canvas.addEventListener("click", (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+
+  droneIcons.forEach((droneIcon, index) => {
+    const { x, y, width, height } = droneIcon;
+    const buttonHeight = height / 5;
+    const buttonY = y + height + 5;
+
+    // Перевірка: чи клік всередині зони дрона + кнопки "спорядити"
+    if (
+      mouseX >= x &&
+      mouseX <= x + width &&
+      mouseY >= y &&
+      mouseY <= buttonY + buttonHeight
+    ) {
+      if (droneIcon.drone) {
+        // Зберігаємо індекс дрона в localStorage
+        localStorage.setItem("droneToEquip", index);
+        // Переходимо на сторінку спорядження
+        window.location.href = "equip.html"; // заміни на свою назву
+      }
+    }
+  });
+});
 let lastTime = 0;
 function animate(timestamp) {
   const deltaTime = timestamp - lastTime;
@@ -33,7 +53,7 @@ function animate(timestamp) {
   const FRAME_TIME = 1000 / FPS;
   if (deltaTime >= FRAME_TIME) {
     lastTime = timestamp - (deltaTime % FRAME_TIME);
-
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     droneIcons.forEach((object) => {
       object.draw();
     });

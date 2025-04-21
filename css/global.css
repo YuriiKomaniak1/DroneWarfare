@@ -9,14 +9,14 @@
 }
 
 :root {
-  --button-color: #d2ad26;
+  --button-color: #ccbc81;
   --button-text-color: #787773;
   --modal-buttons-text-color: rgb(186, 186, 171);
   --modal-buttons-color: rgb(16, 96, 9);
   --modal-buttons-hover-color: rgb(22, 135, 12);
   --modal-window-background-color: rgba(0, 0, 0, 0.5);
   --modal-window-main-color: rgb(168, 167, 162);
-  --menu-background-color: rgba(67, 83, 66, 0.7);
+  --menu-background-color: rgb(67, 83, 66);
   --canvas-background-color: rgb(124, 158, 121);
   --briefing-color: rgb(126, 103, 85);
   --briefing-button-color: #333;
@@ -54,4 +54,37 @@
 h2,
 h3 {
   text-align: center;
+}
+.briefing-button {
+  background-color: var(--briefing-button-color);
+  color: var(--modal-window-main-color);
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.briefing-button {
+  background-color: var(--briefing-button-hover-color);
+}
+.button-panel {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+  background-color: var(--briefing-color);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
 }

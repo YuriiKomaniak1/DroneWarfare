@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dronETerra - спорядження дрона</title>
+    <link rel="stylesheet" href="css/equip.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Спорядження дрона №<span id="drone_number">1</span></h2>
+      <h3>Вибір типу дрона</h3>
+      <div id="choose__drone__type">
+        <div class="drone-box">
+          <div id="small_drone_image"></div>
+          <p>малий дрон</p>
+        </div>
+        <div class="drone-box">
+          <div id="medium_drone_image"></div>
+          <p>середній дрон</p>
+        </div>
+        <div class="drone-box">
+          <div id="big_drone_image"></div>
+          <p>великий дрон</p>
+        </div>
+      </div>
+
+      <div id="equip-canvas-container">
+        <canvas id="equipDroneCanvas" width="250"></canvas>
+      </div>
+      <div class="equip-buttons-panel">
+        <div class="equip-container" id="fragBomb">
+          <div class="equip-container-1row">
+            <div class="equip-container-button">
+              <img src="assets/img/bombs/plus.png" />
+            </div>
+            <div class="equip-container-button">
+              <img src="assets/img/bombs/minus.png" />
+            </div>
+          </div>
+          <div class="equip-container-2row">
+            <img
+              class="bomb-icon"
+              width="25px"
+              src="assets/img/bombs/fragBombIcon.png"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="button-panel">
+        <button id="back-button" class="briefing-button">Назад</button>
+        <button id="upgrade-button" class="briefing-button">Апгрейди</button>
+      </div>
+    </div>
+    <script src="js/equip.js" type="module"></script>
+  </body>
+</html>

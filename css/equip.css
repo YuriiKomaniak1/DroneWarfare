@@ -1,0 +1,73 @@
+@import "global.css";
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--menu-background-color);
+}
+
+#choose__drone__type {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+  font-size: 9px;
+}
+
+#small_drone_image {
+  width: 60px; /* ширина одного кадру */
+  height: 60px; /* висота одного кадру */
+  background-image: url("../assets/img/drones/smallDroneAnimation.png");
+  background-size: 400% 200%; /* 4 кадри по горизонталі, 2 по вертикалі */
+  background-position: 100% 0%; /* Лівий верхній кут */
+}
+#medium_drone_image {
+  width: 60px; /* ширина одного кадру */
+  height: 60px; /* висота одного кадру */
+  background-image: url("../assets/img/drones/mediumDroneAnimation.png");
+  background-size: 400% 100%; /* 4 кадри по горизонталі, 2 по вертикалі */
+  background-position: 100% 0%; /* Лівий верхній кут */
+}
+#big_drone_image {
+  width: 60px; /* ширина одного кадру */
+  height: 60px; /* висота одного кадру */
+  background-image: url("../assets/img/drones/bigDroneAnimation.png");
+  background-size: 400% 100%; /* 4 кадри по горизонталі, 2 по вертикалі */
+  background-position: 100% 0%; /* Лівий верхній кут */
+}
+
+#equipDroneCanvas {
+  border: 2px solid #444;
+  background-color: var(--modal-window-main-color);
+  display: block;
+  max-width: 150px;
+  width: 100%;
+}
+
+#equip-canvas-container {
+  margin: 20px;
+}
+
+.drone-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.equip-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.equip-container-2row {
+  display: flex;
+  align-items: center;
+}
+.bomb-icon {
+  width: 25px;
+  height: auto; /* або конкретна висота */
+  display: block; /* щоб ширина точно застосовувалась */
+}
