@@ -1,6 +1,9 @@
 import { briefingText } from "./levels/briefingText.js";
 import { BriefingDrones } from "./gameElements/briefingDroneIcons.js";
-import { drones } from "./logic/gamestate.js";
+import { gameState } from "./logic/gamestate.js";
+const gameData = JSON.parse(localStorage.getItem("gameData"));
+console.log(gameData);
+gameState.updateData(gameData);
 
 const missionKey = "mission1"; // Сюди підставляється поточна місія
 document.getElementById("briefing-text").innerHTML = briefingText[missionKey];
@@ -18,17 +21,29 @@ for (let i = 0; i < 5; i++) {
   const spase = canvas.width / 21;
   const iconWidth = canvas.width / 7;
   let x = spase + i * (iconWidth + spase);
-  droneIcons[i] = new BriefingDrones(canvas, ctx, drones[i], iconWidth, x, 10);
+  droneIcons[i] = new BriefingDrones(
+    canvas,
+    ctx,
+    gameState.drones[i],
+    iconWidth,
+    x,
+    10
+  );
 }
+console.log(droneIcons);
 canvas.addEventListener("click", (e) => {
   const rect = canvas.getBoundingClientRect();
-  const mouseX = e.clientX - rect.left;
-  const mouseY = e.clientY - rect.top;
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+
+  const mouseX = (e.clientX - rect.left) * scaleX;
+  const mouseY = (e.clientY - rect.top) * scaleY;
 
   droneIcons.forEach((droneIcon, index) => {
     const { x, y, width, height } = droneIcon;
     const buttonHeight = height / 5;
     const buttonY = y + height + 5;
+    console.log(droneIcon.drone);
 
     // Перевірка: чи клік всередині зони дрона + кнопки "спорядити"
     if (

@@ -17,7 +17,6 @@ import { drawNavigationGrid } from "./navigation.js";
 import { drawMenuButtons } from "../levels/training/trainingButtons.js";
 import { DroneScope } from "../gameElements/droneScope.js";
 import { Minimap } from "../gameElements/minimap.js";
-import { drones } from "./gamestate.js";
 import { createDroneIcons } from "../gameElements/droneIcons.js";
 import { keys } from "../logic/controls.js";
 export function createAnimationLoop(
@@ -34,14 +33,14 @@ export function createAnimationLoop(
   let lastTime = 0;
   let gameFrame = 0;
   let bombs = [];
-  let currentDrone = drones[selectionState.selectedDroneIndex];
-  drones[0].isActive = true;
+  let currentDrone = gameState.drones[selectionState.selectedDroneIndex];
+  gameState.drones[0].isActive = true;
   const droneScope = new DroneScope(canvas, ctx);
   const minimap = new Minimap(canvas, enemies, vehicles, ctx, layer1);
-  const droneIcons = createDroneIcons(drones, canvas, ctx);
+  const droneIcons = createDroneIcons(gameState.drones, canvas, ctx);
   setupControls(() => {
     dropBomb(currentDrone, selectionState, layer1, ctx, droneScope, bombs);
-  }, drones);
+  }, gameState.drones);
   setupDroneSelectionByClick(canvas, droneIcons);
   setupTouchControls(() => {
     dropBomb(currentDrone, selectionState, layer1, ctx, droneScope, bombs);
@@ -51,7 +50,7 @@ export function createAnimationLoop(
     const deltaTime = timestamp - lastTime;
     if (deltaTime >= FRAME_TIME) {
       lastTime = timestamp - (deltaTime % FRAME_TIME);
-      drones.forEach((drone) => {
+      gameState.drones.forEach((drone) => {
         if (drone) {
           if (
             (drone.isReloading && drone.baseX === 0 && drone.baseY === 0) ||
@@ -135,7 +134,7 @@ export function createAnimationLoop(
       bombs.forEach((bomb) => {
         if (bomb.initialScale / bomb.scale < 13.5) bomb.draw();
       });
-      const selectedDrone = drones[selectionState.selectedDroneIndex];
+      const selectedDrone = gameState.drones[selectionState.selectedDroneIndex];
       if (currentDrone && currentDrone !== selectedDrone) {
         selectedDrone.visibility = currentDrone.visibility;
         currentDrone.reloading(true);
@@ -145,7 +144,7 @@ export function createAnimationLoop(
         } // Старий дрон летить на зарядку
       }
       currentDrone = selectedDrone;
-      drones.forEach((drone, index) => {
+      gameState.drones.forEach((drone, index) => {
         if (drone) {
           drone.destruction(layer1);
           drone.isActive =
@@ -161,7 +160,7 @@ export function createAnimationLoop(
       droneIcons.forEach((object) => {
         object.draw();
       });
-      drawJoystickAndButtons(ctx, canvas, drones);
+      drawJoystickAndButtons(ctx, canvas, gameState.drones);
       drawMenuButtons(ctx, canvas, minimap, training);
       if (!training) gameState.drawScore(ctx, canvas);
       gameFrame++;
