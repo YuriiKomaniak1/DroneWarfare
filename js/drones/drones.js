@@ -205,7 +205,7 @@ class Drone {
 }
 
 export function createSmallDrone() {
-  return new Drone(smallDroneImage, 0.9, 3, 4, 352, 301);
+  return new Drone(smallDroneImage, 0.8, 3, 4, 352, 301);
 }
 // export function createMediumDrone() {
 //   return new Drone(mediumDroneImage, 2, 4, "mediumDrone");

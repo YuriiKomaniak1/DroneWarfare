@@ -4,7 +4,6 @@ import { FragBomb, HeBomb, ShapedBomb } from "../drones/bomb.js";
 class GameState {
   constructor() {
     this.score = 0;
-    this.currentMission = "mission1";
     this.drones = [];
   }
   drawScore(ctx, canvas) {
@@ -34,6 +33,17 @@ class GameState {
       }
     });
   }
+  rememberDrone(gameData, index) {
+    const drone = this.drones[index];
+    if (!drone) return; // 💡 Якщо дрона немає, нічого не робимо
+
+    gameData.drones[index] = {
+      bombStorage: drone.bombStorage,
+      initialBombStorage: drone.initialBombStorage,
+      capacity: drone.capacity,
+      remainingCapacity: drone.remainingCapacity,
+    };
+  }
 }
 
 class GameData {
@@ -41,6 +51,8 @@ class GameData {
     this.score = 0;
     this.currentMission = "mission1";
     this.drones = [];
+    this.mediumDroneAvailable = false;
+    this.bigDroneAvailable = false;
   }
 }
 const drones = [

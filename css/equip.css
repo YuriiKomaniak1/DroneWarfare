@@ -45,6 +45,12 @@ body {
   max-width: 150px;
   width: 100%;
 }
+.equip-buttons-panel {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
 
 #equip-canvas-container {
   margin: 20px;
