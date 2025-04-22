@@ -29,6 +29,8 @@ class GameState {
       if (drone && gameData.drones[index]) {
         drone.bombStorage = gameData.drones[index].bombStorage;
         drone.initialBombStorage = gameData.drones[index].initialBombStorage;
+        drone.capacity = gameData.drones[index].capacity;
+        drone.remainingCapacity = gameData.drones[index].remainingCapacity;
       }
     });
   }
@@ -51,6 +53,7 @@ const drones = [
 export const gameState = new GameState();
 export const gameData = new GameData();
 const saved = localStorage.getItem("gameData");
+
 if (saved) {
   const parsedData = JSON.parse(saved);
   drones.forEach((drone, index) => {
@@ -83,6 +86,8 @@ if (saved) {
       }
       gameData.drones[index].bombStorage = drone.bombStorage;
       gameData.drones[index].initialBombStorage = drone.initialBombStorage;
+      gameData.drones[index].capacity = drone.capacity;
+      gameData.drones[index].remainingCapacity = drone.remainingCapacity;
     }
   });
 

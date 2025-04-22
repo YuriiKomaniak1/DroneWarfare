@@ -1,5 +1,5 @@
-import { gameState } from "./logic/gamestate.js";
-import { BriefingDrones } from "./gameElements/briefingDroneIcons.js";
+import { gameState } from "../logic/gamestate.js";
+import { BriefingDrones } from "../gameElements/briefingDroneIcons.js";
 const gameData = JSON.parse(localStorage.getItem("gameData"));
 console.log(gameData);
 gameState.updateData(gameData);

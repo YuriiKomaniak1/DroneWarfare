@@ -1,4 +1,4 @@
-import { briefingText } from "./levels/briefingText.js";
+import { briefingText } from "./briefing/briefingText.js";
 import { BriefingDrones } from "./gameElements/briefingDroneIcons.js";
 import { gameState } from "./logic/gamestate.js";
 const gameData = JSON.parse(localStorage.getItem("gameData"));
