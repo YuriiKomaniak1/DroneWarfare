@@ -81,6 +81,7 @@ h3 {
   position: absolute;
   width: 100%;
   max-width: 700px;
+  min-width: 320px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
