@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dronETerra - апгрейди</title>
+    <link rel="stylesheet" href="css/upgrades.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Ігрові бали <span id="score">1</span></h2>
+      <h3>Відкриття технологій</h3>
+      <div id="open-container">
+        <div class="upgrade-box">
+          <h4 class="middleDroneOpenCost upgrade-cost">1</h4>
+          <div id="medium_drone_image" class="medium_drone_image"></div>
+          <p>середній дрон</p>
+        </div>
+        <div class="upgrade-box">
+          <h4 id="bigDroneOpenCost" class="upgrade-cost">1</h4>
+          <div id="big_drone_image"></div>
+          <p>великий дрон</p>
+        </div>
+      </div>
+      <h3>Апгрейд технологій</h3>
+
+      <div id="upgrade-container"></div>
+
+      <div class="button-panel">
+        <button id="back-button" class="briefing-button">Назад</button>
+      </div>
+    </div>
+
+    <div id="middleDroneOpenModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Дослідити середнього дрона</h2>
+        <div class="medium_drone_image"></div>
+        <h3>Вартість дослідження <span class="middleDroneOpenCost">1</span></h3>
+        <p>Пілся цього дослідження вам буде доступний середній дрон</p>
+        <p>
+          Він може нести білбше бомб ніж малий, але повільніший і більш
+          вразливий. Дрон має такі стартові характеристики:
+        </p>
+        <ul>
+          <li><strong>Вага боєприпасів</strong> - 1600г.</li>
+          <li><strong>Кількість підвісів</strong> - 16шт</li>
+          <li><strong>Макс. швидкістю</strong> - 10 м.с.</li>
+          <li><strong>Міцність</strong> - 5.</li>
+        </ul>
+        <div class="button-panel">
+          <button id="middleDroneOpen" class="briefing-button">
+            Дослідити
+          </button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/briefing/upgrades.js" type="module"></script>
+  </body>
+</html>

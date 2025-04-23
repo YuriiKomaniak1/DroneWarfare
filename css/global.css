@@ -21,6 +21,7 @@
   --briefing-color: rgb(126, 103, 85);
   --briefing-button-color: #333;
   --briefing-button-hover-color: #555;
+  --upgrade-box-color: rgb(206, 192, 182);
 
   font-family: "Montserrat", sans-serif;
 }
@@ -72,6 +73,7 @@ h3 {
   display: flex;
   justify-content: center;
   gap: 20px;
+  margin-top: 20px;
 }
 
 .container {

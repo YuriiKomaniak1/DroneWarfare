@@ -1,0 +1,62 @@
+@import "global.css";
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--menu-background-color);
+}
+
+.medium_drone_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/drones/mediumDroneAnimation.png");
+  background-size: 400% 100%; /* 4 кадри по горизонталі, 2 по вертикалі */
+  background-position: 100% 0%; /* Лівий верхній кут */
+}
+#big_drone_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/drones/bigDroneAnimation.png");
+  background-size: 400% 100%; /* 4 кадри по горизонталі, 2 по вертикалі */
+  background-position: 100% 0%; /* Лівий верхній кут */
+}
+
+.upgrade-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--upgrade-box-color);
+  border-radius: 5px;
+  font-size: 9px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.45);
+}
+.upgrade-cost {
+  font-size: 14px;
+}
+
+#open-container {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--modal-window-background-color);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#middleDroneOpenModal {
+  visibility: hidden;
+}

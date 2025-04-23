@@ -58,6 +58,7 @@ export function setupEquipButtons(drone, gameData) {
       drone.remainingCapacity = calculateRemainingCapacity(drone);
     }
   });
+
   document.getElementById("remainingDroneWeight").textContent = Math.round(
     drone.remainingCapacity * 1000
   );

@@ -30,6 +30,8 @@ class GameState {
         drone.initialBombStorage = gameData.drones[index].initialBombStorage;
         drone.capacity = gameData.drones[index].capacity;
         drone.remainingCapacity = gameData.drones[index].remainingCapacity;
+        drone.hangers = gameData.drones[index].hangers;
+        drone.initialHangers = gameData.drones[index].initialHangers;
       }
     });
   }
@@ -42,17 +44,20 @@ class GameState {
       initialBombStorage: drone.initialBombStorage,
       capacity: drone.capacity,
       remainingCapacity: drone.remainingCapacity,
+      hangers: drone.hangers,
+      initialHangers: drone.initialHangers,
     };
   }
 }
 
 class GameData {
   constructor() {
-    this.score = 0;
+    this.score = 9600;
     this.currentMission = "mission1";
     this.drones = [];
     this.mediumDroneAvailable = false;
     this.bigDroneAvailable = false;
+    this.upgradeGap = 0;
   }
 }
 const drones = [
@@ -101,6 +106,8 @@ if (!saved) {
       gameData.drones[index].initialBombStorage = drone.initialBombStorage;
       gameData.drones[index].capacity = drone.capacity;
       gameData.drones[index].remainingCapacity = drone.remainingCapacity;
+      gameData.drones[index].hangers = drone.hangers;
+      gameData.drones[index].initialHangers = drone.initialHangers;
     }
   });
 

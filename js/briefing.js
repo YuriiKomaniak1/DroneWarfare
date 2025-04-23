@@ -15,6 +15,9 @@ canvas.height = canvas.width / 3.8;
 document.getElementById("back-button").addEventListener("click", () => {
   window.location.href = "index.html";
 });
+document.getElementById("upgrade-button").addEventListener("click", () => {
+  window.location.href = "upgrades.html";
+});
 const droneIcons = [];
 for (let i = 0; i < 5; i++) {
   const spase = canvas.width / 21;
