@@ -10,7 +10,9 @@ canvas.height = 160;
 const ctx = canvas.getContext("2d");
 
 const droneIndex = localStorage.getItem("droneToEquip");
+
 document.getElementById("drone_number").textContent = parseInt(droneIndex) + 1;
+
 let drone = null;
 
 if (droneIndex !== null) {

@@ -62,7 +62,7 @@ export function createAnimationLoop(
         }
       });
       ctx.clearRect(0, 0, canvas.width, canvas.height); // Очищаємо канвас
-      layer1.update(keys);
+      layer1.update(keys, currentDrone);
       layer1.draw();
       bombs.forEach((bomb) => {
         if (bomb.frameX === bomb.frames) bomb.draw();
@@ -126,7 +126,7 @@ export function createAnimationLoop(
           });
         }
       });
-      layer2.update(keys);
+      layer2.update(keys, currentDrone);
       layer2.draw();
       enemies.forEach((enemy) => {
         enemy.skullDraw();

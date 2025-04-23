@@ -10,11 +10,12 @@ export class Layer {
     this.speedY = 0;
     this.acceleration = 0.01;
     this.deceleration = 0.007;
-    this.maxSpeed = 1.3;
     this.ctx = ctx;
   }
 
-  update(keys) {
+  update(keys, drone) {
+    this.acceleration = drone.speed / 100;
+    this.deceleration = drone.speed / 100;
     if (keys.up && this.y < this.canvas.height / 2) {
       this.speedY += this.acceleration;
     } else if (keys.down && this.y > this.canvas.height / 2 - this.height) {
@@ -33,14 +34,8 @@ export class Layer {
       if (Math.abs(this.speedX) < 0.001) this.speedX = 0;
     }
 
-    this.speedX = Math.max(
-      -this.maxSpeed,
-      Math.min(this.maxSpeed, this.speedX)
-    );
-    this.speedY = Math.max(
-      -this.maxSpeed,
-      Math.min(this.maxSpeed, this.speedY)
-    );
+    this.speedX = Math.max(-drone.speed, Math.min(drone.speed, this.speedX));
+    this.speedY = Math.max(-drone.speed, Math.min(drone.speed, this.speedY));
 
     if (this.x > this.canvas.width / 2) {
       this.speedX = 0;

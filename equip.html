@@ -27,6 +27,32 @@
 
       <div id="equip-canvas-container">
         <canvas id="equipDroneCanvas" width="250"></canvas>
+        <div id="text-container">
+          <p>
+            Вага<br />
+            <strong
+              ><span id="remainingDroneWeight">1</span>/<span id="droneWeight"
+                >1</span
+              ></strong
+            >
+            г.
+          </p>
+          <p>
+            Підвіси<br />
+            <strong
+              ><span id="hangers">1</span>/<span id="initialHangers">1</span>
+              шт.</strong
+            >
+          </p>
+          <p>
+            Швидкість<br />
+            <strong><span id="droneSpeed">1</span> м/с.</strong>
+          </p>
+          <p>
+            Міцність<br />
+            <strong><span id="droneHP">1</span> .</strong>
+          </p>
+        </div>
       </div>
       <div class="equip-buttons-panel">
         <div class="equip-container" id="fragBomb">
@@ -44,6 +70,7 @@
               width="25px"
               src="assets/img/bombs/fragBombIcon.png"
             />
+            <p id="fragBombWeight"></p>
           </div>
         </div>
 
@@ -62,6 +89,7 @@
               width="25px"
               src="assets/img/bombs/heBombIcon.png"
             />
+            <p id="heBombWeight"></p>
           </div>
         </div>
 
@@ -80,6 +108,7 @@
               width="25px"
               src="assets/img/bombs/shapedBombIcon.png"
             />
+            <p id="shapedBombWeight"></p>
           </div>
         </div>
       </div>

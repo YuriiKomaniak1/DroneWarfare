@@ -54,6 +54,8 @@ body {
 
 #equip-canvas-container {
   margin: 20px;
+  display: flex;
+  gap: 20px;
 }
 
 .drone-box {
@@ -70,6 +72,7 @@ body {
 
 .equip-container-2row {
   display: flex;
+  flex-direction: column;
   align-items: center;
 }
 .bomb-icon {

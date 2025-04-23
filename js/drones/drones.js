@@ -2,7 +2,16 @@ import { basePath } from "../utils/basePath.js";
 let smallDroneImage = new Image();
 smallDroneImage.src = `${basePath}assets/img/drones/smallDroneAnimation.png`;
 class Drone {
-  constructor(image, capacity, hp, visibility, frameWidth, frameHeight) {
+  constructor(
+    image,
+    capacity,
+    hp,
+    visibility,
+    frameWidth,
+    frameHeight,
+    speed,
+    hangers
+  ) {
     this.image = image;
     this.frameWidth = frameWidth;
     this.frameHeight = frameHeight;
@@ -41,6 +50,9 @@ class Drone {
     this.frameSpeed = 3; // Затримка між кадрами
     this.visibility = visibility;
     this.initialVisibility = visibility;
+    this.speed = speed;
+    this.hangers = hangers;
+    this.initialHangers = hangers;
   }
   resetPosition() {
     this.scale = 1;
@@ -190,9 +202,10 @@ class Drone {
     const weight = BombClass.weight;
     const type = BombClass.type;
 
-    if (this.remainingCapacity >= weight) {
+    if (this.remainingCapacity >= weight && this.hangers >= 1) {
       this.bombStorage[type].push("bomb");
       this.remainingCapacity -= weight;
+      this.hangers--;
     }
   }
   cloneBombStorage(storage) {
@@ -205,7 +218,7 @@ class Drone {
 }
 
 export function createSmallDrone() {
-  return new Drone(smallDroneImage, 0.8, 3, 4, 352, 301);
+  return new Drone(smallDroneImage, 0.8, 3, 4, 352, 301, 1.3, 10);
 }
 // export function createMediumDrone() {
 //   return new Drone(mediumDroneImage, 2, 4, "mediumDrone");

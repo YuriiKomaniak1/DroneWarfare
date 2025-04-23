@@ -20,6 +20,7 @@ export function setupEquipButtons(drone, gameData) {
   addClickAndTouch(fragPlus, () => {
     if (drone.remainingCapacity >= FragBomb.weight) {
       drone.addBomb(FragBomb);
+      calculateRemainingCapacity(drone);
     }
   });
 
@@ -33,6 +34,7 @@ export function setupEquipButtons(drone, gameData) {
   addClickAndTouch(hePlus, () => {
     if (drone.remainingCapacity >= HeBomb.weight) {
       drone.addBomb(HeBomb);
+      calculateRemainingCapacity(drone);
     }
   });
 
@@ -46,6 +48,7 @@ export function setupEquipButtons(drone, gameData) {
   addClickAndTouch(shapedPlus, () => {
     if (drone.remainingCapacity >= ShapedBomb.weight) {
       drone.addBomb(ShapedBomb);
+      calculateRemainingCapacity(drone);
     }
   });
 
@@ -55,13 +58,36 @@ export function setupEquipButtons(drone, gameData) {
       drone.remainingCapacity = calculateRemainingCapacity(drone);
     }
   });
+  document.getElementById("remainingDroneWeight").textContent = Math.round(
+    drone.remainingCapacity * 1000
+  );
+  document.getElementById("droneWeight").textContent = Math.round(
+    drone.capacity * 1000
+  );
 
+  document.getElementById("hangers").textContent = Math.round(drone.hangers);
+  document.getElementById("initialHangers").textContent = Math.round(
+    drone.initialHangers
+  );
+  document.getElementById("droneSpeed").textContent = drone.speed * 10;
+  document.getElementById("droneHP").textContent = drone.hp;
+  document.getElementById("fragBombWeight").textContent =
+    Math.round(FragBomb.weight * 1000) + "г.";
+  document.getElementById("heBombWeight").textContent =
+    Math.round(HeBomb.weight * 1000) + "г.";
+  document.getElementById("shapedBombWeight").textContent =
+    Math.round(ShapedBomb.weight * 1000) + "г.";
   function calculateRemainingCapacity(drone) {
     const bombWeight =
       drone.bombStorage.frag.length * FragBomb.weight +
       drone.bombStorage.he.length * HeBomb.weight +
       drone.bombStorage.shaped.length * ShapedBomb.weight;
+    drone.hangers = drone.initialHangers - drone.countBombs();
 
+    document.getElementById("remainingDroneWeight").textContent = Math.round(
+      (drone.capacity - bombWeight) * 1000
+    );
+    document.getElementById("hangers").textContent = Math.round(drone.hangers);
     return parseFloat((drone.capacity - bombWeight).toFixed(4));
   }
 

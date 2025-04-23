@@ -7,7 +7,6 @@ gameState.updateData(gameData);
 
 const missionKey = "mission1"; // Сюди підставляється поточна місія
 document.getElementById("briefing-text").innerHTML = briefingText[missionKey];
-
 // Малюємо дронів та боєзапас
 const canvas = document.getElementById("droneCanvas");
 const ctx = canvas.getContext("2d");

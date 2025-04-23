@@ -66,7 +66,7 @@ export const gameState = new GameState();
 export const gameData = new GameData();
 const saved = localStorage.getItem("gameData");
 
-if (saved) {
+if (!saved) {
   const parsedData = JSON.parse(saved);
   drones.forEach((drone, index) => {
     gameState.drones[index] = drone;
@@ -79,7 +79,8 @@ if (saved) {
     if (drone && Object.values(drone.bombStorage).flat().length === 0) {
       while (
         drone.remainingCapacity >=
-        Math.min(FragBomb.weight, HeBomb.weight, ShapedBomb.weight)
+          Math.min(FragBomb.weight, HeBomb.weight, ShapedBomb.weight) &&
+        drone.hangers >= 1
       ) {
         Math.random() > 0.5
           ? drone.addBomb(FragBomb)
