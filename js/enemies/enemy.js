@@ -54,7 +54,7 @@ export class Enemy {
     this.showSkull = true;
     this.skullOffset = Math.random() * 60 - 30;
     this.skullTimer = 0;
-    this.score = 50;
+    this.score = 51;
     this.scored = false;
     this.hasBailedOut = false;
   }
