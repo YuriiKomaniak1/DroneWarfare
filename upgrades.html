@@ -16,9 +16,9 @@
           <div id="medium_drone_image" class="medium_drone_image"></div>
           <p>середній дрон</p>
         </div>
-        <div class="upgrade-box">
-          <h4 id="bigDroneOpenCost" class="upgrade-cost">1</h4>
-          <div id="big_drone_image"></div>
+        <div class="upgrade-box" id="bigDroneUB">
+          <h4 class="bigDroneOpenCost upgrade-cost">1</h4>
+          <div id="big_drone_image" class="big_drone_image"></div>
           <p>великий дрон</p>
         </div>
       </div>
@@ -30,7 +30,7 @@
         <button id="back-button" class="briefing-button">Назад</button>
       </div>
     </div>
-
+    <!-- Модалка відкриття середнього дрону -->
     <div id="middleDroneOpenModal" class="upgrade-modal">
       <div class="container">
         <h2>Дослідити середнього дрона</h2>
@@ -52,6 +52,30 @@
           <button id="middleDroneOpen" class="briefing-button">
             Дослідити
           </button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+    <!-- Модалка відкриття великого дрону -->
+    <div id="bigDroneOpenModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Дослідити великого дрона</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="big_drone_image"></div>
+        <h3>Вартість дослідження <span class="bigDroneOpenCost">1</span></h3>
+        <p>Пілся цього дослідження вам буде доступний великий дрон</p>
+        <p>
+          Найбільш смертоносний але і найбільш вразливий. Дрон має такі стартові
+          характеристики:
+        </p>
+        <ul>
+          <li><strong>Вага боєприпасів</strong> - 6400г.</li>
+          <li><strong>Кількість підвісів</strong> - 30шт</li>
+          <li><strong>Макс. швидкістю</strong> - 8 м.с.</li>
+          <li><strong>Міцність</strong> - 9.</li>
+        </ul>
+        <div class="button-panel">
+          <button id="bigDroneOpen" class="briefing-button">Дослідити</button>
           <button class="back-button briefing-button">Назад</button>
         </div>
       </div>

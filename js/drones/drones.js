@@ -3,6 +3,8 @@ let smallDroneImage = new Image();
 smallDroneImage.src = `${basePath}assets/img/drones/smallDroneAnimation.png`;
 let mediumDroneImage = new Image();
 mediumDroneImage.src = `${basePath}assets/img/drones/mediumDroneAnimation.png`;
+let bigDroneImage = new Image();
+bigDroneImage.src = `${basePath}assets/img/drones/bigDroneAnimation.png`;
 class Drone {
   constructor() {
     this.image = smallDroneImage;
@@ -48,6 +50,7 @@ class Drone {
     this.initialHangers = 10;
     this.type = "small";
     this.imageScale = 1;
+    this.size = 1;
   }
   resetPosition() {
     this.scale = 1;
@@ -236,7 +239,28 @@ export class MediumDrone extends Drone {
     this.hangers = 16;
     this.initialHangers = 16;
     this.type = "medium";
-    this.scale = 1;
     this.imageScale = 0.5;
+    this.size = 1.5;
+  }
+}
+
+export class BigDrone extends Drone {
+  constructor() {
+    super();
+    this.image = bigDroneImage;
+    this.capacity = 6.4;
+    this.remainingCapacity = 6.4;
+    this.hp = 9;
+    this.initialHP = 8;
+    this.visibility = 10;
+    this.initialVisibility = 10;
+    this.frameWidth = 250;
+    this.frameHeight = 250;
+    this.speed = 0.8;
+    this.hangers = 30;
+    this.initialHangers = 30;
+    this.type = "big";
+    this.imageScale = 3;
+    this.size = 4;
   }
 }

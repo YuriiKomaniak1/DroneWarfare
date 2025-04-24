@@ -22,7 +22,7 @@ export class BriefingDrones {
     if (this.drone) {
       this.ctx.drawImage(
         this.drone.image,
-        this.drone.frameWidth,
+        0,
         0,
         this.drone.frameWidth,
         this.drone.frameHeight,

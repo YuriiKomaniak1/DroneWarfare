@@ -21,20 +21,20 @@ body {
   height: 60px; /* висота одного кадру */
   background-image: url("../assets/img/drones/smallDroneAnimation.png");
   background-size: 400% 200%; /* 4 кадри по горизонталі, 2 по вертикалі */
-  background-position: 100% 0%; /* Лівий верхній кут */
+  background-position: 300% 0%; /* Лівий верхній кут */
 }
 #medium_drone_image {
   width: 60px; /* ширина одного кадру */
   height: 60px; /* висота одного кадру */
   background-image: url("../assets/img/drones/mediumDroneAnimation.png");
-  background-size: 400% 100%; /* 4 кадри по горизонталі, 2 по вертикалі */
-  background-position: 100% 0%; /* Лівий верхній кут */
+  background-size: 400% 200%; /* 4 кадри по горизонталі, 2 по вертикалі */
+  background-position: 0% 0%; /* Лівий верхній кут */
 }
 #big_drone_image {
   width: 60px; /* ширина одного кадру */
   height: 60px; /* висота одного кадру */
   background-image: url("../assets/img/drones/bigDroneAnimation.png");
-  background-size: 400% 100%; /* 4 кадри по горизонталі, 2 по вертикалі */
+  background-size: 400% 200%; /* 4 кадри по горизонталі, 2 по вертикалі */
   background-position: 100% 0%; /* Лівий верхній кут */
 }
 

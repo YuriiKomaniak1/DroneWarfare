@@ -1,9 +1,9 @@
 import { gameState } from "../logic/gamestate.js";
 import { BriefingDrones } from "../gameElements/briefingDroneIcons.js";
 import { setupEquipButtons } from "./equipButtonHandlers.js";
-import { SmallDrone, MediumDrone } from "../drones/drones.js";
+import { SmallDrone, MediumDrone, BigDrone } from "../drones/drones.js";
 const gameData = JSON.parse(localStorage.getItem("gameData"));
-gameState.updateDrones(gameData, SmallDrone, MediumDrone);
+gameState.updateDrones(gameData, SmallDrone, MediumDrone, BigDrone);
 gameState.updateData(gameData);
 
 const canvas = document.getElementById("equipDroneCanvas");

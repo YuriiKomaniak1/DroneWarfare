@@ -22,7 +22,7 @@ class GameState {
     ctx.fillText(text, centerX, paddingTop);
     ctx.restore();
   }
-  updateDrones(gameData, SmallDrone, MediumDrone) {
+  updateDrones(gameData, SmallDrone, MediumDrone, BigDrone) {
     this.drones.forEach((drone, index) => {
       if (drone && gameData.drones[index]) {
         switch (gameData.drones[index].type) {
@@ -31,6 +31,9 @@ class GameState {
             break;
           case "medium":
             this.drones[index] = new MediumDrone();
+            break;
+          case "big":
+            this.drones[index] = new BigDrone();
             break;
         }
       }
@@ -72,11 +75,14 @@ class GameData {
     this.drones = [];
     this.mediumDroneAvailable = false;
     this.bigDroneAvailable = false;
+    this.slot4Available = false;
+    this.slot5Available = false;
     this.upgradeGap = 0;
     this.gapScale = 500;
     this.type = "small";
   }
 }
+
 const drones = [
   new SmallDrone(),
   new SmallDrone(),
@@ -88,7 +94,7 @@ export const gameState = new GameState();
 export const gameData = new GameData();
 const saved = localStorage.getItem("gameData");
 
-if (saved) {
+if (!saved) {
   const parsedData = JSON.parse(saved);
   drones.forEach((drone, index) => {
     gameState.drones[index] = drone;

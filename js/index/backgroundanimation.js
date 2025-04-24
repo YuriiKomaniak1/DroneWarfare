@@ -76,8 +76,8 @@ function addDrone(startX, startY, speed, image, scale, frameX, frameY) {
 addDrone(backWidth, 100, 1, smallDrone, 1, 2, 352, 301);
 addDrone(backWidth + 700, 200, 0.9, smallDrone, 1.3, 352, 301);
 addDrone(backWidth + 1800, 700, 1.1, smallDrone, 1.1, 352, 301);
-addDrone(backWidth + 1500, 500, 0.7, mediumDrone, 1.4, 250, 250);
-addDrone(backWidth + 900, 300, 0.65, mediumDrone, 1.5, 250, 250);
+addDrone(backWidth + 1500, 500, 0.7, mediumDrone, 1.4, 1024, 1024);
+addDrone(backWidth + 900, 300, 0.65, mediumDrone, 1.5, 1024, 1024);
 addDrone(backWidth + 500, 400, 0.45, bigDrone, 3, 250, 250);
 
 function updateDrones() {

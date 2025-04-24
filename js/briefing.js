@@ -1,9 +1,9 @@
 import { briefingText } from "./briefing/briefingText.js";
 import { BriefingDrones } from "./gameElements/briefingDroneIcons.js";
 import { gameState } from "./logic/gamestate.js";
-import { SmallDrone, MediumDrone } from "./drones/drones.js";
+import { SmallDrone, MediumDrone, BigDrone } from "./drones/drones.js";
 const gameData = JSON.parse(localStorage.getItem("gameData"));
-gameState.updateDrones(gameData, SmallDrone, MediumDrone);
+gameState.updateDrones(gameData, SmallDrone, MediumDrone, BigDrone);
 gameState.updateData(gameData);
 
 const missionKey = "mission1"; // Сюди підставляється поточна місія

@@ -367,11 +367,13 @@ export class Vehicle {
       if (this.fireTimer >= 60 / this.fireRate) {
         console.log(
           drone.hp,
-          5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2)
+          (5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2)) *
+            drone.size
         );
         if (
-          Math.random() * 1000 <
-            5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2) &&
+          Math.random() * 500 <
+            (5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2)) *
+              drone.size &&
           drone.hp >= 1
         ) {
           --drone.hp;

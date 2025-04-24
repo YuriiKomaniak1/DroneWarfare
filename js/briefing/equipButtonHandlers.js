@@ -1,5 +1,5 @@
 import { FragBomb, HeBomb, ShapedBomb } from "../drones/bomb.js";
-import { SmallDrone, MediumDrone } from "../drones/drones.js";
+import { SmallDrone, MediumDrone, BigDrone } from "../drones/drones.js";
 
 export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
   const fragPlus = document.getElementById("fragPlus");
@@ -21,19 +21,25 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
     bigDroneImage.style.backgroundImage = "url('assets/img/drones/empty.png')";
 
   addClickAndTouch(smallDroneImage, () => {
-    if (drone.type !== "small") gameState.drones[droneIndex] = new SmallDrone();
+    if (drone.type !== "small") droneChange(SmallDrone);
   });
 
   addClickAndTouch(mediumDroneImage, () => {
-    console.log(drone);
-    if (drone.type !== "medium") {
-      gameState.drones[droneIndex] = new MediumDrone();
-      gameState.rememberDrone(gameData, droneIndex);
-      console.log(gameData);
-      localStorage.setItem("gameData", JSON.stringify(gameData));
-      window.location.reload();
-    }
+    if (drone.type !== "medium" && gameData.mediumDroneAvailable)
+      droneChange(MediumDrone);
   });
+
+  addClickAndTouch(bigDroneImage, () => {
+    if (drone.type !== "big" && gameData.bigDroneAvailable)
+      droneChange(BigDrone);
+  });
+
+  function droneChange(DroneClass) {
+    gameState.drones[droneIndex] = new DroneClass();
+    gameState.rememberDrone(gameData, droneIndex);
+    localStorage.setItem("gameData", JSON.stringify(gameData));
+    window.location.reload();
+  }
 
   addClickAndTouch(fragPlus, () => {
     if (drone.remainingCapacity >= FragBomb.weight) {
