@@ -37,7 +37,7 @@ class DroneIcons {
     if (this.drone.isAlive) {
       this.ctx.drawImage(
         this.drone.image,
-        this.drone.frameWidth,
+        0,
         0,
         this.drone.frameWidth,
         this.drone.frameHeight,

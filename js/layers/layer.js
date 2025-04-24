@@ -36,6 +36,12 @@ export class Layer {
 
     this.speedX = Math.max(-drone.speed, Math.min(drone.speed, this.speedX));
     this.speedY = Math.max(-drone.speed, Math.min(drone.speed, this.speedY));
+    const currentSpeed = Math.sqrt(this.speedX ** 2 + this.speedY ** 2);
+    if (currentSpeed > drone.speed) {
+      const scale = drone.speed / currentSpeed;
+      this.speedX *= scale;
+      this.speedY *= scale;
+    }
 
     if (this.x > this.canvas.width / 2) {
       this.speedX = 0;

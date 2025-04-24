@@ -1,7 +1,9 @@
 import { gameState } from "../logic/gamestate.js";
 import { BriefingDrones } from "../gameElements/briefingDroneIcons.js";
 import { setupEquipButtons } from "./equipButtonHandlers.js";
+import { SmallDrone, MediumDrone } from "../drones/drones.js";
 const gameData = JSON.parse(localStorage.getItem("gameData"));
+gameState.updateDrones(gameData, SmallDrone, MediumDrone);
 gameState.updateData(gameData);
 
 const canvas = document.getElementById("equipDroneCanvas");
@@ -17,17 +19,18 @@ let drone = null;
 
 if (droneIndex !== null) {
   drone = gameState.drones[parseInt(droneIndex)];
-  localStorage.removeItem("droneToEquip");
 } else {
   drone = gameState.drones[0];
 }
-setupEquipButtons(drone, gameData);
+setupEquipButtons(drone, gameData, gameState, droneIndex);
 
 const droneicon = new BriefingDrones(canvas, ctx, drone, 100, 10, 10, true);
 
 // Кнопки
 document.getElementById("back-button").addEventListener("click", () => {
+  drone.initialBombStorage = drone.cloneBombStorage(drone.bombStorage);
   gameState.rememberDrone(gameData, droneIndex);
+  localStorage.removeItem("droneToEquip");
   localStorage.setItem("gameData", JSON.stringify(gameData));
   window.location.href = "briefing.html";
 });

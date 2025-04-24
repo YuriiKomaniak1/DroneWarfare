@@ -275,9 +275,13 @@ export class Enemy {
         this.isFiring = false;
       if (this.isFiring) this.fireTimer++;
       if (this.fireTimer >= 60 / this.fireRate) {
+        console.log(
+          drone.hp,
+          5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2)
+        );
         if (
           Math.random() * 1000 <
-            5 - (4 * (layer.speedX + layer.speedY)) / (2 * layer.maxSpeed) &&
+            5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2) &&
           drone.hp >= 1
         ) {
           --drone.hp;

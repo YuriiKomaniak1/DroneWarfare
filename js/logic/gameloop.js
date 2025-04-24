@@ -19,6 +19,11 @@ import { DroneScope } from "../gameElements/droneScope.js";
 import { Minimap } from "../gameElements/minimap.js";
 import { createDroneIcons } from "../gameElements/droneIcons.js";
 import { keys } from "../logic/controls.js";
+import { SmallDrone, MediumDrone } from "../drones/drones.js";
+const gameData = JSON.parse(localStorage.getItem("gameData"));
+gameState.updateDrones(gameData, SmallDrone, MediumDrone);
+gameState.updateData(gameData);
+
 export function createAnimationLoop(
   canvas,
   layer1,

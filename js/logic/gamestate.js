@@ -1,4 +1,4 @@
-import { createSmallDrone } from "../drones/drones.js";
+import { SmallDrone } from "../drones/drones.js";
 import { FragBomb, HeBomb, ShapedBomb } from "../drones/bomb.js";
 
 class GameState {
@@ -21,6 +21,20 @@ class GameState {
     ctx.strokeText(text, centerX, paddingTop);
     ctx.fillText(text, centerX, paddingTop);
     ctx.restore();
+  }
+  updateDrones(gameData, SmallDrone, MediumDrone) {
+    this.drones.forEach((drone, index) => {
+      if (drone && gameData.drones[index]) {
+        switch (gameData.drones[index].type) {
+          case "small":
+            this.drones[index] = new SmallDrone();
+            break;
+          case "medium":
+            this.drones[index] = new MediumDrone();
+            break;
+        }
+      }
+    });
   }
   updateData(gameData) {
     this.score = gameData.score;
@@ -46,6 +60,7 @@ class GameState {
       remainingCapacity: drone.remainingCapacity,
       hangers: drone.hangers,
       initialHangers: drone.initialHangers,
+      type: drone.type,
     };
   }
 }
@@ -58,12 +73,14 @@ class GameData {
     this.mediumDroneAvailable = false;
     this.bigDroneAvailable = false;
     this.upgradeGap = 0;
+    this.gapScale = 500;
+    this.type = "small";
   }
 }
 const drones = [
-  createSmallDrone(),
-  createSmallDrone(),
-  createSmallDrone(),
+  new SmallDrone(),
+  new SmallDrone(),
+  new SmallDrone(),
   null,
   null,
 ];
@@ -71,7 +88,7 @@ export const gameState = new GameState();
 export const gameData = new GameData();
 const saved = localStorage.getItem("gameData");
 
-if (!saved) {
+if (saved) {
   const parsedData = JSON.parse(saved);
   drones.forEach((drone, index) => {
     gameState.drones[index] = drone;

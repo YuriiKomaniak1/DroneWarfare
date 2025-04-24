@@ -1,8 +1,9 @@
 import { briefingText } from "./briefing/briefingText.js";
 import { BriefingDrones } from "./gameElements/briefingDroneIcons.js";
 import { gameState } from "./logic/gamestate.js";
+import { SmallDrone, MediumDrone } from "./drones/drones.js";
 const gameData = JSON.parse(localStorage.getItem("gameData"));
-console.log(gameData);
+gameState.updateDrones(gameData, SmallDrone, MediumDrone);
 gameState.updateData(gameData);
 
 const missionKey = "mission1"; // Сюди підставляється поточна місія
@@ -32,7 +33,7 @@ for (let i = 0; i < 5; i++) {
     10
   );
 }
-console.log(droneIcons);
+
 canvas.addEventListener("click", (e) => {
   const rect = canvas.getBoundingClientRect();
   const scaleX = canvas.width / rect.width;
