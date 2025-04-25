@@ -1,12 +1,16 @@
 import { basePath } from "../utils/basePath.js";
-export let fragBombImage = new Image();
+import { footMineIcon } from "../gameElements/droneIcons.js";
+export const fragBombImage = new Image();
 fragBombImage.src = `${basePath}assets/img/bombs/fragBomb.png`;
-export let heBombImage = new Image();
+export const heBombImage = new Image();
 heBombImage.src = `${basePath}assets/img/bombs/heBomb.png`;
-export let shapedBombImage = new Image();
+export const shapedBombImage = new Image();
 shapedBombImage.src = `${basePath}assets/img/bombs/shapedBomb.png`;
+export const footMineImage = new Image();
+footMineImage.src = `${basePath}assets/img/bombs/footMine.png`;
 let imageExplosion = new Image();
 imageExplosion.src = `${basePath}assets/img/bombs/smallExplosion.png`;
+
 import { switchToNextAvailableBomb } from "../logic/controls.js";
 export class Bomb {
   static weight = 0.1; // За замовчуванням
@@ -18,6 +22,7 @@ export class Bomb {
     this.ctx = ctx;
     this.image = null;
     this.imageExplosion = null;
+    this.mineImage = null;
     this.width = 300;
     this.height = 300;
     this.scale = 3;
@@ -35,10 +40,13 @@ export class Bomb {
     this.velocityX = layer.speedX;
     this.velocityY = layer.speedY;
     this.armorPenetration = 0;
+    this.deployed = false;
+    this.class = "bomb";
+    this.wheelWidth = 0.4;
   }
 
   drop() {
-    if (!this.exploded) {
+    if (!this.exploded && !this.deployed) {
       this.velocityX *= this.friction ** 2;
       this.velocityY *= this.friction ** 2;
 
@@ -54,12 +62,13 @@ export class Bomb {
       this.scale /= this.shrinkRate;
 
       if (this.scale <= this.initialScale * 0.05) {
-        this.exploded = true;
+        if (this.class == "bomb") this.exploded = true;
+        if (this.class == "mine") this.deployed = true;
       }
     }
   }
   draw() {
-    if (!this.exploded) {
+    if (!this.exploded && !this.deployed) {
       this.ctx.drawImage(
         this.image,
         this.x - (150 * this.scale) / this.initialScale,
@@ -67,7 +76,7 @@ export class Bomb {
         (this.width * this.scale) / this.initialScale,
         (this.height * this.scale) / this.initialScale
       );
-    } else {
+    } else if (this.exploded) {
       if (this.explosionFrame % 10 === 0) {
         this.frameX++;
         if (this.frameX >= this.frames) {
@@ -90,23 +99,110 @@ export class Bomb {
       this.y += this.layer.speedY;
 
       this.explosionFrame++;
+    } else if (this.deployed) {
+      this.ctx.drawImage(this.mineImage, this.x - 2, this.y - 4, 8, 8);
+      this.x += this.layer.speedX;
+      this.y += this.layer.speedY;
     }
+  }
+  checkMineUnderWheels(vehicle) {
+    // 1. Обчислюємо зсув міни відносно центра машини
+    const dx = this.x - vehicle.x;
+    const dy = this.y - vehicle.y;
+
+    // 2. Обертаємо назад (вирівнюємо машину)
+    const cos = Math.cos(-vehicle.rotation);
+    const sin = Math.sin(-vehicle.rotation);
+
+    const localX = dx * cos - dy * sin;
+    const localY = dx * sin + dy * cos;
+
+    // 3. Параметри машини
+    const halfWidth = ((vehicle.width * vehicle.scale) / 2) * 0.95;
+    const halfHeight = ((vehicle.height * vehicle.scale) / 2) * 0.95;
+
+    const wheelZoneWidth = halfWidth * this.wheelWidth;
+
+    // 4. Перевірка:
+    const isInsideLength = Math.abs(localY) <= halfHeight;
+    const isInLeftWheelZone =
+      localX >= -halfWidth && localX <= -halfWidth + wheelZoneWidth;
+    const isInRightWheelZone =
+      localX <= halfWidth && localX >= halfWidth - wheelZoneWidth;
+
+    return isInsideLength && (isInLeftWheelZone || isInRightWheelZone);
+  }
+  checkMineEffect(vehicle) {}
+
+  drawDebugWheels(ctx, vehicle) {
+    const cos = Math.cos(-vehicle.rotation);
+    const sin = Math.sin(-vehicle.rotation);
+
+    const halfWidth = ((vehicle.width * vehicle.scale) / 2) * 0.95;
+    const halfHeight = ((vehicle.height * vehicle.scale) / 2) * 0.95;
+    const wheelZoneWidth = halfWidth * this.wheelWidth;
+
+    // Координати вершин прямокутників для лівого і правого колесного сектору
+    const corners = [
+      // Ліва колесна зона
+      [
+        { x: -halfWidth, y: -halfHeight },
+        { x: -halfWidth + wheelZoneWidth, y: -halfHeight },
+        { x: -halfWidth + wheelZoneWidth, y: halfHeight },
+        { x: -halfWidth, y: halfHeight },
+      ],
+      // Права колесна зона
+      [
+        { x: halfWidth - wheelZoneWidth, y: -halfHeight },
+        { x: halfWidth, y: -halfHeight },
+        { x: halfWidth, y: halfHeight },
+        { x: halfWidth - wheelZoneWidth, y: halfHeight },
+      ],
+    ];
+
+    ctx.save();
+    ctx.translate(vehicle.x, vehicle.y);
+    ctx.rotate(vehicle.rotation);
+
+    ctx.strokeStyle = "lime"; // Яскравий зелений для дебагу
+    ctx.lineWidth = 2;
+
+    corners.forEach((zone) => {
+      ctx.beginPath();
+      ctx.moveTo(zone[0].x, zone[0].y);
+      for (let i = 1; i < zone.length; i++) {
+        ctx.lineTo(zone[i].x, zone[i].y);
+      }
+      ctx.closePath();
+      ctx.stroke();
+    });
+
+    ctx.restore();
   }
 
   distanceToVehicle(explosionRadius, vehicle) {
-    const nearestX = Math.max(
-      vehicle.x - (vehicle.width * vehicle.scale) / 2,
-      Math.min(this.x, vehicle.x + (vehicle.width * vehicle.scale) / 2)
-    );
-    const nearestY = Math.max(
-      vehicle.y - (vehicle.height * vehicle.scale) / 2,
-      Math.min(this.y, vehicle.y + (vehicle.height * vehicle.scale) / 2)
-    );
+    // Різниця координат міни відносно центру машини
+    const dx = this.x - vehicle.x;
+    const dy = this.y - vehicle.y;
 
-    const dx = this.x - nearestX;
-    const dy = this.y - nearestY;
+    // Обертаємо назад (щоб машина була "прямою")
+    const cos = Math.cos(-vehicle.rotation);
+    const sin = Math.sin(-vehicle.rotation);
 
-    return dx * dx + dy * dy <= explosionRadius * explosionRadius;
+    const localX = dx * cos - dy * sin;
+    const localY = dx * sin + dy * cos;
+
+    // Після повороту — перевіряємо в локальній системі координат
+    const halfWidth = (vehicle.width * vehicle.scale) / 2;
+    const halfHeight = (vehicle.height * vehicle.scale) / 2;
+
+    const nearestX = Math.max(-halfWidth, Math.min(localX, halfWidth));
+    const nearestY = Math.max(-halfHeight, Math.min(localY, halfHeight));
+
+    const distX = localX - nearestX;
+    const distY = localY - nearestY;
+
+    return distX * distX + distY * distY <= explosionRadius * explosionRadius;
   }
 
   checkCollision(enemy) {
@@ -115,6 +211,10 @@ export class Bomb {
       this.y - (enemy.y + 32)
     );
     return distance < 50; // базова перевірка
+  }
+  checkMineCollision(enemy) {
+    const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
+    return distance < 1;
   }
   checkVehicleCollision(vehicle) {
     if (distanceToVehicle(10, vehicle)) {
@@ -126,6 +226,8 @@ export class Bomb {
     }
   }
 }
+
+// осколкова бомба
 export class FragBomb extends Bomb {
   static weight = 0.13;
   static type = "frag";
@@ -263,6 +365,40 @@ export class ShapedBomb extends Bomb {
     }
   }
 }
+
+// Протипіхотна міна
+export class FootMine extends Bomb {
+  static weight = 0.08;
+  static type = "footMine";
+  constructor(x, y, layer, ctx) {
+    super(x, y, layer, ctx);
+    this.image = footMineImage;
+    this.imageExplosion = imageExplosion;
+    this.explosionScale = 20;
+    this.mineImage = footMineIcon;
+    this.class = "mine";
+    this.spread = 3;
+    this.type = this.constructor.type;
+  }
+  checkMineCollision(enemy) {
+    const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
+    return distance < 4;
+  }
+  checkMineEffect(vehicle) {
+    if (this.checkMineUnderWheels(vehicle)) {
+      this.exploded = true;
+      this.deployed = false;
+      if (vehicle.armor === 0 && Math.random() > 0.75) {
+        vehicle.isStopped = true;
+        vehicle.bailOut();
+        vehicle.isMoving = false;
+        console.log(vehicle.isStopped);
+      }
+      return vehicle;
+    }
+  }
+}
+
 export function dropBomb(
   currentDrone,
   selectionState,
@@ -293,6 +429,10 @@ export function dropBomb(
     case "shaped":
       bombArray = currentDrone.bombStorage.shaped;
       newBomb = new ShapedBomb(x, y, layer1, ctx);
+      break;
+    case "footMine":
+      bombArray = currentDrone.bombStorage.footMine;
+      newBomb = new FootMine(x, y, layer1, ctx);
       break;
   }
 

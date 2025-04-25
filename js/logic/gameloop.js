@@ -41,7 +41,7 @@ export function createAnimationLoop(
   let currentDrone = gameState.drones[selectionState.selectedDroneIndex];
   gameState.drones[0].isActive = true;
   const droneScope = new DroneScope(canvas, ctx);
-  const minimap = new Minimap(canvas, enemies, vehicles, ctx, layer1);
+  const minimap = new Minimap(canvas, enemies, vehicles, ctx, layer1, bombs);
   const droneIcons = createDroneIcons(gameState.drones, canvas, ctx);
   setupControls(() => {
     dropBomb(currentDrone, selectionState, layer1, ctx, droneScope, bombs);
@@ -112,8 +112,25 @@ export function createAnimationLoop(
         )
           bomb.draw();
         bomb.drop();
-
-        if (bomb.exploded && bomb.explosionFrame < 1) {
+        if (bomb.deployed) {
+          enemies.forEach((enemy) => {
+            if (
+              bomb.checkMineCollision(enemy) &&
+              !enemy.dead &&
+              !enemy.vehicle
+            ) {
+              enemy.dead = true;
+              enemy.deathFrameIndex = 0;
+              bomb.exploded = true;
+              bomb.deployed = false;
+            }
+          });
+          vehicles.forEach((vehicle) => {
+            bomb.checkMineEffect(vehicle);
+            // bomb.drawDebugWheels(ctx, vehicle);
+          });
+        }
+        if (bomb.exploded && bomb.explosionFrame < 1 && bomb.class === "bomb") {
           currentDrone.cahngeVisibility();
           enemies.forEach((enemy) => {
             if (bomb.checkCollision(enemy) && !enemy.dead) {

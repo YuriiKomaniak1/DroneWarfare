@@ -9,6 +9,7 @@
   <body>
     <div class="container">
       <h2>Спорядження дрона №<span id="drone_number">1</span></h2>
+      <!-- вибір типу дрона-->
       <h3>Вибір типу дрона</h3>
       <div id="choose__drone__type">
         <div class="drone-box">
@@ -24,7 +25,7 @@
           <p>великий дрон</p>
         </div>
       </div>
-
+      <!-- Канвас і характеристики дрона-->
       <div id="equip-canvas-container">
         <canvas id="equipDroneCanvas" width="250"></canvas>
         <div id="text-container">
@@ -54,7 +55,9 @@
           </p>
         </div>
       </div>
+      <!-- спорядження дрона бомбами-->
       <div class="equip-buttons-panel">
+        <!-- осколкова бомба-->
         <div class="equip-container" id="fragBomb">
           <div class="equip-container-1row">
             <div class="equip-container-button">
@@ -73,7 +76,7 @@
             <p id="fragBombWeight"></p>
           </div>
         </div>
-
+        <!-- фугасна бомба-->
         <div class="equip-container" id="heBomb">
           <div class="equip-container-1row">
             <div class="equip-container-button">
@@ -92,7 +95,7 @@
             <p id="heBombWeight"></p>
           </div>
         </div>
-
+        <!-- кумулятивна бомба-->
         <div class="equip-container" id="shapedBomb">
           <div class="equip-container-1row">
             <div class="equip-container-button">
@@ -111,8 +114,28 @@
             <p id="shapedBombWeight"></p>
           </div>
         </div>
-      </div>
 
+        <!-- протипіхотна міна-->
+        <div class="equip-container" id="footMine">
+          <div class="equip-container-1row">
+            <div class="equip-container-button">
+              <img src="assets/img/bombs/plus.png" id="footMinePlus" />
+            </div>
+            <div class="equip-container-button">
+              <img src="assets/img/bombs/minus.png" id="footMineMinus" />
+            </div>
+          </div>
+          <div class="equip-container-2row">
+            <img
+              class="bomb-icon"
+              width="30px"
+              src="assets/img/bombs/footMineIcon.png"
+            />
+            <p id="footMineWeight"></p>
+          </div>
+        </div>
+      </div>
+      <!-- кнопки управління-->
       <div class="button-panel">
         <button id="back-button" class="briefing-button">Назад</button>
         <button id="upgrade-button" class="briefing-button">Апгрейди</button>

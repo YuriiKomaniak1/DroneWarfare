@@ -7,12 +7,25 @@ document.querySelectorAll(".score").forEach((el) => {
 // присвоєння цін
 const middleDroneOpenCost = 5000 + gameData.upgradeGap;
 const bigDroneOpenCost = 8000 + gameData.upgradeGap;
+const slot4OpenCost = 5000 + gameData.upgradeGap;
+const slot5OpenCost = 9000 + gameData.upgradeGap;
+const footMineOpenCost = 1000 + gameData.upgradeGap;
+
 // присвоєння цін в HTML
 document.querySelectorAll(".middleDroneOpenCost").forEach((el) => {
   el.textContent = middleDroneOpenCost;
 });
 document.querySelectorAll(".bigDroneOpenCost").forEach((el) => {
   el.textContent = bigDroneOpenCost;
+});
+document.querySelectorAll(".slot4OpenCost").forEach((el) => {
+  el.textContent = slot4OpenCost;
+});
+document.querySelectorAll(".slot5OpenCost").forEach((el) => {
+  el.textContent = slot5OpenCost;
+});
+document.querySelectorAll(".footMineOpenCost").forEach((el) => {
+  el.textContent = footMineOpenCost;
 });
 // Модалка відкриття середнього дрону
 document.getElementById("medium_drone_image").addEventListener("click", () => {
@@ -38,6 +51,46 @@ document.getElementById("bigDroneOpen").addEventListener("click", () => {
 });
 if (gameData.bigDroneAvailable)
   document.getElementById("bigDroneUB").style.display = "none";
+// Модалка відкриття 4 слоту
+document.getElementById("slot4_image").addEventListener("click", () => {
+  document.getElementById("slot4OpenModal").style.visibility = "visible";
+});
+document.getElementById("slot4Open").addEventListener("click", () => {
+  if (!gameData.slot4Available && gameData.score >= slot4OpenCost) {
+    gameData.slot4Available = true;
+    gameData.drones[3] = structuredClone(gameData.drones[0]);
+    upgradeRoutine(slot4OpenCost, ".slot4OpenCost");
+  }
+});
+if (gameData.slot4Available)
+  document.getElementById("slot4UB").style.display = "none";
+console.log(gameData);
+// Модалка відкриття 5 слоту
+document.getElementById("slot5_image").addEventListener("click", () => {
+  document.getElementById("slot5OpenModal").style.visibility = "visible";
+});
+document.getElementById("slot5Open").addEventListener("click", () => {
+  if (!gameData.slot5Available && gameData.score >= slot5OpenCost) {
+    gameData.slot5Available = true;
+    gameData.drones[4] = structuredClone(gameData.drones[0]);
+    upgradeRoutine(slot5OpenCost, ".slot5OpenCost");
+  }
+});
+if (gameData.slot5Available || !gameData.slot4Available)
+  document.getElementById("slot5UB").style.display = "none";
+
+// Модалка відкриття протипіхотної міни
+document.getElementById("footMine_image").addEventListener("click", () => {
+  document.getElementById("footMineOpenModal").style.visibility = "visible";
+});
+document.getElementById("footMineOpen").addEventListener("click", () => {
+  if (!gameData.footMineAvailable && gameData.score >= footMineOpenCost) {
+    gameData.footMineAvailable = true;
+    upgradeRoutine(footMineOpenCost, ".footMineOpenCost");
+  }
+});
+if (gameData.footMineAvailable)
+  document.getElementById("footMineUB").style.display = "none";
 
 // вихід з модалки
 document.querySelectorAll(".back-button").forEach((el) => {

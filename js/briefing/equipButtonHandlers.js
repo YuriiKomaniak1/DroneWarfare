@@ -1,34 +1,32 @@
-import { FragBomb, HeBomb, ShapedBomb } from "../drones/bomb.js";
+import { FragBomb, HeBomb, ShapedBomb, FootMine } from "../drones/bomb.js";
 import { SmallDrone, MediumDrone, BigDrone } from "../drones/drones.js";
 
 export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
+  const smallDroneImage = document.getElementById("small_drone_image");
+  const mediumDroneImage = document.getElementById("medium_drone_image");
+  const bigDroneImage = document.getElementById("big_drone_image");
   const fragPlus = document.getElementById("fragPlus");
   const fragMinus = document.getElementById("fragMinus");
   const hePlus = document.getElementById("hePlus");
   const heMinus = document.getElementById("heMinus");
   const shapedPlus = document.getElementById("shapedPlus");
   const shapedMinus = document.getElementById("shapedMinus");
-  const smallDroneImage = document.getElementById("small_drone_image");
-  const mediumDroneImage = document.getElementById("medium_drone_image");
-  const bigDroneImage = document.getElementById("big_drone_image");
-  console.log(droneIndex);
+  const footMinePlus = document.getElementById("footMinePlus");
+  const footMineMinus = document.getElementById("footMineMinus");
 
+  // перемикання між дронами
   if (!gameData.mediumDroneAvailable)
     mediumDroneImage.style.backgroundImage =
       "url('assets/img/drones/empty.png')";
-
   if (!gameData.bigDroneAvailable)
     bigDroneImage.style.backgroundImage = "url('assets/img/drones/empty.png')";
-
   addClickAndTouch(smallDroneImage, () => {
     if (drone.type !== "small") droneChange(SmallDrone);
   });
-
   addClickAndTouch(mediumDroneImage, () => {
     if (drone.type !== "medium" && gameData.mediumDroneAvailable)
       droneChange(MediumDrone);
   });
-
   addClickAndTouch(bigDroneImage, () => {
     if (drone.type !== "big" && gameData.bigDroneAvailable)
       droneChange(BigDrone);
@@ -41,6 +39,7 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
     window.location.reload();
   }
 
+  // осколкова бомба
   addClickAndTouch(fragPlus, () => {
     if (drone.remainingCapacity >= FragBomb.weight) {
       drone.addBomb(FragBomb);
@@ -54,7 +53,9 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
       drone.remainingCapacity = calculateRemainingCapacity(drone);
     }
   });
-
+  document.getElementById("fragBombWeight").textContent =
+    Math.round(FragBomb.weight * 1000) + "г.";
+  // фугасна бомба
   addClickAndTouch(hePlus, () => {
     if (drone.remainingCapacity >= HeBomb.weight) {
       drone.addBomb(HeBomb);
@@ -68,7 +69,9 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
       drone.remainingCapacity = calculateRemainingCapacity(drone);
     }
   });
-
+  document.getElementById("heBombWeight").textContent =
+    Math.round(HeBomb.weight * 1000) + "г.";
+  // кумулятивна бомба
   addClickAndTouch(shapedPlus, () => {
     if (drone.remainingCapacity >= ShapedBomb.weight) {
       drone.addBomb(ShapedBomb);
@@ -82,27 +85,38 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
       drone.remainingCapacity = calculateRemainingCapacity(drone);
     }
   });
+  document.getElementById("shapedBombWeight").textContent =
+    Math.round(ShapedBomb.weight * 1000) + "г.";
+  // протиміхотна міна
+  addClickAndTouch(footMinePlus, () => {
+    if (drone.remainingCapacity >= FootMine.weight) {
+      drone.addBomb(FootMine);
+      calculateRemainingCapacity(drone);
+    }
+  });
 
+  addClickAndTouch(footMineMinus, () => {
+    if (drone.bombStorage.footMine.length > 0) {
+      drone.bombStorage.footMine.pop();
+      drone.remainingCapacity = calculateRemainingCapacity(drone);
+    }
+  });
+  document.getElementById("footMineWeight").textContent =
+    Math.round(FootMine.weight * 1000) + "г.";
+  // характеристики дронів
   document.getElementById("remainingDroneWeight").textContent = Math.round(
     drone.remainingCapacity * 1000
   );
   document.getElementById("droneWeight").textContent = Math.round(
     drone.capacity * 1000
   );
-
   document.getElementById("hangers").textContent = Math.round(drone.hangers);
   document.getElementById("initialHangers").textContent = Math.round(
     drone.initialHangers
   );
   document.getElementById("droneSpeed").textContent = drone.speed * 10;
   document.getElementById("droneHP").textContent = drone.hp;
-  document.getElementById("fragBombWeight").textContent =
-    Math.round(FragBomb.weight * 1000) + "г.";
-  document.getElementById("heBombWeight").textContent =
-    Math.round(HeBomb.weight * 1000) + "г.";
-  document.getElementById("shapedBombWeight").textContent =
-    Math.round(ShapedBomb.weight * 1000) + "г.";
-
+  // допоміжні функції
   function calculateRemainingCapacity(drone) {
     const bombWeight =
       drone.bombStorage.frag.length * FragBomb.weight +

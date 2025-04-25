@@ -5,6 +5,8 @@ export let heBombIcon = new Image();
 heBombIcon.src = `${basePath}assets/img/bombs/heBombIcon.png`;
 export let shapedBombIcon = new Image();
 shapedBombIcon.src = `${basePath}assets/img/bombs/shapedBombIcon.png`;
+export let footMineIcon = new Image();
+footMineIcon.src = `${basePath}assets/img/bombs/footMineIcon.png`;
 export const changeArrowImage = new Image();
 changeArrowImage.src = `${basePath}assets/img/bombs/changeArrow.png`;
 
@@ -12,6 +14,7 @@ export const bombTypes = [
   { type: "frag", icon: fragBombIcon },
   { type: "he", icon: heBombIcon },
   { type: "shaped", icon: shapedBombIcon },
+  { type: "footMine", icon: footMineIcon },
 ];
 class DroneIcons {
   constructor(canvas, ctx, dronePosition, drone) {
@@ -30,6 +33,7 @@ class DroneIcons {
   }
 
   draw() {
+    // малюємо дрон
     this.ctx.globalAlpha = this.drone.isActive ? 1 : 0.5;
     this.ctx.fillStyle = "rgba(234, 234, 234, 0.3)";
     this.ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -47,7 +51,7 @@ class DroneIcons {
         this.width
       );
     }
-
+    // малюємо бомби
     if (!this.drone.isReloading && this.drone.isAlive) {
       let currentOffset = 0;
       bombTypes.forEach(({ type, icon }) => {

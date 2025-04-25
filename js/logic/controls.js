@@ -3,6 +3,7 @@ import {
   fragBombIcon,
   heBombIcon,
   shapedBombIcon,
+  footMineIcon,
   changeArrowImage,
 } from "../gameElements/droneIcons.js";
 let joystickVisible = false;
@@ -10,6 +11,7 @@ const bombIcons = {
   frag: fragBombIcon,
   he: heBombIcon,
   shaped: shapedBombIcon,
+  footMine: footMineIcon,
 };
 
 // СТАН КЛАВІШ (клавіатура)
@@ -21,7 +23,7 @@ export const keys = {
 };
 // СТАН ВИБОРУ ДРОНІВ І БОМБ
 export const selectionState = {
-  bombTypes: ["frag", "he", "shaped"],
+  bombTypes: ["frag", "he", "shaped", "footMine"],
   selectedBombIndex: 0,
   selectedBombType: "frag",
   selectedDroneIndex: 0,

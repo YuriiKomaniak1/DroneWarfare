@@ -1,5 +1,5 @@
 export class Minimap {
-  constructor(canvas, enemies, vehicles, ctx, layer) {
+  constructor(canvas, enemies, vehicles, ctx, layer, bombs) {
     this.layer = layer;
     this.width = Math.max(canvas.width / 5, 100);
     this.height = (this.width / this.layer.width) * this.layer.height;
@@ -12,6 +12,7 @@ export class Minimap {
     this.canvasWidth = canvas.width;
     this.canvasHeight = canvas.height;
     this.vehicles = vehicles;
+    this.bombs = bombs;
   }
   draw() {
     // Фон мінікарти
@@ -81,7 +82,23 @@ export class Minimap {
         }
       }
     });
-
+    this.bombs.forEach((bomb) => {
+      if (bomb.deployed) {
+        let tempX = this.mapX + (bomb.x - this.layer.x) * this.scaleX;
+        let tempY = this.mapY + (bomb.y - this.layer.y) * this.scaleY;
+        if (
+          tempX > this.mapX &&
+          tempX < this.mapX + this.width &&
+          tempY > this.mapY &&
+          tempY < this.mapY + this.height
+        ) {
+          if (bomb.type === "footMine") {
+            this.ctx.fillStyle = "rgb(233, 230, 230)";
+            this.ctx.fillRect(tempX, tempY, 2, 2);
+          }
+        }
+      }
+    });
     // рамка
     this.ctx.strokeStyle = "white";
     this.ctx.strokeRect(this.mapX, this.mapY, this.width, this.height);

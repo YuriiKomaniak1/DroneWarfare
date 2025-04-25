@@ -9,23 +9,59 @@
   <body>
     <div class="container">
       <h2>Ігрові бали <span class="score">1</span></h2>
+      <!--  вікно відкриття нових технологій -->
       <h3>Відкриття технологій</h3>
+
       <div id="open-container">
         <div class="upgrade-box" id="mediumDroneUB">
           <h4 class="middleDroneOpenCost upgrade-cost">1</h4>
           <div id="medium_drone_image" class="medium_drone_image"></div>
-          <p>середній дрон</p>
+          <p>
+            середній<br />
+            дрон
+          </p>
         </div>
+
         <div class="upgrade-box" id="bigDroneUB">
           <h4 class="bigDroneOpenCost upgrade-cost">1</h4>
           <div id="big_drone_image" class="big_drone_image"></div>
-          <p>великий дрон</p>
+          <p>
+            великий <br />
+            дрон
+          </p>
+        </div>
+
+        <div class="upgrade-box" id="slot4UB">
+          <h4 class="slot4OpenCost upgrade-cost">1</h4>
+          <div id="slot4_image" class="slot4_image"></div>
+          <p>
+            четвертий <br />
+            дрон
+          </p>
+        </div>
+
+        <div class="upgrade-box" id="slot5UB">
+          <h4 class="slot5OpenCost upgrade-cost">1</h4>
+          <div id="slot5_image" class="slot5_image"></div>
+          <p>
+            п'ятий <br />
+            дрон
+          </p>
+        </div>
+
+        <div class="upgrade-box" id="footMineUB">
+          <h4 class="footMineOpenCost upgrade-cost">1</h4>
+          <div id="footMine_image" class="footMine_image"></div>
+          <p>
+            протипіхотна <br />
+            міна
+          </p>
         </div>
       </div>
+      <!--  вікно прокачки існуючих технологій -->
       <h3>Апгрейд технологій</h3>
-
       <div id="upgrade-container"></div>
-
+      <!--  кнопка назад до брифінгу-->
       <div class="button-panel">
         <button id="back-button" class="briefing-button">Назад</button>
       </div>
@@ -76,6 +112,60 @@
         </ul>
         <div class="button-panel">
           <button id="bigDroneOpen" class="briefing-button">Дослідити</button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка відкриття 4 слоту -->
+    <div id="slot4OpenModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Четвертий слот для дрона</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="slot4_image"></div>
+        <h3>Вартість дослідження <span class="slot4OpenCost">1</span></h3>
+        <p>
+          Пілся цього дослідження вам буде доступний до спорядження четвертий
+          дрон
+        </p>
+        <div class="button-panel">
+          <button id="slot4Open" class="briefing-button">Дослідити</button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка відкриття 5 слоту -->
+    <div id="slot5OpenModal" class="upgrade-modal">
+      <div class="container">
+        <h2>П'ятий слот для дрона</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="slot5_image"></div>
+        <h3>Вартість дослідження <span class="slot5OpenCost">1</span></h3>
+        <p>
+          Пілся цього дослідження вам буде доступний до спорядження п'ятий дрон
+        </p>
+        <div class="button-panel">
+          <button id="slot5Open" class="briefing-button">Дослідити</button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка відкриття протипіхотної міни -->
+    <div id="footMineOpenModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Протипіхотна міна</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="footMine_image"></div>
+        <h3>Вартість дослідження <span class="footMineOpenCost">1</span></h3>
+        <p>
+          Протипіхотна міна скидається з дрону на землю. Вона активується при
+          наступі піхотинця на неї. Також міна має шанс зупинити колісну
+          неброньовану техніку.
+        </p>
+        <div class="button-panel">
+          <button id="footMineOpen" class="briefing-button">Дослідити</button>
           <button class="back-button briefing-button">Назад</button>
         </div>
       </div>

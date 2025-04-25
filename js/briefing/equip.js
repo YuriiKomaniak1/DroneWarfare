@@ -5,18 +5,16 @@ import { SmallDrone, MediumDrone, BigDrone } from "../drones/drones.js";
 const gameData = JSON.parse(localStorage.getItem("gameData"));
 gameState.updateDrones(gameData, SmallDrone, MediumDrone, BigDrone);
 gameState.updateData(gameData);
-
+// ініціалізація canvas
 const canvas = document.getElementById("equipDroneCanvas");
 canvas.width = 120;
 canvas.height = 160;
 const ctx = canvas.getContext("2d");
-
+// витягуємо індекс дрона з localStorage
 const droneIndex = localStorage.getItem("droneToEquip");
-
 document.getElementById("drone_number").textContent = parseInt(droneIndex) + 1;
 
 let drone = null;
-
 if (droneIndex !== null) {
   drone = gameState.drones[parseInt(droneIndex)];
 } else {
@@ -26,7 +24,7 @@ setupEquipButtons(drone, gameData, gameState, droneIndex);
 
 const droneicon = new BriefingDrones(canvas, ctx, drone, 100, 10, 10, true);
 
-// Кнопки
+// Кнопка "Повернутись"
 document.getElementById("back-button").addEventListener("click", () => {
   drone.initialBombStorage = drone.cloneBombStorage(drone.bombStorage);
   gameState.rememberDrone(gameData, droneIndex);
@@ -34,6 +32,7 @@ document.getElementById("back-button").addEventListener("click", () => {
   localStorage.setItem("gameData", JSON.stringify(gameData));
   window.location.href = "briefing.html";
 });
+// анімація дронів
 let lastTime = 0;
 function animate(timestamp) {
   const deltaTime = timestamp - lastTime;

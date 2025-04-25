@@ -23,6 +23,29 @@ body {
   background-position: 100% 0%; /* Лівий верхній кут */
 }
 
+.slot4_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/upgrades/4.png");
+  background-size: cover;
+}
+
+.slot5_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/upgrades/5.png");
+  background-size: cover;
+}
+
+.footMine_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/footMineIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .upgrade-box {
   display: flex;
   flex-direction: column;
@@ -32,6 +55,8 @@ body {
   border-radius: 5px;
   font-size: 9px;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.45);
+  text-align: center;
+  padding: 3px;
 }
 .upgrade-cost {
   font-size: 14px;
@@ -64,4 +89,20 @@ body {
 
 #bigDroneOpenModal {
   visibility: hidden;
+}
+
+#slot4OpenModal {
+  visibility: hidden;
+}
+
+#slot5OpenModal {
+  visibility: hidden;
+}
+
+#footMineOpenModal {
+  visibility: hidden;
+}
+
+.score {
+  color: rgb(178, 192, 178);
 }
