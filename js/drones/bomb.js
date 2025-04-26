@@ -1,5 +1,9 @@
 import { basePath } from "../utils/basePath.js";
-import { footMineIcon } from "../gameElements/droneIcons.js";
+import {
+  footMineIcon,
+  tankMineIcon,
+  magnetMineIcon,
+} from "../gameElements/droneIcons.js";
 export const fragBombImage = new Image();
 fragBombImage.src = `${basePath}assets/img/bombs/fragBomb.png`;
 export const heBombImage = new Image();
@@ -8,6 +12,10 @@ export const shapedBombImage = new Image();
 shapedBombImage.src = `${basePath}assets/img/bombs/shapedBomb.png`;
 export const footMineImage = new Image();
 footMineImage.src = `${basePath}assets/img/bombs/footMine.png`;
+export const tankMineImage = new Image();
+tankMineImage.src = `${basePath}assets/img/bombs/tankMine.png`;
+export const magnetMineImage = new Image();
+magnetMineImage.src = `${basePath}assets/img/bombs/magnetMine.png`;
 let imageExplosion = new Image();
 imageExplosion.src = `${basePath}assets/img/bombs/smallExplosion.png`;
 
@@ -43,6 +51,7 @@ export class Bomb {
     this.deployed = false;
     this.class = "bomb";
     this.wheelWidth = 0.4;
+    this.randomRotation = Math.random() * Math.PI * 2;
   }
 
   drop() {
@@ -100,7 +109,11 @@ export class Bomb {
 
       this.explosionFrame++;
     } else if (this.deployed) {
-      this.ctx.drawImage(this.mineImage, this.x - 2, this.y - 4, 8, 8);
+      this.ctx.save();
+      this.ctx.translate(this.x, this.y);
+      this.ctx.rotate(this.randomRotation);
+      this.ctx.drawImage(this.mineImage, -3, -6, 6, 12); // малюємо з центру
+      this.ctx.restore();
       this.x += this.layer.speedX;
       this.y += this.layer.speedY;
     }
@@ -225,6 +238,21 @@ export class Bomb {
       return vehicle;
     }
   }
+  checkArmorPenetration(vehicle) {
+    let success = true;
+    for (let i = 0; i < vehicle.armor; i++) {
+      if (Math.random() > this.armorPenetration) {
+        success = false;
+        break;
+      }
+    }
+    if (success) {
+      vehicle.isBurning = true;
+      vehicle.bailOut();
+      vehicle.isMoving = false;
+    }
+    return vehicle;
+  }
 }
 
 // осколкова бомба
@@ -308,7 +336,7 @@ export class HeBomb extends Bomb {
     if (vehicle.armor === 0) {
       if (this.distanceToVehicle(0, vehicle)) {
         vehicle.isBurning = true;
-      } else if (this.distanceToVehicle(40, vehicle) && Math.random() > 0.2) {
+      } else if (this.distanceToVehicle(40, vehicle) && Math.random() > 0.3) {
         vehicle.isStopped = true;
       }
     } else if (
@@ -349,20 +377,9 @@ export class ShapedBomb extends Bomb {
   }
   checkVehicleCollision(vehicle) {
     if (this.distanceToVehicle(0, vehicle)) {
-      let success = true;
-      for (let i = 0; i < vehicle.armor; i++) {
-        if (Math.random() > this.armorPenetration) {
-          success = false;
-          break;
-        }
-      }
-      if (success) {
-        vehicle.isBurning = true;
-        vehicle.bailOut();
-        vehicle.isMoving = false;
-      }
-      return vehicle;
+      this.checkArmorPenetration(vehicle);
     }
+    return vehicle;
   }
 }
 
@@ -377,7 +394,7 @@ export class FootMine extends Bomb {
     this.explosionScale = 20;
     this.mineImage = footMineIcon;
     this.class = "mine";
-    this.spread = 3;
+    this.spread = 3.5;
     this.type = this.constructor.type;
   }
   checkMineCollision(enemy) {
@@ -392,10 +409,93 @@ export class FootMine extends Bomb {
         vehicle.isStopped = true;
         vehicle.bailOut();
         vehicle.isMoving = false;
-        console.log(vehicle.isStopped);
       }
       return vehicle;
     }
+  }
+}
+
+// фугасна міна
+export class TankMine extends Bomb {
+  static weight = 0.6;
+  static type = "tankMine";
+  constructor(x, y, layer, ctx) {
+    super(x, y, layer, ctx);
+    this.image = tankMineImage;
+    this.imageExplosion = imageExplosion;
+    this.explosionScale = 100;
+    this.mineImage = tankMineIcon;
+    this.class = "mine";
+    this.spread = 3.5;
+    this.type = this.constructor.type;
+  }
+  checkMineCollision(enemy) {
+    return false;
+  }
+  checkMineEffect(vehicle) {
+    if (this.checkMineUnderWheels(vehicle)) {
+      this.exploded = true;
+      this.deployed = false;
+      if (vehicle.armor === 0 || Math.random() > 0.5 + vehicle.armor / 10) {
+        vehicle.isBurning = true;
+        vehicle.bailOut();
+        vehicle.isMoving = false;
+      } else if (Math.random() > vehicle.armor / 12) {
+        vehicle.isStopped = true;
+        vehicle.bailOut();
+        vehicle.isMoving = false;
+      }
+      return vehicle;
+    }
+  }
+}
+// магнітна міна
+export class MagnetMine extends Bomb {
+  static weight = 1.6;
+  static type = "magnetMine";
+  constructor(x, y, layer, ctx) {
+    super(x, y, layer, ctx);
+    this.image = magnetMineImage;
+    this.imageExplosion = imageExplosion;
+    this.explosionScale = 50;
+    this.mineImage = magnetMineIcon;
+    this.class = "mine";
+    this.spread = 3.5;
+    this.type = this.constructor.type;
+    this.armorPenetration = 0.95;
+  }
+  checkMineCollision(enemy) {
+    return false;
+  }
+  checkMineUnderWheels(vehicle) {
+    // 1. Обчислюємо зсув міни відносно центра машини
+    const dx = this.x - vehicle.x;
+    const dy = this.y - vehicle.y;
+
+    // 2. Обертаємо назад (вирівнюємо машину)
+    const cos = Math.cos(-vehicle.rotation);
+    const sin = Math.sin(-vehicle.rotation);
+
+    const localX = dx * cos - dy * sin;
+    const localY = dx * sin + dy * cos;
+
+    // 3. Параметри машини
+    const halfWidth = ((vehicle.width * vehicle.scale) / 2) * 0.95;
+    const halfHeight = ((vehicle.height * vehicle.scale) / 2) * 0.95;
+
+    // 4. Перевірка:
+    const isInsideLength = Math.abs(localY) <= halfHeight;
+    const isInsideWidth = Math.abs(localX) <= halfWidth;
+
+    return isInsideLength && isInsideWidth;
+  }
+  checkMineEffect(vehicle) {
+    if (this.checkMineUnderWheels(vehicle)) {
+      this.exploded = true;
+      this.deployed = false;
+      this.checkArmorPenetration(vehicle);
+    }
+    return vehicle;
   }
 }
 
@@ -411,7 +511,7 @@ export function dropBomb(
     console.warn("🚨 Немає активного дрона!");
     return;
   }
-
+  2;
   let bombArray = null;
   let newBomb = null;
   const x = droneScope.x + droneScope.width / 2;
@@ -433,6 +533,14 @@ export function dropBomb(
     case "footMine":
       bombArray = currentDrone.bombStorage.footMine;
       newBomb = new FootMine(x, y, layer1, ctx);
+      break;
+    case "tankMine":
+      bombArray = currentDrone.bombStorage.tankMine;
+      newBomb = new TankMine(x, y, layer1, ctx);
+      break;
+    case "magnetMine":
+      bombArray = currentDrone.bombStorage.magnetMine;
+      newBomb = new MagnetMine(x, y, layer1, ctx);
       break;
   }
 

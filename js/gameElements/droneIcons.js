@@ -7,6 +7,10 @@ export let shapedBombIcon = new Image();
 shapedBombIcon.src = `${basePath}assets/img/bombs/shapedBombIcon.png`;
 export let footMineIcon = new Image();
 footMineIcon.src = `${basePath}assets/img/bombs/footMineIcon.png`;
+export let tankMineIcon = new Image();
+tankMineIcon.src = `${basePath}assets/img/bombs/tankMineIcon.png`;
+export let magnetMineIcon = new Image();
+magnetMineIcon.src = `${basePath}assets/img/bombs/magnetMineIcon.png`;
 export const changeArrowImage = new Image();
 changeArrowImage.src = `${basePath}assets/img/bombs/changeArrow.png`;
 
@@ -15,6 +19,8 @@ export const bombTypes = [
   { type: "he", icon: heBombIcon },
   { type: "shaped", icon: shapedBombIcon },
   { type: "footMine", icon: footMineIcon },
+  { type: "tankMine", icon: tankMineIcon },
+  { type: "magnetMine", icon: magnetMineIcon },
 ];
 class DroneIcons {
   constructor(canvas, ctx, dronePosition, drone) {

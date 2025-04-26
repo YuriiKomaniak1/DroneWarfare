@@ -24,12 +24,16 @@ class Drone {
       he: [],
       shaped: [],
       footMine: [],
+      tankMine: [],
+      magnetMine: [],
     };
     this.bombStorage = {
       frag: [],
       he: [],
       shaped: [],
       footMine: [],
+      tankMine: [],
+      magnetMine: [],
     };
     this.reloadingTime = 1000 * 60 * 1;
     this.reloadStartTime = null;
@@ -204,6 +208,8 @@ class Drone {
       he: [...storage.he],
       shaped: [...storage.shaped],
       footMine: [...storage.footMine],
+      tankMine: [...storage.tankMine],
+      magnetMine: [...storage.magnetMine],
     };
   }
 }

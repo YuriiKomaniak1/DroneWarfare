@@ -473,7 +473,10 @@ export class Vehicle {
             this.navigaionsGrid,
             { x: enemy.baseX, y: enemy.baseY },
             {
-              x: this.waypoints[this.waypoints.length - 1].x,
+              x:
+                this.waypoints[this.waypoints.length - 1].x +
+                Math.random() * 100 -
+                50,
               y: this.waypoints[this.waypoints.length - 1].y,
             }
           );

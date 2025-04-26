@@ -46,6 +46,24 @@ body {
   background-position: center;
 }
 
+.tankMine_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/tankMineIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.magnetMine_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/magnetMineIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .upgrade-box {
   display: flex;
   flex-direction: column;
@@ -100,6 +118,14 @@ body {
 }
 
 #footMineOpenModal {
+  visibility: hidden;
+}
+
+#tankMineOpenModal {
+  visibility: hidden;
+}
+
+#magnetMineOpenModal {
   visibility: hidden;
 }
 

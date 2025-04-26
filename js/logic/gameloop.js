@@ -50,6 +50,7 @@ export function createAnimationLoop(
   setupTouchControls(() => {
     dropBomb(currentDrone, selectionState, layer1, ctx, droneScope, bombs);
   }, canvas);
+  console.log("gameState", gameState);
 
   function animate(timestamp) {
     const deltaTime = timestamp - lastTime;

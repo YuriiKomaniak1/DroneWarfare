@@ -10,6 +10,8 @@ const bigDroneOpenCost = 8000 + gameData.upgradeGap;
 const slot4OpenCost = 5000 + gameData.upgradeGap;
 const slot5OpenCost = 9000 + gameData.upgradeGap;
 const footMineOpenCost = 1000 + gameData.upgradeGap;
+const tankMineOpenCost = 3000 + gameData.upgradeGap;
+const magnetMineOpenCost = 5000 + gameData.upgradeGap;
 
 // присвоєння цін в HTML
 document.querySelectorAll(".middleDroneOpenCost").forEach((el) => {
@@ -26,6 +28,12 @@ document.querySelectorAll(".slot5OpenCost").forEach((el) => {
 });
 document.querySelectorAll(".footMineOpenCost").forEach((el) => {
   el.textContent = footMineOpenCost;
+});
+document.querySelectorAll(".tankMineOpenCost").forEach((el) => {
+  el.textContent = tankMineOpenCost;
+});
+document.querySelectorAll(".magnetMineOpenCost").forEach((el) => {
+  el.textContent = magnetMineOpenCost;
 });
 // Модалка відкриття середнього дрону
 document.getElementById("medium_drone_image").addEventListener("click", () => {
@@ -91,6 +99,31 @@ document.getElementById("footMineOpen").addEventListener("click", () => {
 });
 if (gameData.footMineAvailable)
   document.getElementById("footMineUB").style.display = "none";
+// Модалка відкриття фугасної міни
+document.getElementById("tankMine_image").addEventListener("click", () => {
+  document.getElementById("tankMineOpenModal").style.visibility = "visible";
+});
+document.getElementById("tankMineOpen").addEventListener("click", () => {
+  if (!gameData.tankMineAvailable && gameData.score >= tankMineOpenCost) {
+    gameData.tankMineAvailable = true;
+    upgradeRoutine(tankMineOpenCost, ".tankMineOpenCost");
+  }
+});
+if (gameData.tankMineAvailable)
+  document.getElementById("tankMineUB").style.display = "none";
+
+// Модалка відкриття магнітної міни
+document.getElementById("magnetMine_image").addEventListener("click", () => {
+  document.getElementById("magnetMineOpenModal").style.visibility = "visible";
+});
+document.getElementById("magnetMineOpen").addEventListener("click", () => {
+  if (!gameData.magnetMineAvailable && gameData.score >= magnetMineOpenCost) {
+    gameData.magnetMineAvailable = true;
+    upgradeRoutine(magnetMineOpenCost, ".magnetMineOpenCost");
+  }
+});
+if (gameData.magnetMineAvailable)
+  document.getElementById("magnetMineUB").style.display = "none";
 
 // вихід з модалки
 document.querySelectorAll(".back-button").forEach((el) => {

@@ -38,7 +38,6 @@ class GameState {
         }
       }
     });
-    console.log(gameData, gameState);
   }
   updateData(gameData) {
     this.score = gameData.score;
@@ -79,6 +78,8 @@ class GameData {
     this.slot4Available = false;
     this.slot5Available = false;
     this.footMineAvailable = false;
+    this.tankMineAvailable = false;
+    this.magnetMineAvailable = false;
     this.upgradeGap = 0;
     this.gapScale = 500;
   }

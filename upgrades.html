@@ -57,6 +57,24 @@
             міна
           </p>
         </div>
+
+        <div class="upgrade-box" id="tankMineUB">
+          <h4 class="tankMineOpenCost upgrade-cost">1</h4>
+          <div id="tankMine_image" class="tankMine_image"></div>
+          <p>
+            фугасна <br />
+            міна
+          </p>
+        </div>
+
+        <div class="upgrade-box" id="magnetMineUB">
+          <h4 class="magnetMineOpenCost upgrade-cost">1</h4>
+          <div id="magnetMine_image" class="magnetMine_image"></div>
+          <p>
+            магнітна <br />
+            міна
+          </p>
+        </div>
       </div>
       <!--  вікно прокачки існуючих технологій -->
       <h3>Апгрейд технологій</h3>
@@ -162,10 +180,50 @@
         <p>
           Протипіхотна міна скидається з дрону на землю. Вона активується при
           наступі піхотинця на неї. Також міна має шанс зупинити колісну
-          неброньовану техніку.
+          неброньовану техніку. Вага 80г.
         </p>
         <div class="button-panel">
           <button id="footMineOpen" class="briefing-button">Дослідити</button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка відкриття фугасної міни -->
+    <div id="tankMineOpenModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Фугасна міна</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="tankMine_image"></div>
+        <h3>Вартість дослідження <span class="tankMineOpenCost">1</span></h3>
+        <p>
+          Активується при наїзді на неї техніки колесом або траком. Гарантовано
+          знищує неброньовану технікую. Непогано знищує або зупиняє
+          легкоброньовану техніку. З важкою бронетехнікою має дуже малі шанси
+          впоратись. Вага 600г.
+        </p>
+        <div class="button-panel">
+          <button id="tankMineOpen" class="briefing-button">Дослідити</button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка відкриття магнітної міни -->
+    <div id="magnetMineOpenModal" class="upgrade-modal">
+      <div class="container">
+        <h2>магнітна міна</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="magnetMine_image"></div>
+        <h3>Вартість дослідження <span class="magnetMineOpenCost">1</span></h3>
+        <p>
+          Активується при проїзді техніки над нею або наїзді. Кумулятивним
+          струменем пропалює днище техніки і знищує її. Непогано справляєтья з
+          легко та середньоброньованою технікою, а після апгрейдів - і з
+          важкоброньованою. Вага 1600г.
+        </p>
+        <div class="button-panel">
+          <button id="magnetMineOpen" class="briefing-button">Дослідити</button>
           <button class="back-button briefing-button">Назад</button>
         </div>
       </div>
