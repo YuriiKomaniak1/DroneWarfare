@@ -5,7 +5,7 @@ import { SmallDrone, MediumDrone, BigDrone } from "./drones/drones.js";
 const gameData = JSON.parse(localStorage.getItem("gameData"));
 gameState.updateDrones(gameData, SmallDrone, MediumDrone, BigDrone);
 gameState.updateData(gameData);
-
+console.log(gameState, gameData);
 const missionKey = "mission1"; // Сюди підставляється поточна місія
 document.getElementById("briefing-text").innerHTML = briefingText[missionKey];
 // Малюємо дронів та боєзапас

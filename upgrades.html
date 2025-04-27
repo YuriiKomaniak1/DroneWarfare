@@ -75,6 +75,24 @@
             міна
           </p>
         </div>
+
+        <div class="upgrade-box" id="shrapnelBombUB">
+          <h4 class="shrapnelBombOpenCost upgrade-cost">1</h4>
+          <div id="shrapnelBomb_image" class="shrapnelBomb_image"></div>
+          <p>
+            шрапнельна <br />
+            бомба
+          </p>
+        </div>
+
+        <div class="upgrade-box" id="clusterBombUB">
+          <h4 class="clusterBombOpenCost upgrade-cost">1</h4>
+          <div id="clusterBomb_image" class="clusterBomb_image"></div>
+          <p>
+            касетна <br />
+            бомба
+          </p>
+        </div>
       </div>
       <!--  вікно прокачки існуючих технологій -->
       <h3>Апгрейд технологій</h3>
@@ -224,6 +242,54 @@
         </p>
         <div class="button-panel">
           <button id="magnetMineOpen" class="briefing-button">Дослідити</button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка відкриття шрапнельної бомби -->
+    <div id="shrapnelBombOpenModal" class="upgrade-modal">
+      <div class="container">
+        <h2>шрапнельна бомба</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="shrapnelBomb_image"></div>
+        <h3>
+          Вартість дослідження <span class="shrapnelBombOpenCost">1</span>
+        </h3>
+        <p>
+          Ефективна проти піхоти . Вибухає в повітрі на висоті 4м. над землею,
+          розкидаючи осколки в радіусі 8м, тому вражає як бігаючу так і повзаючу
+          піхоту. Має шанс зупинити або знищити неброньовану техніку. Проти
+          бронетехніки безсилаю Вага 280г.
+        </p>
+
+        <div class="button-panel">
+          <button id="shrapnelBombOpen" class="briefing-button">
+            Дослідити
+          </button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка відкриття касетної бомби -->
+    <div id="clusterBombOpenModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Касетна бомба</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="clusterBomb_image"></div>
+        <h3>Вартість дослідження <span class="clusterBombOpenCost">1</span></h3>
+        <p>
+          Розкривається на висоті 50м над землею та викидає 25 фугасних снарядів
+          в радіусі 12м.Суббоєприпаси вибухають при падінні на землю. Радіус
+          вибуху суббоєприпасу 2м. В цьмоу радіусі він знищує піхоту та
+          неброньовану техніку. Має шанс знищити ао зупинити легкоброньовану
+          техніку. Вага 2000г.
+        </p>
+        <div class="button-panel">
+          <button id="clusterBombOpen" class="briefing-button">
+            Дослідити
+          </button>
           <button class="back-button briefing-button">Назад</button>
         </div>
       </div>

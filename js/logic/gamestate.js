@@ -70,7 +70,7 @@ class GameState {
 
 class GameData {
   constructor() {
-    this.score = 29600;
+    this.score = 59600;
     this.currentMission = "mission1";
     this.drones = [];
     this.mediumDroneAvailable = false;
@@ -80,6 +80,8 @@ class GameData {
     this.footMineAvailable = false;
     this.tankMineAvailable = false;
     this.magnetMineAvailable = false;
+    this.shrapnelMineAvailable = false;
+    this.clusterBombAvailable = false;
     this.upgradeGap = 0;
     this.gapScale = 500;
   }

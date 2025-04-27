@@ -96,6 +96,14 @@ export class Minimap {
             this.ctx.fillStyle = "rgb(233, 230, 230)";
             this.ctx.fillRect(tempX, tempY, 2, 2);
           }
+          if (bomb.type === "tankMine") {
+            this.ctx.fillStyle = "rgb(233, 230, 230)";
+            this.ctx.fillRect(tempX, tempY, 2, 3);
+          }
+          if (bomb.type === "tankMine") {
+            this.ctx.fillStyle = "rgb(233, 230, 230)";
+            this.ctx.fillRect(tempX, tempY, 3, 3);
+          }
         }
       }
     });

@@ -12,6 +12,8 @@ const slot5OpenCost = 9000 + gameData.upgradeGap;
 const footMineOpenCost = 1000 + gameData.upgradeGap;
 const tankMineOpenCost = 3000 + gameData.upgradeGap;
 const magnetMineOpenCost = 5000 + gameData.upgradeGap;
+const shrapnelBombOpenCost = 3000 + gameData.upgradeGap;
+const clusterBombOpenCost = 5000 + gameData.upgradeGap;
 
 // присвоєння цін в HTML
 document.querySelectorAll(".middleDroneOpenCost").forEach((el) => {
@@ -34,6 +36,12 @@ document.querySelectorAll(".tankMineOpenCost").forEach((el) => {
 });
 document.querySelectorAll(".magnetMineOpenCost").forEach((el) => {
   el.textContent = magnetMineOpenCost;
+});
+document.querySelectorAll(".shrapnelBombOpenCost").forEach((el) => {
+  el.textContent = shrapnelBombOpenCost;
+});
+document.querySelectorAll(".clusterBombOpenCost").forEach((el) => {
+  el.textContent = clusterBombOpenCost;
 });
 // Модалка відкриття середнього дрону
 document.getElementById("medium_drone_image").addEventListener("click", () => {
@@ -124,6 +132,33 @@ document.getElementById("magnetMineOpen").addEventListener("click", () => {
 });
 if (gameData.magnetMineAvailable)
   document.getElementById("magnetMineUB").style.display = "none";
+// Модалка відкриття шрапнельної бомби
+document.getElementById("shrapnelBomb_image").addEventListener("click", () => {
+  document.getElementById("shrapnelBombOpenModal").style.visibility = "visible";
+});
+document.getElementById("shrapnelBombOpen").addEventListener("click", () => {
+  if (
+    !gameData.shrapnelBombAvailable &&
+    gameData.score >= shrapnelBombOpenCost
+  ) {
+    gameData.shrapnelBombAvailable = true;
+    upgradeRoutine(shrapnelBombOpenCost, ".shrapnelBombOpenCost");
+  }
+});
+if (gameData.shrapnelBombAvailable)
+  document.getElementById("shrapnelBombUB").style.display = "none";
+// Модалка відкриття касетної бомби
+document.getElementById("clusterBomb_image").addEventListener("click", () => {
+  document.getElementById("clusterBombOpenModal").style.visibility = "visible";
+});
+document.getElementById("clusterBombOpen").addEventListener("click", () => {
+  if (!gameData.clusterBombAvailable && gameData.score >= clusterBombOpenCost) {
+    gameData.clusterBombAvailable = true;
+    upgradeRoutine(clusterBombOpenCost, ".clusterBombOpenCost");
+  }
+});
+if (gameData.clusterBombAvailable)
+  document.getElementById("clusterBombUB").style.display = "none";
 
 // вихід з модалки
 document.querySelectorAll(".back-button").forEach((el) => {

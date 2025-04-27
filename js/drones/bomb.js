@@ -16,8 +16,16 @@ export const tankMineImage = new Image();
 tankMineImage.src = `${basePath}assets/img/bombs/tankMine.png`;
 export const magnetMineImage = new Image();
 magnetMineImage.src = `${basePath}assets/img/bombs/magnetMine.png`;
+export const shrapnelBombImage = new Image();
+shrapnelBombImage.src = `${basePath}assets/img/bombs/shrapnelBomb.png`;
+export const clusterBombImage = new Image();
+clusterBombImage.src = `${basePath}assets/img/bombs/clusterBomb.png`;
 let imageExplosion = new Image();
-imageExplosion.src = `${basePath}assets/img/bombs/smallExplosion.png`;
+imageExplosion.src = `${basePath}assets/img/effects/smallExplosion.png`;
+let shrapnelExplosion = new Image();
+shrapnelExplosion.src = `${basePath}assets/img/effects/shrapnelExplosion.png`;
+let clusterExplosion = new Image();
+clusterExplosion.src = `${basePath}assets/img/effects/vehicleExplosion.png`;
 
 import { switchToNextAvailableBomb } from "../logic/controls.js";
 export class Bomb {
@@ -52,9 +60,10 @@ export class Bomb {
     this.class = "bomb";
     this.wheelWidth = 0.4;
     this.randomRotation = Math.random() * Math.PI * 2;
+    this.clusterDropped = false;
   }
 
-  drop() {
+  drop(bombs, layer1) {
     if (!this.exploded && !this.deployed) {
       this.velocityX *= this.friction ** 2;
       this.velocityY *= this.friction ** 2;
@@ -74,8 +83,18 @@ export class Bomb {
         if (this.class == "bomb") this.exploded = true;
         if (this.class == "mine") this.deployed = true;
       }
+      if (
+        this.type === "cluster" &&
+        this.scale <= this.initialScale * 0.3 &&
+        !this.clusterDropped
+      ) {
+        this.exploded = true;
+        this.dropClusterBombs(bombs, layer1);
+        this.clusterDropped = true;
+      }
     }
   }
+
   draw() {
     if (!this.exploded && !this.deployed) {
       this.ctx.drawImage(
@@ -277,7 +296,7 @@ export class FragBomb extends Bomb {
       } else if (distance < 50 && !enemy.crawl) {
         if (Math.random() > 0.3) hitStatus = true;
       } else if (distance < 90 && !enemy.crawl) {
-        if (Math.random() > 0.4) hitStatus = true;
+        if (Math.random() > 0.5) hitStatus = true;
       } else if (distance < 140 && !enemy.crawl) {
         if (Math.random() > 0.9) hitStatus = true;
       }
@@ -498,6 +517,169 @@ export class MagnetMine extends Bomb {
     return vehicle;
   }
 }
+// шрапнельна бомба
+export class ShrapnelBomb extends Bomb {
+  static weight = 0.28;
+  static type = "shrapnel";
+  constructor(x, y, layer, ctx) {
+    super(x, y, layer, ctx);
+    this.image = shrapnelBombImage;
+    this.imageExplosion = shrapnelExplosion;
+    this.explosionScale = 260;
+    this.type = this.constructor.type;
+    this.imageWidth = 750;
+    this.imageHeight = 750;
+    this.frames = 9;
+  }
+
+  checkCollision(enemy) {
+    const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
+    let hitStatus = false;
+    if (!enemy.vehicle) {
+      if (distance < 40) {
+        if (Math.random() > 0.2) hitStatus = true;
+      } else if (distance < 50) {
+        if (Math.random() > 0.3) hitStatus = true;
+      } else if (distance < 80) {
+        if (Math.random() > 0.6) hitStatus = true;
+      } else if (distance < 120) {
+        if (Math.random() > 0.7) hitStatus = true;
+      } else if (distance < 160) {
+        if (Math.random() > 0.8) hitStatus = true;
+      }
+    } else if (enemy.vehicle.armor === 0) {
+      if (distance < 40) {
+        if (Math.random() > 0.8) hitStatus = true;
+      } else if (distance < 70) {
+        if (Math.random() > 0.85) hitStatus = true;
+      } else if (distance < 110) {
+        if (Math.random() > 0.9) hitStatus = true;
+      }
+    }
+    return hitStatus;
+  }
+  checkVehicleCollision(vehicle) {
+    if (vehicle.armor === 0) {
+      if (this.distanceToVehicle(10, vehicle) && Math.random() > 0.85) {
+        vehicle.isBurning = true;
+      } else if (this.distanceToVehicle(50, vehicle) && Math.random() > 0.75) {
+        vehicle.isStopped = true;
+      }
+      if (vehicle.isBurning || vehicle.isStopped) {
+        vehicle.bailOut();
+        vehicle.isMoving = false;
+      }
+
+      return vehicle;
+    }
+  }
+}
+// кластерна амуніція
+export class ClusterMunition extends Bomb {
+  static weight = 0.1;
+  static type = "clusterMunition";
+  constructor(x, y, layer, ctx) {
+    super(x, y, layer, ctx);
+    this.image = heBombImage;
+    this.imageExplosion = imageExplosion;
+    this.explosionScale = 60;
+    this.scale = 0.3;
+    this.shrinkRate = 1.003;
+  }
+  drop() {
+    if (!this.exploded && !this.deployed) {
+      // додатково рухаємо по заданій швидкості
+
+      this.x +=
+        this.layer.speedX -
+        this.velocityX +
+        (Math.random() * this.spread - this.spread / 2);
+      this.y +=
+        this.layer.speedY -
+        this.velocityY +
+        (Math.random() * this.spread - this.spread / 2);
+
+      this.scale /= this.shrinkRate;
+
+      if (this.scale <= this.initialScale * 0.05) {
+        if (this.class == "bomb") this.exploded = true;
+        if (this.class == "mine") this.deployed = true;
+      }
+    }
+  }
+  checkCollision(enemy) {
+    let hitStatus = false;
+    const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
+    if (!enemy.vehicle) {
+      hitStatus = distance < 44;
+    } else if (enemy.vehicle.armor === 0) {
+      if (distance < 44) {
+        if (Math.random() > 0.7) hitStatus = true;
+      }
+    }
+    return hitStatus;
+  }
+  checkVehicleCollision(vehicle) {
+    if (vehicle.armor === 0) {
+      if (this.distanceToVehicle(0, vehicle)) {
+        vehicle.isBurning = true;
+      } else if (this.distanceToVehicle(32, vehicle) && Math.random() > 0.3) {
+        vehicle.isStopped = true;
+      }
+    } else if (
+      this.distanceToVehicle(20, vehicle) &&
+      Math.random() > 0.5 + vehicle.armor / 9
+    ) {
+      vehicle.isStopped = true;
+    }
+
+    if (vehicle.isBurning || vehicle.isStopped) {
+      vehicle.bailOut();
+      vehicle.isMoving = false;
+    }
+    return vehicle;
+  }
+}
+// кластерна бомба
+export class ClusterBomb extends Bomb {
+  static weight = 2.0;
+  static type = "cluster";
+  constructor(x, y, layer, ctx) {
+    super(x, y, layer, ctx);
+    this.image = clusterBombImage;
+    this.imageExplosion = clusterExplosion;
+    this.explosionScale = 120;
+    this.type = this.constructor.type;
+    this.imageWidth = 250;
+    this.imageHeight = 250;
+    this.frames = 9;
+  }
+  dropClusterBombs(bombs, layer1) {
+    for (let i = 0; i < 25; i++) {
+      const delay = Math.random() * 1500; // випадкова затримка до 0.5 секунди
+
+      setTimeout(() => {
+        const theta = Math.random() * 2 * Math.PI; // випадковий напрямок
+        const speed = 0.25 + Math.random() * 0.5; // швидкість від 2 до 6
+
+        const bomb = new ClusterMunition(this.x, this.y, this.layer, this.ctx);
+
+        // додаємо швидкість у випадковому напрямку
+        bomb.velocityX = Math.cos(theta) * speed;
+        bomb.velocityY = Math.sin(theta) * speed;
+
+        bombs.push(bomb);
+      }, delay);
+    }
+  }
+
+  checkCollision(enemy) {
+    return false;
+  }
+  checkVehicleCollision(vehicle) {
+    return vehicle;
+  }
+}
 
 export function dropBomb(
   currentDrone,
@@ -541,6 +723,14 @@ export function dropBomb(
     case "magnetMine":
       bombArray = currentDrone.bombStorage.magnetMine;
       newBomb = new MagnetMine(x, y, layer1, ctx);
+      break;
+    case "shrapnel":
+      bombArray = currentDrone.bombStorage.shrapnel;
+      newBomb = new ShrapnelBomb(x, y, layer1, ctx);
+      break;
+    case "cluster":
+      bombArray = currentDrone.bombStorage.cluster;
+      newBomb = new ClusterBomb(x, y, layer1, ctx);
       break;
   }
 

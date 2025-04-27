@@ -5,6 +5,8 @@ import {
   FootMine,
   TankMine,
   MagnetMine,
+  ShrapnelBomb,
+  ClusterBomb,
 } from "../drones/bomb.js";
 import { SmallDrone, MediumDrone, BigDrone } from "../drones/drones.js";
 
@@ -25,6 +27,10 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
   const tankMineMinus = document.getElementById("tankMineMinus");
   const magnetMinePlus = document.getElementById("magnetMinePlus");
   const magnetMineMinus = document.getElementById("magnetMineMinus");
+  const shrapnelBombPlus = document.getElementById("shrapnelBombPlus");
+  const shrapnelBombMinus = document.getElementById("shrapnelBombMinus");
+  const clusterBombPlus = document.getElementById("clusterBombPlus");
+  const clusterBombMinus = document.getElementById("clusterBombMinus");
 
   // ховаємо невідкриті бомби
   if (!gameData.footMineAvailable) {
@@ -35,6 +41,12 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
   }
   if (!gameData.magnetMineAvailable) {
     document.getElementById("magnetMine").style.display = "none";
+  }
+  if (!gameData.shrapnelBombAvailable) {
+    document.getElementById("shrapnelBomb").style.display = "none";
+  }
+  if (!gameData.clusterBombAvailable) {
+    document.getElementById("clusterBomb").style.display = "none";
   }
 
   // перемикання між дронами
@@ -158,6 +170,38 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
   });
   document.getElementById("magnetMineWeight").textContent =
     Math.round(MagnetMine.weight * 1000) + "г.";
+  // шрапнельна бомба
+  addClickAndTouch(shrapnelBombPlus, () => {
+    if (drone.remainingCapacity >= ShrapnelBomb.weight) {
+      drone.addBomb(ShrapnelBomb);
+      calculateRemainingCapacity(drone);
+    }
+  });
+
+  addClickAndTouch(heMinus, () => {
+    if (drone.bombStorage.shrapnel.length > 0) {
+      drone.bombStorage.shrapnel.pop();
+      drone.remainingCapacity = calculateRemainingCapacity(drone);
+    }
+  });
+  document.getElementById("shrapnelBombWeight").textContent =
+    Math.round(ShrapnelBomb.weight * 1000) + "г.";
+  // касетна бомба
+  addClickAndTouch(clusterBombPlus, () => {
+    if (drone.remainingCapacity >= ClusterBomb.weight) {
+      drone.addBomb(ClusterBomb);
+      calculateRemainingCapacity(drone);
+    }
+  });
+
+  addClickAndTouch(clusterBombMinus, () => {
+    if (drone.bombStorage.cluster.length > 0) {
+      drone.bombStorage.cluster.pop();
+      drone.remainingCapacity = calculateRemainingCapacity(drone);
+    }
+  });
+  document.getElementById("clusterBombWeight").textContent =
+    Math.round(ClusterBomb.weight * 1000) + "г.";
   // характеристики дронів
   document.getElementById("remainingDroneWeight").textContent = Math.round(
     drone.remainingCapacity * 1000
@@ -177,7 +221,11 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
       drone.bombStorage.frag.length * FragBomb.weight +
       drone.bombStorage.he.length * HeBomb.weight +
       drone.bombStorage.shaped.length * ShapedBomb.weight +
-      drone.bombStorage.footMine.length * FootMine.weight;
+      drone.bombStorage.shrapnel.length * ShrapnelBomb.weight +
+      drone.bombStorage.cluster.length * ClusterBomb.weight +
+      drone.bombStorage.footMine.length * FootMine.weight +
+      drone.bombStorage.tankMine.length * TankMine.weight +
+      drone.bombStorage.magnetMine.length * MagnetMine.weight;
     drone.hangers = drone.initialHangers - drone.countBombs();
     document.getElementById("remainingDroneWeight").textContent = Math.round(
       (drone.capacity - bombWeight) * 1000

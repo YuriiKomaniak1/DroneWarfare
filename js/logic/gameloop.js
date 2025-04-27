@@ -71,7 +71,7 @@ export function createAnimationLoop(
       layer1.update(keys, currentDrone);
       layer1.draw();
       bombs.forEach((bomb) => {
-        if (bomb.frameX === bomb.frames) bomb.draw();
+        if (bomb.frameX === bomb.frames || bomb.deployed) bomb.draw();
       });
       enemies.forEach((enemy, index) => {
         if (checkVisibility(currentDrone, enemy, canvas, gameFrame)) {
@@ -109,10 +109,11 @@ export function createAnimationLoop(
       bombs.forEach((bomb) => {
         if (
           bomb.initialScale / bomb.scale >= 13.5 &&
-          bomb.frameX !== bomb.frames
+          bomb.frameX !== bomb.frames &&
+          !bomb.deployed
         )
           bomb.draw();
-        bomb.drop();
+        bomb.drop(bombs, layer1);
         if (bomb.deployed) {
           enemies.forEach((enemy) => {
             if (

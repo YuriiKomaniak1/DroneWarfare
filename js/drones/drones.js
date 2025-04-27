@@ -26,6 +26,8 @@ class Drone {
       footMine: [],
       tankMine: [],
       magnetMine: [],
+      shrapnel: [],
+      cluster: [],
     };
     this.bombStorage = {
       frag: [],
@@ -34,6 +36,8 @@ class Drone {
       footMine: [],
       tankMine: [],
       magnetMine: [],
+      shrapnel: [],
+      cluster: [],
     };
     this.reloadingTime = 1000 * 60 * 1;
     this.reloadStartTime = null;
@@ -204,12 +208,14 @@ class Drone {
   }
   cloneBombStorage(storage) {
     return {
-      frag: [...storage.frag],
-      he: [...storage.he],
-      shaped: [...storage.shaped],
-      footMine: [...storage.footMine],
-      tankMine: [...storage.tankMine],
-      magnetMine: [...storage.magnetMine],
+      frag: [...(storage.frag || [])],
+      he: [...(storage.he || [])],
+      shaped: [...(storage.shaped || [])],
+      footMine: [...(storage.footMine || [])],
+      tankMine: [...(storage.tankMine || [])],
+      magnetMine: [...(storage.magnetMine || [])],
+      shrapnel: [...(storage.shrapnel || [])],
+      cluster: [...(storage.cluster || [])],
     };
   }
 }

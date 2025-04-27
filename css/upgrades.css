@@ -64,6 +64,24 @@ body {
   background-position: center;
 }
 
+.shrapnelBomb_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/shrapnelBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.clusterBomb_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/clusterBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .upgrade-box {
   display: flex;
   flex-direction: column;
@@ -126,6 +144,14 @@ body {
 }
 
 #magnetMineOpenModal {
+  visibility: hidden;
+}
+
+#shrapnelBombOpenModal {
+  visibility: hidden;
+}
+
+#clusterBombOpenModal {
   visibility: hidden;
 }
 

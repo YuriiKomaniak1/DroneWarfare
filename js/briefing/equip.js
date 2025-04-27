@@ -26,12 +26,20 @@ const droneicon = new BriefingDrones(canvas, ctx, drone, 100, 10, 10, true);
 
 // Кнопка "Повернутись"
 document.getElementById("back-button").addEventListener("click", () => {
+  returnRoutine();
+  window.location.href = "briefing.html";
+});
+document.getElementById("upgrade-button").addEventListener("click", () => {
+  returnRoutine();
+  window.location.href = "upgrades.html";
+});
+
+function returnRoutine() {
   drone.initialBombStorage = drone.cloneBombStorage(drone.bombStorage);
   gameState.rememberDrone(gameData, droneIndex);
   localStorage.removeItem("droneToEquip");
   localStorage.setItem("gameData", JSON.stringify(gameData));
-  window.location.href = "briefing.html";
-});
+}
 // анімація дронів
 let lastTime = 0;
 function animate(timestamp) {
