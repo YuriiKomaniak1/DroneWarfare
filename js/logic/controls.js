@@ -8,6 +8,7 @@ import {
   magnetMineIcon,
   shrapnelBombIcon,
   clusterBombIcon,
+  shapedClusterBombIcon,
   changeArrowImage,
 } from "../gameElements/droneIcons.js";
 let joystickVisible = false;
@@ -20,6 +21,7 @@ const bombIcons = {
   magnetMine: magnetMineIcon,
   shrapnel: shrapnelBombIcon,
   cluster: clusterBombIcon,
+  shapedCluster: shapedClusterBombIcon,
 };
 
 // СТАН КЛАВІШ (клавіатура)
@@ -40,6 +42,7 @@ export const selectionState = {
     "magnetMine",
     "shrapnel",
     "cluster",
+    "shapedCluster",
   ],
   selectedBombIndex: 0,
   selectedBombType: "frag",
@@ -409,7 +412,6 @@ export function switchToNextAvailableBomb(
       if (!onlyFind) {
         selectionState.selectedBombType = type;
         selectionState.selectedBombIndex = index;
-        console.log(`🔄 Перемкнуто на доступну бомбу: ${type}`);
       }
       return type; // ← Повертаємо тип бомби!
     }

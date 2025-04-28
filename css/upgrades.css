@@ -82,6 +82,15 @@ body {
   background-position: center;
 }
 
+.shapedClusterBomb_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/shapedClusterBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .upgrade-box {
   display: flex;
   flex-direction: column;
@@ -152,6 +161,10 @@ body {
 }
 
 #clusterBombOpenModal {
+  visibility: hidden;
+}
+
+#shapedClusterBombOpenModal {
   visibility: hidden;
 }
 

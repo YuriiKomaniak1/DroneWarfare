@@ -7,6 +7,7 @@ import {
   MagnetMine,
   ShrapnelBomb,
   ClusterBomb,
+  ShapedClusterBomb,
 } from "../drones/bomb.js";
 import { SmallDrone, MediumDrone, BigDrone } from "../drones/drones.js";
 
@@ -31,6 +32,12 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
   const shrapnelBombMinus = document.getElementById("shrapnelBombMinus");
   const clusterBombPlus = document.getElementById("clusterBombPlus");
   const clusterBombMinus = document.getElementById("clusterBombMinus");
+  const shapedClusterBombPlus = document.getElementById(
+    "shapedClusterBombPlus"
+  );
+  const shapedClusterBombMinus = document.getElementById(
+    "shapedClusterBombMinus"
+  );
 
   // ховаємо невідкриті бомби
   if (!gameData.footMineAvailable) {
@@ -178,7 +185,7 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
     }
   });
 
-  addClickAndTouch(heMinus, () => {
+  addClickAndTouch(shrapnelBombMinus, () => {
     if (drone.bombStorage.shrapnel.length > 0) {
       drone.bombStorage.shrapnel.pop();
       drone.remainingCapacity = calculateRemainingCapacity(drone);
@@ -202,6 +209,24 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
   });
   document.getElementById("clusterBombWeight").textContent =
     Math.round(ClusterBomb.weight * 1000) + "г.";
+
+  // протитанкова касетна бомба
+  addClickAndTouch(shapedClusterBombPlus, () => {
+    if (drone.remainingCapacity >= ShapedClusterBomb.weight) {
+      drone.addBomb(ShapedClusterBomb);
+      calculateRemainingCapacity(drone);
+    }
+  });
+
+  addClickAndTouch(shapedClusterBombMinus, () => {
+    if (drone.bombStorage.shapedCluster.length > 0) {
+      drone.bombStorage.shapedCluster.pop();
+      drone.remainingCapacity = calculateRemainingCapacity(drone);
+    }
+  });
+  document.getElementById("shapedClusterBombWeight").textContent =
+    Math.round(ShapedClusterBomb.weight * 1000) + "г.";
+
   // характеристики дронів
   document.getElementById("remainingDroneWeight").textContent = Math.round(
     drone.remainingCapacity * 1000
@@ -223,6 +248,7 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
       drone.bombStorage.shaped.length * ShapedBomb.weight +
       drone.bombStorage.shrapnel.length * ShrapnelBomb.weight +
       drone.bombStorage.cluster.length * ClusterBomb.weight +
+      drone.bombStorage.shapedCluster.length * ShapedClusterBomb.weight +
       drone.bombStorage.footMine.length * FootMine.weight +
       drone.bombStorage.tankMine.length * TankMine.weight +
       drone.bombStorage.magnetMine.length * MagnetMine.weight;

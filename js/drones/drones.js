@@ -28,6 +28,7 @@ class Drone {
       magnetMine: [],
       shrapnel: [],
       cluster: [],
+      shapedCluster: [],
     };
     this.bombStorage = {
       frag: [],
@@ -38,6 +39,7 @@ class Drone {
       magnetMine: [],
       shrapnel: [],
       cluster: [],
+      shapedCluster: [],
     };
     this.reloadingTime = 1000 * 60 * 1;
     this.reloadStartTime = null;
@@ -141,7 +143,9 @@ class Drone {
   }
 
   reloading(forseReload = false) {
-    if ((this.isEmpty() && this.isAlive) || forseReload) {
+    if (this.isReloading || !this.isAlive) return; // якщо вже перезаряджається або мертвий — нічого не робимо
+
+    if (this.isEmpty() || forseReload) {
       this.isReloading = true;
       this.reloadStartTime = Date.now();
       setTimeout(() => {
@@ -216,6 +220,7 @@ class Drone {
       magnetMine: [...(storage.magnetMine || [])],
       shrapnel: [...(storage.shrapnel || [])],
       cluster: [...(storage.cluster || [])],
+      shapedCluster: [...(storage.shapedCluster || [])],
     };
   }
 }

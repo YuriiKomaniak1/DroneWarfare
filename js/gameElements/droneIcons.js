@@ -15,6 +15,8 @@ export let shrapnelBombIcon = new Image();
 shrapnelBombIcon.src = `${basePath}assets/img/bombs/shrapnelBombIcon.png`;
 export let clusterBombIcon = new Image();
 clusterBombIcon.src = `${basePath}assets/img/bombs/clusterBombIcon.png`;
+export const shapedClusterBombIcon = new Image();
+shapedClusterBombIcon.src = `${basePath}assets/img/bombs/shapedClusterBombIcon.png`;
 export const changeArrowImage = new Image();
 changeArrowImage.src = `${basePath}assets/img/bombs/changeArrow.png`;
 
@@ -27,6 +29,7 @@ export const bombTypes = [
   { type: "magnetMine", icon: magnetMineIcon },
   { type: "shrapnel", icon: shrapnelBombIcon },
   { type: "cluster", icon: clusterBombIcon },
+  { type: "shapedCluster", icon: shapedClusterBombIcon },
 ];
 class DroneIcons {
   constructor(canvas, ctx, dronePosition, drone) {

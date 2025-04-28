@@ -93,6 +93,18 @@
             бомба
           </p>
         </div>
+
+        <div class="upgrade-box" id="shapedClusterBombUB">
+          <h4 class="shapedClusterBombOpenCost upgrade-cost">1</h4>
+          <div
+            id="shapedClusterBomb_image"
+            class="shapedClusterBomb_image"
+          ></div>
+          <p>
+            ПТ касетна <br />
+            бомба
+          </p>
+        </div>
       </div>
       <!--  вікно прокачки існуючих технологій -->
       <h3>Апгрейд технологій</h3>
@@ -280,14 +292,38 @@
         <div class="clusterBomb_image"></div>
         <h3>Вартість дослідження <span class="clusterBombOpenCost">1</span></h3>
         <p>
-          Розкривається на висоті 50м над землею та викидає 25 фугасних снарядів
+          Розкривається на висоті 50м над землею та викидає 30 фугасних снарядів
           в радіусі 12м.Суббоєприпаси вибухають при падінні на землю. Радіус
           вибуху суббоєприпасу 2м. В цьмоу радіусі він знищує піхоту та
-          неброньовану техніку. Має шанс знищити ао зупинити легкоброньовану
+          неброньовану техніку. Має шанс знищити або зупинити легкоброньовану
           техніку. Вага 2000г.
         </p>
         <div class="button-panel">
           <button id="clusterBombOpen" class="briefing-button">
+            Дослідити
+          </button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка відкриття протитанкової касетної бомби -->
+    <div id="shapedClusterBombOpenModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Протитанкова касетна бомба</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="shapedClusterBomb_image"></div>
+        <h3>
+          Вартість дослідження <span class="shapedClusterBombOpenCost">1</span>
+        </h3>
+        <p>
+          Розкривається на висоті 50м над землею та викидає 16 фугасних снарядів
+          та 20 протитанкових кумулятивних снарядів в радіусі 12м. Фугасні
+          суббоєприпаси знищують піхоту та неброньовану техніку. Кумулятивні
+          боєприсаси мають хороші шанси знищити броньовану техніку. Вага 2200г.
+        </p>
+        <div class="button-panel">
+          <button id="shapedClusterBombOpen" class="briefing-button">
             Дослідити
           </button>
           <button class="back-button briefing-button">Назад</button>

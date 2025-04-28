@@ -20,6 +20,8 @@ export const shrapnelBombImage = new Image();
 shrapnelBombImage.src = `${basePath}assets/img/bombs/shrapnelBomb.png`;
 export const clusterBombImage = new Image();
 clusterBombImage.src = `${basePath}assets/img/bombs/clusterBomb.png`;
+export const shapedClusterBombImage = new Image();
+shapedClusterBombImage.src = `${basePath}assets/img/bombs/shapedClusterBomb.png`;
 export const clusterSubmunitionImage = new Image();
 clusterSubmunitionImage.src = `${basePath}assets/img/bombs/clusterSubmunition.png`;
 let imageExplosion = new Image();
@@ -86,9 +88,10 @@ export class Bomb {
         if (this.class == "mine") this.deployed = true;
       }
       if (
-        this.type === "cluster" &&
-        this.scale <= this.initialScale * 0.3 &&
-        !this.clusterDropped
+        this.type === "cluster" ||
+        ("shapedCluster" &&
+          this.scale <= this.initialScale * 0.3 &&
+          !this.clusterDropped)
       ) {
         this.exploded = true;
         this.dropClusterBombs(bombs, layer1);
@@ -360,11 +363,18 @@ export class HeBomb extends Bomb {
       } else if (this.distanceToVehicle(40, vehicle) && Math.random() > 0.3) {
         vehicle.isStopped = true;
       }
-    } else if (
-      this.distanceToVehicle(15, vehicle) &&
-      Math.random() > 0.5 + vehicle.armor / 10
-    ) {
-      vehicle.isStopped = true;
+    } else {
+      if (
+        this.distanceToVehicle(0, vehicle) &&
+        Math.random() > 0.3 + vehicle.armor / 10
+      ) {
+        vehicle.isBurning = true;
+      } else if (
+        this.distanceToVehicle(20, vehicle) &&
+        Math.random() > 0.2 + vehicle.armor / 10
+      ) {
+        vehicle.isStopped = true;
+      }
     }
 
     if (vehicle.isBurning || vehicle.isStopped) {
@@ -576,9 +586,9 @@ export class ShrapnelBomb extends Bomb {
     }
   }
 }
-// кластерна амуніція
-export class ClusterMunition extends Bomb {
-  static weight = 0.1;
+// кластерна амуніція фугас
+export class HeClusterMunition extends Bomb {
+  static weight = 0.07;
   static type = "clusterMunition";
   constructor(x, y, layer, ctx) {
     super(x, y, layer, ctx);
@@ -613,9 +623,9 @@ export class ClusterMunition extends Bomb {
     let hitStatus = false;
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     if (!enemy.vehicle) {
-      hitStatus = distance < 44;
+      hitStatus = distance < 47;
     } else if (enemy.vehicle.armor === 0) {
-      if (distance < 44) {
+      if (distance < 46) {
         if (Math.random() > 0.7) hitStatus = true;
       }
     }
@@ -628,11 +638,18 @@ export class ClusterMunition extends Bomb {
       } else if (this.distanceToVehicle(32, vehicle) && Math.random() > 0.3) {
         vehicle.isStopped = true;
       }
-    } else if (
-      this.distanceToVehicle(20, vehicle) &&
-      Math.random() > 0.5 + vehicle.armor / 9
-    ) {
-      vehicle.isStopped = true;
+    } else {
+      if (
+        this.distanceToVehicle(0, vehicle) &&
+        Math.random() > 0.4 + vehicle.armor / 10
+      ) {
+        vehicle.isBurning = true;
+      } else if (
+        this.distanceToVehicle(20, vehicle) &&
+        Math.random() > 0.3 + vehicle.armor / 10
+      ) {
+        vehicle.isStopped = true;
+      }
     }
 
     if (vehicle.isBurning || vehicle.isStopped) {
@@ -642,7 +659,56 @@ export class ClusterMunition extends Bomb {
     return vehicle;
   }
 }
-// кластерна бомба
+// кластерна амуніція кумулятивна
+export class ShapedClusterMunition extends Bomb {
+  static weight = 0.07;
+  static type = "clusterMunition";
+  constructor(x, y, layer, ctx) {
+    super(x, y, layer, ctx);
+    this.image = shapedBombImage;
+    this.imageExplosion = imageExplosion;
+    this.explosionScale = 30;
+    this.scale = 0.3;
+    this.shrinkRate = 1.003;
+    this.armorPenetration = 0.88;
+  }
+  drop() {
+    if (!this.exploded && !this.deployed) {
+      // додатково рухаємо по заданій швидкості
+
+      this.x +=
+        this.layer.speedX -
+        this.velocityX +
+        (Math.random() * this.spread - this.spread / 2);
+      this.y +=
+        this.layer.speedY -
+        this.velocityY +
+        (Math.random() * this.spread - this.spread / 2);
+
+      this.scale /= this.shrinkRate;
+
+      if (this.scale <= this.initialScale * 0.05) {
+        if (this.class == "bomb") this.exploded = true;
+        if (this.class == "mine") this.deployed = true;
+      }
+    }
+  }
+  checkCollision(enemy) {
+    let hitStatus = false;
+    const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
+    if (!enemy.vehicle) {
+      hitStatus = distance < 12;
+    }
+    return hitStatus;
+  }
+  checkVehicleCollision(vehicle) {
+    if (this.distanceToVehicle(0, vehicle)) {
+      this.checkArmorPenetration(vehicle);
+    }
+    return vehicle;
+  }
+}
+//  фугасна кластерна бомба
 export class ClusterBomb extends Bomb {
   static weight = 2.0;
   static type = "cluster";
@@ -654,7 +720,7 @@ export class ClusterBomb extends Bomb {
     this.type = this.constructor.type;
     this.imageWidth = 250;
     this.imageHeight = 250;
-    this.frames = 9;
+    this.frames = 10;
   }
   dropClusterBombs(bombs, layer1) {
     for (let i = 0; i < 30; i++) {
@@ -664,7 +730,68 @@ export class ClusterBomb extends Bomb {
         const theta = Math.random() * 2 * Math.PI; // випадковий напрямок
         const speed = 0.15 + Math.random() * 0.7;
 
-        const bomb = new ClusterMunition(this.x, this.y, this.layer, this.ctx);
+        const bomb = new HeClusterMunition(this.x, this.y, layer1, this.ctx);
+
+        // додаємо швидкість у випадковому напрямку
+        bomb.velocityX = Math.cos(theta) * speed;
+        bomb.velocityY = Math.sin(theta) * speed;
+
+        bombs.push(bomb);
+      }, delay);
+    }
+  }
+
+  checkCollision(enemy) {
+    return false;
+  }
+  checkVehicleCollision(vehicle) {
+    return vehicle;
+  }
+}
+//  протитанкова кластерна бомба
+export class ShapedClusterBomb extends Bomb {
+  static weight = 2.2;
+  static type = "shapedCluster";
+  constructor(x, y, layer, ctx) {
+    super(x, y, layer, ctx);
+    this.image = shapedClusterBombImage;
+    this.imageExplosion = clusterExplosion;
+    this.explosionScale = 120;
+    this.type = this.constructor.type;
+    this.imageWidth = 250;
+    this.imageHeight = 250;
+    this.frames = 10;
+  }
+  dropClusterBombs(bombs, layer1) {
+    for (let i = 0; i < 16; i++) {
+      const delay = Math.random() * 1500; // випадкова затримка до 0.5 секунди
+
+      setTimeout(() => {
+        const theta = Math.random() * 2 * Math.PI; // випадковий напрямок
+        const speed = 0.15 + Math.random() * 0.7;
+
+        const bomb = new HeClusterMunition(this.x, this.y, layer1, this.ctx);
+
+        // додаємо швидкість у випадковому напрямку
+        bomb.velocityX = Math.cos(theta) * speed;
+        bomb.velocityY = Math.sin(theta) * speed;
+
+        bombs.push(bomb);
+      }, delay);
+    }
+    for (let i = 0; i < 20; i++) {
+      const delay = Math.random() * 1500; // випадкова затримка до 0.5 секунди
+
+      setTimeout(() => {
+        const theta = Math.random() * 2 * Math.PI; // випадковий напрямок
+        const speed = 0.15 + Math.random() * 0.7;
+
+        const bomb = new ShapedClusterMunition(
+          this.x,
+          this.y,
+          this.layer,
+          this.ctx
+        );
 
         // додаємо швидкість у випадковому напрямку
         bomb.velocityX = Math.cos(theta) * speed;
@@ -733,6 +860,10 @@ export function dropBomb(
     case "cluster":
       bombArray = currentDrone.bombStorage.cluster;
       newBomb = new ClusterBomb(x, y, layer1, ctx);
+      break;
+    case "shapedCluster":
+      bombArray = currentDrone.bombStorage.shapedCluster;
+      newBomb = new ShapedClusterBomb(x, y, layer1, ctx);
       break;
   }
 

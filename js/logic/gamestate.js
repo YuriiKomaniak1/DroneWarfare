@@ -82,6 +82,7 @@ class GameData {
     this.magnetMineAvailable = false;
     this.shrapnelMineAvailable = false;
     this.clusterBombAvailable = false;
+    this.shapedClusterBombAvailable = false;
     this.upgradeGap = 0;
     this.gapScale = 500;
   }

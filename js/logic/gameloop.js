@@ -23,6 +23,7 @@ import { SmallDrone, MediumDrone, BigDrone } from "../drones/drones.js";
 const gameData = JSON.parse(localStorage.getItem("gameData"));
 gameState.updateDrones(gameData, SmallDrone, MediumDrone, BigDrone);
 gameState.updateData(gameData);
+console.log("gameState", gameState);
 
 export function createAnimationLoop(
   canvas,

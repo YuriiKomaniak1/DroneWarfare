@@ -14,6 +14,7 @@ const tankMineOpenCost = 3000 + gameData.upgradeGap;
 const magnetMineOpenCost = 5000 + gameData.upgradeGap;
 const shrapnelBombOpenCost = 3000 + gameData.upgradeGap;
 const clusterBombOpenCost = 5000 + gameData.upgradeGap;
+const shapedClusterBombOpenCost = 7000 + gameData.upgradeGap;
 
 // присвоєння цін в HTML
 document.querySelectorAll(".middleDroneOpenCost").forEach((el) => {
@@ -42,6 +43,9 @@ document.querySelectorAll(".shrapnelBombOpenCost").forEach((el) => {
 });
 document.querySelectorAll(".clusterBombOpenCost").forEach((el) => {
   el.textContent = clusterBombOpenCost;
+});
+document.querySelectorAll(".shapedClusterBombOpenCost").forEach((el) => {
+  el.textContent = shapedClusterBombOpenCost;
 });
 // Модалка відкриття середнього дрону
 document.getElementById("medium_drone_image").addEventListener("click", () => {
@@ -159,6 +163,27 @@ document.getElementById("clusterBombOpen").addEventListener("click", () => {
 });
 if (gameData.clusterBombAvailable)
   document.getElementById("clusterBombUB").style.display = "none";
+
+// Модалка відкриття протитанкової касетної бомби
+document
+  .getElementById("shapedClusterBomb_image")
+  .addEventListener("click", () => {
+    document.getElementById("shapedClusterBombOpenModal").style.visibility =
+      "visible";
+  });
+document
+  .getElementById("shapedClusterBombOpen")
+  .addEventListener("click", () => {
+    if (
+      !gameData.shapedClusterBombAvailable &&
+      gameData.score >= shapedClusterBombOpenCost
+    ) {
+      gameData.shapedClusterBombAvailable = true;
+      upgradeRoutine(shapedClusterBombOpenCost, ".shapedClusterBombOpenCost");
+    }
+  });
+if (gameData.shapedClusterBombAvailable)
+  document.getElementById("shapedClusterBombUB").style.display = "none";
 
 // вихід з модалки
 document.querySelectorAll(".back-button").forEach((el) => {
