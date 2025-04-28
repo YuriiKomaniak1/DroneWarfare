@@ -1,0 +1,21 @@
+{
+  "name": "dronewarfare",
+  "version": "1.0.0",
+  "description": "🎮 **dronETerra** — це гра, в якій гравець виступає в ролі оператора дрону та знищує ворогів і ворожу техніку, скидаючи на них різні види боєприпасів.",
+  "main": "index.js",
+  "scripts": {
+    "start": "http-server ./ -p 8080",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YuriiKomaniak1/DroneWarfare.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YuriiKomaniak1/DroneWarfare/issues"
+  },
+  "homepage": "https://github.com/YuriiKomaniak1/DroneWarfare#readme"
+}
