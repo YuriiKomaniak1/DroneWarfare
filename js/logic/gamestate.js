@@ -99,7 +99,7 @@ export const gameState = new GameState();
 export const gameData = new GameData();
 const saved = localStorage.getItem("gameData");
 
-if (saved) {
+if (!saved) {
   const parsedData = JSON.parse(saved);
   drones.forEach((drone, index) => {
     gameState.drones[index] = drone;
