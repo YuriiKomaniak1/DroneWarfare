@@ -20,6 +20,8 @@ export const shrapnelBombImage = new Image();
 shrapnelBombImage.src = `${basePath}assets/img/bombs/shrapnelBomb.png`;
 export const clusterBombImage = new Image();
 clusterBombImage.src = `${basePath}assets/img/bombs/clusterBomb.png`;
+export const clusterSubmunitionImage = new Image();
+clusterSubmunitionImage.src = `${basePath}assets/img/bombs/clusterSubmunition.png`;
 let imageExplosion = new Image();
 imageExplosion.src = `${basePath}assets/img/effects/smallExplosion.png`;
 let shrapnelExplosion = new Image();
@@ -580,7 +582,7 @@ export class ClusterMunition extends Bomb {
   static type = "clusterMunition";
   constructor(x, y, layer, ctx) {
     super(x, y, layer, ctx);
-    this.image = heBombImage;
+    this.image = clusterSubmunitionImage;
     this.imageExplosion = imageExplosion;
     this.explosionScale = 60;
     this.scale = 0.3;
@@ -655,12 +657,12 @@ export class ClusterBomb extends Bomb {
     this.frames = 9;
   }
   dropClusterBombs(bombs, layer1) {
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 30; i++) {
       const delay = Math.random() * 1500; // випадкова затримка до 0.5 секунди
 
       setTimeout(() => {
         const theta = Math.random() * 2 * Math.PI; // випадковий напрямок
-        const speed = 0.25 + Math.random() * 0.5; // швидкість від 2 до 6
+        const speed = 0.15 + Math.random() * 0.7;
 
         const bomb = new ClusterMunition(this.x, this.y, this.layer, this.ctx);
 
