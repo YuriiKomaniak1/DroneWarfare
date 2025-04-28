@@ -108,7 +108,77 @@
       </div>
       <!--  вікно прокачки існуючих технологій -->
       <h3>Апгрейд технологій</h3>
-      <div id="upgrade-container"></div>
+
+      <div id="upgrade-container">
+        <div class="upgrade-box" id="smallDroneSpeedUB">
+          <h4 class="smallDroneSpeedUpgradeCost upgrade-cost">1</h4>
+          <div id="smallDroneSpeed_image" class="small_drone_image"></div>
+          <p>малий <br />дрон<br />швидкість</p>
+          <p>
+            <strong><span id="smallDroneSpeedUpgradeCount">0</span>/6</strong>
+          </p>
+        </div>
+
+        <div class="upgrade-box" id="smallDroneCapacityUB">
+          <h4 class="smallDroneCapacityUpgradeCost upgrade-cost">1</h4>
+          <div id="smallDroneCapacity_image" class="small_drone_image"></div>
+          <p>малий <br />дрон<br />вага</p>
+          <p>
+            <strong
+              ><span id="smallDroneCapacityUpgradeCount">0</span>/10</strong
+            >
+          </p>
+        </div>
+
+        <div class="upgrade-box" id="smallDroneHPUB">
+          <h4 class="smallDroneHPUpgradeCost upgrade-cost">1</h4>
+          <div id="smallDroneHP_image" class="small_drone_image"></div>
+          <p>малий <br />дрон<br />міцність</p>
+          <p>
+            <strong><span id="smallDroneHPUpgradeCount">0</span>/3</strong>
+          </p>
+        </div>
+
+        <div class="upgrade-box" id="mediumDroneSpeedUB">
+          <h4 class="mediumDroneSpeedUpgradeCost upgrade-cost">1</h4>
+          <div id="mediumDroneSpeed_image" class="medium_drone_image"></div>
+          <p>середній <br />дрон<br />швидкість</p>
+          <p>
+            <strong><span id="mediumDroneSpeedUpgradeCount">0</span>/6</strong>
+          </p>
+        </div>
+
+        <div class="upgrade-box" id="mediumDroneCapacityUB">
+          <h4 class="mediumDroneCapacityUpgradeCost upgrade-cost">1</h4>
+          <div id="mediumDroneCapacity_image" class="medium_drone_image"></div>
+          <p>середній <br />дрон<br />вага</p>
+        </div>
+
+        <div class="upgrade-box" id="mediumDroneHPUB">
+          <h4 class="mediumDroneHPUpgradeCost upgrade-cost">1</h4>
+          <div id="mediumDroneHP_image" class="medium_drone_image"></div>
+          <p>середній <br />дрон<br />міцність</p>
+        </div>
+
+        <div class="upgrade-box" id="bigDroneSpeedUB">
+          <h4 class="bigDroneSpeedUpgradeCost upgrade-cost">1</h4>
+          <div id="bigDroneSpeed_image" class="big_drone_image"></div>
+          <p>великий <br />дрон<br />швидкість</p>
+        </div>
+
+        <div class="upgrade-box" id="bigDroneCapacityUB">
+          <h4 class="bigDroneCapacityUpgradeCost upgrade-cost">1</h4>
+          <div id="bigDroneCapacity_image" class="big_drone_image"></div>
+          <p>великий <br />дрон<br />вага</p>
+        </div>
+
+        <div class="upgrade-box" id="bigDroneHPUB">
+          <h4 class="bigDroneHPUpgradeCost upgrade-cost">1</h4>
+          <div id="bigDroneHP_image" class="big_drone_image"></div>
+          <p>великий <br />дрон<br />міцність</p>
+        </div>
+      </div>
+
       <!--  кнопка назад до брифінгу-->
       <div class="button-panel">
         <button id="back-button" class="briefing-button">Назад</button>
@@ -324,6 +394,123 @@
         </p>
         <div class="button-panel">
           <button id="shapedClusterBombOpen" class="briefing-button">
+            Дослідити
+          </button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+    <!-- Модалка апгрейду швидкості малого дрону -->
+    <div id="smallDroneSpeedUpgradeModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Покращити швидкість малого дрона</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="small_drone_image"></div>
+        <h3>
+          Вартість дослідження
+          <span class="smallDroneSpeedUpgradeCost">1</span>
+        </h3>
+        <p>
+          Поточна швидкість малого дрону<strong>
+            <span id="smallDroneCurrentSpeed">10</span>м/с.
+          </strong>
+        </p>
+        <p>
+          Після апгрейду вона буде становити<strong>
+            <span id="smallDroneNextSpeed">10</span>м/с.</strong
+          >
+        </p>
+
+        <div class="button-panel">
+          <button id="smallDroneSpeedUpgrade" class="briefing-button">
+            Дослідити
+          </button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+    <!-- Модалка апгрейду вантажопідйомності малого дрону -->
+    <div id="smallDroneCapacityUpgradeModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Покращити вантажопідйомність малого дрона</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="small_drone_image"></div>
+        <h3>
+          Вартість дослідження
+          <span class="smallDroneCapacityUpgradeCost">1</span>
+        </h3>
+        <p>
+          Поточна вантажопідйомність малого дрону<strong>
+            <span id="smallDroneCurrentCapacity">10</span>г.
+          </strong>
+        </p>
+        <p>
+          Після апгрейду вона буде становити<strong>
+            <span id="smallDroneNextCapacity">10</span>г.</strong
+          >
+        </p>
+
+        <div class="button-panel">
+          <button id="smallDroneCapacityUpgrade" class="briefing-button">
+            Дослідити
+          </button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+    <!-- Модалка апгрейду міцності малого дрону -->
+    <div id="smallDroneHPUpgradeModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Покращити міцність малого дрона</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="small_drone_image"></div>
+        <h3>
+          Вартість дослідження
+          <span class="smallDroneHPUpgradeCost">1</span>
+        </h3>
+        <p>
+          Поточна міцність малого дрону<strong>
+            <span id="smallDroneCurrentHP">10</span>
+          </strong>
+        </p>
+        <p>
+          Після апгрейду вона буде становити<strong>
+            <span id="smallDroneNextHP">10</span></strong
+          >
+        </p>
+
+        <div class="button-panel">
+          <button id="smallDroneHPUpgrade" class="briefing-button">
+            Дослідити
+          </button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка апгрейду швидкості середнього дрону -->
+    <div id="mediumDroneSpeedUpgradeModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Покращити швидкість середнього дрона</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="medium_drone_image"></div>
+        <h3>
+          Вартість дослідження
+          <span class="mediumDroneSpeedUpgradeCost">1</span>
+        </h3>
+        <p>
+          Поточна швидкість середнього дрону<strong>
+            <span id="mediumDroneCurrentSpeed">10м/с.</span>
+          </strong>
+        </p>
+        <p>
+          Після апгрейду вона буде становити<strong>
+            <span id="mediumDroneNextSpeed">10м/с.</span></strong
+          >
+        </p>
+
+        <div class="button-panel">
+          <button id="mediumDroneSpeedUpgrade" class="briefing-button">
             Дослідити
           </button>
           <button class="back-button briefing-button">Назад</button>

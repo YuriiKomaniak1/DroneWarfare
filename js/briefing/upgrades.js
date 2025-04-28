@@ -15,6 +15,26 @@ const magnetMineOpenCost = 5000 + gameData.upgradeGap;
 const shrapnelBombOpenCost = 3000 + gameData.upgradeGap;
 const clusterBombOpenCost = 5000 + gameData.upgradeGap;
 const shapedClusterBombOpenCost = 7000 + gameData.upgradeGap;
+const smallDroneSpeedUpgradeCost = 1000 + gameData.upgradeGap;
+const mediumDroneSpeedUpgradeCost = 1000 + gameData.upgradeGap;
+const bigDroneSpeedUpgradeCost = 1000 + gameData.upgradeGap;
+const smallDroneCapacityUpgradeCost = 1000 + gameData.upgradeGap;
+const mediumDroneCapacityUpgradeCost = 1000 + gameData.upgradeGap;
+const bigDroneCapacityUpgradeCost = 1000 + gameData.upgradeGap;
+const smallDroneHPUpgradeCost = 3000 + gameData.upgradeGap;
+const mediumDroneHPUpgradeCost = 3000 + gameData.upgradeGap;
+const bigDroneHPUpgradeCost = 3000 + gameData.upgradeGap;
+
+//лічильники для апгрейдів
+let smallDroneSpeedUpgradeCounter = 0;
+let mediumDroneSpeedUpgradeCounter = 0;
+let bigDroneSpeedUpgradeCounter = 0;
+let smallDroneCapacityUpgradeCounter = 0;
+let mediumDroneCapacityUpgradeCounter = 0;
+let bigDroneCapacityUpgradeCounter = 0;
+let smallDroneHPUpgradeCounter = 0;
+let mediumDroneHPUpgradeCounter = 0;
+let bigDroneHPUpgradeCounter = 0;
 
 // присвоєння цін в HTML
 document.querySelectorAll(".middleDroneOpenCost").forEach((el) => {
@@ -46,6 +66,33 @@ document.querySelectorAll(".clusterBombOpenCost").forEach((el) => {
 });
 document.querySelectorAll(".shapedClusterBombOpenCost").forEach((el) => {
   el.textContent = shapedClusterBombOpenCost;
+});
+document.querySelectorAll(".smallDroneSpeedUpgradeCost").forEach((el) => {
+  el.textContent = smallDroneSpeedUpgradeCost;
+});
+document.querySelectorAll(".mediumDroneSpeedUpgradeCost").forEach((el) => {
+  el.textContent = mediumDroneSpeedUpgradeCost;
+});
+document.querySelectorAll(".bigDroneSpeedUpgradeCost").forEach((el) => {
+  el.textContent = bigDroneSpeedUpgradeCost;
+});
+document.querySelectorAll(".smallDroneCapacityUpgradeCost").forEach((el) => {
+  el.textContent = smallDroneCapacityUpgradeCost;
+});
+document.querySelectorAll(".mediumDroneCapacityUpgradeCost").forEach((el) => {
+  el.textContent = mediumDroneCapacityUpgradeCost;
+});
+document.querySelectorAll(".bigDroneCapacityUpgradeCost").forEach((el) => {
+  el.textContent = bigDroneCapacityUpgradeCost;
+});
+document.querySelectorAll(".smallDroneHPUpgradeCost").forEach((el) => {
+  el.textContent = smallDroneHPUpgradeCost;
+});
+document.querySelectorAll(".mediumDroneHPUpgradeCost").forEach((el) => {
+  el.textContent = mediumDroneHPUpgradeCost;
+});
+document.querySelectorAll(".bigDroneHPUpgradeCost").forEach((el) => {
+  el.textContent = bigDroneHPUpgradeCost;
 });
 // Модалка відкриття середнього дрону
 document.getElementById("medium_drone_image").addEventListener("click", () => {
@@ -184,6 +231,118 @@ document
   });
 if (gameData.shapedClusterBombAvailable)
   document.getElementById("shapedClusterBombUB").style.display = "none";
+//-----------------------------------------------------------------------
+// Модалка апгрейду швидкості маленького дрону
+document
+  .getElementById("smallDroneSpeed_image")
+  .addEventListener("click", () => {
+    document.getElementById("smallDroneSpeedUpgradeModal").style.visibility =
+      "visible";
+  });
+document
+  .getElementById("smallDroneSpeedUpgrade")
+  .addEventListener("click", () => {
+    if (
+      gameData.score >= smallDroneSpeedUpgradeCost &&
+      gameData.smallDroneSpeedUpgrade < 6
+    ) {
+      gameData.smallDroneSpeedUpgrade++;
+      upgradeRoutine(smallDroneSpeedUpgradeCost, ".smallDroneSpeedUpgradeCost");
+    }
+  });
+document.getElementById("smallDroneCurrentSpeed").textContent =
+  13 + gameData.smallDroneSpeedUpgrade;
+document.getElementById("smallDroneNextSpeed").textContent =
+  13 + gameData.smallDroneSpeedUpgrade + 1;
+document.getElementById("smallDroneSpeedUpgradeCount").textContent =
+  gameData.smallDroneSpeedUpgrade;
+
+if (gameData.smallDroneSpeedUpgrade >= 6)
+  document.getElementById("smallDroneSpeedUB").style.display = "none";
+
+// Модалка апгрейду вантажопідйомності малого дрону
+document
+  .getElementById("smallDroneCapacity_image")
+  .addEventListener("click", () => {
+    document.getElementById("smallDroneCapacityUpgradeModal").style.visibility =
+      "visible";
+  });
+document
+  .getElementById("smallDroneCapacityUpgrade")
+  .addEventListener("click", () => {
+    if (
+      gameData.score >= smallDroneCapacityUpgradeCost &&
+      gameData.smallDroneCapacityUpgrade < 10
+    ) {
+      gameData.smallDroneCapacityUpgrade++;
+      upgradeRoutine(
+        smallDroneCapacityUpgradeCost,
+        ".smallDroneCapacityUpgradeCost"
+      );
+    }
+  });
+document.getElementById("smallDroneCurrentCapacity").textContent =
+  800 + gameData.smallDroneCapacityUpgrade * 40;
+document.getElementById("smallDroneNextCapacity").textContent =
+  800 + (gameData.smallDroneCapacityUpgrade + 1) * 40;
+document.getElementById("smallDroneCapacityUpgradeCount").textContent =
+  gameData.smallDroneCapacityUpgrade;
+
+if (gameData.smallDroneCapacityUpgrade >= 10)
+  document.getElementById("smallDroneCapacityUB").style.display = "none";
+// Модалка апгрейду міцності малого дрону
+document.getElementById("smallDroneHP_image").addEventListener("click", () => {
+  document.getElementById("smallDroneHPUpgradeModal").style.visibility =
+    "visible";
+});
+document.getElementById("smallDroneHPUpgrade").addEventListener("click", () => {
+  if (
+    gameData.score >= smallDroneHPUpgradeCost &&
+    gameData.smallDroneHPUpgrade < 3
+  ) {
+    gameData.smallDroneHPUpgrade++;
+    upgradeRoutine(smallDroneHPUpgradeCost, ".smallDroneHPUpgradeCost");
+  }
+});
+document.getElementById("smallDroneCurrentHP").textContent =
+  3 + gameData.smallDroneHPUpgrade;
+document.getElementById("smallDroneNextHP").textContent =
+  3 + (gameData.smallDroneHPUpgrade + 1);
+document.getElementById("smallDroneHPUpgradeCount").textContent =
+  gameData.smallDroneHPUpgrade;
+
+if (gameData.smallDroneHPUpgrade >= 10)
+  document.getElementById("smallDroneHPUB").style.display = "none";
+// Модалка апгрейду швидкості середнього дрону
+document
+  .getElementById("mediumDroneSpeed_image")
+  .addEventListener("click", () => {
+    document.getElementById("mediumDroneSpeedUpgradeModal").style.visibility =
+      "visible";
+  });
+document
+  .getElementById("mediumDroneSpeedUpgrade")
+  .addEventListener("click", () => {
+    if (
+      gameData.score >= mediumDroneSpeedUpgradeCost &&
+      gameData.mediumDroneSpeedUpgrade < 6
+    ) {
+      gameData.mediumDroneSpeedUpgrade++;
+      upgradeRoutine(
+        mediumDroneSpeedUpgradeCost,
+        ".mediumDroneSpeedUpgradeCost"
+      );
+    }
+  });
+document.getElementById("mediumDroneCurrentSpeed").textContent =
+  10 + gameData.mediumDroneSpeedUpgrade * 0.7;
+document.getElementById("mediumDroneNextSpeed").textContent =
+  10 + (gameData.mediumDroneSpeedUpgrade + 1) * 0.7;
+document.getElementById("mediumDroneSpeedUpgradeCount").textContent =
+  gameData.mediumDroneSpeedUpgrade;
+
+if (gameData.mediumDroneSpeedUpgrade >= 6)
+  document.getElementById("mediumDroneSpeedUB").style.display = "none";
 
 // вихід з модалки
 document.querySelectorAll(".back-button").forEach((el) => {
@@ -203,8 +362,6 @@ function upgradeRoutine(cost, name) {
   document.querySelectorAll(".score").forEach((el) => {
     el.textContent = gameData.score;
   });
-  document.querySelectorAll(name).forEach((el) => {
-    el.textContent = "Досліджено";
-  });
   localStorage.setItem("gameData", JSON.stringify(gameData));
+  window.location.href = "upgrades.html?refresh=" + Date.now();
 }

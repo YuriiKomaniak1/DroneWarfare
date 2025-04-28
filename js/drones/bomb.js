@@ -88,10 +88,9 @@ export class Bomb {
         if (this.class == "mine") this.deployed = true;
       }
       if (
-        this.type === "cluster" ||
-        ("shapedCluster" &&
-          this.scale <= this.initialScale * 0.3 &&
-          !this.clusterDropped)
+        (this.type === "cluster" || this.type === "shapedCluster") &&
+        this.scale <= this.initialScale * 0.3 &&
+        !this.clusterDropped
       ) {
         this.exploded = true;
         this.dropClusterBombs(bombs, layer1);

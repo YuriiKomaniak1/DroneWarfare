@@ -1,4 +1,5 @@
 import { basePath } from "../utils/basePath.js";
+
 let smallDroneImage = new Image();
 smallDroneImage.src = `${basePath}assets/img/drones/smallDroneAnimation.png`;
 let mediumDroneImage = new Image();
@@ -225,18 +226,18 @@ class Drone {
   }
 }
 export class SmallDrone extends Drone {
-  constructor() {
+  constructor(gameData) {
     super();
     this.image = smallDroneImage;
-    this.capacity = 0.8;
-    this.remainingCapacity = 0.8;
-    this.hp = 3;
-    this.initialHP = 3;
+    this.capacity = 0.8 + gameData.smallDroneCapacityUpgrade * 0.04;
+    this.remainingCapacity = 0.8 + gameData.smallDroneCapacityUpgrade * 0.04;
+    this.hp = 3 + gameData.smallDroneHPUpgrade;
+    this.initialHP = 3 + gameData.smallDroneHPUpgrade;
     this.visibility = 4;
     this.initialVisibility = 4;
     this.frameWidth = 352;
     this.frameHeight = 301;
-    this.speed = 1.3;
+    this.speed = 1.3 + gameData.smallDroneSpeedUpgrade * 0.1;
     this.hangers = 10;
     this.initialHangers = 10;
     this.type = "small";
@@ -244,18 +245,18 @@ export class SmallDrone extends Drone {
 }
 
 export class MediumDrone extends Drone {
-  constructor() {
+  constructor(gameData) {
     super();
     this.image = mediumDroneImage;
-    this.capacity = 1.6;
-    this.remainingCapacity = 1.6;
-    this.hp = 5;
-    this.initialHP = 5;
+    this.capacity = 1.6 + gameData.mediumDroneCapacityUpgrade * 0.08;
+    this.remainingCapacity = 1.6 + gameData.mediumDroneCapacityUpgrade * 0.08;
+    this.hp = 5 + gameData.mediumDroneHPUpgrade;
+    this.initialHP = 5 + gameData.mediumDroneHPUpgrade;
     this.visibility = 6;
     this.initialVisibility = 6;
     this.frameWidth = 1024;
     this.frameHeight = 1024;
-    this.speed = 1;
+    this.speed = 1 + gameData.mediumDroneSpeedUpgrade * 0.06;
     this.hangers = 16;
     this.initialHangers = 16;
     this.type = "medium";
@@ -265,18 +266,18 @@ export class MediumDrone extends Drone {
 }
 
 export class BigDrone extends Drone {
-  constructor() {
+  constructor(gameData) {
     super();
     this.image = bigDroneImage;
-    this.capacity = 6.4;
-    this.remainingCapacity = 6.4;
-    this.hp = 9;
-    this.initialHP = 8;
+    this.capacity = 6.4 + gameData.bigDroneCapacityUpgrade * 0.2;
+    this.remainingCapacity = 6.4 + gameData.bigDroneCapacityUpgrade * 0.2;
+    this.hp = 9 + gameData.bigDroneHPUpgrade;
+    this.initialHP = 9 + gameData.bigDroneHPUpgrade;
     this.visibility = 10;
     this.initialVisibility = 10;
     this.frameWidth = 250;
     this.frameHeight = 250;
-    this.speed = 0.8;
+    this.speed = 0.8 + gameData.bigDroneSpeedUpgrade * 0.04;
     this.hangers = 30;
     this.initialHangers = 30;
     this.type = "big";

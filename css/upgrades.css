@@ -8,6 +8,13 @@ body {
   background-color: var(--menu-background-color);
 }
 
+.small_drone_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/drones/smallDroneAnimation.png");
+  background-size: 400% 200%; /* 4 кадри по горизонталі, 2 по вертикалі */
+  background-position: 100% 0%; /* Лівий верхній кут */
+}
 .medium_drone_image {
   width: 50px; /* ширина одного кадру */
   height: 50px; /* висота одного кадру */
@@ -115,6 +122,14 @@ body {
   margin: 15px 0;
 }
 
+#upgrade-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin: 15px 0;
+}
+
 .upgrade-modal {
   position: fixed;
   top: 0;
@@ -166,6 +181,41 @@ body {
 }
 
 #shapedClusterBombOpenModal {
+  visibility: hidden;
+}
+
+#smallDroneSpeedUpgradeModal {
+  visibility: hidden;
+}
+
+#mediumDroneSpeedUpgradeModal {
+  visibility: hidden;
+}
+
+#bigDroneSpeedUpgradeModal {
+  visibility: hidden;
+}
+
+#smallDroneCapacityUpgradeModal {
+  visibility: hidden;
+}
+
+#mediumDroneCapacityUpgradeModal {
+  visibility: hidden;
+}
+#bigDroneCapacityUpgradeModal {
+  visibility: hidden;
+}
+
+#smallDroneHPUpgradeModal {
+  visibility: hidden;
+}
+
+#mediumDroneHPUpgradeModal {
+  visibility: hidden;
+}
+
+#bigDroneHPUpgradeModal {
   visibility: hidden;
 }
 

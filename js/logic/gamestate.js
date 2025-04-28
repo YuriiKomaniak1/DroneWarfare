@@ -27,13 +27,13 @@ class GameState {
       if (drone) {
         switch (drone.type) {
           case "small":
-            this.drones[index] = new SmallDrone();
+            this.drones[index] = new SmallDrone(gameData);
             break;
           case "medium":
-            this.drones[index] = new MediumDrone();
+            this.drones[index] = new MediumDrone(gameData);
             break;
           case "big":
-            this.drones[index] = new BigDrone();
+            this.drones[index] = new BigDrone(gameData);
             break;
         }
       }
@@ -83,20 +83,29 @@ class GameData {
     this.shrapnelMineAvailable = false;
     this.clusterBombAvailable = false;
     this.shapedClusterBombAvailable = false;
+    this.smallDroneSpeedUpgrade = 0;
+    this.mediumDroneSpeedUpgrade = 0;
+    this.bigDroneSpeedUpgrade = 0;
+    this.smallDroneCapacityUpgrade = 0;
+    this.mediumDroneCapacityUpgrade = 0;
+    this.bigDroneCapacityUpgrade = 0;
+    this.smallDroneHPUpgrade = 0;
+    this.mediumDroneHPUpgrade = 0;
+    this.bigDroneHPUpgrade = 0;
     this.upgradeGap = 0;
     this.gapScale = 500;
   }
 }
-
+export const gameData = new GameData();
 const drones = [
-  new SmallDrone(),
-  new SmallDrone(),
-  new SmallDrone(),
+  new SmallDrone(gameData),
+  new SmallDrone(gameData),
+  new SmallDrone(gameData),
   null,
   null,
 ];
 export const gameState = new GameState();
-export const gameData = new GameData();
+
 const saved = localStorage.getItem("gameData");
 
 if (saved) {

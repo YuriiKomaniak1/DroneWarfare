@@ -55,6 +55,9 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
   if (!gameData.clusterBombAvailable) {
     document.getElementById("clusterBomb").style.display = "none";
   }
+  if (!gameData.shapedClusterBombAvailable) {
+    document.getElementById("shapedClusterBomb").style.display = "none";
+  }
 
   // перемикання між дронами
   if (!gameData.mediumDroneAvailable)
@@ -75,7 +78,7 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
   });
 
   function droneChange(DroneClass) {
-    gameState.drones[droneIndex] = new DroneClass();
+    gameState.drones[droneIndex] = new DroneClass(gameData);
     gameState.rememberDrone(gameData, droneIndex);
     localStorage.setItem("gameData", JSON.stringify(gameData));
     window.location.reload();
@@ -238,7 +241,9 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
   document.getElementById("initialHangers").textContent = Math.round(
     drone.initialHangers
   );
-  document.getElementById("droneSpeed").textContent = drone.speed * 10;
+  document.getElementById("droneSpeed").textContent = (
+    drone.speed * 10
+  ).toFixed(2);
   document.getElementById("droneHP").textContent = drone.hp;
   // допоміжні функції
   function calculateRemainingCapacity(drone) {
