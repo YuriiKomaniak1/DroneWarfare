@@ -98,6 +98,78 @@ body {
   background-position: center;
 }
 
+.fragBombUpgrade_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/fragBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.heBombUpgrade_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/heBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.shapedBombUpgrade_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/shapedBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.tankMineUpgrade_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/tankMineIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.magnetMineUpgrade_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/magnetMineIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.shrapnelBombUpgrade_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/shrapnelBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.clusterBombUpgrade_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/clusterBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.shapedClusterBombUpgrade_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/shapedClusterBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .upgrade-box {
   display: flex;
   flex-direction: column;
@@ -216,6 +288,33 @@ body {
 }
 
 #bigDroneHPUpgradeModal {
+  visibility: hidden;
+}
+
+#fragBombUpgradeModal {
+  visibility: hidden;
+}
+
+#heBombUpgradeModal {
+  visibility: hidden;
+}
+
+#shapedBombUpgradeModal {
+  visibility: hidden;
+}
+#tankMineUpgradeModal {
+  visibility: hidden;
+}
+#magnetMineUpgradeModal {
+  visibility: hidden;
+}
+#shrapnelBombUpgradeModal {
+  visibility: hidden;
+}
+#clusterBombUpgradeModal {
+  visibility: hidden;
+}
+#shapedClusterBombUpgradeModal {
   visibility: hidden;
 }
 

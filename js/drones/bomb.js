@@ -35,7 +35,7 @@ import { switchToNextAvailableBomb } from "../logic/controls.js";
 export class Bomb {
   static weight = 0.1; // За замовчуванням
   static type = "default"; // Тип за замовчуванням
-  constructor(x, y, layer, ctx) {
+  constructor(x, y, layer, ctx, gameData) {
     this.x = x;
     this.y = y;
     this.layer = layer;
@@ -65,6 +65,7 @@ export class Bomb {
     this.wheelWidth = 0.4;
     this.randomRotation = Math.random() * Math.PI * 2;
     this.clusterDropped = false;
+    this.gameData = gameData;
   }
 
   drop(bombs, layer1) {
@@ -282,44 +283,70 @@ export class Bomb {
 export class FragBomb extends Bomb {
   static weight = 0.13;
   static type = "frag";
-  constructor(x, y, layer, ctx) {
-    super(x, y, layer, ctx);
+  constructor(x, y, layer, ctx, gameData) {
+    super(x, y, layer, ctx, gameData);
     this.image = fragBombImage;
     this.imageExplosion = imageExplosion;
     this.explosionScale = 64;
   }
 
   checkCollision(enemy) {
+    console.log(this.gameData);
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     let hitStatus = false;
     if (!enemy.vehicle) {
-      if (distance < 20) {
+      if (distance < 20 + this.gameData.fragBombUpgrade) {
         hitStatus = true;
-      } else if (distance < 40 && !enemy.crawl) {
-        if (Math.random() > 0.2) hitStatus = true;
-      } else if (distance < 50 && !enemy.crawl) {
-        if (Math.random() > 0.3) hitStatus = true;
-      } else if (distance < 90 && !enemy.crawl) {
-        if (Math.random() > 0.5) hitStatus = true;
-      } else if (distance < 140 && !enemy.crawl) {
-        if (Math.random() > 0.9) hitStatus = true;
+      } else if (
+        distance < 40 + this.gameData.fragBombUpgrade &&
+        !enemy.crawl
+      ) {
+        if (Math.random() > 0.2 - this.gameData.fragBombUpgrade * 0.01)
+          hitStatus = true;
+      } else if (
+        distance < 50 + this.gameData.fragBombUpgrade &&
+        !enemy.crawl
+      ) {
+        if (Math.random() > 0.3 - this.gameData.fragBombUpgrade * 0.01)
+          hitStatus = true;
+      } else if (
+        distance < 90 + this.gameData.fragBombUpgrade &&
+        !enemy.crawl
+      ) {
+        if (Math.random() > 0.5 - this.gameData.fragBombUpgrade * 0.01)
+          hitStatus = true;
+      } else if (
+        distance < 140 + this.gameData.fragBombUpgrade &&
+        !enemy.crawl
+      ) {
+        if (Math.random() > 0.9 - this.gameData.fragBombUpgrade * 0.01)
+          hitStatus = true;
       }
     } else if (enemy.vehicle.armor === 0) {
-      if (distance < 40) {
-        if (Math.random() > 0.85) hitStatus = true;
-      } else if (distance < 50) {
-        if (Math.random() > 0.9) hitStatus = true;
-      } else if (distance < 90) {
-        if (Math.random() > 0.95) hitStatus = true;
+      if (distance < 40 + this.gameData.fragBombUpgrade) {
+        if (Math.random() > 0.85 - this.gameData.fragBombUpgrade * 0.01)
+          hitStatus = true;
+      } else if (distance < 50 + this.gameData.fragBombUpgrade) {
+        if (Math.random() > 0.9 - this.gameData.fragBombUpgrade * 0.01)
+          hitStatus = true;
+      } else if (distance < 90 + this.gameData.fragBombUpgrade) {
+        if (Math.random() > 0.95 - this.gameData.fragBombUpgrade * 0.01)
+          hitStatus = true;
       }
     }
     return hitStatus;
   }
   checkVehicleCollision(vehicle) {
     if (vehicle.armor === 0) {
-      if (this.distanceToVehicle(0, vehicle) && Math.random() > 0.9) {
+      if (
+        this.distanceToVehicle(0 + this.gameData.fragBombUpgrade, vehicle) &&
+        Math.random() > 0.9 - this.gameData.fragBombUpgrade * 0.01
+      ) {
         vehicle.isBurning = true;
-      } else if (this.distanceToVehicle(30, vehicle) && Math.random() > 0.8) {
+      } else if (
+        this.distanceToVehicle(30 + this.gameData.fragBombUpgrade, vehicle) &&
+        Math.random() > 0.8 - this.gameData.fragBombUpgrade * 0.01
+      ) {
         vehicle.isStopped = true;
       }
       if (vehicle.isBurning || vehicle.isStopped) {
@@ -336,8 +363,8 @@ export class FragBomb extends Bomb {
 export class HeBomb extends Bomb {
   static weight = 0.16;
   static type = "he";
-  constructor(x, y, layer, ctx) {
-    super(x, y, layer, ctx);
+  constructor(x, y, layer, ctx, gameData) {
+    super(x, y, layer, ctx, gameData);
     this.image = heBombImage;
     this.imageExplosion = imageExplosion;
     this.explosionScale = 100;
@@ -347,9 +374,9 @@ export class HeBomb extends Bomb {
     let hitStatus = false;
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     if (!enemy.vehicle) {
-      hitStatus = distance < 50;
+      hitStatus = distance < 50 + this.gameData.heBombUpgrade * 2;
     } else if (enemy.vehicle.armor === 0) {
-      if (distance < 50) {
+      if (distance < 50 + this.gameData.heBombUpgrade * 2) {
         if (Math.random() > 0.6) hitStatus = true;
       }
     }
@@ -357,20 +384,25 @@ export class HeBomb extends Bomb {
   }
   checkVehicleCollision(vehicle) {
     if (vehicle.armor === 0) {
-      if (this.distanceToVehicle(0, vehicle)) {
+      if (this.distanceToVehicle(this.gameData.heBombUpgrade, vehicle)) {
         vehicle.isBurning = true;
-      } else if (this.distanceToVehicle(40, vehicle) && Math.random() > 0.3) {
+      } else if (
+        this.distanceToVehicle(40 + this.gameData.heBombUpgrade, vehicle) &&
+        Math.random() > 0.3 - this.gameData.heBombUpgrade * 0.01
+      ) {
         vehicle.isStopped = true;
       }
     } else {
       if (
         this.distanceToVehicle(0, vehicle) &&
-        Math.random() > 0.3 + vehicle.armor / 10
+        Math.random() >
+          0.3 - this.gameData.heBombUpgrade * 0.01 + vehicle.armor / 10
       ) {
         vehicle.isBurning = true;
       } else if (
         this.distanceToVehicle(20, vehicle) &&
-        Math.random() > 0.2 + vehicle.armor / 10
+        Math.random() >
+          0.2 - this.gameData.heBombUpgrade * 0.01 + vehicle.armor / 10
       ) {
         vehicle.isStopped = true;
       }
@@ -388,8 +420,8 @@ export class HeBomb extends Bomb {
 export class ShapedBomb extends Bomb {
   static weight = 0.14;
   static type = "shaped";
-  constructor(x, y, layer, ctx) {
-    super(x, y, layer, ctx);
+  constructor(x, y, layer, ctx, gameData) {
+    super(x, y, layer, ctx, gameData);
     this.image = shapedBombImage;
     this.imageExplosion = imageExplosion;
     this.type = "shaped";
@@ -417,8 +449,8 @@ export class ShapedBomb extends Bomb {
 export class FootMine extends Bomb {
   static weight = 0.08;
   static type = "footMine";
-  constructor(x, y, layer, ctx) {
-    super(x, y, layer, ctx);
+  constructor(x, y, layer, ctx, gameData) {
+    super(x, y, layer, ctx, gameData);
     this.image = footMineImage;
     this.imageExplosion = imageExplosion;
     this.explosionScale = 20;
@@ -449,8 +481,8 @@ export class FootMine extends Bomb {
 export class TankMine extends Bomb {
   static weight = 0.6;
   static type = "tankMine";
-  constructor(x, y, layer, ctx) {
-    super(x, y, layer, ctx);
+  constructor(x, y, layer, ctx, gameData) {
+    super(x, y, layer, ctx, gameData);
     this.image = tankMineImage;
     this.imageExplosion = imageExplosion;
     this.explosionScale = 100;
@@ -483,8 +515,8 @@ export class TankMine extends Bomb {
 export class MagnetMine extends Bomb {
   static weight = 1.6;
   static type = "magnetMine";
-  constructor(x, y, layer, ctx) {
-    super(x, y, layer, ctx);
+  constructor(x, y, layer, ctx, gameData) {
+    super(x, y, layer, ctx, gameData);
     this.image = magnetMineImage;
     this.imageExplosion = imageExplosion;
     this.explosionScale = 50;
@@ -532,8 +564,8 @@ export class MagnetMine extends Bomb {
 export class ShrapnelBomb extends Bomb {
   static weight = 0.28;
   static type = "shrapnel";
-  constructor(x, y, layer, ctx) {
-    super(x, y, layer, ctx);
+  constructor(x, y, layer, ctx, gameData) {
+    super(x, y, layer, ctx, gameData);
     this.image = shrapnelBombImage;
     this.imageExplosion = shrapnelExplosion;
     this.explosionScale = 260;
@@ -589,8 +621,8 @@ export class ShrapnelBomb extends Bomb {
 export class HeClusterMunition extends Bomb {
   static weight = 0.07;
   static type = "clusterMunition";
-  constructor(x, y, layer, ctx) {
-    super(x, y, layer, ctx);
+  constructor(x, y, layer, ctx, gameData) {
+    super(x, y, layer, ctx, gameData);
     this.image = clusterSubmunitionImage;
     this.imageExplosion = imageExplosion;
     this.explosionScale = 60;
@@ -662,8 +694,8 @@ export class HeClusterMunition extends Bomb {
 export class ShapedClusterMunition extends Bomb {
   static weight = 0.07;
   static type = "clusterMunition";
-  constructor(x, y, layer, ctx) {
-    super(x, y, layer, ctx);
+  constructor(x, y, layer, ctx, gameData) {
+    super(x, y, layer, ctx, gameData);
     this.image = shapedBombImage;
     this.imageExplosion = imageExplosion;
     this.explosionScale = 30;
@@ -711,8 +743,8 @@ export class ShapedClusterMunition extends Bomb {
 export class ClusterBomb extends Bomb {
   static weight = 2.0;
   static type = "cluster";
-  constructor(x, y, layer, ctx) {
-    super(x, y, layer, ctx);
+  constructor(x, y, layer, ctx, gameData) {
+    super(x, y, layer, ctx, gameData);
     this.image = clusterBombImage;
     this.imageExplosion = clusterExplosion;
     this.explosionScale = 120;
@@ -751,8 +783,8 @@ export class ClusterBomb extends Bomb {
 export class ShapedClusterBomb extends Bomb {
   static weight = 2.2;
   static type = "shapedCluster";
-  constructor(x, y, layer, ctx) {
-    super(x, y, layer, ctx);
+  constructor(x, y, layer, ctx, gameData) {
+    super(x, y, layer, ctx, gameData);
     this.image = shapedClusterBombImage;
     this.imageExplosion = clusterExplosion;
     this.explosionScale = 120;
@@ -815,7 +847,8 @@ export function dropBomb(
   layer1,
   ctx,
   droneScope,
-  bombs
+  bombs,
+  gameData
 ) {
   if (!currentDrone.isActive) {
     console.warn("🚨 Немає активного дрона!");
@@ -830,39 +863,39 @@ export function dropBomb(
   switch (selectionState.selectedBombType) {
     case "frag":
       bombArray = currentDrone.bombStorage.frag;
-      newBomb = new FragBomb(x, y, layer1, ctx);
+      newBomb = new FragBomb(x, y, layer1, ctx, gameData);
       break;
     case "he":
       bombArray = currentDrone.bombStorage.he;
-      newBomb = new HeBomb(x, y, layer1, ctx);
+      newBomb = new HeBomb(x, y, layer1, ctx, gameData);
       break;
     case "shaped":
       bombArray = currentDrone.bombStorage.shaped;
-      newBomb = new ShapedBomb(x, y, layer1, ctx);
+      newBomb = new ShapedBomb(x, y, layer1, ctx, gameData);
       break;
     case "footMine":
       bombArray = currentDrone.bombStorage.footMine;
-      newBomb = new FootMine(x, y, layer1, ctx);
+      newBomb = new FootMine(x, y, layer1, ctx, gameData);
       break;
     case "tankMine":
       bombArray = currentDrone.bombStorage.tankMine;
-      newBomb = new TankMine(x, y, layer1, ctx);
+      newBomb = new TankMine(x, y, layer1, ctx, gameData);
       break;
     case "magnetMine":
       bombArray = currentDrone.bombStorage.magnetMine;
-      newBomb = new MagnetMine(x, y, layer1, ctx);
+      newBomb = new MagnetMine(x, y, layer1, ctx, gameData);
       break;
     case "shrapnel":
       bombArray = currentDrone.bombStorage.shrapnel;
-      newBomb = new ShrapnelBomb(x, y, layer1, ctx);
+      newBomb = new ShrapnelBomb(x, y, layer1, ctx, gameData);
       break;
     case "cluster":
       bombArray = currentDrone.bombStorage.cluster;
-      newBomb = new ClusterBomb(x, y, layer1, ctx);
+      newBomb = new ClusterBomb(x, y, layer1, ctx, gameData);
       break;
     case "shapedCluster":
       bombArray = currentDrone.bombStorage.shapedCluster;
-      newBomb = new ShapedClusterBomb(x, y, layer1, ctx);
+      newBomb = new ShapedClusterBomb(x, y, layer1, ctx, gameData);
       break;
   }
 

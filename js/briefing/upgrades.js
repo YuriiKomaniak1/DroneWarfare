@@ -24,17 +24,14 @@ const bigDroneCapacityUpgradeCost = 1000 + gameData.upgradeGap;
 const smallDroneHPUpgradeCost = 3000 + gameData.upgradeGap;
 const mediumDroneHPUpgradeCost = 3000 + gameData.upgradeGap;
 const bigDroneHPUpgradeCost = 3000 + gameData.upgradeGap;
-
-//лічильники для апгрейдів
-let smallDroneSpeedUpgradeCounter = 0;
-let mediumDroneSpeedUpgradeCounter = 0;
-let bigDroneSpeedUpgradeCounter = 0;
-let smallDroneCapacityUpgradeCounter = 0;
-let mediumDroneCapacityUpgradeCounter = 0;
-let bigDroneCapacityUpgradeCounter = 0;
-let smallDroneHPUpgradeCounter = 0;
-let mediumDroneHPUpgradeCounter = 0;
-let bigDroneHPUpgradeCounter = 0;
+const fragBombUpgradeCost = 1000 + gameData.upgradeGap;
+const heBombUpgradeCost = 1000 + gameData.upgradeGap;
+const shapedBombUpgradeCost = 1000 + gameData.upgradeGap;
+const tankMineUpgradeCost = 1000 + gameData.upgradeGap;
+const magnetMineUpgradeCost = 2000 + gameData.upgradeGap;
+const shrapnelBombUpgradeCost = 1000 + gameData.upgradeGap;
+const clusterBombUpgradeCost = 1000 + gameData.upgradeGap;
+const shapedClusterBombUpgradeCost = 1000 + gameData.upgradeGap;
 
 // присвоєння цін в HTML
 document.querySelectorAll(".middleDroneOpenCost").forEach((el) => {
@@ -94,6 +91,31 @@ document.querySelectorAll(".mediumDroneHPUpgradeCost").forEach((el) => {
 document.querySelectorAll(".bigDroneHPUpgradeCost").forEach((el) => {
   el.textContent = bigDroneHPUpgradeCost;
 });
+document.querySelectorAll(".fragBombUpgradeCost").forEach((el) => {
+  el.textContent = fragBombUpgradeCost;
+});
+document.querySelectorAll(".heBombUpgradeCost").forEach((el) => {
+  el.textContent = heBombUpgradeCost;
+});
+document.querySelectorAll(".shapedBombUpgradeCost").forEach((el) => {
+  el.textContent = shapedBombUpgradeCost;
+});
+document.querySelectorAll(".tankMineUpgradeCost").forEach((el) => {
+  el.textContent = tankMineUpgradeCost;
+});
+document.querySelectorAll(".magnetMineUpgradeCost").forEach((el) => {
+  el.textContent = magnetMineUpgradeCost;
+});
+document.querySelectorAll(".shrapnelBombUpgradeCost").forEach((el) => {
+  el.textContent = shrapnelBombUpgradeCost;
+});
+document.querySelectorAll(".clusterBombUpgradeCost").forEach((el) => {
+  el.textContent = clusterBombUpgradeCost;
+});
+document.querySelectorAll(".shapedClusterBombUpgradeCost").forEach((el) => {
+  el.textContent = shapedClusterBombUpgradeCost;
+});
+
 // Модалка відкриття середнього дрону
 document.getElementById("medium_drone_image").addEventListener("click", () => {
   document.getElementById("middleDroneOpenModal").style.visibility = "visible";
@@ -311,7 +333,7 @@ document.getElementById("smallDroneNextHP").textContent =
 document.getElementById("smallDroneHPUpgradeCount").textContent =
   gameData.smallDroneHPUpgrade;
 
-if (gameData.smallDroneHPUpgrade >= 10)
+if (gameData.smallDroneHPUpgrade >= 3)
   document.getElementById("smallDroneHPUB").style.display = "none";
 // Модалка апгрейду швидкості середнього дрону
 document
@@ -341,8 +363,186 @@ document.getElementById("mediumDroneNextSpeed").textContent =
 document.getElementById("mediumDroneSpeedUpgradeCount").textContent =
   gameData.mediumDroneSpeedUpgrade;
 
-if (gameData.mediumDroneSpeedUpgrade >= 6)
+if (gameData.mediumDroneSpeedUpgrade >= 6 || !gameData.mediumDroneAvailable)
   document.getElementById("mediumDroneSpeedUB").style.display = "none";
+
+// Модалка апгрейду вантажопідйомності середнього дрону
+document
+  .getElementById("mediumDroneCapacity_image")
+  .addEventListener("click", () => {
+    document.getElementById(
+      "mediumDroneCapacityUpgradeModal"
+    ).style.visibility = "visible";
+  });
+document
+  .getElementById("mediumDroneCapacityUpgrade")
+  .addEventListener("click", () => {
+    if (
+      gameData.score >= mediumDroneCapacityUpgradeCost &&
+      gameData.mediumDroneCapacityUpgrade < 10
+    ) {
+      gameData.mediumDroneCapacityUpgrade++;
+      upgradeRoutine(
+        mediumDroneCapacityUpgradeCost,
+        ".mediumDroneCapacityUpgradeCost"
+      );
+    }
+  });
+document.getElementById("mediumDroneCurrentCapacity").textContent =
+  1600 + gameData.mediumDroneCapacityUpgrade * 80;
+document.getElementById("mediumDroneNextCapacity").textContent =
+  1600 + (gameData.mediumDroneCapacityUpgrade + 1) * 80;
+document.getElementById("mediumDroneCapacityUpgradeCount").textContent =
+  gameData.mediumDroneCapacityUpgrade;
+
+if (gameData.mediumDroneCapacityUpgrade >= 10 || !gameData.mediumDroneAvailable)
+  document.getElementById("mediumDroneCapacityUB").style.display = "none";
+
+// Модалка апгрейду міцності середнього дрону
+document.getElementById("mediumDroneHP_image").addEventListener("click", () => {
+  document.getElementById("mediumDroneHPUpgradeModal").style.visibility =
+    "visible";
+});
+document
+  .getElementById("mediumDroneHPUpgrade")
+  .addEventListener("click", () => {
+    if (
+      gameData.score >= mediumDroneHPUpgradeCost &&
+      gameData.mediumDroneHPUpgrade < 4
+    ) {
+      gameData.mediumDroneHPUpgrade++;
+      upgradeRoutine(mediumDroneHPUpgradeCost, ".mediumDroneHPUpgradeCost");
+    }
+  });
+document.getElementById("mediumDroneCurrentHP").textContent =
+  5 + gameData.mediumDroneHPUpgrade;
+document.getElementById("mediumDroneNextHP").textContent =
+  5 + (gameData.mediumDroneHPUpgrade + 1);
+document.getElementById("mediumDroneHPUpgradeCount").textContent =
+  gameData.mediumDroneHPUpgrade;
+
+if (gameData.mediumDroneHPUpgrade >= 4 || !gameData.mediumDroneAvailable)
+  document.getElementById("mediumDroneHPUB").style.display = "none";
+
+// Модалка апгрейду швидкості великого дрону
+document.getElementById("bigDroneSpeed_image").addEventListener("click", () => {
+  document.getElementById("bigDroneSpeedUpgradeModal").style.visibility =
+    "visible";
+});
+document
+  .getElementById("bigDroneSpeedUpgrade")
+  .addEventListener("click", () => {
+    if (
+      gameData.score >= bigDroneSpeedUpgradeCost &&
+      gameData.bigDroneSpeedUpgrade < 6
+    ) {
+      gameData.bigDroneSpeedUpgrade++;
+      upgradeRoutine(bigDroneSpeedUpgradeCost, ".bigDroneSpeedUpgradeCost");
+    }
+  });
+document.getElementById("bigDroneCurrentSpeed").textContent =
+  8 + gameData.bigDroneSpeedUpgrade * 0.4;
+document.getElementById("bigDroneNextSpeed").textContent =
+  8 + (gameData.bigDroneSpeedUpgrade + 1) * 0.4;
+document.getElementById("bigDroneSpeedUpgradeCount").textContent =
+  gameData.bigDroneSpeedUpgrade;
+
+if (gameData.bigDroneSpeedUpgrade >= 6 || !gameData.bigDroneAvailable)
+  document.getElementById("bigDroneSpeedUB").style.display = "none";
+
+// Модалка апгрейду вантажопідйомності великого дрону
+document
+  .getElementById("bigDroneCapacity_image")
+  .addEventListener("click", () => {
+    document.getElementById("bigDroneCapacityUpgradeModal").style.visibility =
+      "visible";
+  });
+document
+  .getElementById("bigDroneCapacityUpgrade")
+  .addEventListener("click", () => {
+    if (
+      gameData.score >= bigDroneCapacityUpgradeCost &&
+      gameData.bigDroneCapacityUpgrade < 10
+    ) {
+      gameData.bigDroneCapacityUpgrade++;
+      upgradeRoutine(
+        bigDroneCapacityUpgradeCost,
+        ".bigDroneCapacityUpgradeCost"
+      );
+    }
+  });
+document.getElementById("bigDroneCurrentCapacity").textContent =
+  6400 + gameData.bigDroneCapacityUpgrade * 200;
+document.getElementById("bigDroneNextCapacity").textContent =
+  6400 + (gameData.bigDroneCapacityUpgrade + 1) * 200;
+document.getElementById("bigDroneCapacityUpgradeCount").textContent =
+  gameData.bigDroneCapacityUpgrade;
+
+if (gameData.bigDroneCapacityUpgrade >= 10 || !gameData.bigDroneAvailable)
+  document.getElementById("bigDroneCapacityUB").style.display = "none";
+
+// Модалка апгрейду міцності великого дрону
+document.getElementById("bigDroneHP_image").addEventListener("click", () => {
+  document.getElementById("bigDroneHPUpgradeModal").style.visibility =
+    "visible";
+});
+document.getElementById("bigDroneHPUpgrade").addEventListener("click", () => {
+  if (
+    gameData.score >= bigDroneHPUpgradeCost &&
+    gameData.bigDroneHPUpgrade < 5
+  ) {
+    gameData.bigDroneHPUpgrade++;
+    upgradeRoutine(bigDroneHPUpgradeCost, ".bigDroneHPUpgradeCost");
+  }
+});
+document.getElementById("bigDroneCurrentHP").textContent =
+  9 + gameData.bigDroneHPUpgrade;
+document.getElementById("bigDroneNextHP").textContent =
+  9 + (gameData.bigDroneHPUpgrade + 1);
+document.getElementById("bigDroneHPUpgradeCount").textContent =
+  gameData.bigDroneHPUpgrade;
+
+if (gameData.bigDroneHPUpgrade >= 5 || !gameData.bigDroneAvailable)
+  document.getElementById("bigDroneHPUB").style.display = "none";
+
+// Модалка апгрейду осколкової бомби
+document
+  .getElementById("fragBombUpgrade_image")
+  .addEventListener("click", () => {
+    document.getElementById("fragBombUpgradeModal").style.visibility =
+      "visible";
+  });
+document.getElementById("fragBombUpgrade").addEventListener("click", () => {
+  if (gameData.score >= fragBombUpgradeCost && gameData.fragBombUpgrade < 10) {
+    gameData.fragBombUpgrade++;
+    upgradeRoutine(fragBombUpgradeCost, ".fragBombUpgradeCost");
+  }
+});
+document.getElementById("fragBombUpgradeCount").textContent =
+  gameData.fragBombUpgrade;
+
+if (gameData.fragBombUpgrade >= 10)
+  document.getElementById("fragBombUpgradeUB").style.display = "none";
+
+// Модалка апгрейду фугасної бомби
+document.getElementById("heBombUpgrade_image").addEventListener("click", () => {
+  document.getElementById("heBombUpgradeModal").style.visibility = "visible";
+});
+document.getElementById("heBombUpgrade").addEventListener("click", () => {
+  if (gameData.score >= heBombUpgradeCost && gameData.heBombUpgrade < 10) {
+    gameData.heBombUpgrade++;
+    upgradeRoutine(heBombUpgradeCost, ".heBombUpgradeCost");
+  }
+});
+document.getElementById("heBombCurrentRadius").textContent =
+  2.5 + gameData.heBombUpgrade * 0.1;
+document.getElementById("heBombNextRadius").textContent =
+  2.5 + (gameData.heBombUpgrade + 1) * 0.1;
+document.getElementById("heBombUpgradeCount").textContent =
+  gameData.heBombUpgrade;
+
+if (gameData.heBombUpgrade >= 10)
+  document.getElementById("heBombUpgradeUB").style.display = "none";
 
 // вихід з модалки
 document.querySelectorAll(".back-button").forEach((el) => {

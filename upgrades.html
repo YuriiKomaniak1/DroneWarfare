@@ -152,30 +152,136 @@
           <h4 class="mediumDroneCapacityUpgradeCost upgrade-cost">1</h4>
           <div id="mediumDroneCapacity_image" class="medium_drone_image"></div>
           <p>середній <br />дрон<br />вага</p>
+          <p>
+            <strong
+              ><span id="mediumDroneCapacityUpgradeCount">0</span>/10</strong
+            >
+          </p>
         </div>
 
         <div class="upgrade-box" id="mediumDroneHPUB">
           <h4 class="mediumDroneHPUpgradeCost upgrade-cost">1</h4>
           <div id="mediumDroneHP_image" class="medium_drone_image"></div>
           <p>середній <br />дрон<br />міцність</p>
+          <p>
+            <strong><span id="mediumDroneHPUpgradeCount">0</span>/4</strong>
+          </p>
         </div>
 
         <div class="upgrade-box" id="bigDroneSpeedUB">
           <h4 class="bigDroneSpeedUpgradeCost upgrade-cost">1</h4>
           <div id="bigDroneSpeed_image" class="big_drone_image"></div>
           <p>великий <br />дрон<br />швидкість</p>
+          <p>
+            <strong><span id="bigDroneSpeedUpgradeCount">0</span>/6</strong>
+          </p>
         </div>
 
         <div class="upgrade-box" id="bigDroneCapacityUB">
           <h4 class="bigDroneCapacityUpgradeCost upgrade-cost">1</h4>
           <div id="bigDroneCapacity_image" class="big_drone_image"></div>
           <p>великий <br />дрон<br />вага</p>
+          <p>
+            <strong><span id="bigDroneCapacityUpgradeCount">0</span>/10</strong>
+          </p>
         </div>
 
         <div class="upgrade-box" id="bigDroneHPUB">
           <h4 class="bigDroneHPUpgradeCost upgrade-cost">1</h4>
           <div id="bigDroneHP_image" class="big_drone_image"></div>
           <p>великий <br />дрон<br />міцність</p>
+          <p>
+            <strong><span id="bigDroneHPUpgradeCount">0</span>/5</strong>
+          </p>
+        </div>
+
+        <div class="upgrade-box" id="fragBombUpgradeUB">
+          <h4 class="fragBombUpgradeCost upgrade-cost">1</h4>
+          <div id="fragBombUpgrade_image" class="fragBombUpgrade_image"></div>
+          <p>осколкова <br />бомба</p>
+          <p>
+            <strong><span id="fragBombUpgradeCount">0</span>/10</strong>
+          </p>
+        </div>
+
+        <div class="upgrade-box" id="heBombUpgradeUB">
+          <h4 class="heBombUpgradeCost upgrade-cost">1</h4>
+          <div id="heBombUpgrade_image" class="heBombUpgrade_image"></div>
+          <p>фугасна <br />бомба</p>
+          <p>
+            <strong><span id="heBombUpgradeCount">0</span>/10</strong>
+          </p>
+        </div>
+
+        <div class="upgrade-box" id="shapedBombUpgradeUB">
+          <h4 class="shapedBombUpgradeCost upgrade-cost">1</h4>
+          <div
+            id="shapedBombUpgrade_image"
+            class="shapedBombUpgrade_image"
+          ></div>
+          <p>кумулятивна <br />бомба</p>
+          <p>
+            <strong><span id="shapedBombUpgradeCount">0</span>/10</strong>
+          </p>
+        </div>
+
+        <div class="upgrade-box" id="tankMineUpgradeUB">
+          <h4 class="tankMineUpgradeCost upgrade-cost">1</h4>
+          <div id="tankMineUpgrade_image" class="tankMineUpgrade_image"></div>
+          <p>фугасна <br />міна</p>
+          <p>
+            <strong><span id="tankMineUpgradeCount">0</span>/10</strong>
+          </p>
+        </div>
+
+        <div class="upgrade-box" id="magnetMineUpgradeUB">
+          <h4 class="magnetMineUpgradeCost upgrade-cost">1</h4>
+          <div
+            id="magnetMineUpgrade_image"
+            class="magnetMineUpgrade_image"
+          ></div>
+          <p>магнітна <br />міна</p>
+          <p>
+            <strong><span id="magnetMineUpgradeCount">0</span>/4</strong>
+          </p>
+        </div>
+
+        <div class="upgrade-box" id="shrapnelBombUpgradeUB">
+          <h4 class="shrapnelBombUpgradeCost upgrade-cost">1</h4>
+          <div
+            id="shrapnelBombUpgrade_image"
+            class="shrapnelBombUpgrade_image"
+          ></div>
+          <p>шрапнельна <br />бомба</p>
+          <p>
+            <strong><span id="shrapnelBombUpgradeCount">0</span>/10</strong>
+          </p>
+        </div>
+
+        <div class="upgrade-box" id="clusterBombUpgradeUB">
+          <h4 class="clusterBombUpgradeCost upgrade-cost">1</h4>
+          <div
+            id="clusterBombUpgrade_image"
+            class="clusterBombUpgrade_image"
+          ></div>
+          <p>касетна <br />бомба</p>
+          <p>
+            <strong><span id="clusterBombUpgradeCount">0</span>/10</strong>
+          </p>
+        </div>
+
+        <div class="upgrade-box" id="shapedClusterBombUpgradeUB">
+          <h4 class="shapedClusterBombUpgradeCost upgrade-cost">1</h4>
+          <div
+            id="shapedClusterBombUpgrade_image"
+            class="shapedClusterBombUpgrade_image"
+          ></div>
+          <p>ПТ касетна <br />бомба</p>
+          <p>
+            <strong
+              ><span id="shapedClusterBombUpgradeCount">0</span>/10</strong
+            >
+          </p>
         </div>
       </div>
 
@@ -513,6 +619,208 @@
           <button id="mediumDroneSpeedUpgrade" class="briefing-button">
             Дослідити
           </button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка апгрейду вантажопідйомності середнього дрону -->
+    <div id="mediumDroneCapacityUpgradeModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Покращити вантажопідйомність середнього дрона</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="medium_drone_image"></div>
+        <h3>
+          Вартість дослідження
+          <span class="mediumDroneCapacityUpgradeCost">1</span>
+        </h3>
+        <p>
+          Поточна вантажопідйомність середнього дрону<strong>
+            <span id="mediumDroneCurrentCapacity">10.</span>г.
+          </strong>
+        </p>
+        <p>
+          Після апгрейду вона буде становити<strong>
+            <span id="mediumDroneNextCapacity">10.</span>г.</strong
+          >
+        </p>
+
+        <div class="button-panel">
+          <button id="mediumDroneCapacityUpgrade" class="briefing-button">
+            Дослідити
+          </button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка апгрейду міцності середнього дрону -->
+    <div id="mediumDroneHPUpgradeModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Покращити міцність середнього дрона</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="medium_drone_image"></div>
+        <h3>
+          Вартість дослідження
+          <span class="mediumDroneHPUpgradeCost">1</span>
+        </h3>
+        <p>
+          Поточна міцність середнього дрону<strong>
+            <span id="mediumDroneCurrentHP">10.</span>г.
+          </strong>
+        </p>
+        <p>
+          Після апгрейду вона буде становити<strong>
+            <span id="mediumDroneNextHP">10.</span>г.</strong
+          >
+        </p>
+
+        <div class="button-panel">
+          <button id="mediumDroneHPUpgrade" class="briefing-button">
+            Дослідити
+          </button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка апгрейду швидкості великого дрону -->
+    <div id="bigDroneSpeedUpgradeModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Покращити швидкість великого дрона</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="big_drone_image"></div>
+        <h3>
+          Вартість дослідження
+          <span class="bigDroneSpeedUpgradeCost">1</span>
+        </h3>
+        <p>
+          Поточна швидкість великого дрону<strong>
+            <span id="bigDroneCurrentSpeed">10м/с.</span>
+          </strong>
+        </p>
+        <p>
+          Після апгрейду вона буде становити<strong>
+            <span id="bigDroneNextSpeed">10м/с.</span></strong
+          >
+        </p>
+
+        <div class="button-panel">
+          <button id="bigDroneSpeedUpgrade" class="briefing-button">
+            Дослідити
+          </button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка апгрейду вантажопідйомності великого дрону -->
+    <div id="bigDroneCapacityUpgradeModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Покращити вантажопідйомність великого дрона</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="big_drone_image"></div>
+        <h3>
+          Вартість дослідження
+          <span class="bigDroneCapacityUpgradeCost">1</span>
+        </h3>
+        <p>
+          Поточна вантажопідйомність великого дрону<strong>
+            <span id="bigDroneCurrentCapacity">10.</span>г.
+          </strong>
+        </p>
+        <p>
+          Після апгрейду вона буде становити<strong>
+            <span id="bigDroneNextCapacity">10.</span>г.</strong
+          >
+        </p>
+
+        <div class="button-panel">
+          <button id="bigDroneCapacityUpgrade" class="briefing-button">
+            Дослідити
+          </button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка апгрейду міцності великог дрону -->
+    <div id="bigDroneHPUpgradeModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Покращити міцність великого дрона</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="big_drone_image"></div>
+        <h3>
+          Вартість дослідження
+          <span class="bigDroneHPUpgradeCost">1</span>
+        </h3>
+        <p>
+          Поточна міцність великого дрону<strong>
+            <span id="bigDroneCurrentHP">10.</span>г.
+          </strong>
+        </p>
+        <p>
+          Після апгрейду вона буде становити<strong>
+            <span id="bigDroneNextHP">10.</span>г.</strong
+          >
+        </p>
+
+        <div class="button-panel">
+          <button id="bigDroneHPUpgrade" class="briefing-button">
+            Дослідити
+          </button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка апгрейду осколкової бомби -->
+    <div id="fragBombUpgradeModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Покращити фугасну бомбу</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="fragBombUpgrade_image"></div>
+        <h3>
+          Вартість дослідження
+          <span class="fragBombUpgradeCost">1</span>
+        </h3>
+        <p>
+          Кожен апгрейд збільшує радіус розльоту осколків на 2% та їх кількість
+          на 5%
+        </p>
+
+        <div class="button-panel">
+          <button id="fragBombUpgrade" class="briefing-button">
+            Дослідити
+          </button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка апгрейду фугасної бомби -->
+    <div id="heBombUpgradeModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Покращити фугасну бомбу</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="heBombUpgrade_image"></div>
+        <h3>
+          Вартість дослідження
+          <span class="heBombUpgradeCost">1</span>
+        </h3>
+        <p>
+          Поточний радіус вибуху фугасної боми становить<strong>
+            <span id="heBombCurrentRadius">10.</span>м.
+          </strong>
+        </p>
+        <p>
+          Після апгрейду він буде становити<strong>
+            <span id="heBombNextRadius">10.</span>м</strong
+          >
+        </p>
+
+        <div class="button-panel">
+          <button id="heBombUpgrade" class="briefing-button">Дослідити</button>
           <button class="back-button briefing-button">Назад</button>
         </div>
       </div>

@@ -92,6 +92,15 @@ class GameData {
     this.smallDroneHPUpgrade = 0;
     this.mediumDroneHPUpgrade = 0;
     this.bigDroneHPUpgrade = 0;
+    this.fragBombUpgrade = 0;
+    this.heBombUpgrade = 0;
+    this.shapedBombUpgrade = 0;
+    this.footMinebUpgrade = 0;
+    this.tankMineUpgrade = 0;
+    this.magnetMineUpgrade = 0;
+    this.shrapnelBombUpgrade = 0;
+    this.clusterBombUpgrade = 0;
+    this.shapedClusterBombUpgrade = 0;
     this.upgradeGap = 0;
     this.gapScale = 500;
   }

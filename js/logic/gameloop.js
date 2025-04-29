@@ -45,11 +45,27 @@ export function createAnimationLoop(
   const minimap = new Minimap(canvas, enemies, vehicles, ctx, layer1, bombs);
   const droneIcons = createDroneIcons(gameState.drones, canvas, ctx);
   setupControls(() => {
-    dropBomb(currentDrone, selectionState, layer1, ctx, droneScope, bombs);
+    dropBomb(
+      currentDrone,
+      selectionState,
+      layer1,
+      ctx,
+      droneScope,
+      bombs,
+      gameData
+    );
   }, gameState.drones);
   setupDroneSelectionByClick(canvas, droneIcons);
   setupTouchControls(() => {
-    dropBomb(currentDrone, selectionState, layer1, ctx, droneScope, bombs);
+    dropBomb(
+      currentDrone,
+      selectionState,
+      layer1,
+      ctx,
+      droneScope,
+      bombs,
+      gameData
+    );
   }, canvas);
   console.log("gameState", gameState);
 
