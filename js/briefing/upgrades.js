@@ -544,6 +544,32 @@ document.getElementById("heBombUpgradeCount").textContent =
 if (gameData.heBombUpgrade >= 10)
   document.getElementById("heBombUpgradeUB").style.display = "none";
 
+// Модалка апгрейду кумулятивної бомби
+document
+  .getElementById("shapedBombUpgrade_image")
+  .addEventListener("click", () => {
+    document.getElementById("shapedBombUpgradeModal").style.visibility =
+      "visible";
+  });
+document.getElementById("shapedBombUpgrade").addEventListener("click", () => {
+  if (
+    gameData.score >= shapedBombUpgradeCost &&
+    gameData.shapedBombUpgrade < 10
+  ) {
+    gameData.shapedBombUpgrade++;
+    upgradeRoutine(shapedBombUpgradeCost, ".shapedBombUpgradeCost");
+  }
+});
+document.getElementById("shapedBombCurrentAP").textContent =
+  0.9 + gameData.shapedBombUpgrade * 0.01;
+document.getElementById("shapedBombNextAP").textContent =
+  0.9 + (gameData.shapedBombUpgrade + 1) * 0.01;
+document.getElementById("shapedBombUpgradeCount").textContent =
+  gameData.shapedBombUpgrade;
+
+if (gameData.shapedBombUpgrade >= 9)
+  document.getElementById("shapedBombUpgradeUB").style.display = "none";
+
 // вихід з модалки
 document.querySelectorAll(".back-button").forEach((el) => {
   el.addEventListener("click", () => {

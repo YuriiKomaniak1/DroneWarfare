@@ -221,16 +221,7 @@
           ></div>
           <p>кумулятивна <br />бомба</p>
           <p>
-            <strong><span id="shapedBombUpgradeCount">0</span>/10</strong>
-          </p>
-        </div>
-
-        <div class="upgrade-box" id="tankMineUpgradeUB">
-          <h4 class="tankMineUpgradeCost upgrade-cost">1</h4>
-          <div id="tankMineUpgrade_image" class="tankMineUpgrade_image"></div>
-          <p>фугасна <br />міна</p>
-          <p>
-            <strong><span id="tankMineUpgradeCount">0</span>/10</strong>
+            <strong><span id="shapedBombUpgradeCount">0</span>/9</strong>
           </p>
         </div>
 
@@ -406,7 +397,7 @@
           Активується при наїзді на неї техніки колесом або траком. Гарантовано
           знищує неброньовану технікую. Непогано знищує або зупиняє
           легкоброньовану техніку. З важкою бронетехнікою має дуже малі шанси
-          впоратись. Вага 600г.
+          впоратись. Вага 450г.
         </p>
         <div class="button-panel">
           <button id="tankMineOpen" class="briefing-button">Дослідити</button>
@@ -821,6 +812,38 @@
 
         <div class="button-panel">
           <button id="heBombUpgrade" class="briefing-button">Дослідити</button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка апгрейду кумулятивної бомби -->
+    <div id="shapedBombUpgradeModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Покращити кумулятивну бомбу</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="shapedBombUpgrade_image"></div>
+        <h3>
+          Вартість дослідження
+          <span class="shapedBombUpgradeCost">1</span>
+        </h3>
+        <p>
+          Бронепробиття це імовірність пробити одиницю броні. Для знищення
+          техніки снаряд повинен пробити всі одиниці броні бронетехніки. Поточне
+          бронепробиття кумулятивної бомби<strong>
+            <span id="shapedBombCurrentAP">10.</span>
+          </strong>
+        </p>
+        <p>
+          Після апгрейду воно буде становити<strong>
+            <span id="shapedBombNextAP">10.</span></strong
+          >
+        </p>
+
+        <div class="button-panel">
+          <button id="shapedBombUpgrade" class="briefing-button">
+            Дослідити
+          </button>
           <button class="back-button briefing-button">Назад</button>
         </div>
       </div>

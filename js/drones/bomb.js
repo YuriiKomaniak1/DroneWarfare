@@ -426,7 +426,7 @@ export class ShapedBomb extends Bomb {
     this.imageExplosion = imageExplosion;
     this.type = "shaped";
     this.explosionScale = 30;
-    this.armorPenetration = 0.9;
+    this.armorPenetration = 0.9 + this.gameData.shapedBombUpgrade * 0.01;
   }
 
   checkCollision(enemy) {
@@ -479,8 +479,7 @@ export class FootMine extends Bomb {
 
 // фугасна міна
 export class TankMine extends Bomb {
-  static weight = 0.6;
-  static type = "tankMine";
+  static weight = 0.45;
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
     this.image = tankMineImage;
