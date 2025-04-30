@@ -10,10 +10,31 @@ const canvas = document.getElementById("equipDroneCanvas");
 canvas.width = 120;
 canvas.height = 160;
 const ctx = canvas.getContext("2d");
-// витягуємо індекс дрона з localStorage
-const droneIndex = localStorage.getItem("droneToEquip");
-document.getElementById("drone_number").textContent = parseInt(droneIndex) + 1;
 
+// витягуємо індекс дрона з localStorage
+const droneIndex = parseInt(localStorage.getItem("droneToEquip") ?? 0);
+let oldDrone = gameState.drones[droneIndex];
+let newDrone;
+
+switch (oldDrone.type) {
+  case "small":
+    newDrone = new SmallDrone(gameData);
+    break;
+  case "medium":
+    newDrone = new MediumDrone(gameData);
+    break;
+  case "big":
+    newDrone = new BigDrone(gameData);
+    break;
+}
+
+newDrone.bombStorage = oldDrone.cloneBombStorage(oldDrone.bombStorage);
+newDrone.initialBombStorage = oldDrone.cloneBombStorage(
+  oldDrone.initialBombStorage
+);
+gameState.drones[droneIndex] = newDrone;
+document.getElementById("drone_number").textContent = parseInt(droneIndex) + 1;
+console.log("tankMineAvailable =", gameData.tankMineAvailable);
 let drone = null;
 if (droneIndex !== null) {
   drone = gameState.drones[parseInt(droneIndex)];

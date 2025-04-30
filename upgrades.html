@@ -831,17 +831,139 @@
           Бронепробиття це імовірність пробити одиницю броні. Для знищення
           техніки снаряд повинен пробити всі одиниці броні бронетехніки. Поточне
           бронепробиття кумулятивної бомби<strong>
-            <span id="shapedBombCurrentAP">10.</span>
+            <span id="shapedBombCurrentState">10.</span>
           </strong>
         </p>
         <p>
           Після апгрейду воно буде становити<strong>
-            <span id="shapedBombNextAP">10.</span></strong
+            <span id="shapedBombNextState">10.</span></strong
           >
         </p>
 
         <div class="button-panel">
           <button id="shapedBombUpgrade" class="briefing-button">
+            Дослідити
+          </button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка апгрейду магнітної міни -->
+    <div id="magnetMineUpgradeModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Покращити магнітну міну</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="magnetMineUpgrade_image"></div>
+        <h3>
+          Вартість дослідження
+          <span class="magnetMineUpgradeCost">1</span>
+        </h3>
+        <p>
+          Бронепробиття це імовірність пробити одиницю броні. Для знищення
+          техніки снаряд повинен пробити всі одиниці броні бронетехніки. Поточне
+          бронепробиття магнітної міни<strong>
+            <span id="magnetMineCurrentState">4.</span>
+          </strong>
+        </p>
+        <p>
+          Після апгрейду воно буде становити<strong>
+            <span id="magnetMineNextState">4.</span></strong
+          >
+        </p>
+
+        <div class="button-panel">
+          <button id="magnetMineUpgrade" class="briefing-button">
+            Дослідити
+          </button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка апгрейду шрапнельної бомби -->
+    <div id="shrapnelBombUpgradeModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Покращити шрапнельну бомбу</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="shrapnelBombUpgrade_image"></div>
+        <h3>
+          Вартість дослідження
+          <span class="shrapnelBombUpgradeCost">1</span>
+        </h3>
+        <p>
+          Кожен апгрейд збільшує радіус розльоту осколків на 1% та їх кількість
+          на 5%
+        </p>
+
+        <div class="button-panel">
+          <button id="shrapnelBombUpgrade" class="briefing-button">
+            Дослідити
+          </button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка апгрейду касетної бомби -->
+    <div id="clusterBombUpgradeModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Покращити фугасну бомбу</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="clusterBombUpgrade_image"></div>
+        <h3>
+          Вартість дослідження
+          <span class="clusterBombUpgradeCost">1</span>
+        </h3>
+        <p>
+          Кількість фугасних суббоєприпасів
+          <strong> <span id="clusterBombCurrentState">10.</span>шт </strong>
+        </p>
+        <p>
+          Після апгрейду віна буде становити<strong>
+            <span id="clusterBombNextState">10.</span>шт</strong
+          >
+        </p>
+
+        <div class="button-panel">
+          <button id="clusterBombUpgrade" class="briefing-button">
+            Дослідити
+          </button>
+          <button class="back-button briefing-button">Назад</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модалка апгрейду ПТ касетної бомби -->
+    <div id="shapedClusterBombUpgradeModal" class="upgrade-modal">
+      <div class="container">
+        <h2>Покращити ПТ касетну бомбу</h2>
+        <h4>Ігрові бали <span class="score">1</span></h4>
+        <div class="shapedClusterBombUpgrade_image"></div>
+        <h3>
+          Вартість дослідження
+          <span class="shapedClusterBombUpgradeCost">1</span>
+        </h3>
+        <p>Кількість фугасних суббоєприпасів незмінна — 16 шт</p>
+        <p>
+          Кількість кумулятивних суббоєприпасів:
+          <strong><span id="shapedClusterBombCurrentState">10</span> шт</strong>
+        </p>
+        <p>
+          Бронепробиття:
+          <strong><span id="shapedClusterBombCurrentAPState">10</span></strong>
+        </p>
+        <p>
+          Після апгрейду кількість буде:
+          <strong><span id="shapedClusterBombNextState">11</span> шт</strong>
+        </p>
+        <p>
+          Бронепробиття:
+          <strong><span id="shapedClusterBombNextAPState">11</span></strong>
+        </p>
+
+        <div class="button-panel">
+          <button id="shapedClusterBombUpgrade" class="briefing-button">
             Дослідити
           </button>
           <button class="back-button briefing-button">Назад</button>

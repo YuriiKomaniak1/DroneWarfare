@@ -116,6 +116,7 @@ export class Vehicle {
   }
 
   update(vehicles, canvas, gameState, training) {
+    // списування очок
     if (this.isBurning && !this.scored && !training) {
       gameState.score += this.score;
       this.scored = true;
@@ -148,6 +149,30 @@ export class Vehicle {
         this.baseX += Math.cos(angle) * this.speed + randomShakeX;
         this.baseY += Math.sin(angle) * this.speed + randomShakeY;
       }
+      // --- Взаємодія з іншими ворогами (штовхання) ---
+      let pushX = 0;
+      let pushY = 0;
+      for (let other of vehicles) {
+        if (other === this || other.isDestroyed) continue;
+
+        const dx = this.baseX - other.baseX;
+        const dy = this.baseY - other.baseY;
+        const distance = Math.hypot(dx, dy);
+        const minDist = this.width * this.scale * 2;
+
+        // Відштовхуємо лише того, у кого менше Y (нижче на екрані)
+        if (distance < minDist && this.baseY < other.baseY) {
+          const angle = Math.atan2(dy, dx);
+          const push = minDist - distance;
+
+          this.baseX += Math.cos(angle) * push * 0.5; // коефіцієнт приглушення
+          this.baseY += Math.sin(angle) * push * 0.5; // коефіцієнт приглушення
+        }
+      }
+
+      // Замість прямого зсуву — додаємо до основного руху:
+      this.baseX += pushX * 0.5; // коефіцієнт приглушення
+      this.baseY += pushY * 0.5;
     }
     if (this.isBurning) {
       setTimeout(() => {

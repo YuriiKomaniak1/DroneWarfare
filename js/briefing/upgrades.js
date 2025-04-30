@@ -534,10 +534,14 @@ document.getElementById("heBombUpgrade").addEventListener("click", () => {
     upgradeRoutine(heBombUpgradeCost, ".heBombUpgradeCost");
   }
 });
-document.getElementById("heBombCurrentRadius").textContent =
-  2.5 + gameData.heBombUpgrade * 0.1;
-document.getElementById("heBombNextRadius").textContent =
-  2.5 + (gameData.heBombUpgrade + 1) * 0.1;
+document.getElementById("heBombCurrentRadius").textContent = (
+  2.5 +
+  gameData.heBombUpgrade * 0.1
+).toFixed(1);
+document.getElementById("heBombNextRadius").textContent = (
+  2.5 +
+  (gameData.heBombUpgrade + 1) * 0.1
+).toFixed(1);
 document.getElementById("heBombUpgradeCount").textContent =
   gameData.heBombUpgrade;
 
@@ -560,15 +564,140 @@ document.getElementById("shapedBombUpgrade").addEventListener("click", () => {
     upgradeRoutine(shapedBombUpgradeCost, ".shapedBombUpgradeCost");
   }
 });
-document.getElementById("shapedBombCurrentAP").textContent =
-  0.9 + gameData.shapedBombUpgrade * 0.01;
-document.getElementById("shapedBombNextAP").textContent =
-  0.9 + (gameData.shapedBombUpgrade + 1) * 0.01;
+document.getElementById("shapedBombCurrentState").textContent = (
+  0.9 +
+  gameData.shapedBombUpgrade * 0.01
+).toFixed(2);
+document.getElementById("shapedBombNextState").textContent = (
+  0.9 +
+  (gameData.shapedBombUpgrade + 1) * 0.01
+).toFixed(2);
 document.getElementById("shapedBombUpgradeCount").textContent =
   gameData.shapedBombUpgrade;
 
 if (gameData.shapedBombUpgrade >= 9)
   document.getElementById("shapedBombUpgradeUB").style.display = "none";
+
+// Модалка апгрейду мігнітної міни
+document
+  .getElementById("magnetMineUpgrade_image")
+  .addEventListener("click", () => {
+    document.getElementById("magnetMineUpgradeModal").style.visibility =
+      "visible";
+  });
+document.getElementById("magnetMineUpgrade").addEventListener("click", () => {
+  if (
+    gameData.score >= magnetMineUpgradeCost &&
+    gameData.magnetMineUpgrade < 4
+  ) {
+    gameData.magnetMineUpgrade++;
+    upgradeRoutine(magnetMineUpgradeCost, ".magnetMineUpgradeCost");
+  }
+});
+document.getElementById("magnetMineCurrentState").textContent = (
+  0.95 +
+  gameData.magnetMineUpgrade * 0.01
+).toFixed(2);
+document.getElementById("magnetMineNextState").textContent = (
+  0.95 +
+  (gameData.magnetMineUpgrade + 1) * 0.01
+).toFixed(2);
+document.getElementById("magnetMineUpgradeCount").textContent =
+  gameData.magnetMineUpgrade;
+
+if (gameData.magnetMineUpgrade >= 4 || !gameData.magnetMineAvailable)
+  document.getElementById("magnetMineUpgradeUB").style.display = "none";
+
+// Модалка апгрейду шрапнельної бомби
+document
+  .getElementById("shrapnelBombUpgrade_image")
+  .addEventListener("click", () => {
+    document.getElementById("shrapnelBombUpgradeModal").style.visibility =
+      "visible";
+  });
+document.getElementById("shrapnelBombUpgrade").addEventListener("click", () => {
+  if (
+    gameData.score >= shrapnelBombUpgradeCost &&
+    gameData.shrapnelBombUpgrade < 10
+  ) {
+    gameData.shrapnelBombUpgrade++;
+    upgradeRoutine(shrapnelBombUpgradeCost, ".shrapnelBombUpgradeCost");
+  }
+});
+
+document.getElementById("shrapnelBombUpgradeCount").textContent =
+  gameData.shrapnelBombUpgrade;
+
+if (gameData.shrapnelBombUpgrade >= 10 || !gameData.shrapnelBombAvailable)
+  document.getElementById("shrapnelBombUpgradeUB").style.display = "none";
+
+// Модалка апгрейду касетної бомби
+document
+  .getElementById("clusterBombUpgrade_image")
+  .addEventListener("click", () => {
+    document.getElementById("clusterBombUpgradeModal").style.visibility =
+      "visible";
+  });
+document.getElementById("clusterBombUpgrade").addEventListener("click", () => {
+  if (
+    gameData.score >= clusterBombUpgradeCost &&
+    gameData.clusterBombUpgrade < 10
+  ) {
+    gameData.clusterBombUpgrade++;
+    upgradeRoutine(clusterBombUpgradeCost, ".clusterBombUpgradeCost");
+  }
+});
+document.getElementById("clusterBombCurrentState").textContent =
+  26 + gameData.clusterBombUpgrade;
+document.getElementById("clusterBombNextState").textContent =
+  26 + (gameData.clusterBombUpgrade + 1);
+document.getElementById("clusterBombUpgradeCount").textContent =
+  gameData.clusterBombUpgrade;
+
+if (gameData.clusterBombUpgrade >= 10 || !gameData.clusterBombAvailable)
+  document.getElementById("clusterBombUpgradeUB").style.display = "none";
+
+// Модалка апгрейду ПТ касетної бомби
+document
+  .getElementById("shapedClusterBombUpgrade_image")
+  .addEventListener("click", () => {
+    document.getElementById("shapedClusterBombUpgradeModal").style.visibility =
+      "visible";
+  });
+document
+  .getElementById("shapedClusterBombUpgrade")
+  .addEventListener("click", () => {
+    if (
+      gameData.score >= shapedClusterBombUpgradeCost &&
+      gameData.shapedClusterBombUpgrade < 10
+    ) {
+      gameData.shapedClusterBombUpgrade++;
+      upgradeRoutine(
+        shapedClusterBombUpgradeCost,
+        ".shapedClusterBombUpgradeCost"
+      );
+    }
+  });
+document.getElementById("shapedClusterBombCurrentState").textContent =
+  14 + gameData.shapedClusterBombUpgrade;
+document.getElementById("shapedClusterBombNextState").textContent =
+  14 + (gameData.shapedClusterBombUpgrade + 1);
+document.getElementById("shapedClusterBombCurrentAPState").textContent = (
+  0.87 +
+  gameData.shapedClusterBombUpgrade * 0.01
+).toFixed(2);
+document.getElementById("shapedClusterBombNextAPState").textContent = (
+  0.87 +
+  (gameData.shapedClusterBombUpgrade + 1) * 0.01
+).toFixed(2);
+document.getElementById("shapedClusterBombUpgradeCount").textContent =
+  gameData.shapedClusterBombUpgrade;
+
+if (
+  gameData.shapedClusterBombUpgrade >= 10 ||
+  !gameData.shapedClusterBombAvailable
+)
+  document.getElementById("shapedClusterBombUpgradeUB").style.display = "none";
 
 // вихід з модалки
 document.querySelectorAll(".back-button").forEach((el) => {

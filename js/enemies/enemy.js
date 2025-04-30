@@ -60,10 +60,12 @@ export class Enemy {
   }
 
   update(allEnemies, canvas, gameState, training) {
+    //  нарахування очок
     if (!this.scored && this.dead && !training) {
       gameState.score += this.score;
       this.scored = true;
     }
+    //
     if (this.vehicle === null) {
       if (this.path.length === 0 || this.currentPathIndex >= this.path.length) {
         const index = allEnemies.indexOf(this);
@@ -125,6 +127,8 @@ export class Enemy {
       }
 
       // --- Взаємодія з іншими ворогами (штовхання) ---
+      let pushX = 0;
+      let pushY = 0;
       for (let other of allEnemies) {
         if (this.dead || other === this || other.dead) continue;
 
@@ -133,13 +137,20 @@ export class Enemy {
         const distance = Math.hypot(dx, dy);
         const minDist = this.width * 0.22;
 
-        if (distance < minDist) {
+        // Відштовхуємо лише того, у кого менше Y (нижче на екрані)
+        if (distance < minDist && this.baseY < other.baseY) {
           const angle = Math.atan2(dy, dx);
-          const push = (minDist - distance) / 2;
-          this.baseX += Math.cos(angle) * push;
-          this.baseY += Math.sin(angle) * push;
+          const push = minDist - distance;
+
+          this.baseX += Math.cos(angle) * push * 0.5; // коефіцієнт приглушення
+          this.baseY += Math.sin(angle) * push * 0.5; // коефіцієнт приглушення
         }
       }
+
+      // Замість прямого зсуву — додаємо до основного руху:
+      this.baseX += pushX * 0.5; // коефіцієнт приглушення
+      this.baseY += pushY * 0.5;
+      // обертання під час трільби
       if (this.isFiring) {
         const centerX = canvas.width / 2;
         const centerY = canvas.height / 2;

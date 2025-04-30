@@ -277,6 +277,17 @@ export class Bomb {
     }
     return vehicle;
   }
+  checkHEArmorPenetration(AP, vehicle) {
+    let success = true;
+    for (let i = 0; i < vehicle.armor; i++) {
+      if (Math.random() > AP) {
+        success = false;
+        break;
+      }
+    }
+
+    return success;
+  }
 }
 
 // осколкова бомба
@@ -368,6 +379,7 @@ export class HeBomb extends Bomb {
     this.image = heBombImage;
     this.imageExplosion = imageExplosion;
     this.explosionScale = 100;
+    this.armorPenetration = 0.55;
   }
 
   checkCollision(enemy) {
@@ -395,14 +407,12 @@ export class HeBomb extends Bomb {
     } else {
       if (
         this.distanceToVehicle(0, vehicle) &&
-        Math.random() >
-          0.3 - this.gameData.heBombUpgrade * 0.01 + vehicle.armor / 10
+        this.checkHEArmorPenetration(this.armorPenetration, vehicle)
       ) {
         vehicle.isBurning = true;
       } else if (
         this.distanceToVehicle(20, vehicle) &&
-        Math.random() >
-          0.2 - this.gameData.heBombUpgrade * 0.01 + vehicle.armor / 10
+        this.checkHEArmorPenetration(this.armorPenetration + 0.05, vehicle)
       ) {
         vehicle.isStopped = true;
       }
@@ -480,6 +490,7 @@ export class FootMine extends Bomb {
 // фугасна міна
 export class TankMine extends Bomb {
   static weight = 0.45;
+  static type = "tankMine";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
     this.image = tankMineImage;
@@ -523,7 +534,7 @@ export class MagnetMine extends Bomb {
     this.class = "mine";
     this.spread = 3.5;
     this.type = this.constructor.type;
-    this.armorPenetration = 0.95;
+    this.armorPenetration = 0.95 + this.gameData.magnetMineUpgrade * 0.01;
   }
   checkMineCollision(enemy) {
     return false;
@@ -578,33 +589,53 @@ export class ShrapnelBomb extends Bomb {
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     let hitStatus = false;
     if (!enemy.vehicle) {
-      if (distance < 40) {
-        if (Math.random() > 0.2) hitStatus = true;
-      } else if (distance < 50) {
-        if (Math.random() > 0.3) hitStatus = true;
-      } else if (distance < 80) {
-        if (Math.random() > 0.6) hitStatus = true;
-      } else if (distance < 120) {
-        if (Math.random() > 0.7) hitStatus = true;
-      } else if (distance < 160) {
-        if (Math.random() > 0.8) hitStatus = true;
+      if (distance < 40 + this.gameData.shrapnelBombUpgrade) {
+        if (Math.random() > 0.2 - this.gameData.shrapnelBombUpgrade * 0.01)
+          hitStatus = true;
+      } else if (distance < 50 + this.gameData.shrapnelBombUpgrade) {
+        if (Math.random() > 0.3 - this.gameData.shrapnelBombUpgrade * 0.01)
+          hitStatus = true;
+      } else if (distance < 80 + this.gameData.shrapnelBombUpgrade) {
+        if (Math.random() > 0.6 - this.gameData.shrapnelBombUpgrade * 0.01)
+          hitStatus = true;
+      } else if (distance < 120 + this.gameData.shrapnelBombUpgrade) {
+        if (Math.random() > 0.7 - this.gameData.shrapnelBombUpgrade * 0.01)
+          hitStatus = true;
+      } else if (distance < 160 + this.gameData.shrapnelBombUpgrade) {
+        if (Math.random() > 0.8 - this.gameData.shrapnelBombUpgrade * 0.01)
+          hitStatus = true;
       }
     } else if (enemy.vehicle.armor === 0) {
-      if (distance < 40) {
-        if (Math.random() > 0.8) hitStatus = true;
-      } else if (distance < 70) {
-        if (Math.random() > 0.85) hitStatus = true;
-      } else if (distance < 110) {
-        if (Math.random() > 0.9) hitStatus = true;
+      if (distance < 40 + this.gameData.shrapnelBombUpgrade) {
+        if (Math.random() > 0.8 - this.gameData.shrapnelBombUpgrade * 0.01)
+          hitStatus = true;
+      } else if (distance < 70 + this.gameData.shrapnelBombUpgrade) {
+        if (Math.random() > 0.85 - this.gameData.shrapnelBombUpgrade * 0.01)
+          hitStatus = true;
+      } else if (distance < 110 + this.gameData.shrapnelBombUpgrade) {
+        if (Math.random() > 0.9 - this.gameData.shrapnelBombUpgrade * 0.01)
+          hitStatus = true;
       }
     }
     return hitStatus;
   }
   checkVehicleCollision(vehicle) {
     if (vehicle.armor === 0) {
-      if (this.distanceToVehicle(10, vehicle) && Math.random() > 0.85) {
+      if (
+        this.distanceToVehicle(
+          10 + this.gameData.shrapnelBombUpgrade,
+          vehicle
+        ) &&
+        Math.random() > 0.85 - this.gameData.shrapnelBombUpgrade * 0.01
+      ) {
         vehicle.isBurning = true;
-      } else if (this.distanceToVehicle(50, vehicle) && Math.random() > 0.75) {
+      } else if (
+        this.distanceToVehicle(
+          50 + this.gameData.shrapnelBombUpgrade,
+          vehicle
+        ) &&
+        Math.random() > 0.75 - this.gameData.shrapnelBombUpgrade * 0.01
+      ) {
         vehicle.isStopped = true;
       }
       if (vehicle.isBurning || vehicle.isStopped) {
@@ -627,6 +658,7 @@ export class HeClusterMunition extends Bomb {
     this.explosionScale = 60;
     this.scale = 0.3;
     this.shrinkRate = 1.003;
+    this.armorPenetration = 0.5;
   }
   drop() {
     if (!this.exploded && !this.deployed) {
@@ -671,12 +703,12 @@ export class HeClusterMunition extends Bomb {
     } else {
       if (
         this.distanceToVehicle(0, vehicle) &&
-        Math.random() > 0.4 + vehicle.armor / 10
+        this.checkHEArmorPenetration(this.armorPenetration, vehicle)
       ) {
         vehicle.isBurning = true;
       } else if (
-        this.distanceToVehicle(20, vehicle) &&
-        Math.random() > 0.3 + vehicle.armor / 10
+        this.distanceToVehicle(10, vehicle) &&
+        this.checkHEArmorPenetration(this.armorPenetration + 0.05, vehicle)
       ) {
         vehicle.isStopped = true;
       }
@@ -700,7 +732,7 @@ export class ShapedClusterMunition extends Bomb {
     this.explosionScale = 30;
     this.scale = 0.3;
     this.shrinkRate = 1.003;
-    this.armorPenetration = 0.88;
+    this.armorPenetration = 0.87 + this.gameData.shapedBombUpgrade * 0.01;
   }
   drop() {
     if (!this.exploded && !this.deployed) {
@@ -753,12 +785,12 @@ export class ClusterBomb extends Bomb {
     this.frames = 10;
   }
   dropClusterBombs(bombs, layer1) {
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 26 + this.gameData.clusterBombUpgrade; i++) {
       const delay = Math.random() * 1500; // випадкова затримка до 0.5 секунди
 
       setTimeout(() => {
         const theta = Math.random() * 2 * Math.PI; // випадковий напрямок
-        const speed = 0.15 + Math.random() * 0.7;
+        const speed = 0.15 + Math.random() * 0.9;
 
         const bomb = new HeClusterMunition(this.x, this.y, layer1, this.ctx);
 
@@ -798,7 +830,7 @@ export class ShapedClusterBomb extends Bomb {
 
       setTimeout(() => {
         const theta = Math.random() * 2 * Math.PI; // випадковий напрямок
-        const speed = 0.15 + Math.random() * 0.7;
+        const speed = 0.15 + Math.random() * 0.9;
 
         const bomb = new HeClusterMunition(this.x, this.y, layer1, this.ctx);
 
@@ -809,18 +841,19 @@ export class ShapedClusterBomb extends Bomb {
         bombs.push(bomb);
       }, delay);
     }
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 14 + this.gameData.shapedClusterBombUpgrade; i++) {
       const delay = Math.random() * 1500; // випадкова затримка до 0.5 секунди
 
       setTimeout(() => {
         const theta = Math.random() * 2 * Math.PI; // випадковий напрямок
-        const speed = 0.15 + Math.random() * 0.7;
+        const speed = 0.15 + Math.random() * 0.9;
 
         const bomb = new ShapedClusterMunition(
           this.x,
           this.y,
           this.layer,
-          this.ctx
+          this.ctx,
+          this.gameData
         );
 
         // додаємо швидкість у випадковому напрямку
