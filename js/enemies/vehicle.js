@@ -36,8 +36,8 @@ const vehicleExplosionImage = new Image();
 vehicleExplosionImage.src = "./assets/img/effects/vehicleExplosion.png";
 const vehicleFireImage = new Image();
 vehicleFireImage.src = "./assets/img/effects/vehicleFire.png";
-import { Rifleman, createRifleSquad } from "./enemy.js";
-import { findPath } from "../logic/navigation.js";
+import { Rifleman, Crew, createRifleSquad } from "./enemy.js";
+import { NavigationGrid, findPath } from "../logic/navigation.js";
 export class Vehicle {
   static type = "default"; // Тип за замовчуванням
   constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
@@ -113,17 +113,20 @@ export class Vehicle {
     this.turretFrame = 0;
     this.turretFrameTimer = 0;
     this.droneSpottingChanse = 1;
+    this.hasCrew = false; // Чи є екіпаж
+    this.obstacleAdded = false;
   }
 
-  update(vehicles, canvas, gameState, training) {
+  update(vehicles, enemies, canvas, gameState, training) {
     // списування очок
     if (this.isBurning && !this.scored && !training) {
       gameState.score += this.score;
       this.scored = true;
     }
+    // Перехід до наступного вейпоінта
     if (this.path.length === 0 || this.currentPathIndex >= this.path.length) {
       this.currentWaypointIndex++;
-      this.setPathToWaypoint(); // Перехід до наступного вейпоінта
+      this.setPathToWaypoint(); //
       if (!this.isMoving && !this.isStopped && !this.isDestroyed) {
         const index = vehicles.indexOf(this);
         if (index > -1) {
@@ -133,6 +136,7 @@ export class Vehicle {
       }
       return;
     }
+
     if (this.isMoving) {
       const target = this.path[this.currentPathIndex];
       const dx = target.x - this.baseX;
@@ -153,12 +157,12 @@ export class Vehicle {
       let pushX = 0;
       let pushY = 0;
       for (let other of vehicles) {
-        if (other === this || other.isDestroyed) continue;
+        if (other === this || other.isStopped || other.isBurning) continue;
 
         const dx = this.baseX - other.baseX;
         const dy = this.baseY - other.baseY;
         const distance = Math.hypot(dx, dy);
-        const minDist = this.width * this.scale * 2;
+        const minDist = this.height * this.scale;
 
         // Відштовхуємо лише того, у кого менше Y (нижче на екрані)
         if (distance < minDist && this.baseY < other.baseY) {
@@ -407,9 +411,10 @@ export class Vehicle {
       }
     }
   }
-  embark(enemies, navGrid, riflemans, mashinegunners, grenadiers) {
+  embark(enemies, navGrid, riflemans, mashinegunners, grenadiers, crew) {
     // Спочатку водія
-    const driver = new Rifleman(
+    const DriverClass = this.hasCrew ? Crew : Rifleman;
+    const driver = new DriverClass(
       this.baseX,
       this.baseY,
       this.layer,
@@ -448,7 +453,8 @@ export class Vehicle {
       this.baseY,
       riflemans,
       mashinegunners,
-      grenadiers
+      grenadiers,
+      crew
     );
     squad.forEach((enemy) => {
       enemy.vehicle = this;
@@ -613,6 +619,7 @@ export class BMP2 extends Vehicle {
     this.vehiclefireOffsetX = 0;
     this.vehiclefireOffsetY = -0.1;
     this.score = 400;
+    this.hasCrew = true;
   }
 }
 
@@ -639,6 +646,7 @@ export class BMP1 extends Vehicle {
     this.vehiclefireOffsetX = -0;
     this.vehiclefireOffsetY = -0.1;
     this.score = 350;
+    this.hasCrew = true;
   }
 }
 export class Guntruck extends Vehicle {

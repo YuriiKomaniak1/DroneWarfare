@@ -216,6 +216,21 @@ export class Bomb {
 
     ctx.restore();
   }
+  isOnRoof() {
+    const globalX = this.x - this.layer.x;
+    const globalY = this.y - this.layer.y;
+
+    const onRoof = this.gameData.bombObstacles.some(
+      (ob) =>
+        globalX >= ob.x &&
+        globalX <= ob.x + ob.width &&
+        globalY >= ob.y &&
+        globalY <= ob.y + ob.height
+    );
+
+    if (onRoof) console.log("🧱 Бомба на даху");
+    return onRoof;
+  }
 
   distanceToVehicle(explosionRadius, vehicle) {
     // Різниця координат міни відносно центру машини
@@ -243,10 +258,7 @@ export class Bomb {
   }
 
   checkCollision(enemy) {
-    const distance = Math.hypot(
-      this.x - (enemy.x + 32),
-      this.y - (enemy.y + 32)
-    );
+    const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     return distance < 50; // базова перевірка
   }
   checkMineCollision(enemy) {
@@ -302,7 +314,7 @@ export class FragBomb extends Bomb {
   }
 
   checkCollision(enemy) {
-    console.log(this.gameData);
+    if (this.isOnRoof()) return false;
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     let hitStatus = false;
     if (!enemy.vehicle) {
@@ -348,6 +360,7 @@ export class FragBomb extends Bomb {
     return hitStatus;
   }
   checkVehicleCollision(vehicle) {
+    if (this.isOnRoof()) return vehicle;
     if (vehicle.armor === 0) {
       if (
         this.distanceToVehicle(0 + this.gameData.fragBombUpgrade, vehicle) &&

@@ -11,6 +11,7 @@ import {
   setupDroneSelectionByClick,
   drawJoystickAndButtons,
   setupTouchControls,
+  switchToNextAvailableBomb,
 } from "./controls.js";
 import { dropBomb } from "../drones/bomb.js";
 import { drawNavigationGrid } from "./navigation.js";
@@ -23,7 +24,6 @@ import { SmallDrone, MediumDrone, BigDrone } from "../drones/drones.js";
 const gameData = JSON.parse(localStorage.getItem("gameData"));
 gameState.updateDrones(gameData, SmallDrone, MediumDrone, BigDrone);
 gameState.updateData(gameData);
-console.log("gameState", gameState);
 
 export function createAnimationLoop(
   canvas,
@@ -41,6 +41,7 @@ export function createAnimationLoop(
   let bombs = [];
   let currentDrone = gameState.drones[selectionState.selectedDroneIndex];
   gameState.drones[0].isActive = true;
+  switchToNextAvailableBomb(true);
   const droneScope = new DroneScope(canvas, ctx);
   const minimap = new Minimap(canvas, enemies, vehicles, ctx, layer1, bombs);
   const droneIcons = createDroneIcons(gameState.drones, canvas, ctx);
@@ -67,12 +68,12 @@ export function createAnimationLoop(
       gameData
     );
   }, canvas);
-  console.log("gameState", gameState);
-
+  //----------------початок анімації-------------------
   function animate(timestamp) {
     const deltaTime = timestamp - lastTime;
     if (deltaTime >= FRAME_TIME) {
       lastTime = timestamp - (deltaTime % FRAME_TIME);
+      // центрування дронів
       gameState.drones.forEach((drone) => {
         if (drone) {
           if (
@@ -84,13 +85,23 @@ export function createAnimationLoop(
           }
         }
       });
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // Очищаємо канвас
+      // очистка канвасу
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // малюємо перший шар
       layer1.update(keys, currentDrone);
       layer1.draw();
+      //малюємо вибухи бомб
       bombs.forEach((bomb) => {
         if (bomb.frameX === bomb.frames || bomb.deployed) bomb.draw();
       });
-      enemies.forEach((enemy, index) => {
+      // мертва піхота
+      enemies.forEach((enemy) => {
+        if (enemy.dead) {
+          enemy.draw();
+        }
+      });
+      // піхота обчислення і малювання
+      enemies.forEach((enemy) => {
         if (checkVisibility(currentDrone, enemy, canvas, gameFrame)) {
           enemy.isFiring = true;
           enemy.frameX = 0;
@@ -102,10 +113,19 @@ export function createAnimationLoop(
           enemy.isFiring = false;
         }
         enemy.update(enemies, canvas, gameState, training);
-        enemy.draw();
-        enemy.fire(currentDrone, layer1);
+        if (!enemy.dead) {
+          enemy.draw();
+          enemy.fire(currentDrone, layer1);
+        }
       });
-      vehicles.forEach((vehicle, index) => {
+      // знищена техніка
+      vehicles.forEach((vehicle) => {
+        if (!vehicle.isMoving) {
+          vehicle.draw();
+        }
+      });
+      // техніка обчислення і малювання
+      vehicles.forEach((vehicle) => {
         if (vehicle.hasGunner) {
           if (
             checkVehicleVisibility(currentDrone, vehicle, canvas, gameFrame)
@@ -119,10 +139,13 @@ export function createAnimationLoop(
             vehicle.isFiring = false;
           }
         }
-        vehicle.update(vehicles, canvas, gameState, training);
-        vehicle.draw();
+        vehicle.update(vehicles, enemies, canvas, gameState, training);
+        if (vehicle.isMoving) {
+          vehicle.draw();
+        }
         vehicle.fire(currentDrone, layer1);
       });
+      // бомби обчислення і малювання в нижній частині польоту
       bombs.forEach((bomb) => {
         if (
           bomb.initialScale / bomb.scale >= 13.5 &&
@@ -167,14 +190,18 @@ export function createAnimationLoop(
           });
         }
       });
+      // малюємо другий шар
       layer2.update(keys, currentDrone);
       layer2.draw();
+      // малюємо черепи
       enemies.forEach((enemy) => {
         enemy.skullDraw();
       });
+      // малюємо бомби в верхньому польоті
       bombs.forEach((bomb) => {
         if (bomb.initialScale / bomb.scale < 13.5) bomb.draw();
       });
+      // дрони обчислення і малювання
       const selectedDrone = gameState.drones[selectionState.selectedDroneIndex];
       if (currentDrone && currentDrone !== selectedDrone) {
         selectedDrone.visibility = currentDrone.visibility;
@@ -182,7 +209,7 @@ export function createAnimationLoop(
         if (currentDrone.baseX === 0 && currentDrone.baseY === 0) {
           currentDrone.baseX = canvas.width / 2;
           currentDrone.baseY = canvas.height / 2;
-        } // Старий дрон летить на зарядку
+        }
       }
       currentDrone = selectedDrone;
       gameState.drones.forEach((drone, index) => {
@@ -195,7 +222,11 @@ export function createAnimationLoop(
           drone.draw(ctx);
         }
       });
-      // drawNavigationGrid(navGrid, ctx, layer1);
+      // - технічна функція відмальовки навігаційної сітки -
+      if (vehicles[0]) {
+        drawNavigationGrid(vehicles[0].navigaionsGrid, ctx, layer1);
+      }
+      // відмалльовка інтерфейсу
       droneScope.draw(currentDrone);
       minimap.draw();
       droneIcons.forEach((object) => {

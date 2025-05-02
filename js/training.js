@@ -11,13 +11,17 @@ import {
 } from "./levels/training/trainingInfo.js";
 import { NavigationGrid, findPath } from "./logic/navigation.js";
 import { createAnimationLoop } from "./logic/gameloop.js";
+const gameData = JSON.parse(localStorage.getItem("gameData"));
 
-let obstacles = [];
 let enemies = [];
 let vehicles = [];
 async function loadObstacles() {
   const response = await fetch("js/levels/training/obstacles.json");
-  obstacles = await response.json();
+  const response2 = await fetch("js/levels/training/bombObstacles.json");
+  gameData.obstacles = await response.json();
+  gameData.bigObstacles = [...gameData.obstacles];
+  gameData.bombObstacles = await response2.json();
+  localStorage.setItem("gameData", JSON.stringify(gameData));
 }
 await loadObstacles();
 
@@ -29,6 +33,7 @@ const prevSection = document.getElementById("prevSection");
 const nextSection = document.getElementById("nextSection");
 const resumeGame = document.getElementById("resumeGame");
 const hideEnemiesModal = document.getElementById("hideEnemiesModal");
+const enemiesModal = document.getElementById("enemiesModal");
 const squad = document.getElementById("squad");
 const squadTruck = document.getElementById("squadTruck");
 const squadBMP = document.getElementById("squadBMP");
@@ -46,8 +51,8 @@ const trees = new Image();
 trees.src = "./assets/img/grounds/train1trees.png";
 const layer1 = new Layer(gameField, canvas, 1800, 2600, ctx);
 const layer2 = new Layer(trees, canvas, 1800, 2600, ctx);
-const navGrid = new NavigationGrid(layer1, 15, obstacles);
-const vehicleNavGrid = new NavigationGrid(layer1, 40, obstacles);
+const navGrid = new NavigationGrid(layer1, 15, gameData.obstacles);
+const vehicleNavGrid = new NavigationGrid(layer1, 36, gameData.bigObstacles);
 prevSection.addEventListener("click", () => {
   currentSection--;
   if (currentSection < 0) currentSection = 0;
@@ -92,28 +97,29 @@ let coords = [
   1740,
 ];
 tigr.addEventListener("click", () => {
-  addVehicle(Tigr, 2, 1, 0);
+  addVehicle(Tigr, 2, 1, 0, 0);
 });
 guntruck.addEventListener("click", () => {
-  addVehicle(Guntruck, 1, 0, 0);
+  addVehicle(Guntruck, 1, 0, 0, 0);
 });
 squadTruck.addEventListener("click", () => {
   if (Math.random() > 0.45) {
-    addVehicle(Ural, 6, 1, 1);
+    addVehicle(Ural, 6, 1, 1, 0);
   } else {
-    addVehicle(Gaz66, 6, 1, 1);
+    addVehicle(Gaz66, 6, 1, 1, 0);
   }
 });
 
 squadBMP.addEventListener("click", () => {
   if (Math.random() > 0.5) {
-    addVehicle(BMP2, 4, 1, 1);
+    addVehicle(BMP2, 4, 1, 1, 2);
   } else {
-    addVehicle(BMP1, 4, 1, 1);
+    addVehicle(BMP1, 4, 1, 1, 2);
   }
+  console.log(vehicles);
 });
 
-function addVehicle(Class, riflemans, mashinegunners, grenadiers) {
+function addVehicle(Class, riflemans, mashinegunners, grenadiers, crew) {
   if (coords.length > 0) {
     let index = Math.floor(Math.random() * coords.length);
     const startX = coords[index];
@@ -130,7 +136,7 @@ function addVehicle(Class, riflemans, mashinegunners, grenadiers) {
     // === Шукаємо шлях один раз при створенні ===
     bmp.path = findPath(vehicleNavGrid, waypoints[0], waypoints[1]);
     bmp.currentPathIndex = 0;
-    bmp.embark(enemies, navGrid, riflemans, mashinegunners, grenadiers);
+    bmp.embark(enemies, navGrid, riflemans, mashinegunners, grenadiers, crew);
     vehicles.push(bmp);
   }
 }

@@ -34,7 +34,6 @@ newDrone.initialBombStorage = oldDrone.cloneBombStorage(
 );
 gameState.drones[droneIndex] = newDrone;
 document.getElementById("drone_number").textContent = parseInt(droneIndex) + 1;
-console.log("tankMineAvailable =", gameData.tankMineAvailable);
 let drone = null;
 if (droneIndex !== null) {
   drone = gameState.drones[parseInt(droneIndex)];

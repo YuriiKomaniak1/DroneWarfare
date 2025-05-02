@@ -4,6 +4,8 @@ const machinegunnerImage = new Image();
 machinegunnerImage.src = "./assets/img/enemies/machinegunner.png";
 const grenadierImage = new Image();
 grenadierImage.src = "./assets/img/enemies/grenadier.png";
+const crewImage = new Image();
+crewImage.src = "./assets/img/enemies/crew.png";
 const skullImage = new Image();
 skullImage.src = "./assets/img/enemies/skull.png";
 import { findPath } from "../logic/navigation.js";
@@ -57,6 +59,8 @@ export class Enemy {
     this.score = 51;
     this.scored = false;
     this.hasBailedOut = false;
+    this.distance = 0.4 + Math.random() * 0.5;
+    this.navigationsGrid = null; // Сітка навігації
   }
 
   update(allEnemies, canvas, gameState, training) {
@@ -135,7 +139,7 @@ export class Enemy {
         const dx = this.baseX - other.baseX;
         const dy = this.baseY - other.baseY;
         const distance = Math.hypot(dx, dy);
-        const minDist = this.width * 0.22;
+        const minDist = this.width * this.distance;
 
         // Відштовхуємо лише того, у кого менше Y (нижче на екрані)
         if (distance < minDist && this.baseY < other.baseY) {
@@ -338,6 +342,18 @@ export class Machinegunner extends Enemy {
   }
 }
 
+export class Crew extends Enemy {
+  constructor(x, y, layer, ctx, path) {
+    super(x, y, layer, ctx, path);
+    this.image = crewImage;
+    this.type = "crew";
+    this.fireDistance = 260;
+    this.fireRate = 4;
+    this.droneSpottingChanse = 1;
+    this.score = 60;
+  }
+}
+
 export function createRifleSquad(
   x,
   y,
@@ -350,7 +366,8 @@ export function createRifleSquad(
   targetY,
   riflemans,
   mashinegunners,
-  grenadiers
+  grenadiers,
+  crew
 ) {
   const squad = [];
 
@@ -388,6 +405,9 @@ export function createRifleSquad(
   }
   for (let i = 0; i < grenadiers; i++) {
     pushSquadMember(Grenadier);
+  }
+  for (let i = 0; i < crew; i++) {
+    pushSquadMember(Crew);
   }
 
   return squad;

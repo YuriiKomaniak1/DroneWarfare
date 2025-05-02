@@ -73,6 +73,9 @@ class GameData {
     this.score = 159600;
     this.currentMission = "mission1";
     this.drones = [];
+    this.obstacles = [];
+    this.bigObstacles = [];
+    this.bombObstacles = [];
     this.mediumDroneAvailable = false;
     this.bigDroneAvailable = false;
     this.slot4Available = false;
