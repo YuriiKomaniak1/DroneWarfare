@@ -13,6 +13,7 @@ import {
   setupTouchControls,
   switchToNextAvailableBomb,
 } from "./controls.js";
+
 import { dropBomb } from "../drones/bomb.js";
 import { drawNavigationGrid } from "./navigation.js";
 import { drawMenuButtons } from "../levels/training/trainingButtons.js";
@@ -32,6 +33,7 @@ export function createAnimationLoop(
   ctx,
   enemies,
   vehicles,
+  winLoseConditions,
   training = false
 ) {
   const FPS = 60;
@@ -40,6 +42,7 @@ export function createAnimationLoop(
   let gameFrame = 0;
   let bombs = [];
   let currentDrone = gameState.drones[selectionState.selectedDroneIndex];
+  let gameEnded = false;
   gameState.drones[0].isActive = true;
   switchToNextAvailableBomb(true);
   const droneScope = new DroneScope(canvas, ctx);
@@ -68,6 +71,10 @@ export function createAnimationLoop(
       gameData
     );
   }, canvas);
+  document.getElementById("backToMenu").addEventListener("click", () => {
+    location.href = "briefing.html";
+  });
+
   //----------------початок анімації-------------------
   function animate(timestamp) {
     const deltaTime = timestamp - lastTime;
@@ -112,7 +119,7 @@ export function createAnimationLoop(
         ) {
           enemy.isFiring = false;
         }
-        enemy.update(enemies, canvas, gameState, training);
+        enemy.update(enemies, canvas, gameState, gameData, training);
         if (!enemy.dead) {
           enemy.draw();
           enemy.fire(currentDrone, layer1);
@@ -139,7 +146,14 @@ export function createAnimationLoop(
             vehicle.isFiring = false;
           }
         }
-        vehicle.update(vehicles, enemies, canvas, gameState, training);
+        vehicle.update(
+          vehicles,
+          enemies,
+          canvas,
+          gameState,
+          gameData,
+          training
+        );
         if (vehicle.isMoving) {
           vehicle.draw();
         }
@@ -223,9 +237,9 @@ export function createAnimationLoop(
         }
       });
       // - технічна функція відмальовки навігаційної сітки -
-      if (vehicles[0]) {
-        drawNavigationGrid(vehicles[0].navigaionsGrid, ctx, layer1);
-      }
+      // if (vehicles[0]) {
+      //   drawNavigationGrid(vehicles[0].navigaionsGrid, ctx, layer1);
+      // }
       // відмалльовка інтерфейсу
       droneScope.draw(currentDrone);
       minimap.draw();
@@ -233,8 +247,20 @@ export function createAnimationLoop(
         object.draw();
       });
       drawJoystickAndButtons(ctx, canvas, gameState.drones);
-      drawMenuButtons(ctx, canvas, minimap, training);
+      drawMenuButtons(ctx, minimap, training);
       if (!training) gameState.drawScore(ctx, canvas);
+      if (!gameEnded) {
+        if (winLoseConditions.lose(gameState, gameData, enemies, vehicles)) {
+          const loseModal = document.getElementById("loseModal");
+          if (loseModal) loseModal.style.visibility = "visible";
+          gameEnded = true;
+          //  } else if (winLoseConditions.win(gameState, gameData, enemies, vehicles)) {
+          //    const winModal = document.getElementById("winModal");
+          //    if (winModal) winModal.style.visibility = "visible";
+          //    gameEnded = true;
+        }
+      }
+      if (gameFrame % 100 === 0) console.log(gameData.looseScore);
       gameFrame++;
     }
 

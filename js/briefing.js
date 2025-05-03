@@ -19,6 +19,16 @@ document.getElementById("back-button").addEventListener("click", () => {
 document.getElementById("upgrade-button").addEventListener("click", () => {
   window.location.href = "upgrades.html";
 });
+document.getElementById("start-button").addEventListener("click", () => {
+  let href = "";
+  switch (missionKey) {
+    case "mission1":
+      href = "level1.html";
+      break;
+  }
+  window.location.href = href;
+});
+
 const droneIcons = [];
 for (let i = 0; i < 5; i++) {
   const spase = canvas.width / 21;
@@ -46,7 +56,6 @@ canvas.addEventListener("click", (e) => {
     const { x, y, width, height } = droneIcon;
     const buttonHeight = height / 5;
     const buttonY = y + height + 5;
-    console.log(droneIcon.drone);
 
     // Перевірка: чи клік всередині зони дрона + кнопки "спорядити"
     if (

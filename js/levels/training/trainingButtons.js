@@ -2,8 +2,13 @@ export const menuButtons = []; // Масив для збереження кно�
 let hoveredButtonIndex = null;
 let pressedButtonIndex = null;
 
-export function drawMenuButtons(ctx, canvas, minimap) {
-  const labels = ["Навчання", "Вороги", "Меню"];
+export function drawMenuButtons(ctx, minimap, training) {
+  let labels = []; // Змінна для збереження міток кнопок
+  if (training) {
+    labels = ["Меню", "Навчання", "Вороги"];
+  } else {
+    labels = ["Меню", "Назад"]; // для звичайних місій
+  }
   const buttonWidth = minimap.width;
   const buttonHeight = 36;
   const gap = 20;
@@ -68,12 +73,19 @@ export function handleMenuClick(e, canvas, openTrainingModal) {
     if (isInsideButton(mouseX, mouseY, button)) {
       pressedButtonIndex = index;
       setTimeout(() => {
-        if (button.label === "Навчання") {
-          openTrainingModal();
-        } else if (button.label === "Вороги") {
-          openEnemiesModal();
-        } else if (button.label === "Меню") {
-          window.location.href = "index.html";
+        switch (button.label) {
+          case "Навчання":
+            openTrainingModal();
+            break;
+          case "Вороги":
+            openEnemiesModal();
+            break;
+          case "Меню":
+            window.location.href = "index.html";
+            break;
+          case "Назад":
+            history.back(); // або window.location.href = "назад.html";
+            break;
         }
         pressedButtonIndex = null;
       }, 100); // Невелика затримка для візуального ефекту

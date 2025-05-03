@@ -23,7 +23,7 @@ export class Enemy {
     this.x = this.baseX + this.layer.x;
     this.y = this.baseY + this.layer.y;
     this.ctx = ctx;
-    this.speed = Math.random() * 0.07 + 0.16;
+    this.speed = Math.random() * 0.07 + 0.18;
     this.width = 64;
     this.height = 64;
     this.runframeY = 3;
@@ -63,7 +63,7 @@ export class Enemy {
     this.navigationsGrid = null; // Сітка навігації
   }
 
-  update(allEnemies, canvas, gameState, training) {
+  update(allEnemies, canvas, gameState, gameData, training) {
     //  нарахування очок
     if (!this.scored && this.dead && !training) {
       gameState.score += this.score;
@@ -71,9 +71,14 @@ export class Enemy {
     }
     //
     if (this.vehicle === null) {
-      if (this.path.length === 0 || this.currentPathIndex >= this.path.length) {
+      if (
+        (this.path.length === 0 || this.currentPathIndex >= this.path.length) &&
+        !this.scored
+      ) {
         const index = allEnemies.indexOf(this);
         if (index > -1) {
+          gameData.looseScore -= this.score;
+          this.scored = true;
           allEnemies.splice(index, 1);
         }
         return;
@@ -290,11 +295,11 @@ export class Enemy {
         this.isFiring = false;
       if (this.isFiring) this.fireTimer++;
       if (this.fireTimer >= 60 / this.fireRate) {
-        console.log(
-          drone.hp,
-          (5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2)) *
-            drone.size
-        );
+        // console.log(
+        //   drone.hp,
+        //   (5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2)) *
+        //     drone.size
+        // );
         if (
           Math.random() * 500 <
             (5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2)) *
@@ -362,8 +367,7 @@ export function createRifleSquad(
   layer,
   ctx,
   navGrid,
-  targetX,
-  targetY,
+  waypoints,
   riflemans,
   mashinegunners,
   grenadiers,
@@ -378,21 +382,33 @@ export function createRifleSquad(
     const startX = x + localSpreadX;
     const startY = y + localSpreadY;
 
-    const path = findPath(
-      navGrid,
-      { x: startX, y: startY },
-      { x: targetX + localSpreadX, y: targetY }
-    );
+    const fullPath = [];
+    let currentPos = { x: startX, y: startY };
 
-    const enemy = new Class(startX, startY, layer, ctx, path);
+    // Прокладаємо маршрут між кожними двома послідовними вейпоінтами з тим же кроком як старт
+    for (let i = 0; i < waypoints.length; i++) {
+      const x = waypoints[i].x + localSpreadX;
+      let y = waypoints[i].y + localSpreadY;
+      if (y > layer.height) y = layer.height;
+      const adjustedWaypoint = {
+        x: x,
+        y: y,
+      };
+      const segment = findPath(navGrid, currentPos, adjustedWaypoint);
+      if (segment.length > 0) {
+        fullPath.push(...segment);
+        currentPos = adjustedWaypoint;
+      }
+    }
 
+    const enemy = new Class(startX, startY, layer, ctx, fullPath);
     enemy.baseX = startX;
     enemy.baseY = startY;
     enemy.x = startX + layer.x;
     enemy.y = startY + layer.y;
-    enemy.path = path;
+    enemy.path = fullPath;
     enemy.currentPathIndex = 0;
-    enemy.vehicle = null; // Немає транспорту
+    enemy.vehicle = null;
 
     squad.push(enemy);
   }

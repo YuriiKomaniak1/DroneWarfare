@@ -42,7 +42,7 @@ class Drone {
       cluster: [],
       shapedCluster: [],
     };
-    this.reloadingTime = 1000 * 60 * 1;
+    this.reloadingTime = 1000 * 60 * 3;
     this.reloadStartTime = null;
     this.scale = 1; // стартовий масштаб
     this.targetScale = 0.3; // цільовий масштаб при польоті
@@ -199,7 +199,7 @@ class Drone {
         this.initialVisibility,
         Math.min(this.visibility / 2, 100)
       );
-    }, 25000);
+    }, 30000);
   }
   addBomb(BombClass) {
     const weight = BombClass.weight;

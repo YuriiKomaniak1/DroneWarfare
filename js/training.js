@@ -1,16 +1,17 @@
 import { Layer } from "./layers/layer.js";
 import { createRifleSquad } from "./enemies/enemy.js";
 import { Gaz66, Ural, BMP2, BMP1, Guntruck, Tigr } from "./enemies/vehicle.js";
-import {
-  handleMenuClick,
-  handleMenuHover,
-} from "./levels/training/trainingButtons.js";
+
 import {
   trainingSections,
   updateTrainingText,
 } from "./levels/training/trainingInfo.js";
 import { NavigationGrid, findPath } from "./logic/navigation.js";
 import { createAnimationLoop } from "./logic/gameloop.js";
+import {
+  handleMenuClick,
+  handleMenuHover,
+} from "./levels/training/trainingButtons.js";
 const gameData = JSON.parse(localStorage.getItem("gameData"));
 
 let enemies = [];
@@ -73,7 +74,15 @@ resumeGame.addEventListener("click", () => {
 });
 
 // Функція відкриття модалки
-export function openTrainingModal() {
+canvas.addEventListener("mousemove", (e) => handleMenuHover(e, canvas));
+canvas.addEventListener("touchmove", (e) => handleMenuHover(e, canvas));
+canvas.addEventListener("click", (e) =>
+  handleMenuClick(e, canvas, openTrainingModal)
+);
+canvas.addEventListener("touchstart", (e) =>
+  handleMenuClick(e, canvas, openTrainingModal)
+);
+function openTrainingModal() {
   trainingModal.style.visibility = "visible";
   updateTrainingText(trainingText, currentSection);
 }
@@ -84,14 +93,7 @@ window.addEventListener("load", () => {
 startButton.addEventListener("click", () => {
   modal.style.visibility = "hidden";
 });
-canvas.addEventListener("mousemove", (e) => handleMenuHover(e, canvas));
-canvas.addEventListener("touchmove", (e) => handleMenuHover(e, canvas));
-canvas.addEventListener("click", (e) =>
-  handleMenuClick(e, canvas, openTrainingModal)
-);
-canvas.addEventListener("touchstart", (e) =>
-  handleMenuClick(e, canvas, openTrainingModal)
-);
+
 let coords = [
   60, 180, 300, 420, 540, 660, 780, 900, 1020, 1140, 1260, 1380, 1500, 1620,
   1740,
@@ -143,6 +145,7 @@ function addVehicle(Class, riflemans, mashinegunners, grenadiers, crew) {
 
 squad.addEventListener("click", () => {
   const startX = Math.random() * 1200 + 200;
+  const waypoints = [{ x: startX, y: 2600 }];
   const squad = createRifleSquad(
     startX,
     Math.random() * 100 + 100,
@@ -151,11 +154,11 @@ squad.addEventListener("click", () => {
     layer1,
     ctx,
     navGrid,
-    startX,
-    2600,
+    waypoints,
     6,
     1,
-    1
+    1,
+    0
   );
   enemies.push(...squad);
 });

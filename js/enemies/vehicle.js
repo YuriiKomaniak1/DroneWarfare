@@ -124,12 +124,17 @@ export class Vehicle {
       this.scored = true;
     }
     // Перехід до наступного вейпоінта
-    if (this.path.length === 0 || this.currentPathIndex >= this.path.length) {
+    if (
+      (this.path.length === 0 || this.currentPathIndex >= this.path.length) &&
+      !this.scored
+    ) {
       this.currentWaypointIndex++;
       this.setPathToWaypoint(); //
       if (!this.isMoving && !this.isStopped && !this.isDestroyed) {
         const index = vehicles.indexOf(this);
         if (index > -1) {
+          gameData.loosescore -= this.score;
+          this.scored = true;
           vehicles.splice(index, 1);
         }
         return;

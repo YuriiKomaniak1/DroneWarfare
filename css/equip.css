@@ -38,6 +38,14 @@ body {
   background-position: 100% 0%; /* Лівий верхній кут */
 }
 
+.equip-buttons-panel {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin: 15px 0;
+}
+
 #equipDroneCanvas {
   border: 2px solid #444;
   background-color: var(--modal-window-main-color);

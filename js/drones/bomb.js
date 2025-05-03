@@ -396,6 +396,7 @@ export class HeBomb extends Bomb {
   }
 
   checkCollision(enemy) {
+    if (this.isOnRoof()) return false;
     let hitStatus = false;
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     if (!enemy.vehicle) {
@@ -408,6 +409,7 @@ export class HeBomb extends Bomb {
     return hitStatus;
   }
   checkVehicleCollision(vehicle) {
+    if (this.isOnRoof()) return vehicle;
     if (vehicle.armor === 0) {
       if (this.distanceToVehicle(this.gameData.heBombUpgrade, vehicle)) {
         vehicle.isBurning = true;
@@ -453,6 +455,7 @@ export class ShapedBomb extends Bomb {
   }
 
   checkCollision(enemy) {
+    if (this.isOnRoof()) return false;
     let hitStatus = false;
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     if (!enemy.vehicle) {
@@ -461,6 +464,7 @@ export class ShapedBomb extends Bomb {
     return hitStatus;
   }
   checkVehicleCollision(vehicle) {
+    if (this.isOnRoof()) return vehicle;
     if (this.distanceToVehicle(0, vehicle)) {
       this.checkArmorPenetration(vehicle);
     }
@@ -483,10 +487,12 @@ export class FootMine extends Bomb {
     this.type = this.constructor.type;
   }
   checkMineCollision(enemy) {
+    if (this.isOnRoof()) return false;
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     return distance < 4;
   }
   checkMineEffect(vehicle) {
+    if (this.isOnRoof()) return vehicle;
     if (this.checkMineUnderWheels(vehicle)) {
       this.exploded = true;
       this.deployed = false;
@@ -515,9 +521,11 @@ export class TankMine extends Bomb {
     this.type = this.constructor.type;
   }
   checkMineCollision(enemy) {
+    if (this.isOnRoof()) return false;
     return false;
   }
   checkMineEffect(vehicle) {
+    if (this.isOnRoof()) return vehicle;
     if (this.checkMineUnderWheels(vehicle)) {
       this.exploded = true;
       this.deployed = false;
@@ -550,9 +558,11 @@ export class MagnetMine extends Bomb {
     this.armorPenetration = 0.95 + this.gameData.magnetMineUpgrade * 0.01;
   }
   checkMineCollision(enemy) {
+    if (this.isOnRoof()) return false;
     return false;
   }
   checkMineUnderWheels(vehicle) {
+    if (this.isOnRoof()) return false;
     // 1. Обчислюємо зсув міни відносно центра машини
     const dx = this.x - vehicle.x;
     const dy = this.y - vehicle.y;
@@ -695,6 +705,7 @@ export class HeClusterMunition extends Bomb {
     }
   }
   checkCollision(enemy) {
+    if (this.isOnRoof()) return false;
     let hitStatus = false;
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     if (!enemy.vehicle) {
@@ -707,6 +718,7 @@ export class HeClusterMunition extends Bomb {
     return hitStatus;
   }
   checkVehicleCollision(vehicle) {
+    if (this.isOnRoof()) return vehicle;
     if (vehicle.armor === 0) {
       if (this.distanceToVehicle(0, vehicle)) {
         vehicle.isBurning = true;
@@ -769,6 +781,7 @@ export class ShapedClusterMunition extends Bomb {
     }
   }
   checkCollision(enemy) {
+    if (this.isOnRoof()) return false;
     let hitStatus = false;
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     if (!enemy.vehicle) {
@@ -777,6 +790,7 @@ export class ShapedClusterMunition extends Bomb {
     return hitStatus;
   }
   checkVehicleCollision(vehicle) {
+    if (this.isOnRoof()) return vehicle;
     if (this.distanceToVehicle(0, vehicle)) {
       this.checkArmorPenetration(vehicle);
     }
@@ -805,7 +819,13 @@ export class ClusterBomb extends Bomb {
         const theta = Math.random() * 2 * Math.PI; // випадковий напрямок
         const speed = 0.15 + Math.random() * 0.9;
 
-        const bomb = new HeClusterMunition(this.x, this.y, layer1, this.ctx);
+        const bomb = new HeClusterMunition(
+          this.x,
+          this.y,
+          layer1,
+          this.ctx,
+          this.gameData
+        );
 
         // додаємо швидкість у випадковому напрямку
         bomb.velocityX = Math.cos(theta) * speed;
@@ -845,7 +865,13 @@ export class ShapedClusterBomb extends Bomb {
         const theta = Math.random() * 2 * Math.PI; // випадковий напрямок
         const speed = 0.15 + Math.random() * 0.9;
 
-        const bomb = new HeClusterMunition(this.x, this.y, layer1, this.ctx);
+        const bomb = new HeClusterMunition(
+          this.x,
+          this.y,
+          layer1,
+          this.ctx,
+          this.gameData
+        );
 
         // додаємо швидкість у випадковому напрямку
         bomb.velocityX = Math.cos(theta) * speed;
