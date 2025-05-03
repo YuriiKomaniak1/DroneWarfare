@@ -13,7 +13,6 @@ import {
   setupTouchControls,
   switchToNextAvailableBomb,
 } from "./controls.js";
-
 import { dropBomb } from "../drones/bomb.js";
 import { drawNavigationGrid } from "./navigation.js";
 import { drawMenuButtons } from "../levels/training/trainingButtons.js";
@@ -41,6 +40,7 @@ export function createAnimationLoop(
   let lastTime = 0;
   let gameFrame = 0;
   let bombs = [];
+  let isPaused = false;
   let currentDrone = gameState.drones[selectionState.selectedDroneIndex];
   let gameEnded = false;
   gameState.drones[0].isActive = true;
@@ -74,9 +74,21 @@ export function createAnimationLoop(
   document.getElementById("backToMenu").addEventListener("click", () => {
     location.href = "briefing.html";
   });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      isPaused = !isPaused;
+      const pauseOverlay = document.getElementById("pauseOverlay");
+      if (pauseOverlay)
+        pauseOverlay.style.visibility = isPaused ? "visible" : "hidden";
+    }
+  });
 
   //----------------початок анімації-------------------
   function animate(timestamp) {
+    if (isPaused) {
+      requestAnimationFrame(animate); // просто чекаємо без оновлення гри
+      return;
+    }
     const deltaTime = timestamp - lastTime;
     if (deltaTime >= FRAME_TIME) {
       lastTime = timestamp - (deltaTime % FRAME_TIME);
@@ -242,7 +254,7 @@ export function createAnimationLoop(
       // }
       // відмалльовка інтерфейсу
       droneScope.draw(currentDrone);
-      minimap.draw();
+      minimap.draw(gameData);
       droneIcons.forEach((object) => {
         object.draw();
       });
@@ -251,8 +263,10 @@ export function createAnimationLoop(
       if (!training) gameState.drawScore(ctx, canvas);
       if (!gameEnded) {
         if (winLoseConditions.lose(gameState, gameData, enemies, vehicles)) {
+          gameData.looseScore = 0;
           const loseModal = document.getElementById("loseModal");
           if (loseModal) loseModal.style.visibility = "visible";
+          isPaused = true;
           gameEnded = true;
           //  } else if (winLoseConditions.win(gameState, gameData, enemies, vehicles)) {
           //    const winModal = document.getElementById("winModal");

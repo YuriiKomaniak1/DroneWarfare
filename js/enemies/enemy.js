@@ -23,7 +23,7 @@ export class Enemy {
     this.x = this.baseX + this.layer.x;
     this.y = this.baseY + this.layer.y;
     this.ctx = ctx;
-    this.speed = Math.random() * 0.07 + 0.18;
+    this.speed = Math.random() * 0.07 + 1.18;
     this.width = 64;
     this.height = 64;
     this.runframeY = 3;

@@ -7,8 +7,8 @@ const gameData = JSON.parse(localStorage.getItem("gameData"));
 
 let enemies = [];
 let vehicles = [];
-gameData.looseScore = 1000;
-
+gameData.looseScore = 500;
+gameData.initialLooseScore = 500;
 async function loadObstacles() {
   const response = await fetch("js/levels/level1/obstacles.json");
   const response2 = await fetch("js/levels/level1/bombObstacles.json");
@@ -23,7 +23,6 @@ const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
 canvas.width = Math.min(window.innerWidth, 900);
 canvas.height = Math.min(window.innerHeight, 900);
-let currentSection = 0;
 
 initUIControls({
   canvas,
@@ -47,20 +46,20 @@ function createEnemySquad(riflemans, mashinegunners, grenadiers, main = true) {
   if (main) {
     const startX = 1000 + randomX;
     waypoints = [
-      { x: 450 + randomX, y: 800 },
+      { x: 450 + (Math.random() * 400 - 200), y: 800 },
       {
-        x: 450 + randomX + (Math.random() * 200 - 100),
-        y: 1500 + (Math.random() * 200 - 100),
+        x: 450 + (Math.random() * 400 - 200),
+        y: 1500 + (Math.random() * 100 - 50),
       },
       {
-        x: 450 + randomX + (Math.random() * 200 - 100),
-        y: 2200 + (Math.random() * 200 - 100),
+        x: 450 + (Math.random() * 400 - 200),
+        y: 2200 + (Math.random() * 100 - 50),
       },
       {
-        x: 450 + randomX + (Math.random() * 200 - 100),
-        y: 2600 + (Math.random() * 200 - 100),
+        x: 450 + (Math.random() * 400 - 200),
+        y: 2600 + (Math.random() * 100 - 50),
       },
-      { x: 450 + randomX, y: 3000 },
+      { x: 450 + (Math.random() * 400 - 200), y: 3000 },
     ];
   } else {
     const startX = Math.random() * 1500 + 400;
