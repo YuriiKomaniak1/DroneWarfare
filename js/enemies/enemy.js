@@ -23,7 +23,7 @@ export class Enemy {
     this.x = this.baseX + this.layer.x;
     this.y = this.baseY + this.layer.y;
     this.ctx = ctx;
-    this.speed = Math.random() * 0.07 + 1.18;
+    this.speed = Math.random() * 0.07 + 0.18;
     this.width = 64;
     this.height = 64;
     this.runframeY = 3;
@@ -66,10 +66,11 @@ export class Enemy {
   update(allEnemies, canvas, gameState, gameData, training) {
     //  нарахування очок
     if (!this.scored && this.dead && !training) {
-      gameState.score += this.score;
+      gameData.score += this.score;
+      gameData.winScore -= this.score;
       this.scored = true;
     }
-    //
+    //видалення юніта, який успішно дійшов
     if (this.vehicle === null) {
       if (
         (this.path.length === 0 || this.currentPathIndex >= this.path.length) &&
@@ -83,11 +84,13 @@ export class Enemy {
         }
         return;
       }
+      // модифікація швидкості повзання\
       let speedModifier = 1;
       if (this.crawl) {
         speedModifier = 0.4;
         if (Math.random() < 0.002) this.crawl = false;
       }
+      // рух по навігації
       if (!this.dead && !this.isFiring) {
         const target = this.path[this.currentPathIndex];
         const dx = target.x - this.baseX;

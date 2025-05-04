@@ -34,9 +34,12 @@ export class Minimap {
       this.mapX + this.width + 2,
       this.mapY + this.height,
       6,
-      -(this.height * gameData.looseScore) / gameData.initialLooseScore
+      Math.min(
+        -(this.height * gameData.looseScore) / gameData.initialLooseScore,
+        0
+      )
     );
-    console.log(gameData.looseScore, gameData.initialLooseScore);
+
     //фон видимої зони
     this.ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
     this.ctx.fillRect(

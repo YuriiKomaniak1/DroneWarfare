@@ -64,7 +64,7 @@ export function findPath(grid, startPos, endPos) {
 
   // Перевірка чи ціль заблокована
   if (grid.isBlocked(end.x, end.y)) {
-    console.warn("🎯 Ціль заблокована, шукаємо найближчу вільну...");
+    // console.warn("🎯 Ціль заблокована, шукаємо найближчу вільну...");
     const newEnd = findNearestFreeCell(end, grid);
     if (newEnd) {
       end = newEnd;

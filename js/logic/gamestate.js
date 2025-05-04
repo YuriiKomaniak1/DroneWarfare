@@ -3,12 +3,11 @@ import { FragBomb, HeBomb, ShapedBomb } from "../drones/bomb.js";
 
 class GameState {
   constructor() {
-    this.score = 0;
     this.drones = [];
   }
-  drawScore(ctx, canvas) {
+  drawScore(ctx, canvas, gameData) {
     const fontSize = 18;
-    const text = `SCORE: ${this.score}`;
+    const text = `SCORE: ${gameData.score}`;
     ctx.save();
     ctx.font = `${fontSize}px "Press Start 2P", "Pixelify Sans", monospace`;
     ctx.fillStyle = "white";
@@ -40,7 +39,6 @@ class GameState {
     });
   }
   updateData(gameData) {
-    this.score = gameData.score;
     this.drones.forEach((drone, index) => {
       if (drone && gameData.drones[index]) {
         drone.bombStorage = gameData.drones[index].bombStorage;
@@ -71,9 +69,10 @@ class GameState {
 class GameData {
   constructor() {
     this.score = 0;
-    this.looseScore = 0;
+    this.looseScore = 1000;
+    this.winScore = 1000;
     this.initialLooseScore = 0;
-    this.currentMission = "mission1";
+    this.currentMission = 1;
     this.drones = [];
     this.obstacles = [];
     this.bigObstacles = [];

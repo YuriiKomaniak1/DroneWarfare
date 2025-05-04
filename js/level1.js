@@ -9,6 +9,8 @@ let enemies = [];
 let vehicles = [];
 gameData.looseScore = 500;
 gameData.initialLooseScore = 500;
+gameData.winScore = 1500;
+localStorage.setItem("gameData", JSON.stringify(gameData));
 async function loadObstacles() {
   const response = await fetch("js/levels/level1/obstacles.json");
   const response2 = await fetch("js/levels/level1/bombObstacles.json");
@@ -26,6 +28,7 @@ canvas.height = Math.min(window.innerHeight, 900);
 
 initUIControls({
   canvas,
+  gameData,
   training: false, // НЕ тренування
 });
 
@@ -109,12 +112,7 @@ setTimeout(() => {
 
 const winLoseConditions = {
   win: (gameState, gameData, enemies, vehicles) => {
-    const allEnemiesDead =
-      enemies.length === 0 || enemies.every((enemy) => enemy.dead);
-    const allVehiclesDestroyed =
-      vehicles.length === 0 || vehicles.every((vehicle) => vehicle.isDestroyed);
-
-    return allEnemiesDead && allVehiclesDestroyed;
+    return gameData.winScore <= 0;
   },
   lose: (gameState, gameData, enemies, vehicles) => {
     const allDronesDead = gameState.drones.every(
@@ -134,5 +132,6 @@ createAnimationLoop(
   enemies,
   vehicles,
   winLoseConditions,
+  gameData,
   false
 );

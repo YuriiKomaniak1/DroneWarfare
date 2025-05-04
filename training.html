@@ -57,7 +57,19 @@
         </div>
       </div>
     </div>
+    <script>
+      fetch("common-ui.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.body.insertAdjacentHTML("beforeend", html);
 
+          // Підключаємо CSS вручну
+          const link = document.createElement("link");
+          link.rel = "stylesheet";
+          link.href = "./css/common-ui.css"; // шлях до CSS
+          document.head.appendChild(link);
+        });
+    </script>
     <script src="js/training.js" type="module"></script>
   </body>
 </html>

@@ -1,0 +1,59 @@
+.modal {
+  visibility: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--modal-window-background-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Вміст модалки */
+.modal-content {
+  background-color: var(--modal-window-main-color);
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Кнопка "Назад" */
+.back-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #b1322d;
+  color: var(--modal-buttons-text-color);
+  border: none;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+.Ok-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: var(--modal-buttons-color);
+  color: var(--modal-buttons-hover-color);
+  border: none;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.Ok-button:hover {
+  background-color: var(--modal-buttons-color);
+}
+
+#loseModal {
+  visibility: hidden;
+}
+#winModal {
+  visibility: hidden;
+}
+#totalWinModal {
+  visibility: hidden;
+}

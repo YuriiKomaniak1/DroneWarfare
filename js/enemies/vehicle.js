@@ -117,10 +117,11 @@ export class Vehicle {
     this.obstacleAdded = false;
   }
 
-  update(vehicles, enemies, canvas, gameState, training) {
+  update(vehicles, enemies, canvas, gameState, gameData, training) {
     // списування очок
     if (this.isBurning && !this.scored && !training) {
-      gameState.score += this.score;
+      gameData.score += this.score;
+      gameData.winScore -= this.score;
       this.scored = true;
     }
     // Перехід до наступного вейпоінта
@@ -454,8 +455,12 @@ export class Vehicle {
       this.layer,
       this.ctx,
       navGrid,
-      this.baseX,
-      this.baseY,
+      [
+        {
+          x: this.baseX,
+          y: this.baseY,
+        },
+      ],
       riflemans,
       mashinegunners,
       grenadiers,

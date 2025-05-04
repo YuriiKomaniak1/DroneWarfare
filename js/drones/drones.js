@@ -224,6 +224,14 @@ class Drone {
       shapedCluster: [...(storage.shapedCluster || [])],
     };
   }
+  resetAmmo() {
+    this.bombStorage = this.cloneBombStorage(this.initialBombStorage);
+    this.remainingCapacity = this.capacity;
+    this.isReloading = false;
+    this.isAlive = true;
+    this.hp = this.initialHP;
+    this.visibility = this.initialVisibility ?? 1;
+  }
 }
 export class SmallDrone extends Drone {
   constructor(gameData) {

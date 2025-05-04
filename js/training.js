@@ -13,7 +13,9 @@ import {
   handleMenuHover,
 } from "./levels/training/trainingButtons.js";
 const gameData = JSON.parse(localStorage.getItem("gameData"));
-
+gameData.looseScore = 500000;
+gameData.initialLooseScore = 500000;
+gameData.winScore = 1500000;
 let enemies = [];
 let vehicles = [];
 async function loadObstacles() {
@@ -77,10 +79,10 @@ resumeGame.addEventListener("click", () => {
 canvas.addEventListener("mousemove", (e) => handleMenuHover(e, canvas));
 canvas.addEventListener("touchmove", (e) => handleMenuHover(e, canvas));
 canvas.addEventListener("click", (e) =>
-  handleMenuClick(e, canvas, openTrainingModal)
+  handleMenuClick(e, canvas, gameData, openTrainingModal)
 );
 canvas.addEventListener("touchstart", (e) =>
-  handleMenuClick(e, canvas, openTrainingModal)
+  handleMenuClick(e, canvas, gameData, openTrainingModal)
 );
 function openTrainingModal() {
   trainingModal.style.visibility = "visible";
@@ -163,4 +165,23 @@ squad.addEventListener("click", () => {
   enemies.push(...squad);
 });
 
-createAnimationLoop(canvas, layer1, layer2, ctx, enemies, vehicles, true);
+const winLoseConditions = {
+  win: (gameState, gameData, enemies, vehicles) => {
+    return false;
+  },
+  lose: (gameState, gameData, enemies, vehicles) => {
+    return false;
+  },
+};
+
+createAnimationLoop(
+  canvas,
+  layer1,
+  layer2,
+  ctx,
+  enemies,
+  vehicles,
+  winLoseConditions,
+  gameData,
+  true
+);

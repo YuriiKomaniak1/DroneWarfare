@@ -13,6 +13,12 @@
         .then((res) => res.text())
         .then((html) => {
           document.body.insertAdjacentHTML("beforeend", html);
+
+          // Підключаємо CSS вручну
+          const link = document.createElement("link");
+          link.rel = "stylesheet";
+          link.href = "./css/common-ui.css"; // шлях до CSS
+          document.head.appendChild(link);
         });
     </script>
     <script src="./js/level1.js" type="module"></script>

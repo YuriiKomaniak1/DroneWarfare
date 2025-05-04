@@ -5,8 +5,13 @@ import { SmallDrone, MediumDrone, BigDrone } from "./drones/drones.js";
 const gameData = JSON.parse(localStorage.getItem("gameData"));
 gameState.updateDrones(gameData, SmallDrone, MediumDrone, BigDrone);
 gameState.updateData(gameData);
+gameState.drones.forEach((drone) => {
+  if (drone?.resetAmmo) {
+    drone.resetAmmo();
+  }
+});
 console.log(gameState, gameData);
-const missionKey = "mission1"; // Сюди підставляється поточна місія
+const missionKey = gameData.currentMission; // Сюди підставляється поточна місія
 document.getElementById("briefing-text").innerHTML = briefingText[missionKey];
 // Малюємо дронів та боєзапас
 const canvas = document.getElementById("droneCanvas");
@@ -22,8 +27,11 @@ document.getElementById("upgrade-button").addEventListener("click", () => {
 document.getElementById("start-button").addEventListener("click", () => {
   let href = "";
   switch (missionKey) {
-    case "mission1":
+    case 1:
       href = "level1.html";
+      break;
+    case 2:
+      href = "level2.html";
       break;
   }
   window.location.href = href;

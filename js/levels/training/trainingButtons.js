@@ -1,3 +1,6 @@
+import { isPaused, togglePause } from "../../logic/gameloop.js";
+import { getWinCondition } from "../../logic/gameLoopButtonHandlers.js";
+
 export const menuButtons = []; // Масив для збереження кнопок
 let hoveredButtonIndex = null;
 let pressedButtonIndex = null;
@@ -6,8 +9,10 @@ export function drawMenuButtons(ctx, minimap, training) {
   let labels = []; // Змінна для збереження міток кнопок
   if (training) {
     labels = ["Меню", "Навчання", "Вороги"];
+  } else if (getWinCondition()) {
+    labels = ["Меню", "Перемога", "Пауза"];
   } else {
-    labels = ["Меню", "Назад"]; // для звичайних місій
+    labels = ["Меню", "Назад", "Пауза"]; // для звичайних місій
   }
   const buttonWidth = minimap.width;
   const buttonHeight = 36;
@@ -65,7 +70,7 @@ function drawRoundedRect(ctx, x, y, width, height, radius) {
   ctx.fill();
 }
 
-export function handleMenuClick(e, canvas, openTrainingModal) {
+export function handleMenuClick(e, canvas, gameData, openTrainingModal) {
   e.preventDefault();
   const { mouseX, mouseY } = getMousePosition(e, canvas);
 
@@ -84,7 +89,15 @@ export function handleMenuClick(e, canvas, openTrainingModal) {
             window.location.href = "index.html";
             break;
           case "Назад":
-            history.back(); // або window.location.href = "назад.html";
+            history.back();
+            break;
+          case "Пауза":
+            togglePause();
+            break;
+          case "Перемога":
+            gameData.currentMission++;
+            localStorage.setItem("gameData", JSON.stringify(gameData));
+            location.href = "briefing.html";
             break;
         }
         pressedButtonIndex = null;

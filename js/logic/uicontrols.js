@@ -10,6 +10,7 @@ import {
 
 export function initUIControls({
   canvas,
+  gameData,
   training,
   currentSectionRef,
   openModalCallback,
@@ -17,7 +18,7 @@ export function initUIControls({
   canvas.addEventListener("mousemove", (e) => handleMenuHover(e, canvas));
   canvas.addEventListener("touchmove", (e) => handleMenuHover(e, canvas));
   canvas.addEventListener("click", (e) =>
-    handleMenuClick(e, canvas, () => {
+    handleMenuClick(e, canvas, gameData, () => {
       if (training && openModalCallback) {
         openModalCallback("open");
       } else {

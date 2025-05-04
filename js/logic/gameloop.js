@@ -21,9 +21,11 @@ import { Minimap } from "../gameElements/minimap.js";
 import { createDroneIcons } from "../gameElements/droneIcons.js";
 import { keys } from "../logic/controls.js";
 import { SmallDrone, MediumDrone, BigDrone } from "../drones/drones.js";
-const gameData = JSON.parse(localStorage.getItem("gameData"));
-gameState.updateDrones(gameData, SmallDrone, MediumDrone, BigDrone);
-gameState.updateData(gameData);
+import { buttons, winLoseTest } from "./gameLoopButtonHandlers.js";
+export let isPaused = false;
+export function togglePause() {
+  isPaused = !isPaused;
+}
 
 export function createAnimationLoop(
   canvas,
@@ -33,16 +35,19 @@ export function createAnimationLoop(
   enemies,
   vehicles,
   winLoseConditions,
+  gameData,
   training = false
 ) {
+  gameState.updateDrones(gameData, SmallDrone, MediumDrone, BigDrone);
+  gameState.updateData(gameData);
+
   const FPS = 60;
   const FRAME_TIME = 1000 / FPS;
   let lastTime = 0;
   let gameFrame = 0;
   let bombs = [];
-  let isPaused = false;
   let currentDrone = gameState.drones[selectionState.selectedDroneIndex];
-  let gameEnded = false;
+  console.log(gameData);
   gameState.drones[0].isActive = true;
   switchToNextAvailableBomb(true);
   const droneScope = new DroneScope(canvas, ctx);
@@ -71,21 +76,15 @@ export function createAnimationLoop(
       gameData
     );
   }, canvas);
-  document.getElementById("backToMenu").addEventListener("click", () => {
-    location.href = "briefing.html";
-  });
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      isPaused = !isPaused;
-      const pauseOverlay = document.getElementById("pauseOverlay");
-      if (pauseOverlay)
-        pauseOverlay.style.visibility = isPaused ? "visible" : "hidden";
-    }
-  });
-
+  buttons(gameData);
   //----------------початок анімації-------------------
   function animate(timestamp) {
     if (isPaused) {
+      // пауза
+      ctx.fillStyle = "white";
+      ctx.font = "48px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText("ПАУЗА", canvas.width / 2, canvas.height / 2);
       requestAnimationFrame(animate); // просто чекаємо без оновлення гри
       return;
     }
@@ -106,6 +105,7 @@ export function createAnimationLoop(
       });
       // очистка канвасу
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+
       // малюємо перший шар
       layer1.update(keys, currentDrone);
       layer1.draw();
@@ -119,6 +119,7 @@ export function createAnimationLoop(
           enemy.draw();
         }
       });
+      console.log(currentDrone.isAlive);
       // піхота обчислення і малювання
       enemies.forEach((enemy) => {
         if (checkVisibility(currentDrone, enemy, canvas, gameFrame)) {
@@ -126,8 +127,10 @@ export function createAnimationLoop(
           enemy.frameX = 0;
         }
         if (
-          enemy.isFiring &&
-          checkDistance(enemy, canvas) > enemy.fireDistance
+          (enemy.isFiring &&
+            checkDistance(enemy, canvas) > enemy.fireDistance) ||
+          !currentDrone.isAlive ||
+          currentDrone.isReloading
         ) {
           enemy.isFiring = false;
         }
@@ -164,6 +167,7 @@ export function createAnimationLoop(
           canvas,
           gameState,
           gameData,
+          currentDrone,
           training
         );
         if (vehicle.isMoving) {
@@ -260,21 +264,11 @@ export function createAnimationLoop(
       });
       drawJoystickAndButtons(ctx, canvas, gameState.drones);
       drawMenuButtons(ctx, minimap, training);
-      if (!training) gameState.drawScore(ctx, canvas);
-      if (!gameEnded) {
-        if (winLoseConditions.lose(gameState, gameData, enemies, vehicles)) {
-          gameData.looseScore = 0;
-          const loseModal = document.getElementById("loseModal");
-          if (loseModal) loseModal.style.visibility = "visible";
-          isPaused = true;
-          gameEnded = true;
-          //  } else if (winLoseConditions.win(gameState, gameData, enemies, vehicles)) {
-          //    const winModal = document.getElementById("winModal");
-          //    if (winModal) winModal.style.visibility = "visible";
-          //    gameEnded = true;
-        }
+
+      if (!training) {
+        gameState.drawScore(ctx, canvas, gameData);
+        winLoseTest(winLoseConditions, gameState, gameData, enemies, vehicles);
       }
-      if (gameFrame % 100 === 0) console.log(gameData.looseScore);
       gameFrame++;
     }
 
