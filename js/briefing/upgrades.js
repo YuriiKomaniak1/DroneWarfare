@@ -1,9 +1,20 @@
 const gameData = JSON.parse(localStorage.getItem("gameData"));
-
+const shouldPlayMusic = localStorage.getItem("playUpgradeMusic") === "true";
+// програвання музики
 document.querySelectorAll(".score").forEach((el) => {
   el.textContent = gameData.score;
 });
+if (shouldPlayMusic) {
+  const music = new Audio("./assets/audio/music/upgrade-music.mp3");
+  music.loop = true;
+  music.volume = 0.15;
 
+  // Спроба відтворити
+  music.play().catch((e) => {
+    console.warn("Автовідтворення музики заблоковано:", e);
+  });
+  localStorage.removeItem("playBriefingMusic");
+}
 // присвоєння цін
 const middleDroneOpenCost = 5000 + gameData.upgradeGap;
 const bigDroneOpenCost = 8000 + gameData.upgradeGap;
@@ -709,6 +720,7 @@ document.querySelectorAll(".back-button").forEach((el) => {
 // вихід з прокачок
 document.getElementById("back-button").addEventListener("click", () => {
   localStorage.setItem("gameData", JSON.stringify(gameData));
+  localStorage.setItem("playBriefingMusic", "true");
   window.location.href = "briefing.html";
 });
 function upgradeRoutine(cost, name) {

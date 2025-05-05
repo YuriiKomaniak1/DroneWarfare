@@ -2,6 +2,7 @@ import { briefingText } from "./briefing/briefingText.js";
 import { BriefingDrones } from "./gameElements/briefingDroneIcons.js";
 import { gameState } from "./logic/gamestate.js";
 import { SmallDrone, MediumDrone, BigDrone } from "./drones/drones.js";
+// витягування даних з пам'яті
 const gameData = JSON.parse(localStorage.getItem("gameData"));
 gameState.updateDrones(gameData, SmallDrone, MediumDrone, BigDrone);
 gameState.updateData(gameData);
@@ -11,17 +12,17 @@ gameState.drones.forEach((drone) => {
   }
 });
 console.log(gameState, gameData);
+const shouldPlayMusic = localStorage.getItem("playBriefingMusic") === "true";
 const missionKey = gameData.currentMission; // Сюди підставляється поточна місія
+// брифінг перед місією
 document.getElementById("briefing-text").innerHTML = briefingText[missionKey];
-// Малюємо дронів та боєзапас
-const canvas = document.getElementById("droneCanvas");
-const ctx = canvas.getContext("2d");
-canvas.height = canvas.width / 3.8;
 
+// обробка кнопок внизу
 document.getElementById("back-button").addEventListener("click", () => {
   window.location.href = "index.html";
 });
 document.getElementById("upgrade-button").addEventListener("click", () => {
+  localStorage.setItem("playUpgradeMusic", "true");
   window.location.href = "upgrades.html";
 });
 document.getElementById("start-button").addEventListener("click", () => {
@@ -36,7 +37,24 @@ document.getElementById("start-button").addEventListener("click", () => {
   }
   window.location.href = href;
 });
+// обробка музики
+if (shouldPlayMusic) {
+  const music = new Audio("./assets/audio/music/briefing-music.mp3");
+  music.loop = true;
+  music.volume = 0.5;
 
+  // Спроба відтворити
+  music.play().catch((e) => {
+    console.warn("Автовідтворення музики заблоковано:", e);
+  });
+
+  // Видаляємо прапорець, щоб не повторювалося
+  localStorage.removeItem("playBriefingMusic");
+}
+// Малюємо дронів та боєзапас
+const canvas = document.getElementById("droneCanvas");
+const ctx = canvas.getContext("2d");
+canvas.height = canvas.width / 3.8;
 const droneIcons = [];
 for (let i = 0; i < 5; i++) {
   const spase = canvas.width / 21;
