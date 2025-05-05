@@ -21,7 +21,11 @@ import { Minimap } from "../gameElements/minimap.js";
 import { createDroneIcons } from "../gameElements/droneIcons.js";
 import { keys } from "../logic/controls.js";
 import { SmallDrone, MediumDrone, BigDrone } from "../drones/drones.js";
-import { buttons, winLoseTest } from "./gameLoopButtonHandlers.js";
+import {
+  buttons,
+  winLoseTest,
+  tryStartDroneSound,
+} from "./gameLoopButtonHandlers.js";
 export let isPaused = false;
 export function togglePause() {
   isPaused = !isPaused;
@@ -38,6 +42,8 @@ export function createAnimationLoop(
   gameData,
   training = false
 ) {
+  window.addEventListener("click", tryStartDroneSound, { once: true });
+  window.addEventListener("keydown", tryStartDroneSound, { once: true });
   gameState.updateDrones(gameData, SmallDrone, MediumDrone, BigDrone);
   gameState.updateData(gameData);
 
@@ -119,7 +125,6 @@ export function createAnimationLoop(
           enemy.draw();
         }
       });
-      console.log(currentDrone.isAlive);
       // піхота обчислення і малювання
       enemies.forEach((enemy) => {
         if (checkVisibility(currentDrone, enemy, canvas, gameFrame)) {

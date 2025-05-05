@@ -32,6 +32,9 @@ newDrone.bombStorage = oldDrone.cloneBombStorage(oldDrone.bombStorage);
 newDrone.initialBombStorage = oldDrone.cloneBombStorage(
   oldDrone.initialBombStorage
 );
+newDrone.hangers = newDrone.initialHangers - newDrone.countBombs();
+newDrone.remainingCapacity = newDrone.capacity - newDrone.getCurrentLoad();
+
 gameState.drones[droneIndex] = newDrone;
 document.getElementById("drone_number").textContent = parseInt(droneIndex) + 1;
 let drone = null;

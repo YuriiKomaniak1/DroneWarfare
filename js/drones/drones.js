@@ -1,4 +1,15 @@
 import { basePath } from "../utils/basePath.js";
+import {
+  FragBomb,
+  HeBomb,
+  ShapedBomb,
+  FootMine,
+  TankMine,
+  MagnetMine,
+  ShrapnelBomb,
+  ClusterBomb,
+  ShapedClusterBomb,
+} from "./bomb.js";
 
 let smallDroneImage = new Image();
 smallDroneImage.src = `${basePath}assets/img/drones/smallDroneAnimation.png`;
@@ -226,11 +237,33 @@ class Drone {
   }
   resetAmmo() {
     this.bombStorage = this.cloneBombStorage(this.initialBombStorage);
-    this.remainingCapacity = this.capacity;
     this.isReloading = false;
     this.isAlive = true;
     this.hp = this.initialHP;
     this.visibility = this.initialVisibility ?? 1;
+  }
+  getCurrentLoad() {
+    const bombClasses = {
+      frag: FragBomb,
+      he: HeBomb,
+      shaped: ShapedBomb,
+      footMine: FootMine,
+      tankMine: TankMine,
+      magnetMine: MagnetMine,
+      shrapnel: ShrapnelBomb,
+      cluster: ClusterBomb,
+      shapedCluster: ShapedClusterBomb,
+    };
+
+    let total = 0;
+    for (const type in this.bombStorage) {
+      const bombs = this.bombStorage[type];
+      const BombClass = bombClasses[type];
+      if (BombClass && bombs?.length) {
+        total += bombs.length * BombClass.weight;
+      }
+    }
+    return total;
   }
 }
 export class SmallDrone extends Drone {

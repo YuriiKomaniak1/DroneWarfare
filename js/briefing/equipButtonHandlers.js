@@ -232,8 +232,10 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
 
   // характеристики дронів
   document.getElementById("remainingDroneWeight").textContent = Math.round(
-    drone.remainingCapacity * 1000
+    calculateRemainingCapacity(drone) * 1000
   );
+  console.log(FragBomb.weight);
+
   document.getElementById("droneWeight").textContent = Math.round(
     drone.capacity * 1000
   );
@@ -262,6 +264,7 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
       (drone.capacity - bombWeight) * 1000
     );
     document.getElementById("hangers").textContent = Math.round(drone.hangers);
+    console.log(bombWeight);
     return parseFloat((drone.capacity - bombWeight).toFixed(4));
   }
 

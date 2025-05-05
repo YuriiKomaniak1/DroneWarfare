@@ -35,6 +35,7 @@ document.getElementById("start-button").addEventListener("click", () => {
       href = "level2.html";
       break;
   }
+  localStorage.setItem("playDroneMusic", "true");
   window.location.href = href;
 });
 // обробка музики

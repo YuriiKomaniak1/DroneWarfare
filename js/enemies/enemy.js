@@ -61,6 +61,12 @@ export class Enemy {
     this.hasBailedOut = false;
     this.distance = 0.4 + Math.random() * 0.5;
     this.navigationsGrid = null; // Сітка навігації
+    this.fireSound = new Audio("assets/audio/fire/rifleman-sound.mp3");
+    this.fireSound.loop = true;
+    this.fireSound.volume = 0.3;
+    this.fireSoundPlaying = false;
+    this.fireSoundRateMin = 1;
+    this.fireSoundRateMax = 2;
   }
 
   update(allEnemies, canvas, gameState, gameData, training) {
@@ -296,6 +302,14 @@ export class Enemy {
     if (!this.vehicle) {
       if (this.dead || !drone.isAlive || drone.isReloading)
         this.isFiring = false;
+
+      // 🔊 Керуємо звуком стрільби
+      if (this.isFiring) {
+        this.startFiringSoundLoop();
+      } else {
+        this.stopFiringSoundLoop();
+      }
+      //  логіка стрільби
       if (this.isFiring) this.fireTimer++;
       if (this.fireTimer >= 60 / this.fireRate) {
         // console.log(
@@ -314,6 +328,44 @@ export class Enemy {
         this.fireTimer = 0;
       }
     }
+  }
+  startFiringSoundLoop() {
+    if (this._firingSoundTimeout) return;
+
+    const playNext = () => {
+      if (!this.isFiring) return;
+
+      const fireSoundInstance = new Audio(this.fireSound.src); // новий екземпляр
+      fireSoundInstance.volume = this.fireSound.volume || 0.5;
+      fireSoundInstance
+        .play()
+        .catch((e) =>
+          console.warn("🔇 Не вдалося відтворити звук пострілу:", e)
+        );
+
+      // Наступний запуск через випадковий інтервал, тільки якщо isFiring ще true
+      const delay =
+        this.fireSoundRateMin * 1000 +
+        Math.random() * (this.fireSoundRateMax - this.fireSoundRateMin) * 1000;
+
+      this._firingSoundTimeout = setTimeout(() => {
+        this._firingSoundTimeout = null;
+        if (this.isFiring) playNext();
+      }, delay);
+    };
+
+    playNext();
+  }
+
+  stopFiringSoundLoop() {
+    if (this._firingSoundTimeout) {
+      clearTimeout(this._firingSoundTimeout);
+      this._firingSoundTimeout = null;
+    }
+    // if (this.fireSound) {
+    //   this.fireSound.pause();
+    //   this.fireSound.currentTime = 0;
+    // }
   }
 }
 export class Rifleman extends Enemy {
