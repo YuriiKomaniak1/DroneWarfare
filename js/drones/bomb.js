@@ -282,11 +282,7 @@ export class Bomb {
         break;
       }
     }
-    if (success) {
-      vehicle.isBurning = true;
-      vehicle.bailOut();
-      vehicle.isMoving = false;
-    }
+    if (success) vehicle.isBurningF();
     return vehicle;
   }
   checkHEArmorPenetration(AP, vehicle) {
@@ -366,18 +362,13 @@ export class FragBomb extends Bomb {
         this.distanceToVehicle(0 + this.gameData.fragBombUpgrade, vehicle) &&
         Math.random() > 0.9 - this.gameData.fragBombUpgrade * 0.01
       ) {
-        vehicle.isBurning = true;
+        vehicle.isBurningF();
       } else if (
         this.distanceToVehicle(30 + this.gameData.fragBombUpgrade, vehicle) &&
         Math.random() > 0.8 - this.gameData.fragBombUpgrade * 0.01
       ) {
-        vehicle.isStopped = true;
+        vehicle.isStoppedF();
       }
-      if (vehicle.isBurning || vehicle.isStopped) {
-        vehicle.bailOut();
-        vehicle.isMoving = false;
-      }
-
       return vehicle;
     }
   }
@@ -412,30 +403,25 @@ export class HeBomb extends Bomb {
     if (this.isOnRoof()) return vehicle;
     if (vehicle.armor === 0) {
       if (this.distanceToVehicle(this.gameData.heBombUpgrade, vehicle)) {
-        vehicle.isBurning = true;
+        vehicle.isBurningF();
       } else if (
         this.distanceToVehicle(40 + this.gameData.heBombUpgrade, vehicle) &&
         Math.random() > 0.3 - this.gameData.heBombUpgrade * 0.01
       ) {
-        vehicle.isStopped = true;
+        vehicle.isStoppedF();
       }
     } else {
       if (
         this.distanceToVehicle(0, vehicle) &&
         this.checkHEArmorPenetration(this.armorPenetration, vehicle)
       ) {
-        vehicle.isBurning = true;
+        vehicle.isBurningF();
       } else if (
         this.distanceToVehicle(20, vehicle) &&
         this.checkHEArmorPenetration(this.armorPenetration + 0.05, vehicle)
       ) {
-        vehicle.isStopped = true;
+        vehicle.isStoppedF();
       }
-    }
-
-    if (vehicle.isBurning || vehicle.isStopped) {
-      vehicle.bailOut();
-      vehicle.isMoving = false;
     }
     return vehicle;
   }
@@ -496,11 +482,7 @@ export class FootMine extends Bomb {
     if (this.checkMineUnderWheels(vehicle)) {
       this.exploded = true;
       this.deployed = false;
-      if (vehicle.armor === 0 && Math.random() > 0.75) {
-        vehicle.isStopped = true;
-        vehicle.bailOut();
-        vehicle.isMoving = false;
-      }
+      if (vehicle.armor === 0 && Math.random() > 0.75) vehicle.isStoppedF();
       return vehicle;
     }
   }
@@ -530,13 +512,9 @@ export class TankMine extends Bomb {
       this.exploded = true;
       this.deployed = false;
       if (vehicle.armor === 0 || Math.random() > 0.5 + vehicle.armor / 10) {
-        vehicle.isBurning = true;
-        vehicle.bailOut();
-        vehicle.isMoving = false;
+        vehicle.isBurningF();
       } else if (Math.random() > vehicle.armor / 12) {
-        vehicle.isStopped = true;
-        vehicle.bailOut();
-        vehicle.isMoving = false;
+        vehicle.isStoppedF();
       }
       return vehicle;
     }
@@ -651,7 +629,7 @@ export class ShrapnelBomb extends Bomb {
         ) &&
         Math.random() > 0.85 - this.gameData.shrapnelBombUpgrade * 0.01
       ) {
-        vehicle.isBurning = true;
+        vehicle.isBurningF();
       } else if (
         this.distanceToVehicle(
           50 + this.gameData.shrapnelBombUpgrade,
@@ -659,13 +637,8 @@ export class ShrapnelBomb extends Bomb {
         ) &&
         Math.random() > 0.75 - this.gameData.shrapnelBombUpgrade * 0.01
       ) {
-        vehicle.isStopped = true;
+        vehicle.isStoppedF();
       }
-      if (vehicle.isBurning || vehicle.isStopped) {
-        vehicle.bailOut();
-        vehicle.isMoving = false;
-      }
-
       return vehicle;
     }
   }
@@ -721,27 +694,22 @@ export class HeClusterMunition extends Bomb {
     if (this.isOnRoof()) return vehicle;
     if (vehicle.armor === 0) {
       if (this.distanceToVehicle(0, vehicle)) {
-        vehicle.isBurning = true;
+        vehicle.isBurningF();
       } else if (this.distanceToVehicle(32, vehicle) && Math.random() > 0.3) {
-        vehicle.isStopped = true;
+        vehicle.isStoppedF();
       }
     } else {
       if (
         this.distanceToVehicle(0, vehicle) &&
         this.checkHEArmorPenetration(this.armorPenetration, vehicle)
       ) {
-        vehicle.isBurning = true;
+        vehicle.isBurningF();
       } else if (
         this.distanceToVehicle(10, vehicle) &&
         this.checkHEArmorPenetration(this.armorPenetration + 0.05, vehicle)
       ) {
-        vehicle.isStopped = true;
+        vehicle.isStoppedF();
       }
-    }
-
-    if (vehicle.isBurning || vehicle.isStopped) {
-      vehicle.bailOut();
-      vehicle.isMoving = false;
     }
     return vehicle;
   }

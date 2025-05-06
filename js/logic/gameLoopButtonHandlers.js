@@ -1,25 +1,47 @@
 import { togglePause } from "./gameloop.js";
 let winCondition = false;
 let gameStopped = false;
-let droneMusicStarted = false;
-export function tryStartDroneSound() {
-  localStorage;
-  console.log("🛩️ tryStartDroneSound викликано");
-  if (!droneMusicStarted && localStorage.getItem("playDroneMusic") === "true") {
-    console.log("🎵 Умова виконана, пробуємо запускати музику...");
-    const music = new Audio("assets/audio/drone/drone-sound.mp3");
-    music.loop = true;
-    music.volume = 0.8;
-    music
+
+export const soundState = {
+  droneMusicStarted: false,
+  droneMusic: null,
+  allowDroneMusic: false,
+};
+export function enableDroneSound() {
+  soundState.allowDroneMusic = true;
+  console.log("✅ Дозвіл на запуск звуку дрона надано");
+}
+export function tryStartDroneSound(currentDrone) {
+  if (
+    soundState.allowDroneMusic &&
+    currentDrone &&
+    currentDrone.isAlive &&
+    currentDrone.isActive &&
+    currentDrone.countBombs() > 0 &&
+    !soundState.droneMusicStarted
+  ) {
+    console.log("🎵 Активний дрон — запускаємо музику...");
+    soundState.droneMusic = new Audio("assets/audio/drone/drone-sound.mp3");
+    soundState.droneMusic.loop = true;
+    soundState.droneMusic.volume = 0.8;
+
+    soundState.droneMusic
       .play()
       .then(() => {
-        console.log("✅ Музику успішно запущено");
+        soundState.droneMusicStarted = true;
+        console.log("✅ Музику дрона запущено");
       })
-      .catch((e) => {
-        console.warn("Автовідтворення музики заблоковано:", e);
-      });
-    localStorage.removeItem("playDroneMusic");
-    droneMusicStarted = true;
+      .catch((e) => console.warn("❌ Не вдалося відтворити звук дрона:", e));
+  }
+  if (
+    soundState.droneMusic &&
+    (!currentDrone.isAlive || currentDrone.countBombs() <= 0)
+  ) {
+    soundState.droneMusic.pause();
+    soundState.droneMusic.currentTime = 0;
+    soundState.droneMusicStarted = false;
+    soundState.droneMusic = null;
+    console.log("🛑 Дрон знищено або неактивний — музику зупинено");
   }
 }
 

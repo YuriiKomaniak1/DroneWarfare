@@ -25,6 +25,7 @@ import {
   buttons,
   winLoseTest,
   tryStartDroneSound,
+  enableDroneSound,
 } from "./gameLoopButtonHandlers.js";
 export let isPaused = false;
 export function togglePause() {
@@ -42,8 +43,8 @@ export function createAnimationLoop(
   gameData,
   training = false
 ) {
-  window.addEventListener("click", tryStartDroneSound, { once: true });
-  window.addEventListener("keydown", tryStartDroneSound, { once: true });
+  window.addEventListener("click", enableDroneSound, { once: true });
+  window.addEventListener("keydown", enableDroneSound, { once: true });
   gameState.updateDrones(gameData, SmallDrone, MediumDrone, BigDrone);
   gameState.updateData(gameData);
 
@@ -83,6 +84,7 @@ export function createAnimationLoop(
     );
   }, canvas);
   buttons(gameData);
+
   //----------------початок анімації-------------------
   function animate(timestamp) {
     if (isPaused) {
@@ -97,7 +99,9 @@ export function createAnimationLoop(
     const deltaTime = timestamp - lastTime;
     if (deltaTime >= FRAME_TIME) {
       lastTime = timestamp - (deltaTime % FRAME_TIME);
-      // центрування дронів
+      // ззвук дрона
+      tryStartDroneSound(currentDrone);
+
       gameState.drones.forEach((drone) => {
         if (drone) {
           if (
@@ -142,7 +146,7 @@ export function createAnimationLoop(
         enemy.update(enemies, canvas, gameState, gameData, training);
         if (!enemy.dead) {
           enemy.draw();
-          enemy.fire(currentDrone, layer1);
+          enemy.fire(currentDrone, layer1, canvas);
         }
       });
       // знищена техніка
@@ -212,6 +216,8 @@ export function createAnimationLoop(
           enemies.forEach((enemy) => {
             if (bomb.checkCollision(enemy) && !enemy.dead) {
               enemy.dead = true;
+              enemy.isFiring = false; // 💥 припиняє стріляти
+              enemy.stopFiringSoundLoop(); //
               enemy.deathFrameIndex = 0;
             }
             if (checkEffect(bomb, enemy) && !enemy.dead) {

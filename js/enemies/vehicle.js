@@ -38,6 +38,8 @@ const vehicleFireImage = new Image();
 vehicleFireImage.src = "./assets/img/effects/vehicleFire.png";
 import { Rifleman, Crew, createRifleSquad } from "./enemy.js";
 import { NavigationGrid, findPath } from "../logic/navigation.js";
+import { VehicleSoundPlayer } from "../gameElements/sounds.js";
+
 export class Vehicle {
   static type = "default"; // Тип за замовчуванням
   constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
@@ -114,7 +116,16 @@ export class Vehicle {
     this.turretFrameTimer = 0;
     this.droneSpottingChanse = 1;
     this.hasCrew = false; // Чи є екіпаж
-    this.obstacleAdded = false;
+    this.fireSound = new Audio("assets/audio/fire/machinegun.mp3");
+    this.fireSound.loop = true;
+    this.fireSound.volume = 0.3;
+    this.fireSoundPlaying = false;
+    this.fireSoundRateMin = 2;
+    this.fireSoundRateMax = 3;
+    this.driveSound = new VehicleSoundPlayer(
+      "assets/audio/vehicle/truck.mp3",
+      0.4
+    );
   }
 
   update(vehicles, enemies, canvas, gameState, gameData, training) {
@@ -142,7 +153,19 @@ export class Vehicle {
       }
       return;
     }
-
+    // звук руху
+    if (this.isMoving) {
+      this.driveSound.playLoop();
+    } else {
+      this.driveSound.stop();
+    }
+    if (this.driveSound && this.driveSound.isPlaying) {
+      const dx = this.x - canvas.width / 2;
+      const dy = this.y - canvas.height / 2;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      this.driveSound.setVolumeByDistance(distance, 800); //
+    }
+    // рух
     if (this.isMoving) {
       const target = this.path[this.currentPathIndex];
       const dx = target.x - this.baseX;
@@ -398,13 +421,15 @@ export class Vehicle {
         this.isFiring = false;
         this.turretFrame = 0;
       }
+      // 🔊 Керуємо звуком стрільби
+      if (this.isFiring) {
+        this.startFiringSoundLoop();
+      } else {
+        this.stopFiringSoundLoop();
+      }
+      //  логіка стрільби
       if (this.isFiring) this.fireTimer++;
       if (this.fireTimer >= 60 / this.fireRate) {
-        console.log(
-          drone.hp,
-          (5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2)) *
-            drone.size
-        );
         if (
           Math.random() * 500 <
             (5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2)) *
@@ -573,6 +598,66 @@ export class Vehicle {
 
     return null; // нічого не знайдено
   }
+  startFiringSoundLoop() {
+    // 🔁 Якщо вже є активний таймер — не запускаємо ще раз, щоб уникнути дублювання
+    if (this._firingSoundTimeout) return;
+
+    // 🔂 Функція, яка буде викликатись повторно з інтервалом
+    const playNext = () => {
+      // ⛔ Якщо юніт більше не стріляє — зупиняємо рекурсію (не запускаємо звук знову)
+      if (!this.isFiring) return;
+
+      // 🎧 Створюємо новий екземпляр звуку — це дозволяє уникнути переривання вже граючого звуку
+      const fireSoundInstance = new Audio(this.fireSound.src);
+
+      // 🔉 Встановлюємо гучність (використовуємо або задану, або дефолтну 0.5)
+      fireSoundInstance.volume = this.fireSound.volume || 0.5;
+
+      // ▶️ Пробуємо відтворити звук
+      fireSoundInstance
+        .play()
+        .catch((e) =>
+          console.warn("🔇 Не вдалося відтворити звук пострілу:", e)
+        );
+
+      // ⏱️ Обчислюємо випадкову затримку між звуками пострілів (наприклад 2–3 секунди)
+      const delay =
+        this.fireSoundRateMin * 1000 +
+        Math.random() * (this.fireSoundRateMax - this.fireSoundRateMin) * 1000;
+
+      // 🕒 Встановлюємо таймер для наступного виклику playNext
+      this._firingSoundTimeout = setTimeout(() => {
+        this._firingSoundTimeout = null; // 💾 Скидаємо таймер перед новим викликом
+        if (this.isFiring) playNext(); // 🔁 Якщо юніт ще стріляє — повторити
+      }, delay);
+    };
+
+    // ▶️ Стартуємо цикл звуків стрільби
+    playNext();
+  }
+
+  stopFiringSoundLoop() {
+    // ⛔ Зупиняємо майбутній виклик playNext, якщо є активний таймер
+    if (this._firingSoundTimeout) {
+      clearTimeout(this._firingSoundTimeout); // ❌ Очистити таймер
+      this._firingSoundTimeout = null; // 💾 Обнулити стан
+    }
+  }
+  isStoppedF() {
+    this.isStopped = true;
+    this.bailOut();
+    this.isMoving = false;
+    this.isFiring = false;
+    this.stopFiringSoundLoop();
+  }
+  isBurningF() {
+    this.isStopped = true;
+    this.isBurning = true;
+    this.bailOut();
+    this.isMoving = false;
+    this.isFiring = false;
+    this.stopFiringSoundLoop();
+  }
 }
 
 export class Ural extends Vehicle {
@@ -686,6 +771,7 @@ export class Guntruck extends Vehicle {
     this.droneSpottingChanse = 4;
     this.fireDistance = 400;
     this.fireRate = 40;
+    this.fireSound = new Audio("assets/audio/fire/heavyMachinegun.mp3");
   }
 }
 

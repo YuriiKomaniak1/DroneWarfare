@@ -65,7 +65,7 @@ export class Enemy {
     this.fireSound.loop = true;
     this.fireSound.volume = 0.3;
     this.fireSoundPlaying = false;
-    this.fireSoundRateMin = 1;
+    this.fireSoundRateMin = 0.5;
     this.fireSoundRateMax = 2;
   }
 
@@ -170,6 +170,7 @@ export class Enemy {
       this.baseY += pushY * 0.5;
       // обертання під час трільби
       if (this.isFiring) {
+        if (this.dead) this.ifFiring = false;
         const centerX = canvas.width / 2;
         const centerY = canvas.height / 2;
 
@@ -298,14 +299,20 @@ export class Enemy {
     }
   }
 
-  fire(drone, layer) {
+  fire(drone, layer, canvas) {
     if (!this.vehicle) {
-      if (this.dead || !drone.isAlive || drone.isReloading)
-        this.isFiring = false;
+      // 🛑 Якщо мертвий, скидаємо стріляння і звук
+      if (this.dead || !drone.isAlive || drone.isReloading) {
+        if (this.isFiring) {
+          this.isFiring = false;
+          this.stopFiringSoundLoop(); // 🧹 Зупинити звук негайно
+        }
+        return;
+      }
 
       // 🔊 Керуємо звуком стрільби
       if (this.isFiring) {
-        this.startFiringSoundLoop();
+        this.startFiringSoundLoop(canvas);
       } else {
         this.stopFiringSoundLoop();
       }
@@ -329,21 +336,37 @@ export class Enemy {
       }
     }
   }
-  startFiringSoundLoop() {
+  startFiringSoundLoop(canvas) {
+    // 🔁 Уникаємо дублювання запусків
     if (this._firingSoundTimeout) return;
 
     const playNext = () => {
+      // ⛔ Якщо юніт більше не стріляє — не продовжуємо
       if (!this.isFiring) return;
 
-      const fireSoundInstance = new Audio(this.fireSound.src); // новий екземпляр
-      fireSoundInstance.volume = this.fireSound.volume || 0.5;
-      fireSoundInstance
-        .play()
-        .catch((e) =>
-          console.warn("🔇 Не вдалося відтворити звук пострілу:", e)
-        );
+      // 🎧 Створюємо новий екземпляр звуку
+      const fireSoundInstance = new Audio(this.fireSound.src);
 
-      // Наступний запуск через випадковий інтервал, тільки якщо isFiring ще true
+      // 📏 Розрахунок відстані до центру екрану (дрона)
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const dx = this.x - centerX;
+      const dy = this.y - centerY;
+      const distance = Math.hypot(dx, dy);
+
+      // 🎚️ Обчислення коефіцієнта гучності (чим ближче — тим гучніше)
+      const maxDistance = 450; // при 1000+ пікселях звук ≈ 0
+      const volumeFactor = Math.max(0, 1 - distance / maxDistance);
+
+      // 🔉 Встановлення гучності з урахуванням базової
+      fireSoundInstance.volume = (this.fireSound.volume || 0.5) * volumeFactor;
+
+      // ▶️ Відтворення звуку
+      fireSoundInstance.play().catch((e) => {
+        console.warn("🔇 Не вдалося відтворити звук пострілу:", e);
+      });
+
+      // ⏱️ Випадковий інтервал до наступного звуку
       const delay =
         this.fireSoundRateMin * 1000 +
         Math.random() * (this.fireSoundRateMax - this.fireSoundRateMin) * 1000;
@@ -354,18 +377,16 @@ export class Enemy {
       }, delay);
     };
 
+    // ▶️ Стартуємо
     playNext();
   }
 
   stopFiringSoundLoop() {
+    // ⛔ Зупиняємо майбутній виклик playNext, якщо є активний таймер
     if (this._firingSoundTimeout) {
-      clearTimeout(this._firingSoundTimeout);
-      this._firingSoundTimeout = null;
+      clearTimeout(this._firingSoundTimeout); // ❌ Очистити таймер
+      this._firingSoundTimeout = null; // 💾 Обнулити стан
     }
-    // if (this.fireSound) {
-    //   this.fireSound.pause();
-    //   this.fireSound.currentTime = 0;
-    // }
   }
 }
 export class Rifleman extends Enemy {
@@ -399,6 +420,9 @@ export class Machinegunner extends Enemy {
     this.fireRate = 15;
     this.droneSpottingChanse = 2;
     this.score = 100;
+    this.fireSound = new Audio("assets/audio/fire/machinegun.mp3");
+    this.fireSoundRateMin = 2;
+    this.fireSoundRateMax = 3.2;
   }
 }
 

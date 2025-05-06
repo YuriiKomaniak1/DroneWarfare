@@ -87,16 +87,14 @@ function createEnemySquad(riflemans, mashinegunners, grenadiers, main = true) {
 createEnemySquad(3, 1, 1);
 setTimeout(() => {
   createEnemySquad(3, 1, 1);
-}, 500);
+}, 6000);
 setTimeout(() => {
   createEnemySquad(3, 1, 0);
-}, 10000);
-setTimeout(() => {
-  createEnemySquad(3, 1, 0);
-}, 15000);
+}, 12000);
+
 setTimeout(() => {
   createEnemySquad(3, 1, 1);
-}, 20000);
+}, 18000);
 setTimeout(() => {
   createEnemySquad(3, 1, 0);
 }, 25000);
