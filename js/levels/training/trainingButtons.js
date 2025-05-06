@@ -1,4 +1,4 @@
-import { isPaused, togglePause } from "../../logic/gameloop.js";
+import { togglePause } from "../../logic/gameloop.js";
 import { getWinCondition } from "../../logic/gameLoopButtonHandlers.js";
 
 export const menuButtons = []; // Масив для збереження кнопок

@@ -39,6 +39,7 @@ vehicleFireImage.src = "./assets/img/effects/vehicleFire.png";
 import { Rifleman, Crew, createRifleSquad } from "./enemy.js";
 import { NavigationGrid, findPath } from "../logic/navigation.js";
 import { VehicleSoundPlayer } from "../gameElements/sounds.js";
+import { pauseState } from "../logic/gameloop.js";
 
 export class Vehicle {
   static type = "default"; // Тип за замовчуванням
@@ -147,6 +148,9 @@ export class Vehicle {
         if (index > -1) {
           gameData.loosescore -= this.score;
           this.scored = true;
+          if (this.driveSound && this.driveSound.stop) {
+            this.driveSound.stop();
+          }
           vehicles.splice(index, 1);
         }
         return;
@@ -409,21 +413,22 @@ export class Vehicle {
       this.ctx.restore();
     }
   }
-  fire(drone, layer) {
+  fire(drone, layer, canvas) {
     if (this.hasGunner) {
       if (
         !this.gunner.vehicle ||
         this.gunner.dead ||
         !this.isMoving ||
         !drone.isAlive ||
-        drone.isReloading
+        drone.isReloading ||
+        pauseState.isPaused
       ) {
         this.isFiring = false;
         this.turretFrame = 0;
       }
       // 🔊 Керуємо звуком стрільби
       if (this.isFiring) {
-        this.startFiringSoundLoop();
+        this.startFiringSoundLoop(canvas);
       } else {
         this.stopFiringSoundLoop();
       }
@@ -598,20 +603,31 @@ export class Vehicle {
 
     return null; // нічого не знайдено
   }
-  startFiringSoundLoop() {
+  startFiringSoundLoop(canvas) {
     // 🔁 Якщо вже є активний таймер — не запускаємо ще раз, щоб уникнути дублювання
-    if (this._firingSoundTimeout) return;
+    if (this._firingSoundTimeout || pauseState.isPaused) return;
 
     // 🔂 Функція, яка буде викликатись повторно з інтервалом
     const playNext = () => {
       // ⛔ Якщо юніт більше не стріляє — зупиняємо рекурсію (не запускаємо звук знову)
-      if (!this.isFiring) return;
+      if (!this.isFiring || pauseState.isPaused) return;
 
       // 🎧 Створюємо новий екземпляр звуку — це дозволяє уникнути переривання вже граючого звуку
       const fireSoundInstance = new Audio(this.fireSound.src);
 
-      // 🔉 Встановлюємо гучність (використовуємо або задану, або дефолтну 0.5)
-      fireSoundInstance.volume = this.fireSound.volume || 0.5;
+      // 📏 Розрахунок відстані до центру екрану (дрона)
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const dx = this.x - centerX;
+      const dy = this.y - centerY;
+      const distance = Math.hypot(dx, dy);
+
+      // 🎚️ Обчислення коефіцієнта гучності (чим ближче — тим гучніше)
+      const maxDistance = 450; // при 1000+ пікселях звук ≈ 0
+      const volumeFactor = Math.max(0, 1 - distance / maxDistance);
+
+      // 🔉 Встановлення гучності з урахуванням базової
+      fireSoundInstance.volume = (this.fireSound.volume || 0.5) * volumeFactor;
 
       // ▶️ Пробуємо відтворити звук
       fireSoundInstance
@@ -628,7 +644,7 @@ export class Vehicle {
       // 🕒 Встановлюємо таймер для наступного виклику playNext
       this._firingSoundTimeout = setTimeout(() => {
         this._firingSoundTimeout = null; // 💾 Скидаємо таймер перед новим викликом
-        if (this.isFiring) playNext(); // 🔁 Якщо юніт ще стріляє — повторити
+        if (this.isFiring && !pauseState.isPaused) playNext(); // 🔁 Якщо юніт ще стріляє — повторити
       }, delay);
     };
 
@@ -715,6 +731,10 @@ export class BMP2 extends Vehicle {
     this.vehiclefireOffsetY = -0.1;
     this.score = 400;
     this.hasCrew = true;
+    this.driveSound = new VehicleSoundPlayer(
+      "assets/audio/vehicle/tank.mp3",
+      0.4
+    );
   }
 }
 
@@ -742,6 +762,10 @@ export class BMP1 extends Vehicle {
     this.vehiclefireOffsetY = -0.1;
     this.score = 350;
     this.hasCrew = true;
+    this.driveSound = new VehicleSoundPlayer(
+      "assets/audio/vehicle/tank.mp3",
+      0.4
+    );
   }
 }
 export class Guntruck extends Vehicle {
@@ -772,6 +796,10 @@ export class Guntruck extends Vehicle {
     this.fireDistance = 400;
     this.fireRate = 40;
     this.fireSound = new Audio("assets/audio/fire/heavyMachinegun.mp3");
+    this.driveSound = new VehicleSoundPlayer(
+      "assets/audio/vehicle/jeep.mp3",
+      0.4
+    );
   }
 }
 

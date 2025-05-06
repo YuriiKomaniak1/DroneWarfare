@@ -21,15 +21,21 @@ import { Minimap } from "../gameElements/minimap.js";
 import { createDroneIcons } from "../gameElements/droneIcons.js";
 import { keys } from "../logic/controls.js";
 import { SmallDrone, MediumDrone, BigDrone } from "../drones/drones.js";
+import { buttons, winLoseTest } from "./gameLoopButtonHandlers.js";
 import {
-  buttons,
-  winLoseTest,
   tryStartDroneSound,
   enableDroneSound,
-} from "./gameLoopButtonHandlers.js";
-export let isPaused = false;
+  pauseAllSounds,
+  resumeAllSounds,
+} from "../gameElements/sounds.js";
+export const pauseState = { isPaused: false };
 export function togglePause() {
-  isPaused = !isPaused;
+  pauseState.isPaused = !pauseState.isPaused;
+  if (pauseState.isPaused) {
+    pauseAllSounds();
+  } else {
+    resumeAllSounds();
+  }
 }
 
 export function createAnimationLoop(
@@ -87,7 +93,7 @@ export function createAnimationLoop(
 
   //----------------початок анімації-------------------
   function animate(timestamp) {
-    if (isPaused) {
+    if (pauseState.isPaused) {
       // пауза
       ctx.fillStyle = "white";
       ctx.font = "48px Arial";
@@ -176,13 +182,12 @@ export function createAnimationLoop(
           canvas,
           gameState,
           gameData,
-          currentDrone,
           training
         );
         if (vehicle.isMoving) {
           vehicle.draw();
         }
-        vehicle.fire(currentDrone, layer1);
+        vehicle.fire(currentDrone, layer1, canvas);
       });
       // бомби обчислення і малювання в нижній частині польоту
       bombs.forEach((bomb) => {

@@ -1,32 +1,80 @@
+import { pauseState } from "../logic/gameloop.js";
+export const activeSounds = [];
+export const soundState = {
+  droneMusicStarted: false,
+  droneMusic: null,
+  allowDroneMusic: false,
+};
+
+export function pauseAllSounds() {
+  activeSounds.forEach((sound) => {
+    if (!sound.paused) {
+      sound._wasPlayingBeforePause = true;
+      sound.pause();
+    } else {
+      sound._wasPlayingBeforePause = false;
+    }
+  });
+}
+
+export function resumeAllSounds() {
+  activeSounds.forEach((sound) => {
+    if (sound._wasPlayingBeforePause) {
+      sound.play().catch((e) => {
+        console.warn("🔇 Не вдалося відтворити звук після паузи:", e);
+      });
+    }
+    delete sound._wasPlayingBeforePause;
+  });
+}
+
 export class VehicleSoundPlayer {
   constructor(src, overlapTime = 0.2) {
     this.src = src;
     this.overlapTime = overlapTime; // секунди
-    this.currentSound = null;
+    this.currentSounds = []; // ▶️ ВСІ активні інстанси
     this.nextTimeout = null;
     this.isPlaying = false;
   }
 
   playLoop() {
     if (this.isPlaying) return;
+    this.isPlaying = true;
 
     const playInstance = () => {
+      if (!this.isPlaying || pauseState.isPaused) return; // 🔒 Не граємо під час паузи
+
       const sound = new Audio(this.src);
       sound.volume = 0.6;
-      sound.play();
+
+      sound.play().catch((e) => {
+        console.warn("🔇 Не вдалося відтворити звук авто:", e);
+      });
+
+      activeSounds.push(sound);
+      this.currentSounds.push(sound);
 
       sound.addEventListener("loadedmetadata", () => {
         const duration = sound.duration;
-        this.nextTimeout = setTimeout(
-          playInstance,
-          (duration - this.overlapTime) * 1000
-        );
+        // 🔁 Продовжити тільки якщо не пауза
+        this.nextTimeout = setTimeout(() => {
+          this.nextTimeout = null;
+          console.log(pauseState.isPaused);
+          if (this.isPlaying && !pauseState.isPaused) {
+            playInstance();
+          }
+        }, (duration - this.overlapTime) * 1000);
       });
 
-      this.currentSound = sound;
+      sound.addEventListener("ended", () => {
+        const index = activeSounds.indexOf(sound);
+        if (index !== -1) activeSounds.splice(index, 1);
+
+        const localIndex = this.currentSounds.indexOf(sound);
+        if (localIndex !== -1) this.currentSounds.splice(localIndex, 1);
+      });
     };
 
-    this.isPlaying = true;
     playInstance();
   }
 
@@ -34,16 +82,68 @@ export class VehicleSoundPlayer {
     if (!this.isPlaying) return;
     this.isPlaying = false;
     clearTimeout(this.nextTimeout);
-    if (this.currentSound) {
-      this.currentSound.pause();
-      this.currentSound.currentTime = 0;
-      this.currentSound = null;
-    }
+    this.nextTimeout = null;
+
+    this.currentSounds.forEach((sound) => {
+      sound.pause();
+      sound.currentTime = 0;
+      const index = activeSounds.indexOf(sound);
+      if (index !== -1) activeSounds.splice(index, 1);
+    });
+    this.currentSounds = [];
   }
+
   setVolumeByDistance(distance, maxDistance = 600) {
     const clamped = Math.max(0, Math.min(1, 1 - distance / maxDistance));
-    if (this.currentSound) {
-      this.currentSound.volume = clamped * 0.15; // — базовий максимум
-    }
+    this.currentSounds.forEach((sound) => {
+      sound.volume = clamped * 0.15;
+    });
+  }
+}
+
+export function enableDroneSound() {
+  soundState.allowDroneMusic = true;
+  console.log("✅ Дозвіл на запуск звуку дрона надано");
+}
+export function tryStartDroneSound(currentDrone) {
+  // 🟢 Якщо дрон живий, активний і має бомби — запускаємо звук
+  if (
+    soundState.allowDroneMusic &&
+    currentDrone &&
+    currentDrone.isAlive &&
+    currentDrone.isActive &&
+    currentDrone.countBombs() > 0 &&
+    !soundState.droneMusicStarted
+  ) {
+    console.log("🎵 Активний дрон — запускаємо музику...");
+    const droneSound = new Audio("assets/audio/drone/drone-sound.mp3");
+    droneSound.loop = true;
+    droneSound.volume = 0.18;
+
+    droneSound
+      .play()
+      .then(() => {
+        soundState.droneMusic = droneSound;
+        soundState.droneMusicStarted = true;
+        activeSounds.push(droneSound);
+        console.log("✅ Музику дрона запущено");
+      })
+      .catch((e) => console.warn("❌ Не вдалося відтворити звук дрона:", e));
+  }
+
+  // 🔴 Якщо дрон знищено або немає бомб — зупиняємо звук
+  if (
+    soundState.droneMusic &&
+    (!currentDrone?.isAlive || currentDrone.countBombs() <= 0)
+  ) {
+    soundState.droneMusic.pause();
+    soundState.droneMusic.currentTime = 0;
+    soundState.droneMusicStarted = false;
+
+    const index = activeSounds.indexOf(soundState.droneMusic);
+    if (index !== -1) activeSounds.splice(index, 1);
+
+    soundState.droneMusic = null;
+    console.log("🛑 Дрон знищено або неактивний — музику зупинено");
   }
 }

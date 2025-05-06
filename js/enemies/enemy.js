@@ -9,6 +9,8 @@ crewImage.src = "./assets/img/enemies/crew.png";
 const skullImage = new Image();
 skullImage.src = "./assets/img/enemies/skull.png";
 import { findPath } from "../logic/navigation.js";
+import { pauseState } from "../logic/gameloop.js";
+
 export class Enemy {
   constructor(x, y, layer, ctx, path, vehicle = 0) {
     this.image = riflemanImage;
@@ -301,83 +303,70 @@ export class Enemy {
 
   fire(drone, layer, canvas) {
     if (!this.vehicle) {
-      // 🛑 Якщо мертвий, скидаємо стріляння і звук
-      if (this.dead || !drone.isAlive || drone.isReloading) {
+      if (
+        this.dead ||
+        !drone.isAlive ||
+        drone.isReloading ||
+        pauseState.isPaused
+      ) {
         if (this.isFiring) {
           this.isFiring = false;
-          this.stopFiringSoundLoop(); // 🧹 Зупинити звук негайно
+          this.stopFiringSoundLoop();
         }
         return;
       }
 
-      // 🔊 Керуємо звуком стрільби
       if (this.isFiring) {
         this.startFiringSoundLoop(canvas);
       } else {
         this.stopFiringSoundLoop();
       }
-      //  логіка стрільби
+
       if (this.isFiring) this.fireTimer++;
       if (this.fireTimer >= 60 / this.fireRate) {
-        // console.log(
-        //   drone.hp,
-        //   (5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2)) *
-        //     drone.size
-        // );
-        if (
-          Math.random() * 500 <
-            (5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2)) *
-              drone.size &&
-          drone.hp >= 1
-        ) {
+        const chance =
+          (5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2)) *
+          drone.size;
+
+        if (Math.random() * 500 < chance && drone.hp >= 1) {
           --drone.hp;
         }
         this.fireTimer = 0;
       }
     }
   }
+
   startFiringSoundLoop(canvas) {
-    // 🔁 Уникаємо дублювання запусків
-    if (this._firingSoundTimeout) return;
+    if (this._firingSoundTimeout || pauseState.isPaused) return;
 
     const playNext = () => {
-      // ⛔ Якщо юніт більше не стріляє — не продовжуємо
-      if (!this.isFiring) return;
+      if (!this.isFiring || pauseState.isPaused) return;
 
-      // 🎧 Створюємо новий екземпляр звуку
       const fireSoundInstance = new Audio(this.fireSound.src);
 
-      // 📏 Розрахунок відстані до центру екрану (дрона)
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
       const dx = this.x - centerX;
       const dy = this.y - centerY;
       const distance = Math.hypot(dx, dy);
-
-      // 🎚️ Обчислення коефіцієнта гучності (чим ближче — тим гучніше)
-      const maxDistance = 450; // при 1000+ пікселях звук ≈ 0
+      const maxDistance = 450;
       const volumeFactor = Math.max(0, 1 - distance / maxDistance);
-
-      // 🔉 Встановлення гучності з урахуванням базової
       fireSoundInstance.volume = (this.fireSound.volume || 0.5) * volumeFactor;
 
-      // ▶️ Відтворення звуку
       fireSoundInstance.play().catch((e) => {
         console.warn("🔇 Не вдалося відтворити звук пострілу:", e);
       });
 
-      // ⏱️ Випадковий інтервал до наступного звуку
       const delay =
         this.fireSoundRateMin * 1000 +
         Math.random() * (this.fireSoundRateMax - this.fireSoundRateMin) * 1000;
 
       this._firingSoundTimeout = setTimeout(() => {
         this._firingSoundTimeout = null;
-        if (this.isFiring) playNext();
+        if (this.isFiring && !pauseState.isPaused) playNext();
       }, delay);
     };
 
-    // ▶️ Стартуємо
     playNext();
   }
 
