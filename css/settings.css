@@ -1,0 +1,23 @@
+@import "global.css";
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--menu-background-color);
+}
+
+#sound-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin: 16px;
+}
+
+input[type="range"] {
+  width: 220px;
+  height: 15px;
+  accent-color: var(--menu-background-color); /* Працює в нових браузерах */
+}

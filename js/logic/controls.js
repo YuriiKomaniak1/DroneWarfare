@@ -388,7 +388,7 @@ export function switchToNextAvailableBomb(
     !gameState.drones ||
     !gameState.drones[selectionState.selectedDroneIndex]
   ) {
-    console.warn("🚨 drones або активний дрон не готовий!");
+    // console.warn("🚨 drones або активний дрон не готовий!");
     return null;
   }
   const types = selectionState.bombTypes;
@@ -396,7 +396,7 @@ export function switchToNextAvailableBomb(
   const activeDrone = gameState.drones[selectionState.selectedDroneIndex];
 
   if (!activeDrone) {
-    console.warn("🚨 Немає активного дрона!");
+    // console.warn("🚨 Немає активного дрона!");
     return null;
   }
 
@@ -417,6 +417,6 @@ export function switchToNextAvailableBomb(
     }
   }
 
-  console.warn("🚨 Усі типи бомб закінчилися!");
+  // console.warn("🚨 Усі типи бомб закінчилися!");
   return null;
 }

@@ -1,5 +1,6 @@
 const gameData = JSON.parse(localStorage.getItem("gameData"));
 const shouldPlayMusic = localStorage.getItem("playUpgradeMusic") === "true";
+const volumeSettings = JSON.parse(localStorage.getItem("Volume"));
 // програвання музики
 document.querySelectorAll(".score").forEach((el) => {
   el.textContent = gameData.score;
@@ -7,7 +8,7 @@ document.querySelectorAll(".score").forEach((el) => {
 if (shouldPlayMusic) {
   const music = new Audio("./assets/audio/music/upgrade-music.mp3");
   music.loop = true;
-  music.volume = 0.15;
+  music.volume = volumeSettings.musicVolume * 0.3;
 
   // Спроба відтворити
   music.play().catch((e) => {

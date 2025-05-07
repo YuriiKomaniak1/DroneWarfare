@@ -50,6 +50,7 @@ const droneicon = new BriefingDrones(canvas, ctx, drone, 100, 10, 10, true);
 // Кнопка "Повернутись"
 document.getElementById("back-button").addEventListener("click", () => {
   returnRoutine();
+  localStorage.setItem("playBriefingMusic", "true");
   window.location.href = "briefing.html";
 });
 document.getElementById("upgrade-button").addEventListener("click", () => {

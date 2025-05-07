@@ -10,6 +10,15 @@ const skullImage = new Image();
 skullImage.src = "./assets/img/enemies/skull.png";
 import { findPath } from "../logic/navigation.js";
 import { pauseState } from "../logic/gameloop.js";
+const difficulty = JSON.parse(localStorage.getItem("Difficulty")) || {
+  level: "medium",
+  accuracy: 1,
+  weight: 1,
+};
+const volumeSettings = JSON.parse(localStorage.getItem("Volume")) || {
+  soundVolume: 0.8,
+  musicVolume: 0.6,
+};
 
 export class Enemy {
   constructor(x, y, layer, ctx, path, vehicle = 0) {
@@ -65,7 +74,7 @@ export class Enemy {
     this.navigationsGrid = null; // Сітка навігації
     this.fireSound = new Audio("assets/audio/fire/rifleman-sound.mp3");
     this.fireSound.loop = true;
-    this.fireSound.volume = 0.3;
+    this.fireSound.volume = 0.5;
     this.fireSoundPlaying = false;
     this.fireSoundRateMin = 0.5;
     this.fireSoundRateMax = 2;
@@ -326,7 +335,8 @@ export class Enemy {
       if (this.fireTimer >= 60 / this.fireRate) {
         const chance =
           (5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2)) *
-          drone.size;
+          drone.size *
+          difficulty.accuracy;
 
         if (Math.random() * 500 < chance && drone.hp >= 1) {
           --drone.hp;
@@ -351,7 +361,10 @@ export class Enemy {
       const distance = Math.hypot(dx, dy);
       const maxDistance = 450;
       const volumeFactor = Math.max(0, 1 - distance / maxDistance);
-      fireSoundInstance.volume = (this.fireSound.volume || 0.5) * volumeFactor;
+      fireSoundInstance.volume =
+        (this.fireSound.volume || 0.5) *
+        volumeFactor *
+        volumeSettings.soundVolume;
 
       fireSoundInstance.play().catch((e) => {
         console.warn("🔇 Не вдалося відтворити звук пострілу:", e);

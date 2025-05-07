@@ -89,13 +89,15 @@ export function handleMenuClick(e, canvas, gameData, openTrainingModal) {
             window.location.href = "index.html";
             break;
           case "Назад":
-            history.back();
+            localStorage.setItem("playBriefingMusic", "true");
+            window.location.href = "briefing.html";
             break;
           case "Пауза":
             togglePause();
             break;
           case "Перемога":
             gameData.currentMission++;
+            localStorage.setItem("playBriefingMusic", "true");
             localStorage.setItem("gameData", JSON.stringify(gameData));
             location.href = "briefing.html";
             break;

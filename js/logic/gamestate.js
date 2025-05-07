@@ -68,7 +68,7 @@ class GameState {
 
 class GameData {
   constructor() {
-    this.score = 0;
+    this.score = 900000;
     this.looseScore = 1000;
     this.winScore = 1000;
     this.initialLooseScore = 0;

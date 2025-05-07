@@ -41,6 +41,15 @@ import { NavigationGrid, findPath } from "../logic/navigation.js";
 import { VehicleSoundPlayer } from "../gameElements/sounds.js";
 import { pauseState } from "../logic/gameloop.js";
 
+const difficulty = JSON.parse(localStorage.getItem("Difficulty")) || {
+  level: "medium",
+  accuracy: 1,
+  weight: 1,
+};
+const volumeSettings = JSON.parse(localStorage.getItem("Volume")) || {
+  soundVolume: 0.8,
+  musicVolume: 0.6,
+};
 export class Vehicle {
   static type = "default"; // Тип за замовчуванням
   constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
@@ -119,7 +128,7 @@ export class Vehicle {
     this.hasCrew = false; // Чи є екіпаж
     this.fireSound = new Audio("assets/audio/fire/machinegun.mp3");
     this.fireSound.loop = true;
-    this.fireSound.volume = 0.3;
+    this.fireSound.volume = 0.5;
     this.fireSoundPlaying = false;
     this.fireSoundRateMin = 2;
     this.fireSoundRateMax = 3;
@@ -127,6 +136,14 @@ export class Vehicle {
       "assets/audio/vehicle/truck.mp3",
       0.4
     );
+    this.explosionSound = new Audio(
+      "assets/audio/vehicle/vehicle-explosion.mp3"
+    );
+    this.explosionSound.volume = 0.85 * volumeSettings.soundVolume;
+    this.burningSound = new Audio("assets/audio/vehicle/fire.mp3");
+    this.burningSound.volume = 1 * volumeSettings.soundVolume;
+    this.burningSound.loop = false;
+    this.startedBurning = false;
   }
 
   update(vehicles, enemies, canvas, gameState, gameData, training) {
@@ -211,8 +228,21 @@ export class Vehicle {
       this.baseX += pushX * 0.5; // коефіцієнт приглушення
       this.baseY += pushY * 0.5;
     }
-    if (this.isBurning) {
+    if (this.isBurning && !this.startedBurning) {
+      this.startedBurning = true;
+      this.burningSound.loop = true;
+      this.burningSound.play().catch((e) => {
+        console.warn("❌ Не вдалося відтворити звук горіння:", e);
+      });
       setTimeout(() => {
+        if (this.burningSound) {
+          this.burningSound.pause();
+          this.burningSound.currentTime = 0;
+          this.burningSound = null;
+        }
+        this.explosionSound.play().catch((e) => {
+          console.warn("🔇 Не вдалося відтворити звук пострілу:", e);
+        });
         this.isDestroyed = true;
         this.isBurning = false;
       }, this.burningTime);
@@ -435,12 +465,12 @@ export class Vehicle {
       //  логіка стрільби
       if (this.isFiring) this.fireTimer++;
       if (this.fireTimer >= 60 / this.fireRate) {
-        if (
-          Math.random() * 500 <
-            (5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2)) *
-              drone.size &&
-          drone.hp >= 1
-        ) {
+        const chance =
+          (5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2)) *
+          drone.size *
+          difficulty.accuracy;
+
+        if (Math.random() * 500 < chance && drone.hp >= 1) {
           --drone.hp;
         }
         this.fireTimer = 0;
@@ -627,7 +657,10 @@ export class Vehicle {
       const volumeFactor = Math.max(0, 1 - distance / maxDistance);
 
       // 🔉 Встановлення гучності з урахуванням базової
-      fireSoundInstance.volume = (this.fireSound.volume || 0.5) * volumeFactor;
+      fireSoundInstance.volume =
+        (this.fireSound.volume || 0.5) *
+        volumeFactor *
+        volumeSettings.soundVolume;
 
       // ▶️ Пробуємо відтворити звук
       fireSoundInstance

@@ -32,6 +32,15 @@ let clusterExplosion = new Image();
 clusterExplosion.src = `${basePath}assets/img/effects/vehicleExplosion.png`;
 
 import { switchToNextAvailableBomb } from "../logic/controls.js";
+const volumeSettings = JSON.parse(localStorage.getItem("Volume")) || {
+  soundVolume: 0.8,
+  musicVolume: 0.6,
+};
+const difficulty = JSON.parse(localStorage.getItem("Difficulty")) || {
+  level: "medium",
+  accuracy: 1,
+  weight: 1,
+};
 export class Bomb {
   static weight = 0.1; // За замовчуванням
   static type = "default"; // Тип за замовчуванням
@@ -66,12 +75,15 @@ export class Bomb {
     this.randomRotation = Math.random() * Math.PI * 2;
     this.clusterDropped = false;
     this.gameData = gameData;
+    this.explosionSoundStarted = false;
+    this.explosionSound = new Audio("assets/audio/drone/frag.mp3");
+    this.explosionSound.volume = 0.65 * volumeSettings.soundVolume;
   }
 
   drop(bombs, layer1) {
     if (!this.exploded && !this.deployed) {
-      this.velocityX *= this.friction ** 1.5;
-      this.velocityY *= this.friction ** 1.5;
+      this.velocityX *= this.friction ** 1.6;
+      this.velocityY *= this.friction ** 1.6;
 
       this.x +=
         this.layer.speedX -
@@ -85,7 +97,15 @@ export class Bomb {
       this.scale /= this.shrinkRate;
 
       if (this.scale <= this.initialScale * 0.05) {
-        if (this.class == "bomb") this.exploded = true;
+        if (this.class == "bomb") {
+          this.exploded = true;
+          if (!this.explosionSoundStarted) {
+            this.explosionSound.play().catch((e) => {
+              console.warn("🔇 Не вдалося відтворити звук пострілу:", e);
+            });
+            this.explosionSoundStarted = true;
+          }
+        }
         if (this.class == "mine") this.deployed = true;
       }
       if (
@@ -94,6 +114,12 @@ export class Bomb {
         !this.clusterDropped
       ) {
         this.exploded = true;
+        if (!this.explosionSoundStarted) {
+          this.explosionSound.play().catch((e) => {
+            console.warn("🔇 Не вдалося відтворити звук пострілу:", e);
+          });
+          this.explosionSoundStarted = true;
+        }
         this.dropClusterBombs(bombs, layer1);
         this.clusterDropped = true;
       }
@@ -300,13 +326,14 @@ export class Bomb {
 
 // осколкова бомба
 export class FragBomb extends Bomb {
-  static weight = 0.13;
+  static weight = 0.13 * difficulty.weight;
   static type = "frag";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
     this.image = fragBombImage;
     this.imageExplosion = imageExplosion;
     this.explosionScale = 64;
+    this.explosionSound = new Audio("assets/audio/drone/frag.mp3");
   }
 
   checkCollision(enemy) {
@@ -376,7 +403,7 @@ export class FragBomb extends Bomb {
 
 // фУГАСНА БОМБА
 export class HeBomb extends Bomb {
-  static weight = 0.16;
+  static weight = 0.16 * difficulty.weight;
   static type = "he";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
@@ -384,6 +411,7 @@ export class HeBomb extends Bomb {
     this.imageExplosion = imageExplosion;
     this.explosionScale = 100;
     this.armorPenetration = 0.55;
+    this.explosionSound = new Audio("assets/audio/drone/he.mp3");
   }
 
   checkCollision(enemy) {
@@ -429,7 +457,7 @@ export class HeBomb extends Bomb {
 
 // Кумулятивна бомба
 export class ShapedBomb extends Bomb {
-  static weight = 0.14;
+  static weight = 0.14 * difficulty.weight;
   static type = "shaped";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
@@ -438,6 +466,7 @@ export class ShapedBomb extends Bomb {
     this.type = "shaped";
     this.explosionScale = 30;
     this.armorPenetration = 0.9 + this.gameData.shapedBombUpgrade * 0.01;
+    this.explosionSound = new Audio("assets/audio/drone/shaped.mp3");
   }
 
   checkCollision(enemy) {
@@ -460,7 +489,7 @@ export class ShapedBomb extends Bomb {
 
 // Протипіхотна міна
 export class FootMine extends Bomb {
-  static weight = 0.08;
+  static weight = 0.08 * difficulty.weight;
   static type = "footMine";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
@@ -471,6 +500,7 @@ export class FootMine extends Bomb {
     this.class = "mine";
     this.spread = 3.5;
     this.type = this.constructor.type;
+    this.explosionSound = new Audio("assets/audio/drone/footMine.mp3");
   }
   checkMineCollision(enemy) {
     if (this.isOnRoof()) return false;
@@ -480,6 +510,12 @@ export class FootMine extends Bomb {
   checkMineEffect(vehicle) {
     if (this.isOnRoof()) return vehicle;
     if (this.checkMineUnderWheels(vehicle)) {
+      if (!this.explosionSoundStarted) {
+        this.explosionSound.play().catch((e) => {
+          console.warn("🔇 Не вдалося відтворити звук пострілу:", e);
+        });
+        this.explosionSoundStarted = true;
+      }
       this.exploded = true;
       this.deployed = false;
       if (vehicle.armor === 0 && Math.random() > 0.75) vehicle.isStoppedF();
@@ -490,7 +526,7 @@ export class FootMine extends Bomb {
 
 // фугасна міна
 export class TankMine extends Bomb {
-  static weight = 0.45;
+  static weight = 0.45 * difficulty.weight;
   static type = "tankMine";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
@@ -501,6 +537,7 @@ export class TankMine extends Bomb {
     this.class = "mine";
     this.spread = 3.5;
     this.type = this.constructor.type;
+    this.explosionSound = new Audio("assets/audio/drone/tankMine.mp3");
   }
   checkMineCollision(enemy) {
     if (this.isOnRoof()) return false;
@@ -509,6 +546,12 @@ export class TankMine extends Bomb {
   checkMineEffect(vehicle) {
     if (this.isOnRoof()) return vehicle;
     if (this.checkMineUnderWheels(vehicle)) {
+      if (!this.explosionSoundStarted) {
+        this.explosionSound.play().catch((e) => {
+          console.warn("🔇 Не вдалося відтворити звук пострілу:", e);
+        });
+        this.explosionSoundStarted = true;
+      }
       this.exploded = true;
       this.deployed = false;
       if (vehicle.armor === 0 || Math.random() > 0.5 + vehicle.armor / 10) {
@@ -522,7 +565,7 @@ export class TankMine extends Bomb {
 }
 // магнітна міна
 export class MagnetMine extends Bomb {
-  static weight = 1.6;
+  static weight = 1.6 * difficulty.weight;
   static type = "magnetMine";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
@@ -534,6 +577,7 @@ export class MagnetMine extends Bomb {
     this.spread = 3.5;
     this.type = this.constructor.type;
     this.armorPenetration = 0.95 + this.gameData.magnetMineUpgrade * 0.01;
+    this.explosionSound = new Audio("assets/audio/drone/shaped.mp3");
   }
   checkMineCollision(enemy) {
     if (this.isOnRoof()) return false;
@@ -564,6 +608,12 @@ export class MagnetMine extends Bomb {
   }
   checkMineEffect(vehicle) {
     if (this.checkMineUnderWheels(vehicle)) {
+      if (!this.explosionSoundStarted) {
+        this.explosionSound.play().catch((e) => {
+          console.warn("🔇 Не вдалося відтворити звук пострілу:", e);
+        });
+        this.explosionSoundStarted = true;
+      }
       this.exploded = true;
       this.deployed = false;
       this.checkArmorPenetration(vehicle);
@@ -573,7 +623,7 @@ export class MagnetMine extends Bomb {
 }
 // шрапнельна бомба
 export class ShrapnelBomb extends Bomb {
-  static weight = 0.28;
+  static weight = 0.28 * difficulty.weight;
   static type = "shrapnel";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
@@ -584,6 +634,7 @@ export class ShrapnelBomb extends Bomb {
     this.imageWidth = 750;
     this.imageHeight = 750;
     this.frames = 9;
+    this.explosionSound = new Audio("assets/audio/drone/shrapnel.mp3");
   }
 
   checkCollision(enemy) {
@@ -645,7 +696,7 @@ export class ShrapnelBomb extends Bomb {
 }
 // кластерна амуніція фугас
 export class HeClusterMunition extends Bomb {
-  static weight = 0.07;
+  static weight = 0.07 * difficulty.weight;
   static type = "clusterMunition";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
@@ -655,6 +706,8 @@ export class HeClusterMunition extends Bomb {
     this.scale = 0.3;
     this.shrinkRate = 1.003;
     this.armorPenetration = 0.5;
+    this.explosionSound = new Audio("assets/audio/drone/frag.mp3");
+    this.explosionSound.volume = 0.45 * volumeSettings.soundVolume;
   }
   drop() {
     if (!this.exploded && !this.deployed) {
@@ -672,8 +725,11 @@ export class HeClusterMunition extends Bomb {
       this.scale /= this.shrinkRate;
 
       if (this.scale <= this.initialScale * 0.05) {
-        if (this.class == "bomb") this.exploded = true;
-        if (this.class == "mine") this.deployed = true;
+        this.exploded = true;
+        this.explosionSound.play().catch((e) => {
+          console.warn("🔇 Не вдалося відтворити звук пострілу:", e);
+        });
+        this.explosionSoundStarted = true;
       }
     }
   }
@@ -716,7 +772,7 @@ export class HeClusterMunition extends Bomb {
 }
 // кластерна амуніція кумулятивна
 export class ShapedClusterMunition extends Bomb {
-  static weight = 0.07;
+  static weight = 0.07 * difficulty.weight;
   static type = "clusterMunition";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
@@ -726,6 +782,8 @@ export class ShapedClusterMunition extends Bomb {
     this.scale = 0.3;
     this.shrinkRate = 1.003;
     this.armorPenetration = 0.87 + this.gameData.shapedBombUpgrade * 0.01;
+    this.explosionSound = new Audio("assets/audio/drone/shaped.mp3");
+    this.explosionSound.volume = 0.45 * volumeSettings.soundVolume;
   }
   drop() {
     if (!this.exploded && !this.deployed) {
@@ -743,8 +801,11 @@ export class ShapedClusterMunition extends Bomb {
       this.scale /= this.shrinkRate;
 
       if (this.scale <= this.initialScale * 0.05) {
-        if (this.class == "bomb") this.exploded = true;
-        if (this.class == "mine") this.deployed = true;
+        this.exploded = true;
+        this.explosionSound.play().catch((e) => {
+          console.warn("🔇 Не вдалося відтворити звук пострілу:", e);
+        });
+        this.explosionSoundStarted = true;
       }
     }
   }
@@ -767,7 +828,7 @@ export class ShapedClusterMunition extends Bomb {
 }
 //  фугасна кластерна бомба
 export class ClusterBomb extends Bomb {
-  static weight = 2.0;
+  static weight = 2.0 * difficulty.weight;
   static type = "cluster";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
@@ -778,10 +839,11 @@ export class ClusterBomb extends Bomb {
     this.imageWidth = 250;
     this.imageHeight = 250;
     this.frames = 10;
+    this.explosionSound = new Audio("assets/audio/drone/cluster.mp3");
   }
   dropClusterBombs(bombs, layer1) {
     for (let i = 0; i < 26 + this.gameData.clusterBombUpgrade; i++) {
-      const delay = Math.random() * 1500; // випадкова затримка до 0.5 секунди
+      const delay = Math.random() * 1800; // випадкова затримка до 0.5 секунди
 
       setTimeout(() => {
         const theta = Math.random() * 2 * Math.PI; // випадковий напрямок
@@ -813,7 +875,7 @@ export class ClusterBomb extends Bomb {
 }
 //  протитанкова кластерна бомба
 export class ShapedClusterBomb extends Bomb {
-  static weight = 2.2;
+  static weight = 2.2 * difficulty.weight;
   static type = "shapedCluster";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
@@ -824,10 +886,11 @@ export class ShapedClusterBomb extends Bomb {
     this.imageWidth = 250;
     this.imageHeight = 250;
     this.frames = 10;
+    this.explosionSound = new Audio("assets/audio/drone/cluster.mp3");
   }
   dropClusterBombs(bombs, layer1) {
     for (let i = 0; i < 16; i++) {
-      const delay = Math.random() * 1500; // випадкова затримка до 0.5 секунди
+      const delay = Math.random() * 1800; // випадкова затримка до 0.5 секунди
 
       setTimeout(() => {
         const theta = Math.random() * 2 * Math.PI; // випадковий напрямок
@@ -898,6 +961,11 @@ export function dropBomb(
   let newBomb = null;
   const x = droneScope.x + droneScope.width / 2;
   const y = droneScope.y + droneScope.height / 2;
+  const dropSound = new Audio("assets/audio/drone/bomb-drop.wav");
+  dropSound.volume = 0.5 * volumeSettings.soundVolume;
+  dropSound.play().catch((e) => {
+    console.warn("🔇 Не вдалося відтворити звук пострілу:", e);
+  });
 
   switch (selectionState.selectedBombType) {
     case "frag":

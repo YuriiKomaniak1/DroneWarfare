@@ -5,6 +5,10 @@ export const soundState = {
   droneMusic: null,
   allowDroneMusic: false,
 };
+const volumeSettings = JSON.parse(localStorage.getItem("Volume")) || {
+  soundVolume: 0.8,
+  musicVolume: 0.6,
+};
 
 export function pauseAllSounds() {
   activeSounds.forEach((sound) => {
@@ -45,7 +49,7 @@ export class VehicleSoundPlayer {
       if (!this.isPlaying || pauseState.isPaused) return; // 🔒 Не граємо під час паузи
 
       const sound = new Audio(this.src);
-      sound.volume = 0.6;
+      sound.volume = 0.6 * volumeSettings.soundVolume;
 
       sound.play().catch((e) => {
         console.warn("🔇 Не вдалося відтворити звук авто:", e);
@@ -103,7 +107,6 @@ export class VehicleSoundPlayer {
 
 export function enableDroneSound() {
   soundState.allowDroneMusic = true;
-  console.log("✅ Дозвіл на запуск звуку дрона надано");
 }
 export function tryStartDroneSound(currentDrone) {
   // 🟢 Якщо дрон живий, активний і має бомби — запускаємо звук
@@ -115,10 +118,9 @@ export function tryStartDroneSound(currentDrone) {
     currentDrone.countBombs() > 0 &&
     !soundState.droneMusicStarted
   ) {
-    console.log("🎵 Активний дрон — запускаємо музику...");
     const droneSound = new Audio("assets/audio/drone/drone-sound.mp3");
     droneSound.loop = true;
-    droneSound.volume = 0.18;
+    droneSound.volume = 0.14 * volumeSettings.soundVolume;
 
     droneSound
       .play()
@@ -126,7 +128,6 @@ export function tryStartDroneSound(currentDrone) {
         soundState.droneMusic = droneSound;
         soundState.droneMusicStarted = true;
         activeSounds.push(droneSound);
-        console.log("✅ Музику дрона запущено");
       })
       .catch((e) => console.warn("❌ Не вдалося відтворити звук дрона:", e));
   }
@@ -144,6 +145,5 @@ export function tryStartDroneSound(currentDrone) {
     if (index !== -1) activeSounds.splice(index, 1);
 
     soundState.droneMusic = null;
-    console.log("🛑 Дрон знищено або неактивний — музику зупинено");
   }
 }

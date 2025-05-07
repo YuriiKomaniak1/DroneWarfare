@@ -2,8 +2,14 @@ import { briefingText } from "./briefing/briefingText.js";
 import { BriefingDrones } from "./gameElements/briefingDroneIcons.js";
 import { gameState } from "./logic/gamestate.js";
 import { SmallDrone, MediumDrone, BigDrone } from "./drones/drones.js";
+
 // витягування даних з пам'яті
 const gameData = JSON.parse(localStorage.getItem("gameData"));
+const volumeSettings = JSON.parse(localStorage.getItem("Volume")) || {
+  soundVolume: 0.8,
+  musicVolume: 0.6,
+};
+
 gameState.updateDrones(gameData, SmallDrone, MediumDrone, BigDrone);
 gameState.updateData(gameData);
 gameState.drones.forEach((drone) => {
@@ -11,7 +17,7 @@ gameState.drones.forEach((drone) => {
     drone.resetAmmo();
   }
 });
-console.log(gameState, gameData);
+console.log(volumeSettings);
 const shouldPlayMusic = localStorage.getItem("playBriefingMusic") === "true";
 const missionKey = gameData.currentMission; // Сюди підставляється поточна місія
 // брифінг перед місією
@@ -42,7 +48,7 @@ document.getElementById("start-button").addEventListener("click", () => {
 if (shouldPlayMusic) {
   const music = new Audio("./assets/audio/music/briefing-music.mp3");
   music.loop = true;
-  music.volume = 0.5;
+  music.volume = volumeSettings.musicVolume * 0.15;
 
   // Спроба відтворити
   music.play().catch((e) => {

@@ -53,7 +53,7 @@ class Drone {
       cluster: [],
       shapedCluster: [],
     };
-    this.reloadingTime = 1000 * 60 * 2.5;
+    this.reloadingTime = 1000 * 60 * 2;
     this.reloadStartTime = null;
     this.scale = 1; // стартовий масштаб
     this.targetScale = 0.3; // цільовий масштаб при польоті

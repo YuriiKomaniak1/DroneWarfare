@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dronETerra - Налаштування</title>
+    <link rel="stylesheet" href="css/settings.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Налаштування</h2>
+
+      <div id="sound-box">
+        <label
+          >Гучність музики:
+          <input type="range" min="0" max="1" step="0.01" id="musicVolume"
+        /></label>
+        <label
+          >Гучність звуку:
+          <input type="range" min="0" max="1" step="0.01" id="soundVolume"
+        /></label>
+        <p>При зміні складності гри, розпочинається нова гра</p>
+        <label for="difficulty"
+          >Складність гри:
+          <select id="difficulty">
+            <option value="easy">Легко</option>
+            <option value="medium">Нормально</option>
+            <option value="hard">Важко</option>
+          </select></label
+        >
+        <p id="description"></p>
+      </div>
+
+      <div id="button-panel">
+        <button id="back-button" class="briefing-button">Назад</button>
+        <button id="save-button" class="briefing-button">
+          Зберегти і вийти
+        </button>
+      </div>
+    </div>
+    <script src="js/settings.js" type="module"></script>
+  </body>
+</html>
