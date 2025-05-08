@@ -22,6 +22,7 @@ import { createDroneIcons } from "../gameElements/droneIcons.js";
 import { keys } from "../logic/controls.js";
 import { SmallDrone, MediumDrone, BigDrone } from "../drones/drones.js";
 import { buttons, winLoseTest } from "./gameLoopButtonHandlers.js";
+import { NavigationGrid, findPath } from "./navigation.js";
 import {
   tryStartDroneSound,
   enableDroneSound,
@@ -47,6 +48,7 @@ export function createAnimationLoop(
   vehicles,
   winLoseConditions,
   gameData,
+  condition,
   training = false
 ) {
   window.addEventListener("click", enableDroneSound, { once: true });
@@ -200,19 +202,10 @@ export function createAnimationLoop(
         bomb.drop(bombs, layer1);
         if (bomb.deployed) {
           enemies.forEach((enemy) => {
-            if (
-              bomb.checkMineCollision(enemy) &&
-              !enemy.dead &&
-              !enemy.vehicle
-            ) {
-              enemy.dead = true;
-              enemy.deathFrameIndex = 0;
-              bomb.exploded = true;
-              bomb.deployed = false;
-            }
+            bomb.checkMineCollision(enemy);
           });
           vehicles.forEach((vehicle) => {
-            bomb.checkMineEffect(vehicle);
+            bomb.checkMineEffect(vehicle, vehicles, gameData, NavigationGrid);
             // bomb.drawDebugWheels(ctx, vehicle);
           });
         }
@@ -232,7 +225,12 @@ export function createAnimationLoop(
             }
           });
           vehicles.forEach((vehicle) => {
-            bomb.checkVehicleCollision(vehicle);
+            bomb.checkVehicleCollision(
+              vehicle,
+              vehicles,
+              gameData,
+              NavigationGrid
+            );
           });
         }
       });
@@ -283,7 +281,15 @@ export function createAnimationLoop(
 
       if (!training) {
         gameState.drawScore(ctx, canvas, gameData);
-        winLoseTest(winLoseConditions, gameState, gameData, enemies, vehicles);
+        if (condition.start) {
+          winLoseTest(
+            winLoseConditions,
+            gameState,
+            gameData,
+            enemies,
+            vehicles
+          );
+        }
       }
       gameFrame++;
     }

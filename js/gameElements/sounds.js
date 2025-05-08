@@ -6,7 +6,7 @@ export const soundState = {
   allowDroneMusic: false,
 };
 const volumeSettings = JSON.parse(localStorage.getItem("Volume")) || {
-  soundVolume: 0.8,
+  soundVolume: 0.1,
   musicVolume: 0.6,
 };
 
@@ -120,7 +120,8 @@ export function tryStartDroneSound(currentDrone) {
   ) {
     const droneSound = new Audio("assets/audio/drone/drone-sound.mp3");
     droneSound.loop = true;
-    droneSound.volume = 0.14 * volumeSettings.soundVolume;
+    droneSound.volume = 0.1 * volumeSettings.soundVolume;
+    console.log(droneSound.volume);
 
     droneSound
       .play()

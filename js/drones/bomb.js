@@ -36,6 +36,7 @@ const volumeSettings = JSON.parse(localStorage.getItem("Volume")) || {
   soundVolume: 0.8,
   musicVolume: 0.6,
 };
+console.log(JSON.parse(localStorage.getItem("Volume")));
 const difficulty = JSON.parse(localStorage.getItem("Difficulty")) || {
   level: "medium",
   accuracy: 1,
@@ -100,6 +101,8 @@ export class Bomb {
         if (this.class == "bomb") {
           this.exploded = true;
           if (!this.explosionSoundStarted) {
+            this.explosionSound.volume = 1 * volumeSettings.soundVolume;
+            console.log();
             this.explosionSound.play().catch((e) => {
               console.warn("🔇 Не вдалося відтворити звук пострілу:", e);
             });
@@ -300,7 +303,7 @@ export class Bomb {
       return vehicle;
     }
   }
-  checkArmorPenetration(vehicle) {
+  checkArmorPenetration(vehicle, vehicles, gameData, NavigationGrid) {
     let success = true;
     for (let i = 0; i < vehicle.armor; i++) {
       if (Math.random() > this.armorPenetration) {
@@ -308,7 +311,7 @@ export class Bomb {
         break;
       }
     }
-    if (success) vehicle.isBurningF();
+    if (success) vehicle.isBurningF(vehicles, gameData, NavigationGrid);
     return vehicle;
   }
   checkHEArmorPenetration(AP, vehicle) {
@@ -382,19 +385,19 @@ export class FragBomb extends Bomb {
     }
     return hitStatus;
   }
-  checkVehicleCollision(vehicle) {
+  checkVehicleCollision(vehicle, vehicles, gameData, NavigationGrid) {
     if (this.isOnRoof()) return vehicle;
     if (vehicle.armor === 0) {
       if (
         this.distanceToVehicle(0 + this.gameData.fragBombUpgrade, vehicle) &&
         Math.random() > 0.9 - this.gameData.fragBombUpgrade * 0.01
       ) {
-        vehicle.isBurningF();
+        vehicle.isBurningF(vehicles, gameData, NavigationGrid);
       } else if (
         this.distanceToVehicle(30 + this.gameData.fragBombUpgrade, vehicle) &&
         Math.random() > 0.8 - this.gameData.fragBombUpgrade * 0.01
       ) {
-        vehicle.isStoppedF();
+        vehicle.isStoppedF(vehicles, gameData, NavigationGrid);
       }
       return vehicle;
     }
@@ -427,28 +430,28 @@ export class HeBomb extends Bomb {
     }
     return hitStatus;
   }
-  checkVehicleCollision(vehicle) {
+  checkVehicleCollision(vehicle, vehicles, gameData, NavigationGrid) {
     if (this.isOnRoof()) return vehicle;
     if (vehicle.armor === 0) {
       if (this.distanceToVehicle(this.gameData.heBombUpgrade, vehicle)) {
-        vehicle.isBurningF();
+        vehicle.isBurningF(vehicles, gameData, NavigationGrid);
       } else if (
         this.distanceToVehicle(40 + this.gameData.heBombUpgrade, vehicle) &&
         Math.random() > 0.3 - this.gameData.heBombUpgrade * 0.01
       ) {
-        vehicle.isStoppedF();
+        vehicle.isStoppedF(vehicles, gameData, NavigationGrid);
       }
     } else {
       if (
         this.distanceToVehicle(0, vehicle) &&
         this.checkHEArmorPenetration(this.armorPenetration, vehicle)
       ) {
-        vehicle.isBurningF();
+        vehicle.isBurningF(vehicles, gameData, NavigationGrid);
       } else if (
         this.distanceToVehicle(20, vehicle) &&
         this.checkHEArmorPenetration(this.armorPenetration + 0.05, vehicle)
       ) {
-        vehicle.isStoppedF();
+        vehicle.isStoppedF(vehicles, gameData, NavigationGrid);
       }
     }
     return vehicle;
@@ -478,10 +481,10 @@ export class ShapedBomb extends Bomb {
     }
     return hitStatus;
   }
-  checkVehicleCollision(vehicle) {
+  checkVehicleCollision(vehicle, vehicles, gameData, NavigationGrid) {
     if (this.isOnRoof()) return vehicle;
     if (this.distanceToVehicle(0, vehicle)) {
-      this.checkArmorPenetration(vehicle);
+      this.checkArmorPenetration(vehicle, vehicles, gameData, NavigationGrid);
     }
     return vehicle;
   }
@@ -504,13 +507,29 @@ export class FootMine extends Bomb {
   }
   checkMineCollision(enemy) {
     if (this.isOnRoof()) return false;
-    const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
-    return distance < 4;
+    if (
+      Math.hypot(this.x - enemy.x, this.y - enemy.y) < 6 &&
+      !enemy.dead &&
+      !enemy.vehicle
+    ) {
+      if (!this.explosionSoundStarted) {
+        this.explosionSound.volume = 0.65 * volumeSettings.soundVolume;
+        this.explosionSound.play();
+        this.explosionSoundStarted = true;
+      }
+      enemy.dead = true;
+      enemy.deathFrameIndex = 0;
+      this.exploded = true;
+      this.deployed = false;
+    }
+    return enemy;
   }
-  checkMineEffect(vehicle) {
+  checkMineEffect(vehicle, vehicles, gameData, NavigationGrid) {
     if (this.isOnRoof()) return vehicle;
     if (this.checkMineUnderWheels(vehicle)) {
       if (!this.explosionSoundStarted) {
+        this.explosionSound.volume = 0.65 * volumeSettings.soundVolume;
+        console.log("🔊 Гучність міни:", this.explosionSound.volume);
         this.explosionSound.play().catch((e) => {
           console.warn("🔇 Не вдалося відтворити звук пострілу:", e);
         });
@@ -518,7 +537,8 @@ export class FootMine extends Bomb {
       }
       this.exploded = true;
       this.deployed = false;
-      if (vehicle.armor === 0 && Math.random() > 0.75) vehicle.isStoppedF();
+      if (vehicle.armor === 0 && Math.random() > 0.75)
+        vehicle.isStoppedF(vehicles, gameData, NavigationGrid);
       return vehicle;
     }
   }
@@ -543,10 +563,11 @@ export class TankMine extends Bomb {
     if (this.isOnRoof()) return false;
     return false;
   }
-  checkMineEffect(vehicle) {
+  checkMineEffect(vehicle, vehicles, gameData, NavigationGrid) {
     if (this.isOnRoof()) return vehicle;
     if (this.checkMineUnderWheels(vehicle)) {
       if (!this.explosionSoundStarted) {
+        this.explosionSound.volume = 0.65 * volumeSettings.soundVolume;
         this.explosionSound.play().catch((e) => {
           console.warn("🔇 Не вдалося відтворити звук пострілу:", e);
         });
@@ -555,9 +576,9 @@ export class TankMine extends Bomb {
       this.exploded = true;
       this.deployed = false;
       if (vehicle.armor === 0 || Math.random() > 0.5 + vehicle.armor / 10) {
-        vehicle.isBurningF();
+        vehicle.isBurningF(vehicles, gameData, NavigationGrid);
       } else if (Math.random() > vehicle.armor / 12) {
-        vehicle.isStoppedF();
+        vehicle.isStoppedF(vehicles, gameData, NavigationGrid);
       }
       return vehicle;
     }
@@ -606,17 +627,18 @@ export class MagnetMine extends Bomb {
 
     return isInsideLength && isInsideWidth;
   }
-  checkMineEffect(vehicle) {
+  checkMineEffect(vehicle, vehicles, gameData, NavigationGrid) {
     if (this.checkMineUnderWheels(vehicle)) {
       if (!this.explosionSoundStarted) {
         this.explosionSound.play().catch((e) => {
+          this.explosionSound.volume = 0.65 * volumeSettings.soundVolume;
           console.warn("🔇 Не вдалося відтворити звук пострілу:", e);
         });
         this.explosionSoundStarted = true;
       }
       this.exploded = true;
       this.deployed = false;
-      this.checkArmorPenetration(vehicle);
+      this.checkArmorPenetration(vehicle, vehicles, gameData, NavigationGrid);
     }
     return vehicle;
   }
@@ -671,7 +693,7 @@ export class ShrapnelBomb extends Bomb {
     }
     return hitStatus;
   }
-  checkVehicleCollision(vehicle) {
+  checkVehicleCollision(vehicle, vehicles, gameData, NavigationGrid) {
     if (vehicle.armor === 0) {
       if (
         this.distanceToVehicle(
@@ -680,7 +702,7 @@ export class ShrapnelBomb extends Bomb {
         ) &&
         Math.random() > 0.85 - this.gameData.shrapnelBombUpgrade * 0.01
       ) {
-        vehicle.isBurningF();
+        vehicle.isBurningF(vehicles, gameData, NavigationGrid);
       } else if (
         this.distanceToVehicle(
           50 + this.gameData.shrapnelBombUpgrade,
@@ -688,7 +710,7 @@ export class ShrapnelBomb extends Bomb {
         ) &&
         Math.random() > 0.75 - this.gameData.shrapnelBombUpgrade * 0.01
       ) {
-        vehicle.isStoppedF();
+        vehicle.isStoppedF(vehicles, gameData, NavigationGrid);
       }
       return vehicle;
     }
@@ -726,6 +748,7 @@ export class HeClusterMunition extends Bomb {
 
       if (this.scale <= this.initialScale * 0.05) {
         this.exploded = true;
+        this.explosionSound.volume = 0.65 * volumeSettings.soundVolume;
         this.explosionSound.play().catch((e) => {
           console.warn("🔇 Не вдалося відтворити звук пострілу:", e);
         });
@@ -746,25 +769,25 @@ export class HeClusterMunition extends Bomb {
     }
     return hitStatus;
   }
-  checkVehicleCollision(vehicle) {
+  checkVehicleCollision(vehicle, vehicles, gameData, NavigationGrid) {
     if (this.isOnRoof()) return vehicle;
     if (vehicle.armor === 0) {
       if (this.distanceToVehicle(0, vehicle)) {
-        vehicle.isBurningF();
+        vehicle.isBurningF(vehicles, gameData, NavigationGrid);
       } else if (this.distanceToVehicle(32, vehicle) && Math.random() > 0.3) {
-        vehicle.isStoppedF();
+        vehicle.isStoppedF(vehicles, gameData, NavigationGrid);
       }
     } else {
       if (
         this.distanceToVehicle(0, vehicle) &&
         this.checkHEArmorPenetration(this.armorPenetration, vehicle)
       ) {
-        vehicle.isBurningF();
+        vehicle.isBurningF(vehicles, gameData, NavigationGrid);
       } else if (
         this.distanceToVehicle(10, vehicle) &&
         this.checkHEArmorPenetration(this.armorPenetration + 0.05, vehicle)
       ) {
-        vehicle.isStoppedF();
+        vehicle.isStoppedF(vehicles, gameData, NavigationGrid);
       }
     }
     return vehicle;
@@ -782,6 +805,7 @@ export class ShapedClusterMunition extends Bomb {
     this.scale = 0.3;
     this.shrinkRate = 1.003;
     this.armorPenetration = 0.87 + this.gameData.shapedBombUpgrade * 0.01;
+    this.explosionSound.volume = 0.65 * volumeSettings.soundVolume;
     this.explosionSound = new Audio("assets/audio/drone/shaped.mp3");
     this.explosionSound.volume = 0.45 * volumeSettings.soundVolume;
   }
@@ -818,10 +842,10 @@ export class ShapedClusterMunition extends Bomb {
     }
     return hitStatus;
   }
-  checkVehicleCollision(vehicle) {
+  checkVehicleCollision(vehicle, vehicles, gameData, NavigationGrid) {
     if (this.isOnRoof()) return vehicle;
     if (this.distanceToVehicle(0, vehicle)) {
-      this.checkArmorPenetration(vehicle);
+      this.checkArmorPenetration(vehicle, vehicles, gameData, NavigationGrid);
     }
     return vehicle;
   }

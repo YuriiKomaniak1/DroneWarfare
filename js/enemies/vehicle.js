@@ -18,6 +18,10 @@ const bmp1VImage = new Image();
 bmp1VImage.src = "./assets/img/vehicles/bmp1V.png";
 const bmp1turret = new Image();
 bmp1turret.src = "./assets/img/vehicles/bmp1turret.png";
+const mtlbZImage = new Image();
+mtlbZImage.src = "./assets/img/vehicles/mtlbZ.png";
+const mtlbVImage = new Image();
+mtlbVImage.src = "./assets/img/vehicles/mtlbV.png";
 const guntruckZImage = new Image();
 guntruckZImage.src = "./assets/img/vehicles/guntruckZ.png";
 const guntruckVImage = new Image();
@@ -112,6 +116,7 @@ export class Vehicle {
     this.gunner = null;
     this.cargo = [];
     this.navigaionsGrid = navigaionsGrid;
+    this.crewNawgrid = navigaionsGrid;
     this.armor = 0;
     this.score = 100;
     this.scored = false;
@@ -144,6 +149,7 @@ export class Vehicle {
     this.burningSound.volume = 1 * volumeSettings.soundVolume;
     this.burningSound.loop = false;
     this.startedBurning = false;
+    this.addedToObstacles = false;
   }
 
   update(vehicles, enemies, canvas, gameState, gameData, training) {
@@ -163,7 +169,7 @@ export class Vehicle {
       if (!this.isMoving && !this.isStopped && !this.isDestroyed) {
         const index = vehicles.indexOf(this);
         if (index > -1) {
-          gameData.loosescore -= this.score;
+          gameData.looseScore -= this.score;
           this.scored = true;
           if (this.driveSound && this.driveSound.stop) {
             this.driveSound.stop();
@@ -212,15 +218,15 @@ export class Vehicle {
         const dx = this.baseX - other.baseX;
         const dy = this.baseY - other.baseY;
         const distance = Math.hypot(dx, dy);
-        const minDist = this.height * this.scale;
+        const minDist = other.height * other.scale;
 
         // Відштовхуємо лише того, у кого менше Y (нижче на екрані)
         if (distance < minDist && this.baseY < other.baseY) {
           const angle = Math.atan2(dy, dx);
           const push = minDist - distance;
 
-          this.baseX += Math.cos(angle) * push * 0.5; // коефіцієнт приглушення
-          this.baseY += Math.sin(angle) * push * 0.5; // коефіцієнт приглушення
+          this.baseX += Math.cos(angle) * push * 0.7; // коефіцієнт приглушення
+          this.baseY += Math.sin(angle) * push * 0.7; // коефіцієнт приглушення
         }
       }
 
@@ -560,7 +566,7 @@ export class Vehicle {
           const safeSpot = this.getNearestWalkableTile(
             rawX,
             rawY,
-            this.navigaionsGrid
+            this.crewNawgrid
           );
           if (!safeSpot) return; // якщо взагалі немає куди висадити
 
@@ -571,7 +577,7 @@ export class Vehicle {
 
           enemy.vehicle = null;
           enemy.path = findPath(
-            this.navigaionsGrid,
+            this.crewNawgrid,
             { x: enemy.baseX, y: enemy.baseY },
             {
               x:
@@ -692,20 +698,94 @@ export class Vehicle {
       this._firingSoundTimeout = null; // 💾 Обнулити стан
     }
   }
-  isStoppedF() {
+  isStoppedF(vehicles, gameData, NavigationGrid) {
     this.isStopped = true;
     this.bailOut();
     this.isMoving = false;
     this.isFiring = false;
     this.stopFiringSoundLoop();
+    if (!this.addedToObstacles) {
+      gameData.obstacles.push({
+        x: this.baseX - (this.width * this.scale) / 2,
+        y: this.baseY - (this.height * this.scale) / 2,
+        width: this.width * this.scale,
+        height: this.height * this.scale,
+      });
+      this.addedToObstacles = true;
+
+      // Оновити навігаційну сітку (глобальну, спільну для всіх)
+      const newGrid = new NavigationGrid(
+        this.layer,
+        this.navigaionsGrid.cellSize,
+        gameData.obstacles
+      );
+
+      // Передати її всім юнітам
+      vehicles.forEach((v) => {
+        v.navigaionsGrid = newGrid;
+      });
+
+      // Перебудова маршрутів
+      vehicles.forEach((v) => {
+        if (!v.isStopped && !v.isDestroyed && v !== this) {
+          if (v.currentWaypointIndex < v.waypoints.length) {
+            const currentTarget = v.waypoints[v.currentWaypointIndex];
+            v.path = findPath(
+              v.navigaionsGrid,
+              { x: v.baseX, y: v.baseY }, // поточна позиція
+              currentTarget
+            );
+            v.currentPathIndex = 0;
+            v.isMoving = true;
+          }
+        }
+      });
+    }
   }
-  isBurningF() {
+  isBurningF(vehicles, gameData, NavigationGrid) {
     this.isStopped = true;
     this.isBurning = true;
     this.bailOut();
     this.isMoving = false;
     this.isFiring = false;
     this.stopFiringSoundLoop();
+    if (!this.addedToObstacles) {
+      gameData.obstacles.push({
+        x: this.baseX - (this.width * this.scale) / 2,
+        y: this.baseY - (this.height * this.scale) / 2,
+        width: this.width * this.scale,
+        height: this.height * this.scale,
+      });
+      this.addedToObstacles = true;
+
+      // Оновити навігаційну сітку (глобальну, спільну для всіх)
+      const newGrid = new NavigationGrid(
+        this.layer,
+        this.navigaionsGrid.cellSize,
+        gameData.obstacles
+      );
+
+      // Передати її всім юнітам
+      vehicles.forEach((v) => {
+        v.navigaionsGrid = newGrid;
+      });
+
+      // Перебудова маршрутів
+      vehicles.forEach((v) => {
+        if (!v.isStopped && !v.isDestroyed && v !== this) {
+          if (v.currentWaypointIndex < v.waypoints.length) {
+            const currentTarget = v.waypoints[v.currentWaypointIndex];
+            v.path = findPath(
+              v.navigaionsGrid,
+              { x: v.baseX, y: v.baseY }, // поточна позиція
+              currentTarget
+            );
+            v.currentPathIndex = 0;
+            v.isMoving = true;
+          }
+        }
+      });
+    }
   }
 }
 
@@ -720,7 +800,7 @@ export class Ural extends Vehicle {
     this.type = "ural";
     this.scale = 0.7;
     this.speed = 0.4;
-    this.score = 200;
+    this.score = 220;
   }
 }
 export class Gaz66 extends Vehicle {
@@ -756,7 +836,7 @@ export class BMP2 extends Vehicle {
     this.gassmokeoffsetY = -0.7;
     this.gassmokeoffsetX = 0.7;
     this.smokeScale = 0.6;
-    this.armor = 4;
+    this.armor = 5;
     this.turretOffsetX = 0;
     this.turretOffsetY = -0.07;
     this.hasTurret = true;
@@ -787,7 +867,7 @@ export class BMP1 extends Vehicle {
     this.gassmokeoffsetY = -0.7;
     this.gassmokeoffsetX = 0.7;
     this.smokeScale = 0.6;
-    this.armor = 3;
+    this.armor = 4;
     this.turretOffsetX = -0.05;
     this.turretOffsetY = -0.08;
     this.hasTurret = true;
@@ -824,7 +904,7 @@ export class Guntruck extends Vehicle {
     this.hasTurret = true;
     this.vehiclefireOffsetX = -0;
     this.vehiclefireOffsetY = -0.1;
-    this.score = 350;
+    this.score = 400;
     this.droneSpottingChanse = 4;
     this.fireDistance = 400;
     this.fireRate = 40;
@@ -863,5 +943,29 @@ export class Tigr extends Vehicle {
     this.droneSpottingChanse = 2;
     this.fireDistance = 320;
     this.fireRate = 15;
+  }
+}
+
+export class MTLB extends Vehicle {
+  constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
+    super(x, y, layer, ctx, waypoints, navigaionsGrid);
+    this.image = Math.random() > 0.4 ? mtlbZImage : mtlbVImage;
+    this.x = x;
+    this.y = y;
+    this.width = 100;
+    this.height = 200;
+    this.type = "mtlb";
+    this.scale = 0.68;
+    this.speed = 0.3;
+    this.gassmokeoffsetY = -0.7;
+    this.gassmokeoffsetX = 0.7;
+    this.smokeScale = 0.6;
+    this.armor = 2;
+    this.score = 350;
+    this.hasCrew = true;
+    this.driveSound = new VehicleSoundPlayer(
+      "assets/audio/vehicle/tank.mp3",
+      0.4
+    );
   }
 }

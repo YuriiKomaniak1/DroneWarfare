@@ -86,7 +86,11 @@ export class Minimap {
             this.ctx.fillStyle = "rgb(238, 117, 117)";
             this.ctx.fillRect(tempX, tempY, 3, 6);
           }
-          if (vehicle.type === "bmp2" || vehicle.type === "bmp1") {
+          if (
+            vehicle.type === "bmp2" ||
+            vehicle.type === "bmp1" ||
+            vehicle.type === "mtlb"
+          ) {
             this.ctx.fillStyle = "hsl(0, 86.40%, 51.00%)";
             this.ctx.fillRect(tempX, tempY, 4, 6);
           }

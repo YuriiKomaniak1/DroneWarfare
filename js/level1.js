@@ -10,7 +10,12 @@ let vehicles = [];
 gameData.looseScore = 500;
 gameData.initialLooseScore = 500;
 gameData.winScore = 1500;
-localStorage.setItem("gameData", JSON.stringify(gameData));
+
+const condition = { start: false };
+setTimeout(() => {
+  condition.start = true;
+}, 10000);
+
 async function loadObstacles() {
   const response = await fetch("js/levels/level1/obstacles.json");
   const response2 = await fetch("js/levels/level1/bombObstacles.json");
@@ -131,5 +136,6 @@ createAnimationLoop(
   vehicles,
   winLoseConditions,
   gameData,
+  condition,
   false
 );

@@ -159,7 +159,14 @@ export class Enemy {
       let pushX = 0;
       let pushY = 0;
       for (let other of allEnemies) {
-        if (this.dead || other === this || other.dead) continue;
+        if (
+          this.dead ||
+          other === this ||
+          other.dead ||
+          other.crawl ||
+          other.isFiring
+        )
+          continue;
 
         const dx = this.baseX - other.baseX;
         const dy = this.baseY - other.baseY;
@@ -171,8 +178,8 @@ export class Enemy {
           const angle = Math.atan2(dy, dx);
           const push = minDist - distance;
 
-          this.baseX += Math.cos(angle) * push * 0.5; // коефіцієнт приглушення
-          this.baseY += Math.sin(angle) * push * 0.5; // коефіцієнт приглушення
+          this.baseX += Math.cos(angle) * push * 0.01; // коефіцієнт приглушення
+          this.baseY += Math.sin(angle) * push * 0.01; // коефіцієнт приглушення
         }
       }
 

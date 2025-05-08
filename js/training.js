@@ -1,6 +1,14 @@
 import { Layer } from "./layers/layer.js";
 import { createRifleSquad } from "./enemies/enemy.js";
-import { Gaz66, Ural, BMP2, BMP1, Guntruck, Tigr } from "./enemies/vehicle.js";
+import {
+  Gaz66,
+  Ural,
+  BMP2,
+  BMP1,
+  Guntruck,
+  Tigr,
+  MTLB,
+} from "./enemies/vehicle.js";
 
 import {
   trainingSections,
@@ -18,6 +26,12 @@ gameData.initialLooseScore = 500000;
 gameData.winScore = 1500000;
 let enemies = [];
 let vehicles = [];
+
+const condition = { start: false };
+setTimeout(() => {
+  condition.start = true;
+}, 10000);
+
 async function loadObstacles() {
   const response = await fetch("js/levels/training/obstacles.json");
   const response2 = await fetch("js/levels/training/bombObstacles.json");
@@ -55,7 +69,7 @@ trees.src = "./assets/img/grounds/train1trees.png";
 const layer1 = new Layer(gameField, canvas, 1800, 2600, ctx);
 const layer2 = new Layer(trees, canvas, 1800, 2600, ctx);
 const navGrid = new NavigationGrid(layer1, 15, gameData.obstacles);
-const vehicleNavGrid = new NavigationGrid(layer1, 36, gameData.bigObstacles);
+const vehicleNavGrid = new NavigationGrid(layer1, 40, gameData.bigObstacles);
 prevSection.addEventListener("click", () => {
   currentSection--;
   if (currentSection < 0) currentSection = 0;
@@ -118,7 +132,7 @@ squadBMP.addEventListener("click", () => {
   if (Math.random() > 0.5) {
     addVehicle(BMP2, 4, 1, 1, 2);
   } else {
-    addVehicle(BMP1, 4, 1, 1, 2);
+    addVehicle(MTLB, 6, 1, 1, 2);
   }
   console.log(vehicles);
 });
@@ -133,6 +147,7 @@ function addVehicle(Class, riflemans, mashinegunners, grenadiers, crew) {
     coords.splice(index, 1);
     let waypoints = [
       { x: startX, y: startY },
+      { x: startX + 1, y: startY + 1 },
 
       { x: targetX, y: targetY },
     ];
@@ -183,5 +198,6 @@ createAnimationLoop(
   vehicles,
   winLoseConditions,
   gameData,
+  condition,
   true
 );
