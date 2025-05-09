@@ -178,8 +178,8 @@ export class Enemy {
           const angle = Math.atan2(dy, dx);
           const push = minDist - distance;
 
-          this.baseX += Math.cos(angle) * push * 0.01; // коефіцієнт приглушення
-          this.baseY += Math.sin(angle) * push * 0.01; // коефіцієнт приглушення
+          this.baseX += Math.cos(angle) * push * 0.025; // коефіцієнт приглушення
+          this.baseY += Math.sin(angle) * push * 0.025; // коефіцієнт приглушення
         }
       }
 
