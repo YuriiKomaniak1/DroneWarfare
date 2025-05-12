@@ -20,6 +20,7 @@ import {
   handleMenuClick,
   handleMenuHover,
 } from "./levels/training/trainingButtons.js";
+import { addTestVehicle } from "./levels/training/trainingCar.js";
 const gameData = JSON.parse(localStorage.getItem("gameData"));
 gameData.looseScore = 500000;
 gameData.initialLooseScore = 500000;
@@ -179,6 +180,7 @@ squad.addEventListener("click", () => {
   );
   enemies.push(...squad);
 });
+addTestVehicle(layer1, ctx, vehicleNavGrid, vehicles, enemies, navGrid);
 
 const winLoseConditions = {
   win: (gameState, gameData, enemies, vehicles) => {
