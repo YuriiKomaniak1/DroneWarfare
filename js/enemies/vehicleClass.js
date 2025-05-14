@@ -83,6 +83,7 @@ export class Vehicle {
     this.crewNawgrid = navigaionsGrid;
     this.armor = 0;
     this.score = 100;
+    this.looseScore = this.score;
     this.scored = false;
     this.fireDistance = 280;
     this.fireRate = 5;
@@ -117,6 +118,9 @@ export class Vehicle {
     this.startedBurning = false;
     this.addedToObstacles = false;
     this.static = false;
+    this.disembarked = false;
+    this.bailOutX = null;
+    this.bailOutY = null;
   }
 
   update(vehicles, enemies, canvas, gameState, gameData, training) {
@@ -137,7 +141,7 @@ export class Vehicle {
         if (!this.isMoving && !this.isStopped && !this.isDestroyed) {
           const index = vehicles.indexOf(this);
           if (index > -1) {
-            gameData.looseScore -= this.score;
+            gameData.looseScore -= this.looseScore;
             this.scored = true;
             if (this.driveSound && this.driveSound.stop) {
               this.driveSound.stop();
@@ -201,10 +205,9 @@ export class Vehicle {
         }
       }
     } else {
+      this.driveSound.stop();
       if (this.isMoving) {
-        console.log(this.isMoving);
         this.turretUpdateTimer++;
-
         if (this.turretUpdateTimer >= 170) {
           // кожні 2 секунди
           const angleOffset =
@@ -554,6 +557,56 @@ export class Vehicle {
 
     this.cargo = [...squad];
   }
+  disembark(x, y, navGrid) {
+    if (!this.disembarked) {
+      this.disembarked = true;
+      this.static = true;
+      this.cargo.forEach((enemy, index) => {
+        if (!enemy.dead && !enemy.hasBailedOut) {
+          enemy.hasBailedOut = true;
+          const side = index % 2 === 0 ? -1 : 1;
+          const distanceFromTruck = 40 + Math.random() * 50;
+          const angleOffset = (Math.random() - 0.5) * (Math.PI / 4);
+          const angleFromTruck =
+            this.rotation - Math.PI / 2 + side * (Math.PI / 2) + angleOffset;
+
+          const offsetX = distanceFromTruck * Math.cos(angleFromTruck);
+          const offsetY = distanceFromTruck * Math.sin(angleFromTruck);
+
+          const delay = index * 1000;
+
+          setTimeout(() => {
+            if (enemy.dead) return;
+            const rawX = this.baseX + offsetX;
+            const rawY = this.baseY + offsetY;
+
+            const safeSpot = this.getNearestWalkableTile(rawX, rawY, navGrid);
+            if (!safeSpot) return; // якщо взагалі немає куди висадити
+
+            enemy.baseX = safeSpot.x;
+            enemy.baseY = safeSpot.y;
+            enemy.x = enemy.baseX + this.layer.x;
+            enemy.y = enemy.baseY + this.layer.y;
+
+            enemy.vehicle = null;
+            enemy.path = findPath(
+              navGrid,
+              { x: enemy.baseX, y: enemy.baseY },
+              {
+                x: x,
+                y: y,
+              }
+            );
+            enemy.currentPathIndex = 0;
+            if (index === this.cargo.length - 1) {
+              this.cargo = [];
+              this.static = false;
+            }
+          }, delay);
+        }
+      });
+    }
+  }
   bailOut() {
     if (this.driver) this.cargo.unshift(this.driver);
     if (this.gunner) this.cargo.unshift(this.gunner);
@@ -595,10 +648,11 @@ export class Vehicle {
             { x: enemy.baseX, y: enemy.baseY },
             {
               x:
+                this.bailOutX ||
                 this.waypoints[this.waypoints.length - 1].x +
-                Math.random() * 100 -
-                50,
-              y: this.waypoints[this.waypoints.length - 1].y,
+                  Math.random() * 100 -
+                  50,
+              y: this.bailOutY || this.waypoints[this.waypoints.length - 1].y,
             }
           );
           enemy.currentPathIndex = 0;

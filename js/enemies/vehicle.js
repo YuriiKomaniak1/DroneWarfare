@@ -621,7 +621,7 @@ export class Shilka extends Vehicle {
     this.y = y;
     this.width = 100;
     this.height = 180;
-    this.type = "mtlbZU23";
+    this.type = "shilka";
     this.scale = 0.7;
     this.turretScale = 0.64;
     this.speed = 0.3;
@@ -784,7 +784,7 @@ export class T72B3 extends Vehicle {
     this.y = y;
     this.width = 100;
     this.height = 188;
-    this.type = "t72";
+    this.type = "t72B3";
     this.scale = 0.67;
     this.turretScale = 0.67;
     this.speed = 0.3;
@@ -816,7 +816,7 @@ export class T90 extends Vehicle {
     this.y = y;
     this.width = 100;
     this.height = 180;
-    this.type = "t72";
+    this.type = "t90";
     this.scale = 0.67;
     this.turretScale = 0.58;
     this.speed = 0.3;

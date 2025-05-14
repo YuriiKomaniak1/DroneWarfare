@@ -53,7 +53,7 @@ class Drone {
       cluster: [],
       shapedCluster: [],
     };
-    this.reloadingTime = 1000 * 60 * 2;
+    this.reloadingTime = 1000 * 60 * 1.5;
     this.reloadStartTime = null;
     this.scale = 1; // стартовий масштаб
     this.targetScale = 0.3; // цільовий масштаб при польоті
@@ -302,7 +302,7 @@ export class MediumDrone extends Drone {
     this.initialHangers = 16;
     this.type = "medium";
     this.imageScale = 0.5;
-    this.size = 1.5;
+    this.size = 2;
   }
 }
 

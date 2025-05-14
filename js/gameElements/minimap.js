@@ -60,7 +60,11 @@ export class Minimap {
         tempY < this.mapY + this.height
       ) {
         if (!enemy.dead) {
-          if (enemy.type === "rifleman" || enemy.type === "grenadier") {
+          if (
+            enemy.type === "rifleman" ||
+            enemy.type === "grenadier" ||
+            enemy.type === "crew"
+          ) {
             this.ctx.fillStyle = "rgb(255, 0, 0)";
             this.ctx.fillRect(tempX, tempY, 3, 3);
           }
@@ -82,21 +86,46 @@ export class Minimap {
         tempY < this.mapY + this.height
       ) {
         if (!vehicle.isDestroyed) {
-          if (vehicle.type === "ural" || vehicle.type === "gaz66") {
+          if (
+            vehicle.type === "ural" ||
+            vehicle.type === "gaz66" ||
+            vehicle.type === "uralSupply" ||
+            vehicle.type === "bm30" ||
+            vehicle.type === "grad" ||
+            vehicle.type === "uaz452" ||
+            vehicle.type === "jeep"
+          ) {
             this.ctx.fillStyle = "rgb(238, 117, 117)";
             this.ctx.fillRect(tempX, tempY, 3, 6);
           }
           if (
             vehicle.type === "bmp2" ||
             vehicle.type === "bmp1" ||
-            vehicle.type === "mtlb"
+            vehicle.type === "mtlb" ||
+            vehicle.type === "bukM2" ||
+            vehicle.type === "bmp3" ||
+            vehicle.type === "msta" ||
+            vehicle.type === "t55" ||
+            vehicle.type === "t62" ||
+            vehicle.type === "t72" ||
+            vehicle.type === "t72B3" ||
+            vehicle.type === "t90"
           ) {
             this.ctx.fillStyle = "hsl(0, 86.40%, 51.00%)";
             this.ctx.fillRect(tempX, tempY, 4, 6);
           }
-          if (vehicle.type === "guntruck" || vehicle.type === "tigr") {
+          if (
+            vehicle.type === "guntruck" ||
+            vehicle.type === "tigr" ||
+            vehicle.type === "btr82" ||
+            vehicle.type === "mtlbKPVT" ||
+            vehicle.type === "kpvt" ||
+            vehicle.type === "mtlbZU23" ||
+            vehicle.type === "zu23" ||
+            vehicle.type === "shilka"
+          ) {
             this.ctx.fillStyle = "rgb(123, 2, 2)";
-            this.ctx.fillRect(tempX, tempY, 4, 7);
+            this.ctx.fillRect(tempX, tempY, 4, 6);
           }
         }
       }

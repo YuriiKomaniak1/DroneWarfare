@@ -268,7 +268,7 @@ export function createAnimationLoop(
       });
       // - технічна функція відмальовки навігаційної сітки -
       // if (vehicles[0]) {
-      //   drawNavigationGrid(vehicles[0].navigaionsGrid, ctx, layer1);
+      //   drawNavigationGrid(vehicles[0].crewNawgrid, ctx, layer1);
       // }
       // відмалльовка інтерфейсу
       droneScope.draw(currentDrone);
@@ -290,6 +290,7 @@ export function createAnimationLoop(
             vehicles
           );
         }
+        winLoseConditions.addedFunction(vehicles);
       }
       gameFrame++;
     }

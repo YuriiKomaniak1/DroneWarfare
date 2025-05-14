@@ -72,7 +72,7 @@ class GameData {
     this.looseScore = 1000;
     this.winScore = 1000;
     this.initialLooseScore = 0;
-    this.currentMission = 3;
+    this.currentMission = 4;
     this.drones = [];
     this.obstacles = [];
     this.bigObstacles = [];
