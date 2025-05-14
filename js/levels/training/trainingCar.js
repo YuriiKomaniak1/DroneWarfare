@@ -1,4 +1,4 @@
-import { BMP1 } from "../../enemies/vehicle.js";
+import { ZU23 } from "../../enemies/vehicle.js";
 import { NavigationGrid, findPath } from "../../logic/navigation.js";
 export function addTestVehicle(
   layer1,
@@ -9,12 +9,12 @@ export function addTestVehicle(
   navGrid
 ) {
   let waypoints = [
-    { x: 1000, y: 2000 },
-    { x: 1000 + 1, y: 2000 + 1 },
+    { x: 900, y: 1800 },
+    { x: 900 + 1, y: 1800 + 1 },
 
     { x: 1000, y: 2600 },
   ];
-  let bmp = new BMP1(
+  let bmp = new ZU23(
     waypoints[0].x,
     waypoints[0].y,
     layer1,

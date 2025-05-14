@@ -15,6 +15,7 @@ export function buttons(gameData, gameState) {
   document.querySelectorAll(".nextMission").forEach((button) => {
     button.addEventListener("click", () => {
       gameData.currentMission++;
+      gameData.score;
       localStorage.setItem("gameData", JSON.stringify(gameData));
       location.href = "briefing.html";
     });

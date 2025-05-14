@@ -91,8 +91,10 @@ export class Vehicle {
     this.fireFrames = 6;
     this.fireFramespeed = 6;
     this.turretRotationAngle = 0;
+    this.turretUpdateTimer = 0;
     this.turretFrame = 0;
     this.turretFrameTimer = 0;
+    this.turretRotateRange = 25; //кут руху башти під час руху
     this.droneSpottingChanse = 1;
     this.hasCrew = false; // Чи є екіпаж
     this.fireSound = new Audio("assets/audio/fire/machinegun.mp3");
@@ -114,6 +116,7 @@ export class Vehicle {
     this.burningSound.loop = false;
     this.startedBurning = false;
     this.addedToObstacles = false;
+    this.static = false;
   }
 
   update(vehicles, enemies, canvas, gameState, gameData, training) {
@@ -123,75 +126,121 @@ export class Vehicle {
       gameData.winScore -= this.score;
       this.scored = true;
     }
-    // Перехід до наступного вейпоінта
-    if (
-      (this.path.length === 0 || this.currentPathIndex >= this.path.length) &&
-      !this.scored
-    ) {
-      this.currentWaypointIndex++;
-      this.setPathToWaypoint(); //
-      if (!this.isMoving && !this.isStopped && !this.isDestroyed) {
-        const index = vehicles.indexOf(this);
-        if (index > -1) {
-          gameData.looseScore -= this.score;
-          this.scored = true;
-          if (this.driveSound && this.driveSound.stop) {
-            this.driveSound.stop();
+    if (!this.static) {
+      // Перехід до наступного вейпоінта
+      if (
+        (this.path.length === 0 || this.currentPathIndex >= this.path.length) &&
+        !this.scored
+      ) {
+        this.currentWaypointIndex++;
+        this.setPathToWaypoint(); //
+        if (!this.isMoving && !this.isStopped && !this.isDestroyed) {
+          const index = vehicles.indexOf(this);
+          if (index > -1) {
+            gameData.looseScore -= this.score;
+            this.scored = true;
+            if (this.driveSound && this.driveSound.stop) {
+              this.driveSound.stop();
+            }
+            vehicles.splice(index, 1);
           }
-          vehicles.splice(index, 1);
+          return;
         }
         return;
       }
-      return;
-    }
-    // звук руху
-    if (this.isMoving) {
-      this.driveSound.playLoop();
-    } else {
-      this.driveSound.stop();
-    }
-    if (this.driveSound && this.driveSound.isPlaying) {
-      const dx = this.x - canvas.width / 2;
-      const dy = this.y - canvas.height / 2;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      this.driveSound.setVolumeByDistance(distance, 800); //
-    }
-    // рух
-    if (this.isMoving) {
-      const target = this.path[this.currentPathIndex];
-      const dx = target.x - this.baseX;
-      const dy = target.y - this.baseY;
-      const distance = Math.hypot(dx, dy);
-
-      if (distance < 10) {
-        this.currentPathIndex++;
+      // звук руху
+      if (this.isMoving) {
+        this.driveSound.playLoop();
       } else {
-        const angle = Math.atan2(dy, dx);
-        this.rotation = angle + Math.PI * 1.5;
-        const randomShakeX = (Math.random() - 0.5) * this.shakeIntensity;
-        const randomShakeY = (Math.random() - 0.5) * this.shakeIntensity;
-        this.baseX += Math.cos(angle) * this.speed + randomShakeX;
-        this.baseY += Math.sin(angle) * this.speed + randomShakeY;
+        this.driveSound.stop();
       }
-      // --- Взаємодія з іншими ворогами (штовхання) ---
-      let pushX = 0;
-      let pushY = 0;
-      for (let other of vehicles) {
-        if (other === this || other.isStopped || other.isBurning) continue;
+      if (this.driveSound && this.driveSound.isPlaying) {
+        const dx = this.x - canvas.width / 2;
+        const dy = this.y - canvas.height / 2;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        this.driveSound.setVolumeByDistance(distance, 800); //
+      }
+      // рух
+      if (this.hasTurret && this.isMoving && !this.isDestroyed) {
+        // 1. Вираховуємо дельту обертання корпусу
+        const angleDiff = Math.abs(this.turretRotationAngle - this.rotation);
+        const maxTurretDeviation = this.turretRotateRange * (Math.PI / 180); // ±30°
 
-        const dx = this.baseX - other.baseX;
-        const dy = this.baseY - other.baseY;
-        const distance = Math.hypot(dx, dy);
-        const minDist = other.height * other.scale;
-
-        // Відштовхуємо лише того, у кого менше Y (нижче на екрані)
-        if (distance < minDist && this.baseY < other.baseY) {
-          const angle = Math.atan2(dy, dx);
-          const push = minDist - distance;
-
-          this.baseX += Math.cos(angle) * push * 0.7; // коефіцієнт приглушення
-          this.baseY += Math.sin(angle) * push * 0.7; // коефіцієнт приглушення
+        // 2. Якщо кут башти надто відрізняється — оновлюємо одразу
+        if (angleDiff > maxTurretDeviation) {
+          this.turretRotationAngle = this.rotation; // "центр"
+          this.turretUpdateTimer = 100; // змусимо одразу змінити
         }
+        this.turretUpdateTimer++;
+
+        if (this.turretUpdateTimer >= 170) {
+          // кожні 2 секунди
+          const angleOffset =
+            (Math.random() * this.turretRotateRange * 2 -
+              this.turretRotateRange) *
+            (Math.PI / 180);
+          this.turretRotationAngle = this.rotation + angleOffset;
+          this.turretUpdateTimer = 0;
+        }
+      }
+      if (this.isMoving) {
+        const target = this.path[this.currentPathIndex];
+        const dx = target.x - this.baseX;
+        const dy = target.y - this.baseY;
+        const distance = Math.hypot(dx, dy);
+
+        if (distance < 10) {
+          this.currentPathIndex++;
+        } else {
+          const angle = Math.atan2(dy, dx);
+          this.rotation = angle + Math.PI * 1.5;
+          const randomShakeX = (Math.random() - 0.5) * this.shakeIntensity;
+          const randomShakeY = (Math.random() - 0.5) * this.shakeIntensity;
+          this.baseX += Math.cos(angle) * this.speed + randomShakeX;
+          this.baseY += Math.sin(angle) * this.speed + randomShakeY;
+        }
+      }
+    } else {
+      if (this.isMoving) {
+        console.log(this.isMoving);
+        this.turretUpdateTimer++;
+
+        if (this.turretUpdateTimer >= 170) {
+          // кожні 2 секунди
+          const angleOffset =
+            (Math.random() * this.turretRotateRange * 2 -
+              this.turretRotateRange) *
+            (Math.PI / 180);
+          this.turretRotationAngle = this.turretRotationAngle + angleOffset;
+          this.turretUpdateTimer = 0;
+        }
+      }
+    }
+    // --- Взаємодія з іншими ворогами (штовхання) ---
+    let pushX = 0;
+    let pushY = 0;
+    for (let other of vehicles) {
+      if (
+        other === this ||
+        other.isStopped ||
+        other.isBurning ||
+        this.static ||
+        other.static
+      )
+        continue;
+
+      const dx = this.baseX - other.baseX;
+      const dy = this.baseY - other.baseY;
+      const distance = Math.hypot(dx, dy);
+      const minDist = other.height * other.scale;
+
+      // Відштовхуємо лише того, у кого менше Y (нижче на екрані)
+      if (distance < minDist && this.baseY < other.baseY) {
+        const angle = Math.atan2(dy, dx);
+        const push = minDist - distance;
+
+        this.baseX += Math.cos(angle) * push * 0.7; // коефіцієнт приглушення
+        this.baseY += Math.sin(angle) * push * 0.7; // коефіцієнт приглушення
       }
 
       // Замість прямого зсуву — додаємо до основного руху:
@@ -249,7 +298,7 @@ export class Vehicle {
         }
       }
     }
-    if (this.isFiring) {
+    if (this.isFiring && this.isMoving) {
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
 
@@ -328,6 +377,7 @@ export class Vehicle {
         );
       } else {
         this.ctx.translate(globalOffsetX, globalOffsetY);
+        this.ctx.rotate(this.turretRotationAngle);
         this.ctx.drawImage(
           this.turretImage,
           turretFrame * this.turretWidth,
@@ -344,7 +394,7 @@ export class Vehicle {
     }
 
     // малюємо вихлоп
-    if (this.isMoving) {
+    if (this.isMoving && !this.static) {
       this.ctx.save();
       this.ctx.translate(this.x, this.y);
       this.ctx.rotate(this.rotation);
@@ -440,7 +490,7 @@ export class Vehicle {
           drone.size *
           difficulty.accuracy;
 
-        if (Math.random() * 500 < chance && drone.hp >= 1) {
+        if (Math.random() * 150 < chance && drone.hp >= 1) {
           --drone.hp;
         }
         this.fireTimer = 0;

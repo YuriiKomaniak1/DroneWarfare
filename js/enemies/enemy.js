@@ -345,7 +345,7 @@ export class Enemy {
           drone.size *
           difficulty.accuracy;
 
-        if (Math.random() * 500 < chance && drone.hp >= 1) {
+        if (Math.random() * 150 < chance && drone.hp >= 1) {
           --drone.hp;
         }
         this.fireTimer = 0;
@@ -404,7 +404,7 @@ export class Rifleman extends Enemy {
     this.image = riflemanImage;
     this.type = "rifleman";
     this.fireDistance = 260;
-    this.fireRate = 5;
+    this.fireRate = 1;
     this.droneSpottingChanse = 1;
     this.score = 50;
   }
@@ -415,7 +415,7 @@ export class Grenadier extends Enemy {
     this.image = grenadierImage;
     this.type = "grenadier";
     this.fireDistance = 260;
-    this.fireRate = 4;
+    this.fireRate = 1;
     this.droneSpottingChanse = 1;
     this.score = 100;
   }
@@ -426,7 +426,7 @@ export class Machinegunner extends Enemy {
     this.image = machinegunnerImage;
     this.type = "machinegunner";
     this.fireDistance = 350;
-    this.fireRate = 15;
+    this.fireRate = 3;
     this.droneSpottingChanse = 2;
     this.score = 100;
     this.fireSound = new Audio("assets/audio/fire/machinegun.mp3");
@@ -441,7 +441,7 @@ export class Crew extends Enemy {
     this.image = crewImage;
     this.type = "crew";
     this.fireDistance = 260;
-    this.fireRate = 4;
+    this.fireRate = 1;
     this.droneSpottingChanse = 1;
     this.score = 60;
   }

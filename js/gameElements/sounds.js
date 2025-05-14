@@ -63,7 +63,6 @@ export class VehicleSoundPlayer {
         // 🔁 Продовжити тільки якщо не пауза
         this.nextTimeout = setTimeout(() => {
           this.nextTimeout = null;
-          console.log(pauseState.isPaused);
           if (this.isPlaying && !pauseState.isPaused) {
             playInstance();
           }
@@ -100,7 +99,7 @@ export class VehicleSoundPlayer {
   setVolumeByDistance(distance, maxDistance = 600) {
     const clamped = Math.max(0, Math.min(1, 1 - distance / maxDistance));
     this.currentSounds.forEach((sound) => {
-      sound.volume = clamped * 0.15;
+      sound.volume = clamped * 0.3 * volumeSettings.soundVolume;
     });
   }
 }
