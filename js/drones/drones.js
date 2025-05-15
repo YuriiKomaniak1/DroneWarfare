@@ -282,6 +282,7 @@ export class SmallDrone extends Drone {
     this.hangers = 10;
     this.initialHangers = 10;
     this.type = "small";
+    this.reloadingTime = 1000 * 60 * 1.4;
   }
 }
 
@@ -303,6 +304,7 @@ export class MediumDrone extends Drone {
     this.type = "medium";
     this.imageScale = 0.5;
     this.size = 2;
+    this.reloadingTime = 1000 * 60 * 1.8;
   }
 }
 
@@ -324,5 +326,6 @@ export class BigDrone extends Drone {
     this.type = "big";
     this.imageScale = 3;
     this.size = 4;
+    this.reloadingTime = 1000 * 60 * 2.5;
   }
 }

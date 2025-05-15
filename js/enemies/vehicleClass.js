@@ -120,7 +120,7 @@ export class Vehicle {
     this.static = false;
     this.disembarked = false;
     this.bailOutX = null;
-    this.bailOutY = null;
+    this.embarkY = null;
   }
 
   update(vehicles, enemies, canvas, gameState, gameData, training) {
@@ -143,9 +143,35 @@ export class Vehicle {
           if (index > -1) {
             gameData.looseScore -= this.looseScore;
             this.scored = true;
+
+            // 🟡 Списати очки за пасажирів, які не встигли вийти
+            if (this.cargo?.length) {
+              this.cargo.forEach((enemy) => {
+                if (!enemy.dead && !enemy.scored) {
+                  gameData.looseScore -= enemy.score; // або конкретне значення
+                  enemy.scored = true;
+                }
+                const i = enemies.indexOf(enemy);
+                if (i > -1) enemies.splice(i, 1);
+              });
+            }
+            if (this.driver && !this.driver.scored) {
+              gameData.looseScore -= this.driver.score || 50;
+              this.driver.scored = true;
+            }
+            const driverIndex = enemies.indexOf(this.driver);
+            if (driverIndex > -1) enemies.splice(driverIndex, 1);
+
+            if (this.gunner && !this.gunner.scored) {
+              gameData.looseScore -= this.gunner.score || 50;
+              this.gunner.scored = true;
+            }
+            const gunnerIndex = enemies.indexOf(this.gunner);
+            if (gunnerIndex > -1) enemies.splice(gunnerIndex, 1);
             if (this.driveSound && this.driveSound.stop) {
               this.driveSound.stop();
             }
+
             vehicles.splice(index, 1);
           }
           return;
