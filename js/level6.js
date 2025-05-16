@@ -3,13 +3,13 @@ import { NavigationGrid, findPath } from "./logic/navigation.js";
 import { createRifleSquad } from "./enemies/enemy.js";
 import { createAnimationLoop } from "./logic/gameloop.js";
 import { initUIControls } from "./logic/uicontrols.js";
-import { BMP2, BMP1, Guntruck, Tigr } from "./enemies/vehicle.js";
+
 const gameData = JSON.parse(localStorage.getItem("gameData"));
 let enemies = [];
 let vehicles = [];
-gameData.looseScore = 1000;
+gameData.looseScore = 50;
 gameData.initialLooseScore = 800;
-gameData.winScore = 2800;
+gameData.winScore = 2000;
 
 const condition = { start: false };
 setTimeout(() => {
@@ -17,9 +17,9 @@ setTimeout(() => {
 }, 60000);
 
 async function loadObstacles() {
-  const response = await fetch("js/levels/level5/obstacles.json");
-  const response2 = await fetch("js/levels/level5/obstacles.json");
-  const response3 = await fetch("js/levels/level5/bombObstacles.json");
+  const response = await fetch("js/levels/level6/obstacles.json");
+  const response2 = await fetch("js/levels/level6/obstacles.json");
+  const response3 = await fetch("js/levels/level6/bombObstacles.json");
   gameData.obstacles = await response.json();
   gameData.bigObstacles = await response2.json();
   gameData.bombObstacles = await response3.json();
@@ -39,65 +39,38 @@ initUIControls({
 });
 
 const layerBottom = new Image();
-layerBottom.src = "assets/img/grounds/level5bottom.png";
+layerBottom.src = "assets/img/grounds/level6bottom.png";
 const layerTop = new Image();
-layerTop.src = "assets/img/grounds/level5top.png";
-const layer1 = new Layer(layerBottom, canvas, 2000, 3500, ctx);
-const layer2 = new Layer(layerTop, canvas, 2000, 3500, ctx);
+layerTop.src = "assets/img/grounds/level6top.png";
+const layer1 = new Layer(layerBottom, canvas, 2500, 2500, ctx);
+const layer2 = new Layer(layerTop, canvas, 2500, 2500, ctx);
 const navGrid = new NavigationGrid(layer1, 15, gameData.obstacles);
 const vehicleNavGrid = new NavigationGrid(layer1, 36, gameData.bigObstacles);
 
-setTimeout(() => {
-  addVehicle(Tigr, 350, 1, 1, 0);
-}, 8500);
+const wa1 = [
+  { x: 2466, y: 821 },
+  { x: 1899, y: 1367 },
+  { x: 0, y: 0 },
+];
+enemy(1, 0, 0, wa1);
 
-setTimeout(() => {
-  addVehicle(Guntruck, 1200, 1, 0, 0, 0);
-}, 19000);
-
-setTimeout(() => {
-  addVehicle(Tigr, 1650, 1, 1, 0);
-}, 12500);
-
-addVehicle(BMP2, 500, 4, 1, 1, 2);
-
-setTimeout(() => {
-  addVehicle(BMP1, 1000, 4, 1, 1, 2);
-}, 6000);
-
-setTimeout(() => {
-  addVehicle(BMP2, 1500, 4, 1, 1, 2);
-}, 14000);
-
-function addVehicle(
-  Class,
-  startX,
-  riflemans,
-  mashinegunners,
-  grenadiers,
-  crew
-) {
-  let waypoints = [
-    { x: startX, y: 50 },
-    { x: startX, y: 101 },
-    { x: startX, y: 1000 },
-    { x: startX, y: 3500 },
-  ];
-  let vehicle = new Class(
-    waypoints[0].x,
-    waypoints[0].y,
+// функція створення юнітів
+function enemy(riflemans, mashinegunners, grenadiers, waypoints) {
+  const squad = createRifleSquad(
+    0,
+    0,
     layer1,
     ctx,
+    navGrid,
     waypoints,
-    vehicleNavGrid
+    riflemans,
+    mashinegunners,
+    grenadiers,
+    0
   );
-  // === Шукаємо шлях один раз при створенні ===
-  vehicle.path = findPath(vehicleNavGrid, waypoints[0], waypoints[1]);
-  vehicle.currentPathIndex = 0;
-  vehicle.embark(enemies, navGrid, riflemans, mashinegunners, grenadiers, crew);
-  vehicles.push(vehicle);
+  enemies.push(...squad);
 }
-
+console.log(enemies);
 const winLoseConditions = {
   win: (gameState, gameData, enemies, vehicles) => {
     return gameData.winScore <= 0;
@@ -110,7 +83,11 @@ const winLoseConditions = {
 
     return allDronesDead || scoreTooLow;
   },
-  addedFunction(vehicles, enemies) {},
+  addedFunction(vehicles, enemies) {
+    enemies.forEach((enemy) => {
+      if (enemy.currentWaypointIndex === 2) enemy.static = true;
+    });
+  },
 };
 
 createAnimationLoop(

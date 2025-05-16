@@ -20,3 +20,13 @@ Thumbs.db
 # Ігноруємо свої локальні ресурси
 /assets/tmp/
 /assets/test/
+
+# Android build artifacts
+/android/
+/node_modules/
+/www/
+
+
+# Capacitor config artifacts
+capacitor.config.json
+package-lock.json

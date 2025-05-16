@@ -19,6 +19,5 @@ body {
   width: 100vw;
   height: 100vh;
   display: block;
-  max-width: 900px;
-  max-height: 900px;
+  max-width: 1500px;
 }

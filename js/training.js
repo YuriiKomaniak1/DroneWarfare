@@ -59,8 +59,8 @@ const guntruck = document.getElementById("guntruck");
 const tigr = document.getElementById("tigr");
 const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
-canvas.width = Math.min(window.innerWidth, 900);
-canvas.height = Math.min(window.innerHeight, 900);
+canvas.width = Math.min(window.innerWidth, 1500);
+canvas.height = Math.min(window.innerHeight, 2000);
 let currentSection = 0;
 
 const gameField = new Image();

@@ -20,7 +20,7 @@ const volumeSettings = JSON.parse(localStorage.getItem("Volume")) || {
 };
 export class Vehicle {
   static type = "default"; // Тип за замовчуванням
-  constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
+  constructor(x, y, layer, ctx, waypoints, navigationsGrid) {
     this.image = null;
     this.turretImage = null;
     this.turretWidth = 200;
@@ -79,8 +79,8 @@ export class Vehicle {
     this.driver = null;
     this.gunner = null;
     this.cargo = [];
-    this.navigaionsGrid = navigaionsGrid;
-    this.crewNawgrid = navigaionsGrid;
+    this.navigationsGrid = navigationsGrid;
+    this.crewNawgrid = navigationsGrid;
     this.armor = 0;
     this.score = 100;
     this.looseScore = this.score;
@@ -120,7 +120,7 @@ export class Vehicle {
     this.static = false;
     this.disembarked = false;
     this.bailOutX = null;
-    this.embarkY = null;
+    this.bailOutY = null;
   }
 
   update(vehicles, enemies, canvas, gameState, gameData, training) {
@@ -130,54 +130,55 @@ export class Vehicle {
       gameData.winScore -= this.score;
       this.scored = true;
     }
-    if (!this.static) {
-      // Перехід до наступного вейпоінта
-      if (
-        (this.path.length === 0 || this.currentPathIndex >= this.path.length) &&
-        !this.scored
-      ) {
-        this.currentWaypointIndex++;
-        this.setPathToWaypoint(); //
-        if (!this.isMoving && !this.isStopped && !this.isDestroyed) {
-          const index = vehicles.indexOf(this);
-          if (index > -1) {
-            gameData.looseScore -= this.looseScore;
-            this.scored = true;
 
-            // 🟡 Списати очки за пасажирів, які не встигли вийти
-            if (this.cargo?.length) {
-              this.cargo.forEach((enemy) => {
-                if (!enemy.dead && !enemy.scored) {
-                  gameData.looseScore -= enemy.score; // або конкретне значення
-                  enemy.scored = true;
-                }
-                const i = enemies.indexOf(enemy);
-                if (i > -1) enemies.splice(i, 1);
-              });
-            }
-            if (this.driver && !this.driver.scored) {
-              gameData.looseScore -= this.driver.score || 50;
-              this.driver.scored = true;
-            }
-            const driverIndex = enemies.indexOf(this.driver);
-            if (driverIndex > -1) enemies.splice(driverIndex, 1);
+    // Перехід до наступного вейпоінта
+    if (
+      (this.path.length === 0 || this.currentPathIndex >= this.path.length) &&
+      !this.scored
+    ) {
+      this.currentWaypointIndex++;
+      this.setPathToWaypoint(); //
+      if (!this.isMoving && !this.isStopped && !this.isDestroyed) {
+        const index = vehicles.indexOf(this);
+        if (index > -1) {
+          gameData.looseScore -= this.looseScore;
+          this.scored = true;
 
-            if (this.gunner && !this.gunner.scored) {
-              gameData.looseScore -= this.gunner.score || 50;
-              this.gunner.scored = true;
-            }
-            const gunnerIndex = enemies.indexOf(this.gunner);
-            if (gunnerIndex > -1) enemies.splice(gunnerIndex, 1);
-            if (this.driveSound && this.driveSound.stop) {
-              this.driveSound.stop();
-            }
-
-            vehicles.splice(index, 1);
+          // 🟡 Списати очки за пасажирів, які не встигли вийти
+          if (this.cargo?.length) {
+            this.cargo.forEach((enemy) => {
+              if (!enemy.dead && !enemy.scored) {
+                gameData.looseScore -= enemy.score; // або конкретне значення
+                enemy.scored = true;
+              }
+              const i = enemies.indexOf(enemy);
+              if (i > -1) enemies.splice(i, 1);
+            });
           }
-          return;
+          if (this.driver && !this.driver.scored) {
+            gameData.looseScore -= this.driver.score || 50;
+            this.driver.scored = true;
+          }
+          const driverIndex = enemies.indexOf(this.driver);
+          if (driverIndex > -1) enemies.splice(driverIndex, 1);
+
+          if (this.gunner && !this.gunner.scored) {
+            gameData.looseScore -= this.gunner.score || 50;
+            this.gunner.scored = true;
+          }
+          const gunnerIndex = enemies.indexOf(this.gunner);
+          if (gunnerIndex > -1) enemies.splice(gunnerIndex, 1);
+          if (this.driveSound && this.driveSound.stop) {
+            this.driveSound.stop();
+          }
+
+          vehicles.splice(index, 1);
         }
         return;
       }
+      return;
+    }
+    if (!this.static) {
       // звук руху
       if (this.isMoving) {
         this.driveSound.playLoop();
@@ -534,42 +535,35 @@ export class Vehicle {
       this.baseY,
       this.layer,
       this.ctx,
-      [] // без маршруту спочатку
+      this.waypoints,
+      navGrid
     );
 
     driver.vehicle = this;
-    driver.path = [];
     enemies.push(driver);
     this.driver = driver;
     if (this.hasGunner) {
-      const gunner = new Rifleman(
+      const gunner = new DriverClass(
         this.baseX,
         this.baseY,
         this.layer,
         this.ctx,
-        [] // без маршруту спочатку
+        this.waypoints,
+        navGrid
       );
 
       gunner.vehicle = this;
-      gunner.path = [];
       enemies.push(gunner);
       this.gunner = gunner;
     }
     // Тепер піхота
     const squad = createRifleSquad(
-      this.baseX,
-      this.baseY,
       0, // без розкиду при посадці
       0,
       this.layer,
       this.ctx,
       navGrid,
-      [
-        {
-          x: this.baseX,
-          y: this.baseY,
-        },
-      ],
+      this.waypoints,
       riflemans,
       mashinegunners,
       grenadiers,
@@ -615,15 +609,11 @@ export class Vehicle {
             enemy.y = enemy.baseY + this.layer.y;
 
             enemy.vehicle = null;
-            enemy.path = findPath(
-              navGrid,
+            enemy.waypoints = [
               { x: enemy.baseX, y: enemy.baseY },
-              {
-                x: x,
-                y: y,
-              }
-            );
-            enemy.currentPathIndex = 0;
+              { x: x, y: y },
+            ];
+
             if (index === this.cargo.length - 1) {
               this.cargo = [];
               this.static = false;
@@ -669,8 +659,7 @@ export class Vehicle {
           enemy.y = enemy.baseY + this.layer.y;
 
           enemy.vehicle = null;
-          enemy.path = findPath(
-            this.crewNawgrid,
+          enemy.waypoints = [
             { x: enemy.baseX, y: enemy.baseY },
             {
               x:
@@ -679,9 +668,8 @@ export class Vehicle {
                   Math.random() * 100 -
                   50,
               y: this.bailOutY || this.waypoints[this.waypoints.length - 1].y,
-            }
-          );
-          enemy.currentPathIndex = 0;
+            },
+          ];
         }, delay);
       }
     });
@@ -691,7 +679,7 @@ export class Vehicle {
     if (this.currentWaypointIndex < this.waypoints.length) {
       const nextWaypoint = this.waypoints[this.currentWaypointIndex];
       this.path = findPath(
-        this.navigaionsGrid,
+        this.navigationsGrid,
         { x: this.baseX, y: this.baseY },
         nextWaypoint
       );
@@ -810,13 +798,13 @@ export class Vehicle {
       // Оновити навігаційну сітку (глобальну, спільну для всіх)
       const newGrid = new NavigationGrid(
         this.layer,
-        this.navigaionsGrid.cellSize,
+        this.navigationsGrid.cellSize,
         gameData.obstacles
       );
 
       // Передати її всім юнітам
       vehicles.forEach((v) => {
-        v.navigaionsGrid = newGrid;
+        v.navigationsGrid = newGrid;
       });
 
       // Перебудова маршрутів
@@ -825,7 +813,7 @@ export class Vehicle {
           if (v.currentWaypointIndex < v.waypoints.length) {
             const currentTarget = v.waypoints[v.currentWaypointIndex];
             v.path = findPath(
-              v.navigaionsGrid,
+              v.navigationsGrid,
               { x: v.baseX, y: v.baseY }, // поточна позиція
               currentTarget
             );
@@ -855,13 +843,13 @@ export class Vehicle {
       // Оновити навігаційну сітку (глобальну, спільну для всіх)
       const newGrid = new NavigationGrid(
         this.layer,
-        this.navigaionsGrid.cellSize,
+        this.navigationsGrid.cellSize,
         gameData.obstacles
       );
 
       // Передати її всім юнітам
       vehicles.forEach((v) => {
-        v.navigaionsGrid = newGrid;
+        v.navigationsGrid = newGrid;
       });
 
       // Перебудова маршрутів
@@ -870,7 +858,7 @@ export class Vehicle {
           if (v.currentWaypointIndex < v.waypoints.length) {
             const currentTarget = v.waypoints[v.currentWaypointIndex];
             v.path = findPath(
-              v.navigaionsGrid,
+              v.navigationsGrid,
               { x: v.baseX, y: v.baseY }, // поточна позиція
               currentTarget
             );

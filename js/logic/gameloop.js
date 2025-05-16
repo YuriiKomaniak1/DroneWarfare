@@ -109,7 +109,6 @@ export function createAnimationLoop(
       lastTime = timestamp - (deltaTime % FRAME_TIME);
       // ззвук дрона
       tryStartDroneSound(currentDrone);
-
       gameState.drones.forEach((drone) => {
         if (drone) {
           if (
@@ -290,7 +289,7 @@ export function createAnimationLoop(
             vehicles
           );
         }
-        winLoseConditions.addedFunction(vehicles);
+        winLoseConditions.addedFunction(vehicles, enemies);
       }
       gameFrame++;
     }

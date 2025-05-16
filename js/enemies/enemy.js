@@ -21,7 +21,7 @@ const volumeSettings = JSON.parse(localStorage.getItem("Volume")) || {
 };
 
 export class Enemy {
-  constructor(x, y, layer, ctx, path, vehicle = 0) {
+  constructor(x, y, layer, ctx, waypoints, navigaionsGrid, vehicle = null) {
     this.image = riflemanImage;
     this.skullImage = skullImage;
     this.type = "rifleman";
@@ -60,7 +60,7 @@ export class Enemy {
     this.oldPositions = []; // Масив з історією положення
     this.positionMemory = 15;
     this.droneSpottingChanse = 1;
-    this.path = path; // Маршрут
+    this.path = []; // Маршрут
     this.currentPathIndex = 0;
     this.shakeIntensity = 0.3;
     this.vehicle = vehicle;
@@ -78,6 +78,13 @@ export class Enemy {
     this.fireSoundPlaying = false;
     this.fireSoundRateMin = 0.5;
     this.fireSoundRateMax = 2;
+    this.static = false;
+    this.rotateTimer = 0;
+    this.currentWaypointIndex = 0;
+    this.looseScore = this.score;
+    this.ended = false;
+    this.navigationsGrid = navigaionsGrid;
+    this.waypoints = waypoints;
   }
 
   update(allEnemies, canvas, gameState, gameData, training) {
@@ -93,41 +100,44 @@ export class Enemy {
         (this.path.length === 0 || this.currentPathIndex >= this.path.length) &&
         !this.scored
       ) {
-        const index = allEnemies.indexOf(this);
-        if (index > -1) {
-          gameData.looseScore -= this.score;
-          this.scored = true;
-          allEnemies.splice(index, 1);
-        }
-        return;
-      }
-      // модифікація швидкості повзання\
-      let speedModifier = 1;
-      if (this.crawl) {
-        speedModifier = 0.4;
-        if (Math.random() < 0.002) this.crawl = false;
-      }
-      // рух по навігації
-      if (!this.dead && !this.isFiring) {
-        const target = this.path[this.currentPathIndex];
-        const dx = target.x - this.baseX;
-        const dy = target.y - this.baseY;
-        const distance = Math.hypot(dx, dy);
-
-        if (distance < 5) {
-          this.currentPathIndex++;
-          if (this.currentPathIndex >= this.path.length) {
-            return;
+        this.currentWaypointIndex++;
+        this.setPathToWaypoint(); //
+        if (this.ended && !this.dead) {
+          const index = allEnemies.indexOf(this);
+          if (index > -1) {
+            gameData.looseScore -= this.looseScore;
+            this.scored = true;
+            allEnemies.splice(index, 1);
           }
-        } else {
-          const angle = Math.atan2(dy, dx);
-          this.rotationAngle = angle - Math.PI / 2;
-          const randomShakeX = (Math.random() - 0.5) * this.shakeIntensity;
-          const randomShakeY = (Math.random() - 0.5) * this.shakeIntensity;
-          this.baseX +=
-            Math.cos(angle) * this.speed * speedModifier + randomShakeX;
-          this.baseY +=
-            Math.sin(angle) * this.speed * speedModifier + randomShakeY;
+          return;
+        }
+      }
+      if (!this.static) {
+        // модифікація швидкості повзання\
+        let speedModifier = 1;
+        if (this.crawl) {
+          speedModifier = 0.4;
+          if (Math.random() < 0.002) this.crawl = false;
+        }
+        // рух по навігації
+        if (!this.dead && !this.isFiring) {
+          const target = this.path[this.currentPathIndex];
+          const dx = target.x - this.baseX;
+          const dy = target.y - this.baseY;
+          const distance = Math.hypot(dx, dy);
+
+          if (distance < 5) {
+            this.currentPathIndex++;
+          } else {
+            const angle = Math.atan2(dy, dx);
+            this.rotationAngle = angle - Math.PI / 2;
+            const randomShakeX = (Math.random() - 0.5) * this.shakeIntensity;
+            const randomShakeY = (Math.random() - 0.5) * this.shakeIntensity;
+            this.baseX +=
+              Math.cos(angle) * this.speed * speedModifier + randomShakeX;
+            this.baseY +=
+              Math.sin(angle) * this.speed * speedModifier + randomShakeY;
+          }
         }
       }
       this.x = this.baseX + this.layer.x;
@@ -143,7 +153,8 @@ export class Enemy {
           this.frameX = (this.frameX + 1) % this.runFrames;
         }
         this.frameTimer = 0;
-      } else {
+      }
+      if (this.dead) {
         // --- Анімація смерті ---
         this.deathTimer++;
         if (this.deathTimer >= this.deathAnimationSpeed) {
@@ -160,6 +171,7 @@ export class Enemy {
       let pushY = 0;
       for (let other of allEnemies) {
         if (
+          this.static ||
           this.dead ||
           other === this ||
           other.dead ||
@@ -187,7 +199,13 @@ export class Enemy {
       this.baseX += pushX * 0.5; // коефіцієнт приглушення
       this.baseY += pushY * 0.5;
       // обертання під час трільби
+
       if (this.isFiring) {
+        this.frameTimer++;
+        if (this.frameTimer >= this.frameSpeed) {
+          this.frameX = (this.frameX + 1) % this.fireFrames;
+          this.frameTimer = 0;
+        }
         if (this.dead) this.ifFiring = false;
         const centerX = canvas.width / 2;
         const centerY = canvas.height / 2;
@@ -227,6 +245,16 @@ export class Enemy {
     }
     this.x = this.baseX + this.layer.x;
     this.y = this.baseY + this.layer.y;
+
+    if (!this.dead && this.static && !this.isFiring) {
+      this.rotateTimer++;
+      if (this.rotateTimer >= 110) {
+        // кожні 2 секунди
+        const angleOffset = (Math.random() * 40 * 2 - 40) * (Math.PI / 180);
+        this.rotationAngle = this.rotationAngle + angleOffset;
+        this.rotateTimer = 0;
+      }
+    }
   }
 
   draw() {
@@ -237,7 +265,7 @@ export class Enemy {
         this.ctx.rotate(this.rotationAngle);
         this.ctx.drawImage(
           this.image,
-          this.frameX * this.width,
+          this.static ? 0 : this.frameX * this.width,
           this.runframeY * this.height,
           this.width,
           this.height,
@@ -397,10 +425,23 @@ export class Enemy {
       this._firingSoundTimeout = null; // 💾 Обнулити стан
     }
   }
+  setPathToWaypoint() {
+    if (this.currentWaypointIndex < this.waypoints.length) {
+      const nextWaypoint = this.waypoints[this.currentWaypointIndex];
+      this.path = findPath(
+        this.navigationsGrid,
+        { x: this.baseX, y: this.baseY },
+        nextWaypoint
+      );
+      this.currentPathIndex = 0;
+    } else {
+      this.ended = true; // Всі вейпоінти пройдено
+    }
+  }
 }
 export class Rifleman extends Enemy {
-  constructor(x, y, layer, ctx, path) {
-    super(x, y, layer, ctx, path);
+  constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
+    super(x, y, layer, ctx, waypoints, navigaionsGrid);
     this.image = riflemanImage;
     this.type = "rifleman";
     this.fireDistance = 260;
@@ -410,8 +451,8 @@ export class Rifleman extends Enemy {
   }
 }
 export class Grenadier extends Enemy {
-  constructor(x, y, layer, ctx, path) {
-    super(x, y, layer, ctx, path);
+  constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
+    super(x, y, layer, ctx, waypoints, navigaionsGrid);
     this.image = grenadierImage;
     this.type = "grenadier";
     this.fireDistance = 260;
@@ -421,8 +462,8 @@ export class Grenadier extends Enemy {
   }
 }
 export class Machinegunner extends Enemy {
-  constructor(x, y, layer, ctx, path) {
-    super(x, y, layer, ctx, path);
+  constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
+    super(x, y, layer, ctx, waypoints, navigaionsGrid);
     this.image = machinegunnerImage;
     this.type = "machinegunner";
     this.fireDistance = 350;
@@ -436,8 +477,8 @@ export class Machinegunner extends Enemy {
 }
 
 export class Crew extends Enemy {
-  constructor(x, y, layer, ctx, path) {
-    super(x, y, layer, ctx, path);
+  constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
+    super(x, y, layer, ctx, waypoints, navigaionsGrid);
     this.image = crewImage;
     this.type = "crew";
     this.fireDistance = 260;
@@ -448,8 +489,6 @@ export class Crew extends Enemy {
 }
 
 export function createRifleSquad(
-  x,
-  y,
   spreadX,
   spreadY,
   layer,
@@ -467,36 +506,19 @@ export function createRifleSquad(
     const localSpreadX = Math.floor(Math.random() * spreadX - spreadX / 2);
     const localSpreadY = Math.floor(Math.random() * spreadY - spreadY / 2);
 
-    const startX = x + localSpreadX;
-    const startY = y + localSpreadY;
-
-    const fullPath = [];
-    let currentPos = { x: startX, y: startY };
-
-    // Прокладаємо маршрут між кожними двома послідовними вейпоінтами з тим же кроком як старт
-    for (let i = 0; i < waypoints.length; i++) {
-      const x = waypoints[i].x + localSpreadX;
-      let y = waypoints[i].y + localSpreadY;
-      if (y > layer.height) y = layer.height;
-      const adjustedWaypoint = {
-        x: x,
-        y: y,
-      };
-      const segment = findPath(navGrid, currentPos, adjustedWaypoint);
-      if (segment.length > 0) {
-        fullPath.push(...segment);
-        currentPos = adjustedWaypoint;
-      }
-    }
-
-    const enemy = new Class(startX, startY, layer, ctx, fullPath);
-    enemy.baseX = startX;
-    enemy.baseY = startY;
-    enemy.x = startX + layer.x;
-    enemy.y = startY + layer.y;
-    enemy.path = fullPath;
-    enemy.currentPathIndex = 0;
-    enemy.vehicle = null;
+    // Створити копії waypoints з унікальними зміщеннями
+    const shiftedWaypoints = waypoints.map((wp, i) => ({
+      x: wp.x + localSpreadX,
+      y: i === 0 ? wp.y + localSpreadY : wp.y,
+    }));
+    const enemy = new Class(
+      shiftedWaypoints[0].x,
+      shiftedWaypoints[0].y,
+      layer,
+      ctx,
+      shiftedWaypoints,
+      navGrid
+    );
 
     squad.push(enemy);
   }

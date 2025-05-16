@@ -6,7 +6,7 @@ class GameState {
     this.drones = [];
   }
   drawScore(ctx, canvas, gameData) {
-    const fontSize = 18;
+    const fontSize = 14;
     const text = `SCORE: ${gameData.score}`;
     ctx.save();
     ctx.font = `${fontSize}px "Press Start 2P", "Pixelify Sans", monospace`;
@@ -68,11 +68,11 @@ class GameState {
 
 class GameData {
   constructor() {
-    this.score = 900000;
+    this.score = 0;
     this.looseScore = 1000;
     this.winScore = 1000;
     this.initialLooseScore = 0;
-    this.currentMission = 5;
+    this.currentMission = 1;
     this.drones = [];
     this.obstacles = [];
     this.bigObstacles = [];

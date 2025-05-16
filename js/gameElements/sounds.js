@@ -119,7 +119,7 @@ export function tryStartDroneSound(currentDrone) {
   ) {
     const droneSound = new Audio("assets/audio/drone/drone-sound.mp3");
     droneSound.loop = true;
-    droneSound.volume = 0.1 * volumeSettings.soundVolume;
+    droneSound.volume = 0.5 * volumeSettings.soundVolume;
     console.log(droneSound.volume);
 
     droneSound

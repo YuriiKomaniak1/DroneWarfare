@@ -30,8 +30,8 @@ await loadObstacles();
 
 const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
-canvas.width = Math.min(window.innerWidth, 900);
-canvas.height = Math.min(window.innerHeight, 900);
+canvas.width = Math.min(window.innerWidth, 1500);
+canvas.height = Math.min(window.innerHeight, 2000);
 
 initUIControls({
   canvas,
@@ -158,7 +158,7 @@ const winLoseConditions = {
     return allDronesDead || scoreTooLow;
   },
 
-  addedFunction(vehicles) {
+  addedFunction(vehicles, enemies) {
     vehicles.forEach((vehicle) => {
       if (vehicle.currentWaypointIndex === 4)
         vehicle.disembark(1450, 1650, navGrid);

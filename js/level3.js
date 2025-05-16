@@ -30,8 +30,8 @@ await loadObstacles();
 
 const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
-canvas.width = Math.min(window.innerWidth, 900);
-canvas.height = Math.min(window.innerHeight, 900);
+canvas.width = Math.min(window.innerWidth, 1500);
+canvas.height = Math.min(window.innerHeight, 2000);
 
 initUIControls({
   canvas,
@@ -51,14 +51,12 @@ const vehicleNavGrid = new NavigationGrid(layer1, 36, gameData.bigObstacles);
 function createEnemySquad(riflemans, mashinegunners, grenadiers, startX) {
   let waypoints = [];
   waypoints = [
-    { x: startX, y: 101 },
+    { x: startX, y: 60 },
     { x: startX + Math.random() * 200 - 100, y: 1500 },
     { x: startX + Math.random() * 200 - 100, y: 3000 },
   ];
 
   const squad = createRifleSquad(
-    startX,
-    60,
     300,
     50,
     layer1,
@@ -133,6 +131,7 @@ const winLoseConditions = {
 
     return allDronesDead || scoreTooLow;
   },
+  addedFunction(vehicles, enemies) {},
 };
 
 createAnimationLoop(
