@@ -294,8 +294,8 @@ export class MediumDrone extends Drone {
     this.remainingCapacity = 1.6 + gameData.mediumDroneCapacityUpgrade * 0.08;
     this.hp = 5 + gameData.mediumDroneHPUpgrade;
     this.initialHP = 5 + gameData.mediumDroneHPUpgrade;
-    this.visibility = 6;
-    this.initialVisibility = 6;
+    this.visibility = 10;
+    this.initialVisibility = 10;
     this.frameWidth = 1024;
     this.frameHeight = 1024;
     this.speed = 1 + gameData.mediumDroneSpeedUpgrade * 0.06;
@@ -316,12 +316,12 @@ export class BigDrone extends Drone {
     this.remainingCapacity = 6.4 + gameData.bigDroneCapacityUpgrade * 0.2;
     this.hp = 9 + gameData.bigDroneHPUpgrade;
     this.initialHP = 9 + gameData.bigDroneHPUpgrade;
-    this.visibility = 10;
-    this.initialVisibility = 10;
+    this.visibility = 20;
+    this.initialVisibility = 20;
     this.frameWidth = 250;
     this.frameHeight = 250;
     this.speed = 0.8 + gameData.bigDroneSpeedUpgrade * 0.04;
-    this.hangers = 30;
+    this.hangers = 36;
     this.initialHangers = 30;
     this.type = "big";
     this.imageScale = 3;

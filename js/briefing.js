@@ -52,6 +52,15 @@ document.getElementById("start-button").addEventListener("click", () => {
     case 6:
       href = "level6.html";
       break;
+    case 7:
+      href = "level7.html";
+      break;
+    case 8:
+      href = "level8.html";
+      break;
+    case 9:
+      href = "level9.html";
+      break;
   }
   localStorage.setItem("playDroneMusic", "true");
   window.location.href = href;

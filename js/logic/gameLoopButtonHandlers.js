@@ -40,11 +40,13 @@ export function winLoseTest(
   const totalWinModal = document.getElementById("totalWinModal");
   if (winLoseConditions.lose(gameState, gameData, enemies, vehicles)) {
     if (!winCondition) {
+      gameData.timer = null;
       gameData.looseScore = 0;
       const loseModal = document.getElementById("loseModal");
       if (loseModal) loseModal.style.visibility = "visible";
       togglePause();
     } else {
+      gameData.timer = null;
       if (totalWinModal) totalWinModal.style.visibility = "visible";
     }
   } else if (
@@ -52,6 +54,7 @@ export function winLoseTest(
     !gameStopped
   ) {
     winCondition = true;
+    gameData.timer = null;
     togglePause();
     gameStopped = true;
     const winModal = document.getElementById("winModal");
@@ -59,7 +62,7 @@ export function winLoseTest(
   }
   if (totalWin()) {
     togglePause();
-
+    gameData.timer = null;
     if (totalWinModal) totalWinModal.style.visibility = "visible";
   }
   function totalWin() {

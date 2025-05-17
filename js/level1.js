@@ -85,7 +85,6 @@ function createEnemySquad(riflemans, mashinegunners, grenadiers, main = true) {
     grenadiers,
     0
   );
-  console.log(squad);
   enemies.push(...squad);
 }
 createEnemySquad(3, 1, 1);

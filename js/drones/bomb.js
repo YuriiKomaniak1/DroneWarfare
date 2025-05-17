@@ -72,7 +72,7 @@ export class Bomb {
     this.armorPenetration = 0;
     this.deployed = false;
     this.class = "bomb";
-    this.wheelWidth = 0.4;
+    this.wheelWidth = 0.5;
     this.randomRotation = Math.random() * Math.PI * 2;
     this.clusterDropped = false;
     this.gameData = gameData;
@@ -325,6 +325,19 @@ export class Bomb {
 
     return success;
   }
+  isInTrench(x, y) {
+    for (const trench of this.gameData.trenches) {
+      if (
+        x >= trench.x &&
+        x <= trench.x + trench.width &&
+        y >= trench.y &&
+        y <= trench.y + trench.height
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
 
 // осколкова бомба
@@ -341,6 +354,16 @@ export class FragBomb extends Bomb {
 
   checkCollision(enemy) {
     if (this.isOnRoof()) return false;
+
+    if (this.gameData.trenches) {
+      const bombInTrench = this.isInTrench(
+        this.x - this.layer.x,
+        this.y - this.layer.y
+      );
+      const enemyInTrench = this.isInTrench(enemy.baseX, enemy.baseY);
+      if (bombInTrench !== enemyInTrench) return false;
+    }
+
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     let hitStatus = false;
     if (!enemy.vehicle) {
@@ -419,6 +442,16 @@ export class HeBomb extends Bomb {
 
   checkCollision(enemy) {
     if (this.isOnRoof()) return false;
+
+    if (this.gameData.trenches) {
+      const bombInTrench = this.isInTrench(
+        this.x - this.layer.x,
+        this.y - this.layer.y
+      );
+      const enemyInTrench = this.isInTrench(enemy.baseX, enemy.baseY);
+      if (bombInTrench !== enemyInTrench) return false;
+    }
+
     let hitStatus = false;
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     if (!enemy.vehicle) {
@@ -508,7 +541,7 @@ export class FootMine extends Bomb {
   checkMineCollision(enemy) {
     if (this.isOnRoof()) return false;
     if (
-      Math.hypot(this.x - enemy.x, this.y - enemy.y) < 6 &&
+      Math.hypot(this.x - enemy.x, this.y - enemy.y) < 7 &&
       !enemy.dead &&
       !enemy.vehicle
     ) {
@@ -546,7 +579,7 @@ export class FootMine extends Bomb {
 
 // фугасна міна
 export class TankMine extends Bomb {
-  static weight = 0.45 * difficulty.weight;
+  static weight = 0.38 * difficulty.weight;
   static type = "tankMine";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
@@ -645,7 +678,7 @@ export class MagnetMine extends Bomb {
 }
 // шрапнельна бомба
 export class ShrapnelBomb extends Bomb {
-  static weight = 0.28 * difficulty.weight;
+  static weight = 0.22 * difficulty.weight;
   static type = "shrapnel";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
@@ -758,6 +791,16 @@ export class HeClusterMunition extends Bomb {
   }
   checkCollision(enemy) {
     if (this.isOnRoof()) return false;
+
+    if (this.gameData.trenches) {
+      const bombInTrench = this.isInTrench(
+        this.x - this.layer.x,
+        this.y - this.layer.y
+      );
+      const enemyInTrench = this.isInTrench(enemy.baseX, enemy.baseY);
+      if (bombInTrench !== enemyInTrench) return false;
+    }
+
     let hitStatus = false;
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     if (!enemy.vehicle) {

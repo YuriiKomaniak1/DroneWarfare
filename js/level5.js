@@ -7,14 +7,14 @@ import { BMP2, BMP1, Guntruck, Tigr } from "./enemies/vehicle.js";
 const gameData = JSON.parse(localStorage.getItem("gameData"));
 let enemies = [];
 let vehicles = [];
-gameData.looseScore = 1000;
-gameData.initialLooseScore = 800;
+gameData.looseScore = 1147;
+gameData.initialLooseScore = 1000;
 gameData.winScore = 2800;
 
 const condition = { start: false };
 setTimeout(() => {
   condition.start = true;
-}, 60000);
+}, 20000);
 
 async function loadObstacles() {
   const response = await fetch("js/levels/level5/obstacles.json");

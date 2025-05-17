@@ -254,6 +254,8 @@ export class Vehicle {
         other === this ||
         other.isStopped ||
         other.isBurning ||
+        this.isStopped ||
+        this.isBurning ||
         this.static ||
         other.static
       )
@@ -646,12 +648,22 @@ export class Vehicle {
           const rawX = this.baseX + offsetX;
           const rawY = this.baseY + offsetY;
 
-          const safeSpot = this.getNearestWalkableTile(
+          let safeSpot = this.getNearestWalkableTile(
             rawX,
             rawY,
             this.crewNawgrid
           );
-          if (!safeSpot) return; // якщо взагалі немає куди висадити
+
+          // Якщо не знайдено або за межами карти — fallback на координати техніки
+          if (
+            !safeSpot ||
+            safeSpot.x < 0 ||
+            safeSpot.y < 0 ||
+            safeSpot.x >= this.layer.width ||
+            safeSpot.y >= this.layer.height
+          ) {
+            safeSpot = { x: this.baseX, y: this.baseY };
+          }
 
           enemy.baseX = safeSpot.x;
           enemy.baseY = safeSpot.y;

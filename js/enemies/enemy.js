@@ -70,7 +70,7 @@ export class Enemy {
     this.score = 51;
     this.scored = false;
     this.hasBailedOut = false;
-    this.distance = 0.4 + Math.random() * 0.5;
+    this.distance = 0.4 + Math.random() * 0.4;
     this.navigationsGrid = null; // Сітка навігації
     this.fireSound = new Audio("assets/audio/fire/rifleman-sound.mp3");
     this.fireSound.loop = true;
@@ -112,16 +112,23 @@ export class Enemy {
           return;
         }
       }
+
+      // модифікація швидкості повзання\
+      let speedModifier = 1;
+      if (this.crawl) {
+        speedModifier = 0.4;
+        if (Math.random() < 0.002) this.crawl = false;
+      }
       if (!this.static) {
-        // модифікація швидкості повзання\
-        let speedModifier = 1;
-        if (this.crawl) {
-          speedModifier = 0.4;
-          if (Math.random() < 0.002) this.crawl = false;
-        }
         // рух по навігації
-        if (!this.dead && !this.isFiring) {
+        if (
+          !this.dead &&
+          !this.isFiring &&
+          this.path.length > 0 &&
+          this.currentPathIndex < this.path.length
+        ) {
           const target = this.path[this.currentPathIndex];
+          if (!target) return;
           const dx = target.x - this.baseX;
           const dy = target.y - this.baseY;
           const distance = Math.hypot(dx, dy);
@@ -172,6 +179,7 @@ export class Enemy {
       for (let other of allEnemies) {
         if (
           this.static ||
+          other.static ||
           this.dead ||
           other === this ||
           other.dead ||
@@ -265,7 +273,7 @@ export class Enemy {
         this.ctx.rotate(this.rotationAngle);
         this.ctx.drawImage(
           this.image,
-          this.static ? 0 : this.frameX * this.width,
+          (this.static ? 2 : this.frameX) * this.width,
           this.runframeY * this.height,
           this.width,
           this.height,
@@ -281,7 +289,7 @@ export class Enemy {
         this.ctx.rotate(this.rotationAngle);
         this.ctx.drawImage(
           this.image,
-          this.frameX * this.width,
+          (this.static ? 2 : this.frameX) * this.width,
           0 * this.height,
           this.width,
           this.height,

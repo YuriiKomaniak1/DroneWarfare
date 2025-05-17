@@ -19,8 +19,25 @@ class GameState {
     const paddingTop = 20;
     ctx.strokeText(text, centerX, paddingTop);
     ctx.fillText(text, centerX, paddingTop);
+
+    if (gameData.timer) {
+      // 🕒 Зворотній таймер
+      const totalTime = gameData.timer.totalTime * 60 * 1000; // 10 хв у мс
+      const elapsed = Date.now() - gameData.timer.startTime;
+      const remaining = Math.max(0, totalTime - elapsed);
+
+      const minutes = Math.floor(remaining / 60000);
+      const seconds = Math.floor((remaining % 60000) / 1000);
+      const timeText = `TIME: ${minutes}:${seconds
+        .toString()
+        .padStart(2, "0")}`;
+
+      ctx.strokeText(timeText, centerX, paddingTop + 22);
+      ctx.fillText(timeText, centerX, paddingTop + 22);
+    }
     ctx.restore();
   }
+
   updateDrones(gameData, SmallDrone, MediumDrone, BigDrone) {
     gameData.drones.forEach((drone, index) => {
       if (drone) {
@@ -68,11 +85,11 @@ class GameState {
 
 class GameData {
   constructor() {
-    this.score = 0;
+    this.score = 900000;
     this.looseScore = 1000;
     this.winScore = 1000;
     this.initialLooseScore = 0;
-    this.currentMission = 1;
+    this.currentMission = 9;
     this.drones = [];
     this.obstacles = [];
     this.bigObstacles = [];
@@ -107,6 +124,8 @@ class GameData {
     this.shapedClusterBombUpgrade = 0;
     this.upgradeGap = 0;
     this.gapScale = 500;
+    this.trenches = null;
+    this.timer = { startTime: null, totalTime: null };
   }
 }
 export const gameData = new GameData();

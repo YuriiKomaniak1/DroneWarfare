@@ -497,6 +497,7 @@ export class MTLBKPVT extends Vehicle {
     this.hasTurret = true;
     this.turretOffsetX = 0;
     this.turretOffsetY = -0.3;
+    this.droneSpottingChanse = 5;
     this.fireRate = 10;
     this.fireDistance = 420;
     this.fireSound = new Audio("assets/audio/fire/heavyMachinegun.mp3");
@@ -533,6 +534,7 @@ export class KPVT extends Vehicle {
     this.static = true;
     this.fireDistance = 420;
     this.turretRotateRange = 45;
+    this.droneSpottingChanse = 8;
     this.fireSound = new Audio("assets/audio/fire/heavyMachinegun.mp3");
     this.driveSound = new VehicleSoundPlayer(
       "assets/audio/vehicle/tank.mp3",
@@ -567,6 +569,7 @@ export class MTLBZU23 extends Vehicle {
     this.fireRate = 20;
     this.vehiclefireOffsetY = 0.15;
     this.fireDistance = 450;
+    this.droneSpottingChanse = 5;
     this.fireSound = new Audio("assets/audio/fire/zu23.mp3");
     this.driveSound = new VehicleSoundPlayer(
       "assets/audio/vehicle/tank.mp3",
@@ -601,7 +604,7 @@ export class ZU23 extends Vehicle {
     this.fireDistance = 450;
     this.turretRotateRange = 45;
     this.fireSound.volume = 1;
-
+    this.droneSpottingChanse = 5;
     this.fireSoundRateMin = 1;
     this.fireSoundRateMax = 2;
     this.fireSound = new Audio("assets/audio/fire/zu23.mp3");
@@ -638,6 +641,7 @@ export class Shilka extends Vehicle {
     this.fireRate = 30;
     this.fireDistance = 450;
     this.vehiclefireOffsetY = 0.15;
+    this.droneSpottingChanse = 6;
     this.fireSound = new Audio("assets/audio/fire/zu23.mp3");
     this.driveSound = new VehicleSoundPlayer(
       "assets/audio/vehicle/tank.mp3",

@@ -15,7 +15,7 @@ gameData.winScore = 2800;
 const condition = { start: false };
 setTimeout(() => {
   condition.start = true;
-}, 60000);
+}, 20000);
 
 async function loadObstacles() {
   const response = await fetch("js/levels/level3/obstacles.json");
