@@ -4,6 +4,9 @@ const vehicleExplosionImage = new Image();
 vehicleExplosionImage.src = "./assets/img/effects/vehicleExplosion.png";
 const vehicleFireImage = new Image();
 vehicleFireImage.src = "./assets/img/effects/vehicleFire.png";
+const protectionImage = new Image();
+protectionImage.src = "./assets/img/vehicles/protection.png";
+
 import { Rifleman, Crew, createRifleSquad } from "./enemy.js";
 import { NavigationGrid, findPath } from "../logic/navigation.js";
 import { VehicleSoundPlayer } from "../gameElements/sounds.js";
@@ -41,6 +44,7 @@ export class Vehicle {
     this.imageExplosion = vehicleExplosionImage;
     this.imageFire = vehicleFireImage;
     this.imageGasSmoke = gasSmokeImage;
+    this.imageProtection = protectionImage;
     this.frameTimer = 0;
     this.frameX = 0;
     this.gasSmokeFrames = 7;
@@ -84,6 +88,7 @@ export class Vehicle {
     this.armor = 0;
     this.score = 100;
     this.looseScore = this.score;
+    this.winScore = this.score;
     this.scored = false;
     this.fireDistance = 280;
     this.fireRate = 5;
@@ -119,15 +124,19 @@ export class Vehicle {
     this.addedToObstacles = false;
     this.static = false;
     this.disembarked = false;
+    this.hasDriver = true;
     this.bailOutX = null;
     this.bailOutY = null;
+    this.protected = false;
+    this.protectionWidth = 300;
+    this.protectionScale = 0.25;
   }
 
   update(vehicles, enemies, canvas, gameState, gameData, training) {
     // списування очок
     if (this.isBurning && !this.scored && !training) {
       gameData.score += this.score;
-      gameData.winScore -= this.score;
+      gameData.winScore -= this.winScore;
       this.scored = true;
     }
 
@@ -369,6 +378,20 @@ export class Vehicle {
       this.height * this.scale
     );
     this.ctx.restore();
+    //малюємо захист
+    if (this.static && this.protected) {
+      this.ctx.save();
+      this.ctx.translate(this.x, this.y);
+      this.ctx.drawImage(
+        this.imageProtection,
+        (-this.protectionWidth * this.protectionScale) / 2,
+        (-this.protectionWidth * this.protectionScale) / 2,
+        this.protectionWidth * this.protectionScale,
+        this.protectionWidth * this.protectionScale
+      );
+      this.ctx.restore();
+    }
+
     // малюємо башту
     if (this.hasTurret) {
       this.ctx.save();
@@ -532,18 +555,19 @@ export class Vehicle {
   embark(enemies, navGrid, riflemans, mashinegunners, grenadiers, crew) {
     // Спочатку водія
     const DriverClass = this.hasCrew ? Crew : Rifleman;
-    const driver = new DriverClass(
-      this.baseX,
-      this.baseY,
-      this.layer,
-      this.ctx,
-      this.waypoints,
-      navGrid
-    );
-
-    driver.vehicle = this;
-    enemies.push(driver);
-    this.driver = driver;
+    if (this.hasDriver) {
+      const driver = new DriverClass(
+        this.baseX,
+        this.baseY,
+        this.layer,
+        this.ctx,
+        this.waypoints,
+        navGrid
+      );
+      driver.vehicle = this;
+      enemies.push(driver);
+      this.driver = driver;
+    }
     if (this.hasGunner) {
       const gunner = new DriverClass(
         this.baseX,

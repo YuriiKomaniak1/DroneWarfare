@@ -222,3 +222,22 @@ export function drawNavigationGrid(grid, ctx, layer) {
 
   ctx.restore();
 }
+
+export function drawTrenches(ctx, layer, gameData) {
+  if (!gameData.trenches || !Array.isArray(gameData.trenches)) return;
+
+  ctx.save();
+  ctx.strokeStyle = "rgba(100, 100, 255, 0.6)";
+  ctx.lineWidth = 2;
+  ctx.fillStyle = "rgba(100, 100, 255, 0.2)";
+
+  gameData.trenches.forEach((trench) => {
+    const screenX = trench.x + layer.x;
+    const screenY = trench.y + layer.y;
+
+    ctx.fillRect(screenX, screenY, trench.width, trench.height);
+    ctx.strokeRect(screenX, screenY, trench.width, trench.height);
+  });
+
+  ctx.restore();
+}

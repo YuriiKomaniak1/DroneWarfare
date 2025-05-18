@@ -10,6 +10,7 @@ let vehicles = [];
 gameData.looseScore = 500;
 gameData.initialLooseScore = 500;
 gameData.winScore = 1500;
+gameData.initialWinScore = 1500;
 
 const condition = { start: false };
 setTimeout(() => {

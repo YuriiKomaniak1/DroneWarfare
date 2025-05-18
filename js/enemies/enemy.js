@@ -82,6 +82,7 @@ export class Enemy {
     this.rotateTimer = 0;
     this.currentWaypointIndex = 0;
     this.looseScore = this.score;
+    this.winScore = this.score;
     this.ended = false;
     this.navigationsGrid = navigaionsGrid;
     this.waypoints = waypoints;
@@ -91,7 +92,7 @@ export class Enemy {
     //  нарахування очок
     if (!this.scored && this.dead && !training) {
       gameData.score += this.score;
-      gameData.winScore -= this.score;
+      gameData.winScore -= this.winScore;
       this.scored = true;
     }
     //видалення юніта, який успішно дійшов

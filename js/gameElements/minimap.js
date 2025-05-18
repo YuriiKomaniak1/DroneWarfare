@@ -26,17 +26,30 @@ export class Minimap {
       6,
       6
     );
-    // полоса провалу місії
-    this.ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
+    // полоса Перемоги місії
+    this.ctx.fillStyle = "rgba(149, 175, 101, 0.3)";
     this.ctx.fillRect(this.mapX + this.width + 2, this.mapY, 6, this.height);
     this.ctx.fillStyle = "rgba(160, 243, 6, 0.6)";
     this.ctx.fillRect(
       this.mapX + this.width + 2,
       this.mapY + this.height,
       6,
-      Math.min(
-        -(this.height * gameData.looseScore) / gameData.initialLooseScore,
-        0
+      Math.max(
+        -(this.height * (1 - gameData.winScore / gameData.initialWinScore)),
+        -this.height
+      )
+    );
+    // полоса поразки місії
+    this.ctx.fillStyle = "rgba(192, 107, 74, 0.3)";
+    this.ctx.fillRect(this.mapX + this.width + 9, this.mapY, 6, this.height);
+    this.ctx.fillStyle = "rgba(243, 73, 6, 0.6)";
+    this.ctx.fillRect(
+      this.mapX + this.width + 9,
+      this.mapY + this.height,
+      6,
+      Math.max(
+        -(this.height * (1 - gameData.looseScore / gameData.initialLooseScore)),
+        -this.height
       )
     );
 
@@ -70,7 +83,7 @@ export class Minimap {
           }
           if (enemy.type === "machinegunner") {
             this.ctx.fillStyle = "rgb(123, 2, 2)";
-            this.ctx.fillRect(tempX, tempY, 4, 4);
+            this.ctx.fillRect(tempX, tempY, 3, 3);
           }
         }
       }
@@ -95,9 +108,23 @@ export class Minimap {
             vehicle.type === "uaz452" ||
             vehicle.type === "jeep"
           ) {
-            this.ctx.fillStyle = "rgb(238, 117, 117)";
+            this.ctx.fillStyle =
+              vehicle.mark !== "goal"
+                ? "rgb(238, 117, 117)"
+                : "rgb(214, 202, 37)";
             this.ctx.fillRect(tempX, tempY, 3, 6);
           }
+
+          if (
+            vehicle.type === "crate" ||
+            vehicle.type === "kpvt" ||
+            vehicle.type === "zu23"
+          ) {
+            this.ctx.fillStyle =
+              vehicle.mark !== "goal" ? "rgb(123, 2, 2)" : "rgb(214, 202, 37)";
+            this.ctx.fillRect(tempX, tempY, 4, 4);
+          }
+
           if (
             vehicle.type === "bmp2" ||
             vehicle.type === "bmp1" ||
@@ -114,6 +141,7 @@ export class Minimap {
             this.ctx.fillStyle = "hsl(0, 86.40%, 51.00%)";
             this.ctx.fillRect(tempX, tempY, 4, 6);
           }
+
           if (
             vehicle.type === "guntruck" ||
             vehicle.type === "tigr" ||
@@ -121,7 +149,6 @@ export class Minimap {
             vehicle.type === "mtlbKPVT" ||
             vehicle.type === "kpvt" ||
             vehicle.type === "mtlbZU23" ||
-            vehicle.type === "zu23" ||
             vehicle.type === "shilka"
           ) {
             this.ctx.fillStyle = "rgb(123, 2, 2)";

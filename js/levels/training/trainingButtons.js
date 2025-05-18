@@ -12,7 +12,7 @@ export function drawMenuButtons(ctx, minimap, training) {
   } else if (getWinCondition()) {
     labels = ["Меню", "Перемога", "Пауза"];
   } else {
-    labels = ["Меню", "Назад", "Пауза"]; // для звичайних місій
+    labels = ["Меню"]; // для звичайних місій
   }
   const buttonWidth = minimap.width;
   const buttonHeight = 36;
@@ -86,7 +86,9 @@ export function handleMenuClick(e, canvas, gameData, openTrainingModal) {
             openEnemiesModal();
             break;
           case "Меню":
-            window.location.href = "index.html";
+            const pauseModal = document.getElementById("pauseModal");
+            if (pauseModal) pauseModal.style.visibility = "visible";
+            togglePause();
             break;
           case "Назад":
             localStorage.setItem("playBriefingMusic", "true");

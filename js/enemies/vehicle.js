@@ -525,7 +525,6 @@ export class KPVT extends Vehicle {
     this.gassmokeoffsetX = 0.7;
     this.smokeScale = 0.6;
     this.score = 550;
-    this.hasCrew = true;
     this.hasGunner = true;
     this.hasTurret = true;
     this.turretOffsetX = 0;
@@ -535,11 +534,37 @@ export class KPVT extends Vehicle {
     this.fireDistance = 420;
     this.turretRotateRange = 45;
     this.droneSpottingChanse = 8;
+    this.hasDriver = false;
     this.fireSound = new Audio("assets/audio/fire/heavyMachinegun.mp3");
     this.driveSound = new VehicleSoundPlayer(
       "assets/audio/vehicle/tank.mp3",
       0.4
     );
+  }
+}
+
+export class Crate extends Vehicle {
+  constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
+    super(x, y, layer, ctx, waypoints, navigaionsGrid);
+    this.image = crate;
+    this.x = x;
+    this.y = y;
+    this.width = 60;
+    this.height = 60;
+    this.type = "crate";
+    this.scale = 0.5;
+    this.speed = 0.3;
+    this.score = 1000;
+    this.winScore = this.score;
+    this.static = true;
+    this.proiected = true;
+    this.fireSound = new Audio("assets/audio/fire/heavyMachinegun.mp3");
+    this.stoppedFrame = 1;
+    this.destroyedFrame = 2;
+    this.armor = 1;
+    this.protectionScale = 0.15;
+    this.hasDriver = false;
+    this.mark = "goal";
   }
 }
 

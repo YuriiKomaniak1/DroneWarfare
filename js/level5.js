@@ -7,9 +7,10 @@ import { BMP2, BMP1, Guntruck, Tigr } from "./enemies/vehicle.js";
 const gameData = JSON.parse(localStorage.getItem("gameData"));
 let enemies = [];
 let vehicles = [];
-gameData.looseScore = 1147;
-gameData.initialLooseScore = 1000;
-gameData.winScore = 2800;
+gameData.looseScore = 918;
+gameData.initialLooseScore = 918;
+gameData.winScore = 3670;
+gameData.initialWinScore = 3670;
 
 const condition = { start: false };
 setTimeout(() => {

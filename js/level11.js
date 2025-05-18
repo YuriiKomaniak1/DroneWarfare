@@ -1,16 +1,17 @@
 import { Layer } from "./layers/layer.js";
 import { NavigationGrid, findPath } from "./logic/navigation.js";
+import { createRifleSquad } from "./enemies/enemy.js";
 import { createAnimationLoop } from "./logic/gameloop.js";
 import { initUIControls } from "./logic/uicontrols.js";
-import { BTR82, BMP2, MTLBKPVT } from "./enemies/vehicle.js";
+import { BMP3, MLTBKPVT, BMP2, BTR82, MTLBKPVT } from "./enemies/vehicle.js";
 const gameData = JSON.parse(localStorage.getItem("gameData"));
 
 let enemies = [];
 let vehicles = [];
-gameData.looseScore = 1180;
-gameData.initialLooseScore = 1180;
-gameData.winScore = 4700;
-gameData.initialWinScore = 4700;
+gameData.looseScore = 1000;
+gameData.initialLooseScore = 1000;
+gameData.winScore = 4030;
+gameData.initialWinScore = 4030;
 
 const condition = { start: false };
 setTimeout(() => {
@@ -18,12 +19,11 @@ setTimeout(() => {
 }, 20000);
 
 async function loadObstacles() {
-  const response = await fetch("js/levels/level2/obstacles.json");
-  const response2 = await fetch("js/levels/level2/obstacles.json");
-  const response3 = await fetch("js/levels/level2/bombObstacles.json");
+  const response = await fetch("js/levels/level1/obstacles.json");
+  const response2 = await fetch("js/levels/level1/bombObstacles.json");
   gameData.obstacles = await response.json();
-  gameData.bigObstacles = await response2.json();
-  gameData.bombObstacles = await response3.json();
+  gameData.bigObstacles = [...gameData.obstacles];
+  gameData.bombObstacles = await response2.json();
   localStorage.setItem("gameData", JSON.stringify(gameData));
 }
 await loadObstacles();
@@ -40,35 +40,63 @@ initUIControls({
 });
 
 const layerBottom = new Image();
-layerBottom.src = "assets/img/grounds/level2bottom.png";
+layerBottom.src = "assets/img/grounds/level1bottom.png";
 const layerTop = new Image();
-layerTop.src = "assets/img/grounds/level2top.png";
-const layer1 = new Layer(layerBottom, canvas, 1800, 3400, ctx);
-const layer2 = new Layer(layerTop, canvas, 1800, 3400, ctx);
+layerTop.src = "assets/img/grounds/level1top.png";
+const layer1 = new Layer(layerBottom, canvas, 2000, 3000, ctx);
+const layer2 = new Layer(layerTop, canvas, 2000, 3000, ctx);
 const navGrid = new NavigationGrid(layer1, 15, gameData.obstacles);
 const vehicleNavGrid = new NavigationGrid(layer1, 36, gameData.bigObstacles);
 
+function createEnemySquad(riflemans, mashinegunners, grenadiers, startX) {
+  let waypoints = [];
+  waypoints = [
+    { x: startX, y: 60 },
+    { x: startX + Math.random() * 200 - 100, y: 1500 },
+    { x: startX + Math.random() * 200 - 100, y: 3000 },
+  ];
+
+  const squad = createRifleSquad(
+    400,
+    50,
+    layer1,
+    ctx,
+    navGrid,
+    waypoints,
+    riflemans,
+    mashinegunners,
+    grenadiers,
+    0
+  );
+  enemies.push(...squad);
+}
+createEnemySquad(7, 2, 1, 500);
+createEnemySquad(7, 2, 1, 1000);
+createEnemySquad(7, 2, 1, 1500);
+
 setTimeout(() => {
-  addVehicle(MTLBKPVT, 350, 0, 0, 2);
+  addVehicle(MTLBKPVT, 750, 2, 0, 0);
 }, 8500);
+setTimeout(() => {
+  addVehicle(BMP3, 400, 0, 0, 0, 2);
+}, 6500);
 
 setTimeout(() => {
-  addVehicle(BTR82, 1200, 4, 1, 1, 1);
-}, 19000);
-
+  addVehicle(BTR82, 1000, 0, 0, 0, 1);
+}, 6000);
 setTimeout(() => {
-  addVehicle(MTLBKPVT, 1550, 0, 0, 2);
-}, 12500);
-
-addVehicle(BMP2, 500, 4, 1, 1, 2);
-
+  addVehicle(BMP2, 1150, 1, 0, 0, 0);
+}, 9000);
 setTimeout(() => {
-  addVehicle(BTR82, 1000, 4, 1, 1, 2);
+  addVehicle(BTR82, 1000, 0, 0, 0, 1);
 }, 6000);
 
 setTimeout(() => {
-  addVehicle(BMP2, 1400, 4, 1, 1, 2);
-}, 14000);
+  addVehicle(BMP3, 1600, 0, 0, 0, 2);
+}, 7000);
+setTimeout(() => {
+  addVehicle(MTLBKPVT, 1750, 2, 0, 0);
+}, 8500);
 
 function addVehicle(
   Class,
@@ -82,7 +110,7 @@ function addVehicle(
     { x: startX, y: 50 },
     { x: startX, y: 101 },
     { x: startX, y: 1000 },
-    { x: startX, y: 3400 },
+    { x: startX, y: 3000 },
   ];
   let vehicle = new Class(
     waypoints[0].x,
@@ -94,6 +122,7 @@ function addVehicle(
   );
   // === Шукаємо шлях один раз при створенні ===
   vehicle.path = findPath(vehicleNavGrid, waypoints[0], waypoints[1]);
+  vehicle.speed = 0.18;
   vehicle.currentPathIndex = 0;
   vehicle.embark(enemies, navGrid, riflemans, mashinegunners, grenadiers, crew);
   vehicles.push(vehicle);

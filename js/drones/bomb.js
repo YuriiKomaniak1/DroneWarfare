@@ -410,6 +410,14 @@ export class FragBomb extends Bomb {
   }
   checkVehicleCollision(vehicle, vehicles, gameData, NavigationGrid) {
     if (this.isOnRoof()) return vehicle;
+    if (this.gameData.trenches) {
+      const bombInTrench = this.isInTrench(
+        this.x - this.layer.x,
+        this.y - this.layer.y
+      );
+      const enemyInTrench = this.isInTrench(vehicle.baseX, vehicle.baseY);
+      if (bombInTrench !== enemyInTrench) return vehicle;
+    }
     if (vehicle.armor === 0) {
       if (
         this.distanceToVehicle(0 + this.gameData.fragBombUpgrade, vehicle) &&
@@ -465,6 +473,14 @@ export class HeBomb extends Bomb {
   }
   checkVehicleCollision(vehicle, vehicles, gameData, NavigationGrid) {
     if (this.isOnRoof()) return vehicle;
+    if (this.gameData.trenches) {
+      const bombInTrench = this.isInTrench(
+        this.x - this.layer.x,
+        this.y - this.layer.y
+      );
+      const enemyInTrench = this.isInTrench(vehicle.baseX, vehicle.baseY);
+      if (bombInTrench !== enemyInTrench) return vehicle;
+    }
     if (vehicle.armor === 0) {
       if (this.distanceToVehicle(this.gameData.heBombUpgrade, vehicle)) {
         vehicle.isBurningF(vehicles, gameData, NavigationGrid);
@@ -814,6 +830,14 @@ export class HeClusterMunition extends Bomb {
   }
   checkVehicleCollision(vehicle, vehicles, gameData, NavigationGrid) {
     if (this.isOnRoof()) return vehicle;
+    if (this.gameData.trenches) {
+      const bombInTrench = this.isInTrench(
+        this.x - this.layer.x,
+        this.y - this.layer.y
+      );
+      const enemyInTrench = this.isInTrench(vehicle.baseX, vehicle.baseY);
+      if (bombInTrench !== enemyInTrench) return vehicle;
+    }
     if (vehicle.armor === 0) {
       if (this.distanceToVehicle(0, vehicle)) {
         vehicle.isBurningF(vehicles, gameData, NavigationGrid);

@@ -14,7 +14,7 @@ import {
   switchToNextAvailableBomb,
 } from "./controls.js";
 import { dropBomb } from "../drones/bomb.js";
-import { drawNavigationGrid } from "./navigation.js";
+import { drawNavigationGrid, drawTrenches } from "./navigation.js";
 import { drawMenuButtons } from "../levels/training/trainingButtons.js";
 import { DroneScope } from "../gameElements/droneScope.js";
 import { Minimap } from "../gameElements/minimap.js";
@@ -269,6 +269,7 @@ export function createAnimationLoop(
       // if (vehicles[0]) {
       //   drawNavigationGrid(vehicles[0].crewNawgrid, ctx, layer1);
       // }
+      // drawTrenches(ctx, layer1, gameData);
       // відмалльовка інтерфейсу
       droneScope.draw(currentDrone);
       minimap.draw(gameData);

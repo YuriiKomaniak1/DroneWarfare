@@ -17,9 +17,10 @@ const gameData = JSON.parse(localStorage.getItem("gameData"));
 
 let enemies = [];
 let vehicles = [];
-gameData.looseScore = 1400;
-gameData.initialLooseScore = 1400;
-gameData.winScore = 4000;
+gameData.looseScore = 980;
+gameData.initialLooseScore = 980;
+gameData.winScore = 3900;
+gameData.initialWinScore = 3900;
 
 const condition = { start: false };
 setTimeout(() => {
@@ -185,7 +186,10 @@ function enemy(riflemans, mashinegunners, grenadiers, waypoints) {
     grenadiers,
     0
   );
-  squad.forEach((enemy) => (enemy.static = true));
+  squad.forEach((enemy) => {
+    enemy.static = true;
+    enemy.winScore = 0;
+  });
   enemies.push(...squad);
 }
 
@@ -202,6 +206,7 @@ function addVehicle(Class, waypoints, riflemans, mashinegunners, grenadiers) {
   // === Шукаємо шлях один раз при створенні ===
   vehicle.path = findPath(vehicleNavGrid, waypoints[0], waypoints[1]);
   vehicle.currentPathIndex = 0;
+  if (vehicle.static) vehicle.winScore;
   vehicle.speed = 0.4;
   vehicle.embark(enemies, navGrid, riflemans, mashinegunners, grenadiers, 0);
   vehicles.push(vehicle);

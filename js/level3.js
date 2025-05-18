@@ -8,9 +8,10 @@ const gameData = JSON.parse(localStorage.getItem("gameData"));
 
 let enemies = [];
 let vehicles = [];
-gameData.looseScore = 1000;
-gameData.initialLooseScore = 800;
-gameData.winScore = 2800;
+gameData.looseScore = 758;
+gameData.initialLooseScore = 758;
+gameData.winScore = 3032;
+gameData.initialWinScore = 3032;
 
 const condition = { start: false };
 setTimeout(() => {
