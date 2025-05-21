@@ -541,7 +541,7 @@ export class ShapedBomb extends Bomb {
 
 // Протипіхотна міна
 export class FootMine extends Bomb {
-  static weight = 0.08 * difficulty.weight;
+  static weight = 0.075 * difficulty.weight;
   static type = "footMine";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
@@ -595,7 +595,7 @@ export class FootMine extends Bomb {
 
 // фугасна міна
 export class TankMine extends Bomb {
-  static weight = 0.38 * difficulty.weight;
+  static weight = 0.35 * difficulty.weight;
   static type = "tankMine";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
@@ -635,7 +635,7 @@ export class TankMine extends Bomb {
 }
 // магнітна міна
 export class MagnetMine extends Bomb {
-  static weight = 1.6 * difficulty.weight;
+  static weight = 0.8 * difficulty.weight;
   static type = "magnetMine";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
@@ -709,6 +709,11 @@ export class ShrapnelBomb extends Bomb {
   }
 
   checkCollision(enemy) {
+    if (
+      this.isInTrench(enemy.baseX, enemy.baseY) &&
+      this.gameData.currentMission === 12
+    )
+      return false;
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     let hitStatus = false;
     if (!enemy.vehicle) {
@@ -919,7 +924,7 @@ export class ShapedClusterMunition extends Bomb {
 }
 //  фугасна кластерна бомба
 export class ClusterBomb extends Bomb {
-  static weight = 2.0 * difficulty.weight;
+  static weight = 1.6 * difficulty.weight;
   static type = "cluster";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
@@ -966,7 +971,7 @@ export class ClusterBomb extends Bomb {
 }
 //  протитанкова кластерна бомба
 export class ShapedClusterBomb extends Bomb {
-  static weight = 2.2 * difficulty.weight;
+  static weight = 1.8 * difficulty.weight;
   static type = "shapedCluster";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);

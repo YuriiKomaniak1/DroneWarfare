@@ -70,7 +70,7 @@ trees.src = "./assets/img/grounds/train1trees.png";
 const layer1 = new Layer(gameField, canvas, 1800, 2600, ctx);
 const layer2 = new Layer(trees, canvas, 1800, 2600, ctx);
 const navGrid = new NavigationGrid(layer1, 15, gameData.obstacles);
-const vehicleNavGrid = new NavigationGrid(layer1, 40, gameData.bigObstacles);
+const vehicleNavGrid = new NavigationGrid(layer1, 36, gameData.bigObstacles);
 prevSection.addEventListener("click", () => {
   currentSection--;
   if (currentSection < 0) currentSection = 0;
@@ -180,7 +180,7 @@ squad.addEventListener("click", () => {
   );
   enemies.push(...squad);
 });
-addTestVehicle(layer1, ctx, vehicleNavGrid, vehicles, enemies, navGrid);
+// addTestVehicle(layer1, ctx, vehicleNavGrid, vehicles, enemies, navGrid);
 
 const winLoseConditions = {
   win: (gameState, gameData, enemies, vehicles) => {

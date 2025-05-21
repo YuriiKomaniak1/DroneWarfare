@@ -90,7 +90,7 @@ class GameData {
     this.winScore = 1000;
     this.initialLooseScore = 0;
     this.initialWinScore = 0;
-    this.currentMission = 11;
+    this.currentMission = 6;
     this.drones = [];
     this.obstacles = [];
     this.bigObstacles = [];
@@ -126,6 +126,7 @@ class GameData {
     this.upgradeGap = 0;
     this.gapScale = 500;
     this.trenches = null;
+    this.covers = null;
     this.timer = { startTime: null, totalTime: null };
   }
 }

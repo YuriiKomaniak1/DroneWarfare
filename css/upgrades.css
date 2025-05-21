@@ -2,12 +2,17 @@
 body {
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  /* overflow: hidden; */
   height: 100vh;
   width: 100vw;
   background-color: var(--menu-background-color);
 }
-
+#upgradeCntainer {
+  transform-origin: top left;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 .small_drone_image {
   width: 50px; /* ширина одного кадру */
   height: 50px; /* висота одного кадру */

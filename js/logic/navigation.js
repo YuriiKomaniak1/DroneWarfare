@@ -241,3 +241,57 @@ export function drawTrenches(ctx, layer, gameData) {
 
   ctx.restore();
 }
+
+export function drawCovers(ctx, layer, gameData) {
+  if (!gameData.covers || !Array.isArray(gameData.covers)) return;
+
+  ctx.save();
+  ctx.strokeStyle = "rgba(59, 224, 211, 0.6)";
+  ctx.lineWidth = 2;
+  ctx.fillStyle = "rgba(5, 245, 65, 0.2)";
+
+  gameData.covers.forEach((cover) => {
+    const screenX = cover.x + layer.x;
+    const screenY = cover.y + layer.y;
+
+    ctx.fillRect(screenX, screenY, cover.width, cover.height);
+    ctx.strokeRect(screenX, screenY, cover.width, cover.height);
+  });
+
+  ctx.restore();
+}
+
+export function drawRoofs(ctx, layer, gameData) {
+  if (!gameData.covers || !Array.isArray(gameData.bombObstacles)) return;
+
+  ctx.save();
+  ctx.strokeStyle = "rgba(59, 224, 211, 0.6)";
+  ctx.lineWidth = 2;
+  ctx.fillStyle = "rgba(5, 245, 65, 0.2)";
+
+  gameData.bombObstacles.forEach((cover) => {
+    const screenX = cover.x + layer.x;
+    const screenY = cover.y + layer.y;
+
+    ctx.fillRect(screenX, screenY, cover.width, cover.height);
+    ctx.strokeRect(screenX, screenY, cover.width, cover.height);
+  });
+
+  ctx.restore();
+}
+
+export function rebuildNavgrid(gameData, vehicle) {
+  const newGrid = new NavigationGrid(vehicle.layer, 36, gameData.bigObstacles);
+
+  vehicle.navigationsGrid = newGrid;
+  if (vehicle.currentWaypointIndex < vehicle.waypoints.length) {
+    const currentTarget = vehicle.waypoints[vehicle.currentWaypointIndex];
+    vehicle.path = findPath(
+      vehicle.navigationsGrid,
+      { x: vehicle.baseX, y: vehicle.baseY }, // поточна позиція
+      currentTarget
+    );
+    vehicle.currentPathIndex = 0;
+    vehicle.isMoving = true;
+  }
+}

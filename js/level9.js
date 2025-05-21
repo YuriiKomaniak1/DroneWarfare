@@ -21,9 +21,12 @@ async function loadObstacles() {
   const response = await fetch("js/levels/level2/obstacles.json");
   const response2 = await fetch("js/levels/level2/obstacles.json");
   const response3 = await fetch("js/levels/level2/bombObstacles.json");
+  const response5 = await fetch("js/levels/level2/covers.json");
   gameData.obstacles = await response.json();
   gameData.bigObstacles = await response2.json();
   gameData.bombObstacles = await response3.json();
+  gameData.trenches = null;
+  gameData.covers = await response5.json();
   localStorage.setItem("gameData", JSON.stringify(gameData));
 }
 await loadObstacles();

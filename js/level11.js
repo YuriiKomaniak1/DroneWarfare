@@ -3,15 +3,15 @@ import { NavigationGrid, findPath } from "./logic/navigation.js";
 import { createRifleSquad } from "./enemies/enemy.js";
 import { createAnimationLoop } from "./logic/gameloop.js";
 import { initUIControls } from "./logic/uicontrols.js";
-import { BMP3, MLTBKPVT, BMP2, BTR82, MTLBKPVT } from "./enemies/vehicle.js";
+import { BMP3, BMP2, BTR82, MTLBKPVT } from "./enemies/vehicle.js";
 const gameData = JSON.parse(localStorage.getItem("gameData"));
 
 let enemies = [];
 let vehicles = [];
-gameData.looseScore = 1000;
-gameData.initialLooseScore = 1000;
-gameData.winScore = 4030;
-gameData.initialWinScore = 4030;
+gameData.looseScore = 1338;
+gameData.initialLooseScore = 1338;
+gameData.winScore = 5352;
+gameData.initialWinScore = 5352;
 
 const condition = { start: false };
 setTimeout(() => {
@@ -21,9 +21,12 @@ setTimeout(() => {
 async function loadObstacles() {
   const response = await fetch("js/levels/level1/obstacles.json");
   const response2 = await fetch("js/levels/level1/bombObstacles.json");
+  const response5 = await fetch("js/levels/level1/covers.json");
   gameData.obstacles = await response.json();
   gameData.bigObstacles = [...gameData.obstacles];
   gameData.bombObstacles = await response2.json();
+  gameData.trenches = null;
+  gameData.covers = await response5.json();
   localStorage.setItem("gameData", JSON.stringify(gameData));
 }
 await loadObstacles();
@@ -127,7 +130,7 @@ function addVehicle(
   vehicle.embark(enemies, navGrid, riflemans, mashinegunners, grenadiers, crew);
   vehicles.push(vehicle);
 }
-
+console.log(enemies, vehicles);
 const winLoseConditions = {
   win: (gameState, gameData, enemies, vehicles) => {
     return gameData.winScore <= 0;

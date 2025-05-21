@@ -325,7 +325,7 @@ export class BigDrone extends Drone {
     this.initialHangers = 30;
     this.type = "big";
     this.imageScale = 3;
-    this.size = 4;
+    this.size = 8;
     this.reloadingTime = 1000 * 60 * 2.5;
   }
 }

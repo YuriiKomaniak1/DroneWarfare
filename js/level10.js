@@ -23,10 +23,12 @@ async function loadObstacles() {
   const response2 = await fetch("js/levels/level10/obstacles.json");
   const response3 = await fetch("js/levels/level10/bombObstacles.json");
   const response4 = await fetch("js/levels/level10/trenches.json");
+  const response5 = await fetch("js/levels/level10/covers.json");
   gameData.obstacles = await response.json();
   gameData.bigObstacles = await response2.json();
   gameData.bombObstacles = await response3.json();
   gameData.trenches = await response4.json();
+  gameData.covers = await response5.json();
   localStorage.setItem("gameData", JSON.stringify(gameData));
 }
 await loadObstacles();
@@ -162,13 +164,13 @@ const waypoints = [
 ];
 
 setTimeout(() => {
-  addVehicle(MTLBKPVT, waypoints, 2, 0, 1);
+  addVehicle(MTLBKPVT, waypoints, 2, 0, 0);
 }, 1000);
 setTimeout(() => {
-  addVehicle(MTLBKPVT, waypoints, 2, 0, 1);
+  addVehicle(MTLBKPVT, waypoints, 2, 0, 0);
 }, 41000);
 setTimeout(() => {
-  addVehicle(MTLBKPVT, waypoints, 2, 0, 1);
+  addVehicle(MTLBKPVT, waypoints, 2, 0, 0);
   enemies.forEach((enemy) => {
     enemy.winScore = 0;
     enemy.looseScore = 0;

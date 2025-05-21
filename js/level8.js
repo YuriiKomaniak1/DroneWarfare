@@ -32,10 +32,12 @@ async function loadObstacles() {
   const response2 = await fetch("js/levels/level8/bigObstacles.json");
   const response3 = await fetch("js/levels/level8/bombObstacles.json");
   const response4 = await fetch("js/levels/level8/trenches.json");
+  const response5 = await fetch("js/levels/level8/covers.json");
   gameData.obstacles = await response.json();
   gameData.bigObstacles = await response2.json();
   gameData.bombObstacles = await response3.json();
   gameData.trenches = await response4.json();
+  gameData.covers = await response5.json();
   localStorage.setItem("gameData", JSON.stringify(gameData));
 }
 await loadObstacles();
@@ -61,54 +63,54 @@ const navGrid = new NavigationGrid(layer1, 15, gameData.obstacles);
 const vehicleNavGrid = new NavigationGrid(layer1, 36, gameData.bigObstacles);
 
 const wa1 = [
-  { x: 1345, y: 1710 },
+  { x: 1345, y: 1725 },
   { x: 0, y: 0 },
 ];
 enemy(1, 0, 0, wa1);
 const wa2 = [
-  { x: 1400, y: 1710 },
+  { x: 1400, y: 1725 },
   { x: 0, y: 0 },
 ];
 enemy(0, 1, 0, wa2);
 const wa3 = [
-  { x: 1400, y: 1675 },
+  { x: 1400, y: 1690 },
   { x: 0, y: 0 },
 ];
 enemy(0, 1, 0, wa3);
 
 const wa4 = [
-  { x: 1740, y: 1868 },
+  { x: 1740, y: 1883 },
   { x: 0, y: 0 },
 ];
 enemy(0, 1, 0, wa4);
 const wa5 = [
-  { x: 1790, y: 1868 },
+  { x: 1790, y: 1883 },
   { x: 0, y: 0 },
 ];
 enemy(1, 0, 0, wa5);
 const wa6 = [
-  { x: 1850, y: 1868 },
+  { x: 1850, y: 1883 },
   { x: 0, y: 0 },
 ];
 enemy(1, 0, 0, wa6);
 const wa7 = [
-  { x: 1900, y: 1868 },
+  { x: 1900, y: 1883 },
   { x: 0, y: 0 },
 ];
 enemy(0, 1, 0, wa7);
 
 const wa8 = [
-  { x: 2093, y: 1710 },
+  { x: 2093, y: 1725 },
   { x: 0, y: 0 },
 ];
 enemy(1, 0, 0, wa8);
 const wa9 = [
-  { x: 2143, y: 1710 },
+  { x: 2143, y: 1725 },
   { x: 0, y: 0 },
 ];
 enemy(0, 1, 0, wa9);
 const wa10 = [
-  { x: 2093, y: 1675 },
+  { x: 2093, y: 1690 },
   { x: 0, y: 0 },
 ];
 enemy(0, 1, 0, wa10);

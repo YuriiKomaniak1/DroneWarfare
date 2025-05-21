@@ -32,44 +32,8 @@ document.getElementById("upgrade-button").addEventListener("click", () => {
   window.location.href = "upgrades.html";
 });
 document.getElementById("start-button").addEventListener("click", () => {
-  let href = "";
-  switch (missionKey) {
-    case 1:
-      href = "level1.html";
-      break;
-    case 2:
-      href = "level2.html";
-      break;
-    case 3:
-      href = "level3.html";
-      break;
-    case 4:
-      href = "level4.html";
-      break;
-    case 5:
-      href = "level5.html";
-      break;
-    case 6:
-      href = "level6.html";
-      break;
-    case 7:
-      href = "level7.html";
-      break;
-    case 8:
-      href = "level8.html";
-      break;
-    case 9:
-      href = "level9.html";
-      break;
-    case 10:
-      href = "level10.html";
-      break;
-    case 11:
-      href = "level11.html";
-      break;
-  }
   localStorage.setItem("playDroneMusic", "true");
-  window.location.href = href;
+  window.location.href = `level${missionKey}.html`;
 });
 // обробка музики
 if (shouldPlayMusic) {

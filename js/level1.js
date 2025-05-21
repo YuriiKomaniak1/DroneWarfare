@@ -20,9 +20,11 @@ setTimeout(() => {
 async function loadObstacles() {
   const response = await fetch("js/levels/level1/obstacles.json");
   const response2 = await fetch("js/levels/level1/bombObstacles.json");
+  const response4 = await fetch("js/levels/level1/covers.json");
   gameData.obstacles = await response.json();
   gameData.bigObstacles = [...gameData.obstacles];
   gameData.bombObstacles = await response2.json();
+  gameData.covers = await response4.json();
   localStorage.setItem("gameData", JSON.stringify(gameData));
 }
 await loadObstacles();

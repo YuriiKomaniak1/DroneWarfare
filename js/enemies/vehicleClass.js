@@ -841,6 +841,7 @@ export class Vehicle {
       // Передати її всім юнітам
       vehicles.forEach((v) => {
         v.navigationsGrid = newGrid;
+        console.log("created");
       });
 
       // Перебудова маршрутів
@@ -868,7 +869,7 @@ export class Vehicle {
     this.isFiring = false;
     this.stopFiringSoundLoop();
     if (!this.addedToObstacles) {
-      gameData.obstacles.push({
+      gameData.bigObstacles.push({
         x: this.baseX - (this.width * this.scale) / 2,
         y: this.baseY - (this.height * this.scale) / 2,
         width: this.width * this.scale,
@@ -880,12 +881,13 @@ export class Vehicle {
       const newGrid = new NavigationGrid(
         this.layer,
         this.navigationsGrid.cellSize,
-        gameData.obstacles
+        gameData.bigObstacles
       );
 
       // Передати її всім юнітам
       vehicles.forEach((v) => {
         v.navigationsGrid = newGrid;
+        console.log("created");
       });
 
       // Перебудова маршрутів
@@ -900,6 +902,7 @@ export class Vehicle {
             );
             v.currentPathIndex = 0;
             v.isMoving = true;
+            console.log(currentTarget);
           }
         }
       });

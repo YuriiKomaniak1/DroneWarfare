@@ -70,7 +70,7 @@ export class Enemy {
     this.score = 51;
     this.scored = false;
     this.hasBailedOut = false;
-    this.distance = 0.4 + Math.random() * 0.4;
+    this.distance = 0.5 + Math.random() * 0.5;
     this.navigationsGrid = null; // Сітка навігації
     this.fireSound = new Audio("assets/audio/fire/rifleman-sound.mp3");
     this.fireSound.loop = true;
@@ -108,6 +108,7 @@ export class Enemy {
           if (index > -1) {
             gameData.looseScore -= this.looseScore;
             this.scored = true;
+            console.log("юніта видалено", this.baseX, this.baseY);
             allEnemies.splice(index, 1);
           }
           return;
@@ -185,7 +186,9 @@ export class Enemy {
           other === this ||
           other.dead ||
           other.crawl ||
-          other.isFiring
+          other.isFiring ||
+          this.isFiring ||
+          this.crawl
         )
           continue;
 
@@ -335,8 +338,12 @@ export class Enemy {
       }
     }
   }
-  skullDraw() {
-    if (this.dead && this.vehicle && this.showSkull) {
+  skullDraw(gameData) {
+    if (
+      this.dead &&
+      (this.vehicle || this.isCovered(gameData)) &&
+      this.showSkull
+    ) {
       this.ctx.save();
       this.ctx.translate(this.x, this.y);
       const alpha = Math.max(0, (300 - this.skullTimer) / 300);
@@ -447,6 +454,19 @@ export class Enemy {
       this.ended = true; // Всі вейпоінти пройдено
     }
   }
+  isCovered(gameData) {
+    for (const cover of gameData.covers) {
+      if (
+        this.baseX >= cover.x &&
+        this.baseX <= cover.x + cover.width &&
+        this.baseY >= cover.y &&
+        this.baseY <= cover.y + cover.height
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
 export class Rifleman extends Enemy {
   constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
@@ -457,6 +477,8 @@ export class Rifleman extends Enemy {
     this.fireRate = 1;
     this.droneSpottingChanse = 1;
     this.score = 50;
+    this.winScore = this.score;
+    this.looseScore = this.score;
   }
 }
 export class Grenadier extends Enemy {
@@ -468,6 +490,8 @@ export class Grenadier extends Enemy {
     this.fireRate = 1;
     this.droneSpottingChanse = 1;
     this.score = 100;
+    this.winScore = this.score;
+    this.looseScore = this.score;
   }
 }
 export class Machinegunner extends Enemy {
@@ -479,6 +503,8 @@ export class Machinegunner extends Enemy {
     this.fireRate = 3;
     this.droneSpottingChanse = 2;
     this.score = 100;
+    this.winScore = this.score;
+    this.looseScore = this.score;
     this.fireSound = new Audio("assets/audio/fire/machinegun.mp3");
     this.fireSoundRateMin = 2;
     this.fireSoundRateMax = 3.2;
@@ -494,6 +520,8 @@ export class Crew extends Enemy {
     this.fireRate = 1;
     this.droneSpottingChanse = 1;
     this.score = 60;
+    this.winScore = this.score;
+    this.looseScore = this.score;
   }
 }
 
