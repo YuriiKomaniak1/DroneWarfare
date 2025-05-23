@@ -17,7 +17,7 @@ gameState.drones.forEach((drone) => {
     drone.resetAmmo();
   }
 });
-console.log(volumeSettings);
+
 const shouldPlayMusic = localStorage.getItem("playBriefingMusic") === "true";
 const missionKey = gameData.currentMission; // Сюди підставляється поточна місія
 // брифінг перед місією

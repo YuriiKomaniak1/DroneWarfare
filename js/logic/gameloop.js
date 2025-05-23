@@ -35,6 +35,7 @@ import {
   resumeAllSounds,
 } from "../gameElements/sounds.js";
 import { ScaleSlider } from "../gameElements/ScaleSlider.js";
+import { initUIControls } from "../logic/uicontrols.js";
 export const pauseState = { isPaused: false };
 export function togglePause() {
   pauseState.isPaused = !pauseState.isPaused;
@@ -54,7 +55,6 @@ export function createAnimationLoop(
   vehicles,
   winLoseConditions,
   gameData,
-  condition,
   training = false
 ) {
   window.addEventListener("click", enableDroneSound, { once: true });
@@ -98,6 +98,17 @@ export function createAnimationLoop(
     );
   }, canvas);
   buttons(gameData);
+
+  const condition = { start: false };
+  setTimeout(() => {
+    condition.start = true;
+  }, 10000);
+
+  initUIControls({
+    canvas,
+    gameData,
+    training: false, // НЕ тренування
+  });
 
   //----------------початок анімації-------------------
   function animate(timestamp) {
@@ -293,6 +304,7 @@ export function createAnimationLoop(
       });
       drawJoystickAndButtons(ctx, canvas, gameState.drones);
       drawMenuButtons(ctx, minimap, training);
+      slider.fadeOutStep();
       slider.draw();
 
       if (!training) {

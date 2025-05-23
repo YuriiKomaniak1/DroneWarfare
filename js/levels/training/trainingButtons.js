@@ -10,7 +10,7 @@ export function drawMenuButtons(ctx, minimap, training) {
   if (training) {
     labels = ["Меню", "Навчання", "Вороги"];
   } else if (getWinCondition()) {
-    labels = ["Меню", "Перемога", "Пауза"];
+    labels = ["Меню", "Перемога"];
   } else {
     labels = ["Меню"]; // для звичайних місій
   }

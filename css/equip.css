@@ -21,7 +21,7 @@ body {
   height: 60px; /* висота одного кадру */
   background-image: url("../assets/img/drones/smallDroneAnimation.png");
   background-size: 400% 200%; /* 4 кадри по горизонталі, 2 по вертикалі */
-  background-position: 300% 0%; /* Лівий верхній кут */
+  background-position: 0% 0%; /* Лівий верхній кут */
 }
 #medium_drone_image {
   width: 60px; /* ширина одного кадру */
@@ -87,4 +87,11 @@ body {
   width: 25px;
   height: auto; /* або конкретна висота */
   display: block; /* щоб ширина точно застосовувалась */
+}
+
+#equipDrone-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
 }

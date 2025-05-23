@@ -235,12 +235,27 @@ class Drone {
       shapedCluster: [...(storage.shapedCluster || [])],
     };
   }
+  clearBombStorage() {
+    return {
+      frag: [],
+      he: [],
+      shaped: [],
+      footMine: [],
+      tankMine: [],
+      magnetMine: [],
+      shrapnel: [],
+      cluster: [],
+      shapedCluster: [],
+    };
+  }
   resetAmmo() {
     this.bombStorage = this.cloneBombStorage(this.initialBombStorage);
     this.isReloading = false;
     this.isAlive = true;
     this.hp = this.initialHP;
     this.visibility = this.initialVisibility ?? 1;
+    this.hangers = this.initialHangers - this.countBombs();
+    this.remainingCapacity = this.capacity - this.getCurrentLoad();
   }
   getCurrentLoad() {
     const bombClasses = {
@@ -270,14 +285,14 @@ export class SmallDrone extends Drone {
   constructor(gameData) {
     super();
     this.image = smallDroneImage;
-    this.capacity = 0.8 + gameData.smallDroneCapacityUpgrade * 0.04;
-    this.remainingCapacity = 0.8 + gameData.smallDroneCapacityUpgrade * 0.04;
+    this.capacity = 0.9 + gameData.smallDroneCapacityUpgrade * 0.04;
+    this.remainingCapacity = 0.9 + gameData.smallDroneCapacityUpgrade * 0.04;
     this.hp = 3 + gameData.smallDroneHPUpgrade;
     this.initialHP = 3 + gameData.smallDroneHPUpgrade;
     this.visibility = 4;
     this.initialVisibility = 4;
-    this.frameWidth = 352;
-    this.frameHeight = 301;
+    this.frameWidth = 310;
+    this.frameHeight = 288;
     this.speed = 1.3 + gameData.smallDroneSpeedUpgrade * 0.1;
     this.hangers = 10;
     this.initialHangers = 10;

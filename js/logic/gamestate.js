@@ -20,7 +20,7 @@ class GameState {
     ctx.strokeText(text, centerX, paddingTop);
     ctx.fillText(text, centerX, paddingTop);
 
-    if (gameData.timer) {
+    if (gameData.timer && gameData.timer.startTime) {
       // 🕒 Зворотній таймер
       const totalTime = gameData.timer.totalTime * 60 * 1000; // 10 хв у мс
       const elapsed = Date.now() - gameData.timer.startTime;
@@ -85,12 +85,12 @@ class GameState {
 
 class GameData {
   constructor() {
-    this.score = 900000;
+    this.score = 60000;
     this.looseScore = 1000;
     this.winScore = 1000;
     this.initialLooseScore = 0;
     this.initialWinScore = 0;
-    this.currentMission = 6;
+    this.currentMission = 13;
     this.drones = [];
     this.obstacles = [];
     this.bigObstacles = [];
@@ -124,7 +124,7 @@ class GameData {
     this.clusterBombUpgrade = 0;
     this.shapedClusterBombUpgrade = 0;
     this.upgradeGap = 0;
-    this.gapScale = 500;
+    this.gapScale = 250;
     this.trenches = null;
     this.covers = null;
     this.timer = { startTime: null, totalTime: null };
@@ -184,4 +184,17 @@ if (saved) {
   });
 
   localStorage.setItem("gameData", JSON.stringify(gameData));
+}
+
+function cloneDataDrone(sourceDrone) {
+  return {
+    type: sourceDrone.type,
+    capacity: sourceDrone.capacity,
+    remainingCapacity: sourceDrone.remainingCapacity,
+    hangers: sourceDrone.hangers,
+    bombStorage: sourceDrone.cloneBombStorage(sourceDrone.bombStorage),
+    initialBombStorage: sourceDrone.cloneBombStorage(sourceDrone.bombStorage),
+    hp: sourceDrone.hp,
+    initialHP: sourceDrone.initialHP,
+  };
 }

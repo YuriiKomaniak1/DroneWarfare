@@ -38,6 +38,9 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
   const shapedClusterBombMinus = document.getElementById(
     "shapedClusterBombMinus"
   );
+  const nextDrone = document.getElementById("nextDrone");
+  const copyDrone = document.getElementById("copyDrone");
+  const clearDrone = document.getElementById("clearDrone");
 
   // ховаємо невідкриті бомби
   if (!gameData.footMineAvailable) {
@@ -58,7 +61,47 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
   if (!gameData.shapedClusterBombAvailable) {
     document.getElementById("shapedClusterBomb").style.display = "none";
   }
+  // перейти до наступного дрону
+  addClickAndTouch(nextDrone, () => {
+    // Зберегти зміни перед переходом
+    drone.initialBombStorage = drone.cloneBombStorage(drone.bombStorage); // якщо хочеш зберігати як базове
+    gameData.drones[droneIndex] = drone;
 
+    let targetIndex = droneIndex + 1;
+
+    const targetDrone = gameData.drones[targetIndex];
+    if (!targetDrone) targetIndex = 0;
+
+    localStorage.setItem("droneToEquip", targetIndex);
+    localStorage.setItem("gameData", JSON.stringify(gameData));
+    window.location.reload();
+  });
+
+  // копіювати на наступний дрон
+  addClickAndTouch(copyDrone, () => {
+    // Зберігаємо зміненого дрона перед копіюванням
+    gameData.drones[droneIndex] = cloneDataDrone(drone);
+
+    const sourceDrone = drone;
+    const targetIndex = droneIndex + 1;
+
+    // Перевірка: чи існує цільовий дрон
+    if (!gameData.drones[targetIndex]) return;
+
+    // Копіювання
+    gameData.drones[targetIndex] = cloneDataDrone(sourceDrone);
+
+    // Зберігаємо індекс і дані
+    localStorage.setItem("droneToEquip", targetIndex);
+    localStorage.setItem("gameData", JSON.stringify(gameData));
+    window.location.reload();
+  });
+  // очистити дрон
+  addClickAndTouch(clearDrone, () => {
+    drone.initialBombStorage = drone.clearBombStorage();
+    drone.resetAmmo();
+    showDroneData();
+  });
   // перемикання між дронами
   if (!gameData.mediumDroneAvailable)
     mediumDroneImage.style.backgroundImage =
@@ -231,22 +274,25 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
     Math.round(ShapedClusterBomb.weight * 1000) + "г.";
 
   // характеристики дронів
-  document.getElementById("remainingDroneWeight").textContent = Math.round(
-    calculateRemainingCapacity(drone) * 1000
-  );
-  console.log(FragBomb.weight);
+  showDroneData();
+  function showDroneData() {
+    document.getElementById("remainingDroneWeight").textContent = Math.round(
+      calculateRemainingCapacity(drone) * 1000
+    );
+    console.log(FragBomb.weight);
 
-  document.getElementById("droneWeight").textContent = Math.round(
-    drone.capacity * 1000
-  );
-  document.getElementById("hangers").textContent = Math.round(drone.hangers);
-  document.getElementById("initialHangers").textContent = Math.round(
-    drone.initialHangers
-  );
-  document.getElementById("droneSpeed").textContent = (
-    drone.speed * 10
-  ).toFixed(2);
-  document.getElementById("droneHP").textContent = drone.hp;
+    document.getElementById("droneWeight").textContent = Math.round(
+      drone.capacity * 1000
+    );
+    document.getElementById("hangers").textContent = Math.round(drone.hangers);
+    document.getElementById("initialHangers").textContent = Math.round(
+      drone.initialHangers
+    );
+    document.getElementById("droneSpeed").textContent = (
+      drone.speed * 10
+    ).toFixed(2);
+    document.getElementById("droneHP").textContent = drone.hp;
+  }
   // допоміжні функції
   function calculateRemainingCapacity(drone) {
     const bombWeight =
@@ -280,4 +326,20 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
     ); // потрібно для preventDefault на touchstart
   }
   console.log(drone);
+}
+
+function cloneDataDrone(sourceDrone) {
+  return {
+    type: sourceDrone.type,
+    capacity: sourceDrone.capacity,
+    remainingCapacity: sourceDrone.remainingCapacity,
+    hangers: sourceDrone.hangers,
+    bombStorage: sourceDrone.cloneBombStorage(sourceDrone.bombStorage),
+    initialBombStorage: sourceDrone.cloneBombStorage(sourceDrone.bombStorage),
+    hp: sourceDrone.hp,
+    initialHP: sourceDrone.initialHP,
+    isAlive: true,
+    isAllowed: sourceDrone.isAllowed ?? true,
+    isReloading: false,
+  };
 }

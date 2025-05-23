@@ -27,7 +27,6 @@
       </div>
       <!-- Канвас і характеристики дрона-->
       <div id="equip-canvas-container">
-        <canvas id="equipDroneCanvas" width="250"></canvas>
         <div id="text-container">
           <p>
             Вага<br />
@@ -53,6 +52,30 @@
             Міцність<br />
             <strong><span id="droneHP">1</span> .</strong>
           </p>
+        </div>
+        <canvas id="equipDroneCanvas" width="250"></canvas>
+        <div id="equipDrone-buttons">
+          <div id="nextImage">
+            <img
+              width="45px"
+              src="assets/img/drones/nextDrone.png"
+              id="nextDrone"
+            />
+          </div>
+          <div id="copyImage">
+            <img
+              width="45px"
+              src="assets/img/drones/copyDrone.png"
+              id="copyDrone"
+            />
+          </div>
+          <div id="clearImage">
+            <img
+              width="45px"
+              src="assets/img/drones/clearDrone.png"
+              id="clearDrone"
+            />
+          </div>
         </div>
       </div>
       <!-- спорядження дрона бомбами-->
@@ -247,6 +270,10 @@
         <button id="upgrade-button" class="briefing-button">Апгрейди</button>
       </div>
     </div>
+    <script type="module">
+      import { setupDebugConsole } from "./js/utils/debugConsole.js";
+      setupDebugConsole();
+    </script>
     <script src="js/briefing/equip.js" type="module"></script>
   </body>
 </html>

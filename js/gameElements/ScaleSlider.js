@@ -3,21 +3,22 @@ export class ScaleSlider {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
 
-    this.x = canvas.width - 40;
+    this.x = 30;
     this.y = canvas.height / 2 - 100;
     this.width = 10;
     this.height = 200;
-    this.handleRadius = 12;
+    this.handleRadius = 15;
 
     this.min = 0.5;
-    this.max = 2.0;
+    this.max = 1.25;
     this.value = 1.0;
+
+    this.opacity = 1; // <-- нова змінна
 
     this.dragging = false;
 
     this._setupListeners();
   }
-
   _valueToY(value) {
     const percent = (value - this.min) / (this.max - this.min);
     return this.y + this.height - percent * this.height;
@@ -29,13 +30,23 @@ export class ScaleSlider {
     return this.min + percent * (this.max - this.min);
   }
 
+  fadeOutStep() {
+    if (this.opacity > 0.15) {
+      this.opacity -= 0.001;
+      if (this.opacity < 0) this.opacity = 0;
+    }
+  }
+
   draw() {
     const ctx = this.ctx;
+
+    ctx.save();
+    ctx.globalAlpha = this.opacity;
 
     // Лінія
     ctx.fillStyle = "#aaa";
     ctx.fillRect(this.x, this.y, this.width, this.height);
-
+    ctx.globalAlpha = this.opacity > 0.6 ? this.opacity : 0.6;
     // Ручка
     const handleY = this._valueToY(this.value);
     const handleX = this.x + this.width / 2;
@@ -47,8 +58,10 @@ export class ScaleSlider {
     // Текст
     ctx.fillStyle = "white";
     ctx.font = "14px sans-serif";
-    ctx.textAlign = "right";
-    ctx.fillText("Scale: " + this.value.toFixed(2), this.x - 10, this.y - 10);
+    ctx.textAlign = "center";
+    ctx.fillText("Scale: " + this.value.toFixed(2), this.x + 10, this.y - 10);
+
+    ctx.restore();
   }
 
   _setupListeners() {
@@ -60,6 +73,7 @@ export class ScaleSlider {
       const dy = y - this._valueToY(this.value);
       if (dx * dx + dy * dy <= this.handleRadius * this.handleRadius) {
         this.dragging = true;
+        this.opacity = 1;
       }
     });
 

@@ -42,30 +42,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //скролл
 
-  let scrollY = 0;
-  let startY = 0;
-  let isDragging = false;
+  // let scrollY = 0;
+  // let startY = 0;
+  // let isDragging = false;
 
-  const container = document.getElementById("upgradeContainer");
+  // const container = document.getElementById("upgradeContainer");
 
-  container.addEventListener("touchstart", (e) => {
-    startY = e.touches[0].clientY;
-    isDragging = true;
-  });
+  // container.addEventListener("touchstart", (e) => {
+  //   startY = e.touches[0].clientY;
+  //   isDragging = true;
+  // });
 
-  container.addEventListener("touchmove", (e) => {
-    if (!isDragging) return;
-    const currentY = e.touches[0].clientY;
-    const deltaY = currentY - startY;
-    scrollY -= deltaY;
-    scrollY = Math.max(0, scrollY); // запобігти прокрутці вгору за межі
-    container.style.transform = `translateY(${-scrollY}px)`;
-    startY = currentY;
-  });
+  // container.addEventListener("touchmove", (e) => {
+  //   if (!isDragging) return;
+  //   const currentY = e.touches[0].clientY;
+  //   const deltaY = currentY - startY;
+  //   scrollY -= deltaY;
+  //   scrollY = Math.max(0, scrollY); // запобігти прокрутці вгору за межі
+  //   container.style.transform = `translateY(${-scrollY}px)`;
+  //   startY = currentY;
+  // });
 
-  container.addEventListener("touchend", () => {
-    isDragging = false;
-  });
+  // container.addEventListener("touchend", () => {
+  //   isDragging = false;
+  // });
 
   // присвоєння цін
   const middleDroneOpenCost = 5000 + gameData.upgradeGap;

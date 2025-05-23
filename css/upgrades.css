@@ -2,23 +2,35 @@
 body {
   margin: 0;
   padding: 0;
-  /* overflow: hidden; */
-  height: 100vh;
   width: 100vw;
-  background-color: var(--menu-background-color);
+  height: 100vh;
+  overflow: hidden;
+  font-family: sans-serif;
+  touch-action: manipulation;
+  box-sizing: border-box;
 }
-#upgradeCntainer {
-  transform-origin: top left;
-  position: absolute;
-  top: 0;
-  left: 0;
+#upgradeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1rem;
+  background-color: var(--briefing-color);
+  box-sizing: border-box;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
 }
+
 .small_drone_image {
   width: 50px; /* ширина одного кадру */
   height: 50px; /* висота одного кадру */
   background-image: url("../assets/img/drones/smallDroneAnimation.png");
   background-size: 400% 200%; /* 4 кадри по горизонталі, 2 по вертикалі */
-  background-position: 100% 0%; /* Лівий верхній кут */
+  background-position: 0% 0%; /* Лівий верхній кут */
 }
 .medium_drone_image {
   width: 50px; /* ширина одного кадру */

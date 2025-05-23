@@ -141,10 +141,10 @@ export function setupDroneSelectionByClick(canvas, droneIcons) {
 export const joystick = {
   baseX: 90,
   baseY: 0,
-  baseRadius: 60,
+  baseRadius: 70,
   stickX: 90,
   stickY: 0,
-  stickRadius: 24,
+  stickRadius: 26,
   active: false,
   touchId: null,
 };
@@ -152,28 +152,28 @@ export const joystick = {
 export const buttonDrop = {
   x: 0,
   y: 0,
-  radius: 45,
+  radius: 50,
   pressed: false,
 };
 
 export const buttonSwitch = {
   x: 0,
   y: 0,
-  radius: 45,
+  radius: 50,
   pressed: false,
 };
 // МАЛЮВАННЯ ДЖОЙСТИКА І КНОПОК
 export function drawJoystickAndButtons(ctx, canvas) {
-  joystick.baseY = canvas.height - 150;
+  joystick.baseY = canvas.height - 120;
   if (!joystick.active) {
     joystick.stickY = joystick.baseY;
   }
 
-  buttonDrop.x = canvas.width - 160;
-  buttonDrop.y = canvas.height - 100;
+  buttonDrop.x = canvas.width - 170;
+  buttonDrop.y = canvas.height - 70;
 
   buttonSwitch.x = canvas.width - 60;
-  buttonSwitch.y = canvas.height - 100;
+  buttonSwitch.y = canvas.height - 120;
 
   ctx.globalAlpha = 0.6;
   if (joystickVisible) {
@@ -290,6 +290,7 @@ export function drawJoystickAndButtons(ctx, canvas) {
 
 // НАЛАШТУВАННЯ сенсорного керування
 export function setupTouchControls(dropBomb, canvas) {
+  joystickVisible = true;
   const TOUCH_EXTRA_RADIUS = 10;
   canvas.addEventListener("touchstart", (e) => {
     joystickVisible = true;

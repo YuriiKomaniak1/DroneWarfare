@@ -27,7 +27,7 @@ if (shouldPlayMusic) {
   localStorage.removeItem("playBriefingMusic");
 }
 
-console.log(volumeSettings);
+// console.log(volumeSettings);
 // Встановити значення в селекті
 document.getElementById("difficulty").value = difficulty.level;
 

@@ -887,7 +887,6 @@ export class Vehicle {
       // Передати її всім юнітам
       vehicles.forEach((v) => {
         v.navigationsGrid = newGrid;
-        console.log("created");
       });
 
       // Перебудова маршрутів
@@ -902,7 +901,6 @@ export class Vehicle {
             );
             v.currentPathIndex = 0;
             v.isMoving = true;
-            console.log(currentTarget);
           }
         }
       });
