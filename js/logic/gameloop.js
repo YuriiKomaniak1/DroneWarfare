@@ -57,6 +57,8 @@ export function createAnimationLoop(
   gameData,
   training = false
 ) {
+  let gameSave = JSON.parse(localStorage.getItem("gameSave") || "{}");
+
   window.addEventListener("click", enableDroneSound, { once: true });
   window.addEventListener("keydown", enableDroneSound, { once: true });
   gameState.updateDrones(gameData, SmallDrone, MediumDrone, BigDrone);
@@ -97,7 +99,7 @@ export function createAnimationLoop(
       gameData
     );
   }, canvas);
-  buttons(gameData);
+  buttons(gameData, gameSave);
 
   const condition = { start: false };
   setTimeout(() => {
@@ -284,7 +286,7 @@ export function createAnimationLoop(
           drone.isActive =
             (index === selectionState.selectedDroneIndex && drone.isAlive) ||
             drone.isReloading;
-          drone.flyToreload(layer1);
+          drone.flyToreload(layer1, pauseState.isPaused);
           drone.draw(ctx);
         }
       });
@@ -298,7 +300,7 @@ export function createAnimationLoop(
       // відмалльовка інтерфейсу
       ctx.restore();
       droneScope.draw(currentDrone);
-      minimap.draw(gameData);
+      minimap.draw(gameData, slider);
       droneIcons.forEach((object) => {
         object.draw();
       });

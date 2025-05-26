@@ -15,11 +15,51 @@
       <div class="menu">
         <a class="menu-button" id="start">НОВА ГРА</a>
         <a class="menu-button" id="continue">ПРОДОВЖИТИ</a>
+        <a class="menu-button" id="load">ЗАВАНТАЖИТИ</a>
         <a class="menu-button" id="training">НАВЧАННЯ</a>
         <a class="menu-button" id="settings">НАЛАШТУВАННЯ</a>
-        <a href="#" class="menu-button" id="account">РЕЄСТРАЦІЯ</a>
       </div>
     </div>
+
+    <div id="loadModal" class="load_container">
+      <div class="load_menu">
+        <h2>Завантажити гру</h2>
+        <div class="load_menu" id="loadContent"></div>
+        <button id="back" class="menu-button">Назад</button>
+      </div>
+    </div>
+
+    <div id="startModal" class="load_container">
+      <div class="load_menu start">
+        <h2>Рівень складності</h2>
+        <div class="startGroup">
+          <button id="easy" class="loadButton">Легкий</button>
+          <p style="font-size: 10px">
+            вага бомб 75% влучність ворогів 50% від норми
+          </p>
+        </div>
+        <div class="startGroup">
+          <button id="medium" class="loadButton">Середній</button>
+          <p style="font-size: 10px">
+            вага бомб 85% влучність ворогів 75% від норми
+          </p>
+        </div>
+        <div class="startGroup">
+          <button id="hard" class="loadButton">Важкий</button>
+          <p style="font-size: 10px">
+            вага бомб 100% влучність ворогів 100% від норми
+          </p>
+        </div>
+        <div class="startGroup">
+          <button id="veryHard" class="loadButton">Дуже важкий</button>
+          <p style="font-size: 10px">
+            вага бомб 100% влучність ворогів 125% від норми
+          </p>
+        </div>
+        <button id="startBack" class="menu-button">Назад</button>
+      </div>
+    </div>
+
     <script type="module">
       import { setupDebugConsole } from "./js/utils/debugConsole.js";
       setupDebugConsole();

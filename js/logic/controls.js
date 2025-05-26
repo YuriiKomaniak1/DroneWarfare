@@ -130,6 +130,7 @@ export function setupDroneSelectionByClick(canvas, droneIcons) {
         mouseY <= icon.y + icon.height
       ) {
         if (!gameState.drones[index].isReloading) {
+          switchToNextAvailableBomb(false);
           selectionState.selectedDroneIndex = index;
           console.log(`🚁 Вибрано дрона #${index + 1}`);
         }

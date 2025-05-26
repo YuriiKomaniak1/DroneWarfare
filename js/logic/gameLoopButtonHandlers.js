@@ -13,7 +13,7 @@ const music = new Audio("./assets/audio/music/upgrade-music.mp3");
 music.loop = true;
 music.volume = volumeSettings.musicVolume * 0.15;
 
-export function buttons(gameData, gameState) {
+export function buttons(gameData, gameSave) {
   document.getElementById("backToMenu").addEventListener("click", () => {
     location.href = "briefing.html";
   });
@@ -24,12 +24,31 @@ export function buttons(gameData, gameState) {
   });
   document.querySelectorAll(".nextMission").forEach((button) => {
     button.addEventListener("click", () => {
+      // Оновлюємо основні дані
       gameData.currentMission++;
       gameData.score += 1000 + gameData.currentMission * 100;
       localStorage.setItem("gameData", JSON.stringify(gameData));
+
+      // Завантажуємо сейви або створюємо нові
+      let gameSave = JSON.parse(localStorage.getItem("gameSave")) || {
+        saves: [],
+      };
+      let difficulty = JSON.parse(localStorage.getItem("Difficulty")) || {};
+
+      // Додаємо сейв з копією gameData
+      gameSave.saves.push({
+        data: JSON.parse(JSON.stringify(gameData)),
+        date: Date.now(),
+        mission: gameData.currentMission,
+        difficulty: JSON.parse(JSON.stringify(difficulty)),
+      });
+
+      // Зберігаємо сейви
+      localStorage.setItem("gameSave", JSON.stringify(gameSave));
       location.href = "briefing.html";
     });
   });
+
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       togglePause();

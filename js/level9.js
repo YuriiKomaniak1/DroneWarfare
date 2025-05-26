@@ -31,21 +31,21 @@ function startLevel(
 
   setTimeout(() => {
     addVehicle(BTR82, 1200, 4, 1, 1, 1);
-  }, 19000);
+  }, 29000);
 
   setTimeout(() => {
     addVehicle(MTLBKPVT, 1550, 0, 0, 0, 1);
-  }, 12500);
+  }, 18500);
 
   addVehicle(BMP2, 500, 4, 1, 1, 2);
 
   setTimeout(() => {
     addVehicle(BTR82, 1000, 4, 1, 1, 2);
-  }, 6000);
+  }, 11000);
 
   setTimeout(() => {
     addVehicle(BMP2, 1400, 4, 1, 1, 2);
-  }, 14000);
+  }, 21000);
 
   function addVehicle(
     Class,

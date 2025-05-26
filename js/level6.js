@@ -22,6 +22,9 @@ function startLevel(
   navGrid,
   vehicleNavGrid
 ) {
+  if (!gameData.timer) {
+    gameData.timer = { startTime: null, totalTime: null };
+  }
   let vehicles = [];
   let enemies = [];
   gameData.timer.startTime = Date.now();

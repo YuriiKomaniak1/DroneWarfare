@@ -370,39 +370,39 @@ export class FragBomb extends Bomb {
       if (distance < 20 + this.gameData.fragBombUpgrade) {
         hitStatus = true;
       } else if (
-        distance < 40 + this.gameData.fragBombUpgrade &&
+        distance < 40 + this.gameData.fragBombUpgrade * 2 &&
         !enemy.crawl
       ) {
         if (Math.random() > 0.2 - this.gameData.fragBombUpgrade * 0.01)
           hitStatus = true;
       } else if (
-        distance < 50 + this.gameData.fragBombUpgrade &&
+        distance < 50 + this.gameData.fragBombUpgrade * 2 &&
         !enemy.crawl
       ) {
-        if (Math.random() > 0.3 - this.gameData.fragBombUpgrade * 0.01)
+        if (Math.random() > 0.3 - this.gameData.fragBombUpgrade * 0.015)
           hitStatus = true;
       } else if (
-        distance < 90 + this.gameData.fragBombUpgrade &&
+        distance < 90 + this.gameData.fragBombUpgrade * 2 &&
         !enemy.crawl
       ) {
-        if (Math.random() > 0.5 - this.gameData.fragBombUpgrade * 0.01)
+        if (Math.random() > 0.5 - this.gameData.fragBombUpgrade * 0.015)
           hitStatus = true;
       } else if (
-        distance < 140 + this.gameData.fragBombUpgrade &&
+        distance < 140 + this.gameData.fragBombUpgrade * 3 &&
         !enemy.crawl
       ) {
-        if (Math.random() > 0.9 - this.gameData.fragBombUpgrade * 0.01)
+        if (Math.random() > 0.85 - this.gameData.fragBombUpgrade * 0.02)
           hitStatus = true;
       }
     } else if (enemy.vehicle.armor === 0) {
       if (distance < 40 + this.gameData.fragBombUpgrade) {
-        if (Math.random() > 0.85 - this.gameData.fragBombUpgrade * 0.01)
+        if (Math.random() > 0.85 - this.gameData.fragBombUpgrade * 0.015)
           hitStatus = true;
-      } else if (distance < 50 + this.gameData.fragBombUpgrade) {
-        if (Math.random() > 0.9 - this.gameData.fragBombUpgrade * 0.01)
+      } else if (distance < 50 + this.gameData.fragBombUpgrade * 2) {
+        if (Math.random() > 0.9 - this.gameData.fragBombUpgrade * 0.015)
           hitStatus = true;
-      } else if (distance < 90 + this.gameData.fragBombUpgrade) {
-        if (Math.random() > 0.95 - this.gameData.fragBombUpgrade * 0.01)
+      } else if (distance < 90 + this.gameData.fragBombUpgrade * 2) {
+        if (Math.random() > 0.92 - this.gameData.fragBombUpgrade * 0.015)
           hitStatus = true;
       }
     }
@@ -421,12 +421,15 @@ export class FragBomb extends Bomb {
     if (vehicle.armor === 0) {
       if (
         this.distanceToVehicle(0 + this.gameData.fragBombUpgrade, vehicle) &&
-        Math.random() > 0.9 - this.gameData.fragBombUpgrade * 0.01
+        Math.random() > 0.9 - this.gameData.fragBombUpgrade * 0.015
       ) {
         vehicle.isBurningF(vehicles, gameData, NavigationGrid);
       } else if (
-        this.distanceToVehicle(30 + this.gameData.fragBombUpgrade, vehicle) &&
-        Math.random() > 0.8 - this.gameData.fragBombUpgrade * 0.01
+        this.distanceToVehicle(
+          30 + this.gameData.fragBombUpgrade * 2,
+          vehicle
+        ) &&
+        Math.random() > 0.8 - this.gameData.fragBombUpgrade * 0.015
       ) {
         vehicle.isStoppedF(vehicles, gameData, NavigationGrid);
       }
@@ -498,7 +501,7 @@ export class HeBomb extends Bomb {
         vehicle.isBurningF(vehicles, gameData, NavigationGrid);
       } else if (
         this.distanceToVehicle(20, vehicle) &&
-        this.checkHEArmorPenetration(this.armorPenetration + 0.05, vehicle)
+        this.checkHEArmorPenetration(this.armorPenetration + 0.1, vehicle)
       ) {
         vehicle.isStoppedF(vehicles, gameData, NavigationGrid);
       }
@@ -557,7 +560,7 @@ export class FootMine extends Bomb {
   checkMineCollision(enemy) {
     if (this.isOnRoof()) return false;
     if (
-      Math.hypot(this.x - enemy.x, this.y - enemy.y) < 7 &&
+      Math.hypot(this.x - enemy.x, this.y - enemy.y) < 9 &&
       !enemy.dead &&
       !enemy.vehicle
     ) {
@@ -718,30 +721,30 @@ export class ShrapnelBomb extends Bomb {
     let hitStatus = false;
     if (!enemy.vehicle) {
       if (distance < 40 + this.gameData.shrapnelBombUpgrade) {
-        if (Math.random() > 0.2 - this.gameData.shrapnelBombUpgrade * 0.01)
+        if (Math.random() > 0.1 - this.gameData.shrapnelBombUpgrade * 0.01)
           hitStatus = true;
-      } else if (distance < 50 + this.gameData.shrapnelBombUpgrade) {
-        if (Math.random() > 0.3 - this.gameData.shrapnelBombUpgrade * 0.01)
+      } else if (distance < 50 + this.gameData.shrapnelBombUpgrade * 2) {
+        if (Math.random() > 0.25 - this.gameData.shrapnelBombUpgrade * 0.015)
           hitStatus = true;
-      } else if (distance < 80 + this.gameData.shrapnelBombUpgrade) {
-        if (Math.random() > 0.6 - this.gameData.shrapnelBombUpgrade * 0.01)
+      } else if (distance < 80 + this.gameData.shrapnelBombUpgrade * 2) {
+        if (Math.random() > 0.45 - this.gameData.shrapnelBombUpgrade * 0.015)
           hitStatus = true;
-      } else if (distance < 120 + this.gameData.shrapnelBombUpgrade) {
-        if (Math.random() > 0.7 - this.gameData.shrapnelBombUpgrade * 0.01)
+      } else if (distance < 120 + this.gameData.shrapnelBombUpgrade * 2) {
+        if (Math.random() > 0.6 - this.gameData.shrapnelBombUpgrade * 0.015)
           hitStatus = true;
-      } else if (distance < 160 + this.gameData.shrapnelBombUpgrade) {
-        if (Math.random() > 0.8 - this.gameData.shrapnelBombUpgrade * 0.01)
+      } else if (distance < 160 + this.gameData.shrapnelBombUpgrade * 3) {
+        if (Math.random() > 0.75 - this.gameData.shrapnelBombUpgrade * 0.015)
           hitStatus = true;
       }
     } else if (enemy.vehicle.armor === 0) {
       if (distance < 40 + this.gameData.shrapnelBombUpgrade) {
-        if (Math.random() > 0.8 - this.gameData.shrapnelBombUpgrade * 0.01)
+        if (Math.random() > 0.65 - this.gameData.shrapnelBombUpgrade * 0.02)
           hitStatus = true;
       } else if (distance < 70 + this.gameData.shrapnelBombUpgrade) {
-        if (Math.random() > 0.85 - this.gameData.shrapnelBombUpgrade * 0.01)
+        if (Math.random() > 0.75 - this.gameData.shrapnelBombUpgrade * 0.02)
           hitStatus = true;
       } else if (distance < 110 + this.gameData.shrapnelBombUpgrade) {
-        if (Math.random() > 0.9 - this.gameData.shrapnelBombUpgrade * 0.01)
+        if (Math.random() > 0.9 - this.gameData.shrapnelBombUpgrade * 0.02)
           hitStatus = true;
       }
     }
@@ -751,18 +754,18 @@ export class ShrapnelBomb extends Bomb {
     if (vehicle.armor === 0) {
       if (
         this.distanceToVehicle(
-          10 + this.gameData.shrapnelBombUpgrade,
+          10 + this.gameData.shrapnelBombUpgrade * 2,
           vehicle
         ) &&
-        Math.random() > 0.85 - this.gameData.shrapnelBombUpgrade * 0.01
+        Math.random() > 0.75 - this.gameData.shrapnelBombUpgrade * 0.02
       ) {
         vehicle.isBurningF(vehicles, gameData, NavigationGrid);
       } else if (
         this.distanceToVehicle(
-          50 + this.gameData.shrapnelBombUpgrade,
+          50 + this.gameData.shrapnelBombUpgrade * 2,
           vehicle
         ) &&
-        Math.random() > 0.75 - this.gameData.shrapnelBombUpgrade * 0.01
+        Math.random() > 0.65 - this.gameData.shrapnelBombUpgrade * 0.02
       ) {
         vehicle.isStoppedF(vehicles, gameData, NavigationGrid);
       }
@@ -825,7 +828,7 @@ export class HeClusterMunition extends Bomb {
     let hitStatus = false;
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     if (!enemy.vehicle) {
-      hitStatus = distance < 47;
+      hitStatus = distance < 48;
     } else if (enemy.vehicle.armor === 0) {
       if (distance < 46) {
         if (Math.random() > 0.7) hitStatus = true;

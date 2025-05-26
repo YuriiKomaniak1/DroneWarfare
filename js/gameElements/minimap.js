@@ -14,7 +14,7 @@ export class Minimap {
     this.vehicles = vehicles;
     this.bombs = bombs;
   }
-  draw(gameData) {
+  draw(gameData, slider) {
     // Фон мінікарти
     this.ctx.fillStyle = "rgba(34, 34, 34, 0.5)";
     this.ctx.fillRect(this.mapX, this.mapY, this.width, this.height);
@@ -55,12 +55,19 @@ export class Minimap {
 
     //фон видимої зони
     this.ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
-    this.ctx.fillRect(
-      this.mapX + -this.layer.x * this.scaleX,
-      this.mapY + -this.layer.y * this.scaleY,
-      this.canvasWidth * this.scaleX,
-      this.canvasHeight * this.scaleY
+    this.ctx.save();
+    this.ctx.translate(
+      this.mapX + (this.canvasWidth / 2 - this.layer.x) * this.scaleX,
+      this.mapY + (this.canvasHeight / 2 - this.layer.y) * this.scaleY
     );
+    this.ctx.fillRect(
+      (-this.canvasWidth * this.scaleX * (1 / slider.value)) / 2,
+      (-this.canvasHeight * this.scaleY * (1 / slider.value)) / 2,
+
+      this.canvasWidth * this.scaleX * (1 / slider.value),
+      this.canvasHeight * this.scaleY * (1 / slider.value)
+    );
+    this.ctx.restore();
 
     // вороги
     this.enemies.forEach((enemy) => {

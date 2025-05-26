@@ -87,7 +87,10 @@ class DroneIcons {
     if (this.drone.isReloading) {
       const now = Date.now();
       const elapsed = now - this.drone.reloadStartTime;
-      const progress = Math.min(elapsed / this.drone.reloadingTime, 1);
+      const progress = Math.min(
+        this.drone.reloadFrameCount / this.drone.requiredReloadFrames,
+        1
+      );
       const barWidth = (this.width - 4) * progress;
       this.ctx.fillStyle = "rgba(100, 100, 100, 1)";
       this.ctx.fillRect(

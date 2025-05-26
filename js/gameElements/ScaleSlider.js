@@ -7,7 +7,7 @@ export class ScaleSlider {
     this.y = canvas.height / 2 - 100;
     this.width = 10;
     this.height = 200;
-    this.handleRadius = 15;
+    this.handleRadius = 18;
 
     this.min = 0.5;
     this.max = 1.25;

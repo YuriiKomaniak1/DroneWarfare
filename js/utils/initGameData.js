@@ -1,27 +1,82 @@
 export function initGameDataStrict(gameData) {
-  if (!gameData) throw new Error("gameData is undefined");
+  if (!gameData || typeof gameData !== "object") {
+    console.warn("gameData was null or invalid, initializing new object");
+    gameData = {};
+  }
 
-  if (!Array.isArray(gameData.trenches))
-    throw new Error("gameData.trenches is missing or invalid");
+  // Гарантуємо масиви
+  gameData.trenches ??= [];
+  gameData.obstacles ??= [];
+  gameData.bigObstacles ??= [];
+  gameData.bombObstacles ??= [];
+  gameData.covers ??= [];
 
-  if (!Array.isArray(gameData.obstacles))
-    throw new Error("gameData.obstacles is missing or invalid");
+  // Числові значення
+  gameData.winScore = Number(gameData.winScore) || 0;
+  gameData.looseScore = Number(gameData.looseScore) || 0;
+  gameData.initialWinScore =
+    Number(gameData.initialWinScore) || gameData.winScore;
+  gameData.initialLooseScore =
+    Number(gameData.initialLooseScore) || gameData.looseScore;
+  gameData.score = Number(gameData.score) || 0;
 
-  if (!Array.isArray(gameData.bigObstacles))
-    throw new Error("gameData.bigObstacles is missing or invalid");
+  // Таймер
+  gameData.timer ??= { startTime: null, totalTime: null };
+  if (typeof gameData.timer.startTime !== "number")
+    gameData.timer.startTime = null;
+  if (typeof gameData.timer.totalTime !== "number")
+    gameData.timer.totalTime = null;
 
-  if (!Array.isArray(gameData.bombObstacles))
-    throw new Error("gameData.bombObstacles is missing or invalid");
+  // Дрони
+  gameData.drones ??= [];
 
-  if (!Array.isArray(gameData.covers))
-    throw new Error("gameData.covers is missing or invalid");
+  // Флаги доступності
+  gameData.mediumDroneAvailable ??= false;
+  gameData.bigDroneAvailable ??= false;
+  gameData.slot4Available ??= false;
+  gameData.slot5Available ??= false;
 
-  // Можеш додати ще інші обов'язкові поля:
-  if (typeof gameData.winScore !== "number")
-    throw new Error("gameData.winScore is missing or invalid");
+  gameData.footMineAvailable ??= false;
+  gameData.tankMineAvailable ??= false;
+  gameData.magnetMineAvailable ??= false;
+  gameData.shrapnelMineAvailable ??= false;
+  gameData.clusterBombAvailable ??= false;
+  gameData.shapedClusterBombAvailable ??= false;
 
-  if (typeof gameData.looseScore !== "number")
-    throw new Error("gameData.looseScore is missing or invalid");
+  // Апгрейди (швидкість, місткість, HP)
+  const upgradeFields = [
+    "smallDroneSpeedUpgrade",
+    "mediumDroneSpeedUpgrade",
+    "bigDroneSpeedUpgrade",
+    "smallDroneCapacityUpgrade",
+    "mediumDroneCapacityUpgrade",
+    "bigDroneCapacityUpgrade",
+    "smallDroneHPUpgrade",
+    "mediumDroneHPUpgrade",
+    "bigDroneHPUpgrade",
+    "fragBombUpgrade",
+    "heBombUpgrade",
+    "shapedBombUpgrade",
+    "footMineUpgrade",
+    "tankMineUpgrade",
+    "magnetMineUpgrade",
+    "shrapnelBombUpgrade",
+    "clusterBombUpgrade",
+    "shapedClusterBombUpgrade",
+    "upgradeGap",
+    "gapScale",
+  ];
+  for (const field of upgradeFields) {
+    gameData[field] = Number(gameData[field]) || 0;
+  }
 
+  // Поточна місія
+  gameData.currentMission = Number(gameData.currentMission) || 1;
+
+  // Типово — null або 0
+  gameData.trenches ??= null;
+  gameData.covers ??= null;
+
+  // Повертаємо стабільний об'єкт
   return gameData;
 }

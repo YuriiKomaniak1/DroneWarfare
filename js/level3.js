@@ -53,19 +53,19 @@ function startLevel(
   createEnemySquad(4, 1, 1, 1350);
   setTimeout(() => {
     addVehicle(Tigr, 750, 1, 0, 0);
-  }, 8500);
+  }, 9500);
   setTimeout(() => {
     addVehicle(BMP1, 400, 0, 0, 0, 2);
   }, 6500);
   setTimeout(() => {
     addVehicle(BMP1, 1400, 0, 0, 0, 2);
-  }, 7000);
+  }, 12000);
   setTimeout(() => {
     addVehicle(Guntruck, 1150, 1, 0, 0, 0);
-  }, 9000);
+  }, 14000);
   setTimeout(() => {
     addVehicle(MTLB, 900, 0, 0, 0, 2);
-  }, 6000);
+  }, 18000);
 
   function addVehicle(
     Class,

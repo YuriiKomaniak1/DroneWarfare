@@ -28,15 +28,15 @@ function startLevel(
 
   setTimeout(() => {
     addVehicle(Tigr, 350, 1, 1, 0);
-  }, 8500);
+  }, 11000);
 
   setTimeout(() => {
     addVehicle(Guntruck, 1200, 1, 0, 0, 0);
-  }, 19000);
+  }, 29000);
 
   setTimeout(() => {
     addVehicle(Tigr, 1650, 1, 1, 0);
-  }, 12500);
+  }, 18500);
 
   addVehicle(BMP2, 500, 4, 1, 1, 2);
 
@@ -46,7 +46,7 @@ function startLevel(
 
   setTimeout(() => {
     addVehicle(BMP2, 1500, 4, 1, 1, 2);
-  }, 14000);
+  }, 21000);
 
   function addVehicle(
     Class,

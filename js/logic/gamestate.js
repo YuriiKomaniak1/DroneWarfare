@@ -90,7 +90,7 @@ class GameData {
     this.winScore = 1000;
     this.initialLooseScore = 0;
     this.initialWinScore = 0;
-    this.currentMission = 13;
+    this.currentMission = 1;
     this.drones = [];
     this.obstacles = [];
     this.bigObstacles = [];
@@ -106,23 +106,37 @@ class GameData {
     this.clusterBombAvailable = false;
     this.shapedClusterBombAvailable = false;
     this.smallDroneSpeedUpgrade = 0;
+    this.smallDroneSpeedUpgradeGap = 1000;
     this.mediumDroneSpeedUpgrade = 0;
+    this.mediumDroneSpeedUpgradeGap = 1000;
     this.bigDroneSpeedUpgrade = 0;
+    this.bigDroneSpeedUpgradeGap = 1000;
     this.smallDroneCapacityUpgrade = 0;
+    this.smallDroneCapacityUpgradeGap = 1000;
     this.mediumDroneCapacityUpgrade = 0;
+    this.mediumDroneCapacityUpgradeGap = 1000;
     this.bigDroneCapacityUpgrade = 0;
+    this.bigDroneCapacityUpgradeGap = 1000;
     this.smallDroneHPUpgrade = 0;
+    this.smallDroneHPUpgradeGap = 1000;
     this.mediumDroneHPUpgrade = 0;
+    this.mediumDroneHPUpgradeGap = 1000;
     this.bigDroneHPUpgrade = 0;
+    this.bigDroneHPUpgradeGap = 1000;
     this.fragBombUpgrade = 0;
+    this.fragBombUpgradeGap = 1000;
     this.heBombUpgrade = 0;
+    this.heBombUpgradeGap = 1000;
     this.shapedBombUpgrade = 0;
-    this.footMinebUpgrade = 0;
-    this.tankMineUpgrade = 0;
+    this.shapedBombUpgradeGap = 1000;
     this.magnetMineUpgrade = 0;
+    this.magnetMineUpgradeGap = 1000;
     this.shrapnelBombUpgrade = 0;
+    this.shrapnelBombUpgradeGap = 1000;
     this.clusterBombUpgrade = 0;
+    this.clusterBombUpgradeGap = 1000;
     this.shapedClusterBombUpgrade = 0;
+    this.shapedClusterBombUpgradeGap = 1000;
     this.upgradeGap = 0;
     this.gapScale = 250;
     this.trenches = null;
@@ -130,7 +144,9 @@ class GameData {
     this.timer = { startTime: null, totalTime: null };
   }
 }
+
 export const gameData = new GameData();
+
 const drones = [
   new SmallDrone(gameData),
   new SmallDrone(gameData),

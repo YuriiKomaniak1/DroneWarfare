@@ -32,6 +32,10 @@ document.getElementById("upgrade-button").addEventListener("click", () => {
   window.location.href = "upgrades.html";
 });
 document.getElementById("start-button").addEventListener("click", () => {
+  gameState.drones.forEach((drone, index) => {
+    gameState.rememberDrone(gameData, index);
+  });
+  localStorage.setItem("gameData", JSON.stringify(gameData));
   localStorage.setItem("playDroneMusic", "true");
   window.location.href = `level${missionKey}.html`;
 });

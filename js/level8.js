@@ -14,12 +14,12 @@ import {
 } from "./enemies/vehicle.js";
 
 initGame({
-  levelId: "level1",
-  mapId: "level1",
-  winScore: 1500,
-  looseScore: 500,
+  levelId: "level8",
+  mapId: "level8",
+  winScore: 3920,
+  looseScore: 1000,
   startLevel: startLevel,
-  mapWidth: 2000,
+  mapWidth: 3000,
   mapHeight: 3000,
 });
 

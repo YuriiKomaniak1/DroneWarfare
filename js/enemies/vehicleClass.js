@@ -727,6 +727,8 @@ export class Vehicle {
   }
   getNearestWalkableTile(x, y, navGrid, maxRadius = 120) {
     const step = 10; // Крок у пікселях
+    const cellSize = navGrid.cellSize;
+
     const directions = [
       [0, 0],
       [1, 0],
@@ -744,18 +746,19 @@ export class Vehicle {
         const testX = x + dx * r;
         const testY = y + dy * r;
 
-        const path = findPath(
-          navGrid,
-          { x: testX, y: testY },
-          { x: testX + 1, y: testY + 1 }
-        );
-        if (path.length > 0) {
-          return { x: testX, y: testY };
+        const tileX = Math.floor(testX / cellSize);
+        const tileY = Math.floor(testY / cellSize);
+
+        if (!navGrid.isBlocked(tileX, tileY)) {
+          return {
+            x: tileX * cellSize + cellSize / 2,
+            y: tileY * cellSize + cellSize / 2,
+          };
         }
       }
     }
 
-    return null; // нічого не знайдено
+    return null;
   }
   startFiringSoundLoop(canvas) {
     // 🔁 Якщо вже є активний таймер — не запускаємо ще раз, щоб уникнути дублювання

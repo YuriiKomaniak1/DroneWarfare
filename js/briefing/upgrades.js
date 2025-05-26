@@ -40,65 +40,59 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.removeItem("playBriefingMusic");
   }
 
-  //скролл
-
-  // let scrollY = 0;
-  // let startY = 0;
-  // let isDragging = false;
-
-  // const container = document.getElementById("upgradeContainer");
-
-  // container.addEventListener("touchstart", (e) => {
-  //   startY = e.touches[0].clientY;
-  //   isDragging = true;
-  // });
-
-  // container.addEventListener("touchmove", (e) => {
-  //   if (!isDragging) return;
-  //   const currentY = e.touches[0].clientY;
-  //   const deltaY = currentY - startY;
-  //   scrollY -= deltaY;
-  //   scrollY = Math.max(0, scrollY); // запобігти прокрутці вгору за межі
-  //   container.style.transform = `translateY(${-scrollY}px)`;
-  //   startY = currentY;
-  // });
-
-  // container.addEventListener("touchend", () => {
-  //   isDragging = false;
-  // });
-
   // присвоєння цін
-  const middleDroneOpenCost = 5000 + gameData.upgradeGap;
-  const bigDroneOpenCost = 8000 + gameData.upgradeGap;
-  const slot4OpenCost = 5000 + gameData.upgradeGap;
-  const slot5OpenCost = 9000 + gameData.upgradeGap;
-  const footMineOpenCost = 1000 + gameData.upgradeGap;
-  const tankMineOpenCost = 3000 + gameData.upgradeGap;
-  const magnetMineOpenCost = 5000 + gameData.upgradeGap;
-  const shrapnelBombOpenCost = 3000 + gameData.upgradeGap;
-  const clusterBombOpenCost = 5000 + gameData.upgradeGap;
-  const shapedClusterBombOpenCost = 7000 + gameData.upgradeGap;
-  const smallDroneSpeedUpgradeCost = 1000 + gameData.upgradeGap;
-  const mediumDroneSpeedUpgradeCost = 1000 + gameData.upgradeGap;
-  const bigDroneSpeedUpgradeCost = 1000 + gameData.upgradeGap;
-  const smallDroneCapacityUpgradeCost = 1000 + gameData.upgradeGap;
-  const mediumDroneCapacityUpgradeCost = 1000 + gameData.upgradeGap;
-  const bigDroneCapacityUpgradeCost = 1000 + gameData.upgradeGap;
-  const smallDroneHPUpgradeCost = 3000 + gameData.upgradeGap;
-  const mediumDroneHPUpgradeCost = 3000 + gameData.upgradeGap;
-  const bigDroneHPUpgradeCost = 3000 + gameData.upgradeGap;
-  const fragBombUpgradeCost = 1000 + gameData.upgradeGap;
-  const heBombUpgradeCost = 1000 + gameData.upgradeGap;
-  const shapedBombUpgradeCost = 1000 + gameData.upgradeGap;
-  const tankMineUpgradeCost = 1000 + gameData.upgradeGap;
-  const magnetMineUpgradeCost = 2000 + gameData.upgradeGap;
-  const shrapnelBombUpgradeCost = 1000 + gameData.upgradeGap;
-  const clusterBombUpgradeCost = 1000 + gameData.upgradeGap;
-  const shapedClusterBombUpgradeCost = 1000 + gameData.upgradeGap;
+  const mediumDroneOpenCost = 8000;
+  const bigDroneOpenCost = 10000;
+  const slot4OpenCost = 5000;
+  const slot5OpenCost = 10000;
+  const footMineOpenCost = 1000;
+  const tankMineOpenCost = 3000;
+  const magnetMineOpenCost = 5000;
+  const shrapnelBombOpenCost = 3000;
+  const clusterBombOpenCost = 5000;
+  const shapedClusterBombOpenCost = 10000;
+  const smallDroneSpeedUpgradeCost =
+    1000 + gameData.smallDroneSpeedUpgradeGap * gameData.smallDroneSpeedUpgrade;
+  const mediumDroneSpeedUpgradeCost =
+    1000 + gameData.mediumDroneSpeedUpgradeGap;
+  const bigDroneSpeedUpgradeCost =
+    1000 + gameData.bigDroneSpeedUpgradeGap * gameData.bigDroneSpeedUpgrade;
+  const smallDroneCapacityUpgradeCost =
+    1000 +
+    gameData.smallDroneCapacityUpgradeGap * gameData.smallDroneCapacityUpgrade;
+  const mediumDroneCapacityUpgradeCost =
+    1000 +
+    gameData.mediumDroneCapacityUpgradeGap *
+      gameData.mediumDroneCapacityUpgrade;
+  const bigDroneCapacityUpgradeCost =
+    1000 +
+    gameData.bigDroneCapacityUpgradeGap * gameData.bigDroneCapacityUpgrade;
+  const smallDroneHPUpgradeCost =
+    3000 + gameData.smallDroneHPUpgradeGap * gameData.smallDroneHPUpgrade;
+  const mediumDroneHPUpgradeCost =
+    3000 + gameData.mediumDroneHPUpgradeGap * gameData.mediumDroneHPUpgrade;
+  const bigDroneHPUpgradeCost =
+    3000 + gameData.bigDroneHPUpgradeGap * gameData.bigDroneHPUpgrade;
+  const fragBombUpgradeCost =
+    1000 + gameData.fragBombUpgradeGap * gameData.fragBombUpgrade;
+  const heBombUpgradeCost =
+    1000 + gameData.heBombUpgradeGap * gameData.heBombUpgrade;
+  const shapedBombUpgradeCost =
+    1000 + gameData.shapedBombUpgradeGap * gameData.shapedBombUpgrade;
+  const tankMineUpgradeCost = 1000;
+  const magnetMineUpgradeCost =
+    2000 + gameData.magnetMineUpgradeGap * gameData.magnetMineUpgrade;
+  const shrapnelBombUpgradeCost =
+    1000 + gameData.shrapnelBombUpgradeGap * gameData.shrapnelBombUpgrade;
+  const clusterBombUpgradeCost =
+    1000 + gameData.clusterBombUpgradeGap * gameData.clusterBombUpgrade;
+  const shapedClusterBombUpgradeCost =
+    1000 +
+    gameData.shapedClusterBombUpgradeGap * gameData.shapedClusterBombUpgrade;
 
   // присвоєння цін в HTML
   document.querySelectorAll(".middleDroneOpenCost").forEach((el) => {
-    el.textContent = middleDroneOpenCost;
+    el.textContent = mediumDroneOpenCost;
   });
   document.querySelectorAll(".bigDroneOpenCost").forEach((el) => {
     el.textContent = bigDroneOpenCost;
@@ -189,10 +183,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("middleDroneOpen").addEventListener("click", () => {
     if (
       !gameData.mediumDroneAvailable &&
-      gameData.score >= middleDroneOpenCost
+      gameData.score >= mediumDroneOpenCost
     ) {
       gameData.mediumDroneAvailable = true;
-      upgradeRoutine(middleDroneOpenCost, ".middleDroneOpenCost");
+      upgradeRoutine(mediumDroneOpenCost, ".middleDroneOpenCost");
     }
   });
   if (gameData.mediumDroneAvailable)
@@ -384,9 +378,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   document.getElementById("smallDroneCurrentCapacity").textContent =
-    800 + gameData.smallDroneCapacityUpgrade * 40;
+    900 + gameData.smallDroneCapacityUpgrade * 60;
   document.getElementById("smallDroneNextCapacity").textContent =
-    800 + (gameData.smallDroneCapacityUpgrade + 1) * 40;
+    900 + (gameData.smallDroneCapacityUpgrade + 1) * 60;
   document.getElementById("smallDroneCapacityUpgradeCount").textContent =
     gameData.smallDroneCapacityUpgrade;
 
@@ -473,9 +467,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   document.getElementById("mediumDroneCurrentCapacity").textContent =
-    1600 + gameData.mediumDroneCapacityUpgrade * 80;
+    1600 + gameData.mediumDroneCapacityUpgrade * 100;
   document.getElementById("mediumDroneNextCapacity").textContent =
-    1600 + (gameData.mediumDroneCapacityUpgrade + 1) * 80;
+    1600 + (gameData.mediumDroneCapacityUpgrade + 1) * 100;
   document.getElementById("mediumDroneCapacityUpgradeCount").textContent =
     gameData.mediumDroneCapacityUpgrade;
 
@@ -563,9 +557,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   document.getElementById("bigDroneCurrentCapacity").textContent =
-    6400 + gameData.bigDroneCapacityUpgrade * 200;
+    6400 + gameData.bigDroneCapacityUpgrade * 250;
   document.getElementById("bigDroneNextCapacity").textContent =
-    6400 + (gameData.bigDroneCapacityUpgrade + 1) * 200;
+    6400 + (gameData.bigDroneCapacityUpgrade + 1) * 250;
   document.getElementById("bigDroneCapacityUpgradeCount").textContent =
     gameData.bigDroneCapacityUpgrade;
 
@@ -612,6 +606,14 @@ document.addEventListener("DOMContentLoaded", () => {
       upgradeRoutine(fragBombUpgradeCost, ".fragBombUpgradeCost");
     }
   });
+  document.getElementById("fragBombCurrentRadius").textContent = (
+    7 +
+    gameData.fragBombUpgrade * 0.3
+  ).toFixed(1);
+  document.getElementById("fragBombNextRadius").textContent = (
+    7 +
+    (gameData.fragBombUpgrade + 1) * 0.3
+  ).toFixed(1);
   document.getElementById("fragBombUpgradeCount").textContent =
     gameData.fragBombUpgrade;
 
@@ -723,6 +725,14 @@ document.addEventListener("DOMContentLoaded", () => {
         upgradeRoutine(shrapnelBombUpgradeCost, ".shrapnelBombUpgradeCost");
       }
     });
+  document.getElementById("shrapnelBombCurrentRadius").textContent = (
+    7 +
+    gameData.shrapnelBombUpgrade * 0.3
+  ).toFixed(1);
+  document.getElementById("shrapnelBombNextRadius").textContent = (
+    7 +
+    (gameData.shrapnelBombUpgrade + 1) * 0.3
+  ).toFixed(1);
 
   document.getElementById("shrapnelBombUpgradeCount").textContent =
     gameData.shrapnelBombUpgrade;

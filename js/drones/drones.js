@@ -75,6 +75,8 @@ class Drone {
     this.type = "small";
     this.imageScale = 1;
     this.size = 1;
+    this.reloadFrameCount = 0;
+    this.requiredReloadFrames = 0;
   }
   resetPosition() {
     this.scale = 1;
@@ -82,7 +84,22 @@ class Drone {
     this.baseX = localCanvas.width / 2;
     this.baseY = localCanvas.height / 2;
   }
-  flyToreload(layer) {
+  flyToreload(layer, isPaused = false) {
+    // перезарядка
+    if (this.isReloading && !isPaused) {
+      this.reloadFrameCount++;
+
+      if (this.reloadFrameCount >= this.requiredReloadFrames) {
+        this.isReloading = false;
+        this.isActive = true;
+        this.bombStorage = this.cloneBombStorage(this.initialBombStorage);
+        this.baseX = 0;
+        this.baseY = 0;
+        this.scale = 1.5;
+        this.rotation = 0;
+        this.hp = this.initialHP;
+      }
+    }
     if (this.isReloading && this.isAlive) {
       if (this.scale > this.targetScale) {
         this.scale -= this.shrinkRate;
@@ -155,22 +172,12 @@ class Drone {
   }
 
   reloading(forseReload = false) {
-    if (this.isReloading || !this.isAlive) return; // якщо вже перезаряджається або мертвий — нічого не робимо
+    if (this.isReloading || !this.isAlive) return;
 
     if (this.isEmpty() || forseReload) {
       this.isReloading = true;
-      this.reloadStartTime = Date.now();
-      setTimeout(() => {
-        this.isReloading = false;
-        this.reloadStartTime = null;
-        this.isActive = true;
-        this.bombStorage = this.cloneBombStorage(this.initialBombStorage);
-        this.baseX = 0;
-        this.baseY = 0;
-        this.scale = 1.5;
-        this.rotation = 0;
-        this.hp = this.initialHP;
-      }, this.reloadingTime);
+      this.reloadFrameCount = 0;
+      this.requiredReloadFrames = Math.floor(this.reloadingTime / (1000 / 60));
     }
   }
 
@@ -285,8 +292,8 @@ export class SmallDrone extends Drone {
   constructor(gameData) {
     super();
     this.image = smallDroneImage;
-    this.capacity = 0.9 + gameData.smallDroneCapacityUpgrade * 0.04;
-    this.remainingCapacity = 0.9 + gameData.smallDroneCapacityUpgrade * 0.04;
+    this.capacity = 0.9 + gameData.smallDroneCapacityUpgrade * 0.06;
+    this.remainingCapacity = 0.9 + gameData.smallDroneCapacityUpgrade * 0.06;
     this.hp = 3 + gameData.smallDroneHPUpgrade;
     this.initialHP = 3 + gameData.smallDroneHPUpgrade;
     this.visibility = 4;
@@ -305,15 +312,15 @@ export class MediumDrone extends Drone {
   constructor(gameData) {
     super();
     this.image = mediumDroneImage;
-    this.capacity = 1.6 + gameData.mediumDroneCapacityUpgrade * 0.08;
-    this.remainingCapacity = 1.6 + gameData.mediumDroneCapacityUpgrade * 0.08;
+    this.capacity = 1.6 + gameData.mediumDroneCapacityUpgrade * 0.1;
+    this.remainingCapacity = 1.6 + gameData.mediumDroneCapacityUpgrade * 0.1;
     this.hp = 5 + gameData.mediumDroneHPUpgrade;
     this.initialHP = 5 + gameData.mediumDroneHPUpgrade;
     this.visibility = 10;
     this.initialVisibility = 10;
     this.frameWidth = 1024;
     this.frameHeight = 1024;
-    this.speed = 1 + gameData.mediumDroneSpeedUpgrade * 0.06;
+    this.speed = 1 + gameData.mediumDroneSpeedUpgrade * 0.07;
     this.hangers = 16;
     this.initialHangers = 16;
     this.type = "medium";
@@ -327,20 +334,20 @@ export class BigDrone extends Drone {
   constructor(gameData) {
     super();
     this.image = bigDroneImage;
-    this.capacity = 6.4 + gameData.bigDroneCapacityUpgrade * 0.2;
-    this.remainingCapacity = 6.4 + gameData.bigDroneCapacityUpgrade * 0.2;
+    this.capacity = 6.4 + gameData.bigDroneCapacityUpgrade * 0.25;
+    this.remainingCapacity = 6.4 + gameData.bigDroneCapacityUpgrade * 0.25;
     this.hp = 9 + gameData.bigDroneHPUpgrade;
     this.initialHP = 9 + gameData.bigDroneHPUpgrade;
     this.visibility = 20;
     this.initialVisibility = 20;
     this.frameWidth = 250;
     this.frameHeight = 250;
-    this.speed = 0.8 + gameData.bigDroneSpeedUpgrade * 0.04;
-    this.hangers = 36;
-    this.initialHangers = 30;
+    this.speed = 0.8 + gameData.bigDroneSpeedUpgrade * 0.05;
+    this.hangers = 40;
+    this.initialHangers = 40;
     this.type = "big";
     this.imageScale = 3;
-    this.size = 8;
+    this.size = 10;
     this.reloadingTime = 1000 * 60 * 2.5;
   }
 }

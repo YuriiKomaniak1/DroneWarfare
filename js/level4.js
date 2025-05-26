@@ -7,7 +7,7 @@ initGame({
   levelId: "level4",
   mapId: "level4",
   winScore: 2200,
-  looseScore: 300,
+  looseScore: 400,
   startLevel: startLevel,
   mapWidth: 3000,
   mapHeight: 3000,
