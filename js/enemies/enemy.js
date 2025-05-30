@@ -388,8 +388,10 @@ export class Enemy {
           (5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2)) *
           drone.size *
           difficulty.accuracy;
+        let shot = Math.random() * 120;
+        console.log(shot, chance);
 
-        if (Math.random() * 150 < chance && drone.hp >= 1) {
+        if (shot < chance && drone.hp >= 1) {
           --drone.hp;
         }
         this.fireTimer = 0;
@@ -500,7 +502,7 @@ export class Machinegunner extends Enemy {
     this.image = machinegunnerImage;
     this.type = "machinegunner";
     this.fireDistance = 350;
-    this.fireRate = 3;
+    this.fireRate = 5;
     this.droneSpottingChanse = 2;
     this.score = 100;
     this.winScore = this.score;

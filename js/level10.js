@@ -13,6 +13,7 @@ initGame({
   mapWidth: 2500,
   mapHeight: 2500,
   rotationDegrees: 180,
+  startY: 2400,
 });
 
 function startLevel(

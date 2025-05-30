@@ -11,6 +11,7 @@ initGame({
   startLevel: startLevel,
   mapWidth: 2000,
   mapHeight: 3000,
+  startY: 2300,
 });
 
 function startLevel(
@@ -57,7 +58,7 @@ function startLevel(
       ];
     }
     const squad = createRifleSquad(
-      Math.random() * 250 + 50,
+      Math.random() * 350 + 50,
       50,
       layer1,
       ctx,

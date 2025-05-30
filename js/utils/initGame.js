@@ -10,6 +10,7 @@ export async function initGame({
   startLevel,
   mapWidth,
   mapHeight,
+  startY,
   rotationDegrees = 0,
 }) {
   let gameData = JSON.parse(localStorage.getItem("gameData") || "{}");
@@ -73,6 +74,7 @@ export async function initGame({
       mapWidth,
       mapHeight,
       ctx,
+      startY,
       rotationDegrees
     );
     const layer2 = new Layer(
@@ -81,6 +83,7 @@ export async function initGame({
       mapWidth,
       mapHeight,
       ctx,
+      startY,
       rotationDegrees
     );
     const navGrid = new NavigationGrid(layer1, 15, gameData.obstacles);

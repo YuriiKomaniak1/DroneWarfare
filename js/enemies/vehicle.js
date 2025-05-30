@@ -126,6 +126,8 @@ const MSTAturret = new Image();
 MSTAturret.src = "./assets/img/vehicles/MSTAturret.png";
 const crate = new Image();
 crate.src = "./assets/img/vehicles/crate.png";
+const uav = new Image();
+uav.src = "./assets/img/vehicles/uav.png";
 
 import { Vehicle } from "./vehicleClass.js";
 import { VehicleSoundPlayer } from "../gameElements/sounds.js";
@@ -155,7 +157,7 @@ export class UralSupply extends Vehicle {
     this.width = 100;
     this.height = 225;
     this.type = "uralSupply";
-    this.scale = 0.7;
+    this.scale = 0.65;
     this.speed = 0.38;
     this.score = 400;
     this.gassmokeoffsetY = -0.7;
@@ -198,7 +200,7 @@ export class Grad extends Vehicle {
   }
 }
 
-export class BukM2 extends Vehicle {
+export class Buk extends Vehicle {
   constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
     super(x, y, layer, ctx, waypoints, navigaionsGrid);
     this.image = bukM2Image;
@@ -206,7 +208,7 @@ export class BukM2 extends Vehicle {
     this.y = y;
     this.width = 100;
     this.height = 220;
-    this.type = "bukM2";
+    this.type = "buk";
     this.scale = 0.7;
     this.speed = 0.28;
     this.score = 3000;
@@ -404,7 +406,7 @@ export class Guntruck extends Vehicle {
     this.looseScore = this.score;
     this.droneSpottingChanse = 4;
     this.fireDistance = 400;
-    this.fireRate = 8;
+    this.fireRate = 10;
     this.fireSound = new Audio("assets/audio/fire/heavyMachinegun.mp3");
     this.driveSound = new VehicleSoundPlayer(
       "assets/audio/vehicle/jeep.mp3",
@@ -441,7 +443,7 @@ export class Tigr extends Vehicle {
     this.looseScore = this.score;
     this.droneSpottingChanse = 2;
     this.fireDistance = 320;
-    this.fireRate = 3;
+    this.fireRate = 5;
   }
 }
 
@@ -473,7 +475,7 @@ export class BTR82 extends Vehicle {
     this.looseScore = this.score;
     this.droneSpottingChanse = 2;
     this.fireDistance = 320;
-    this.fireRate = 4;
+    this.fireRate = 6;
     this.hasCrew = true;
   }
 }
@@ -527,7 +529,7 @@ export class MTLBKPVT extends Vehicle {
     this.hasTurret = true;
     this.turretOffsetX = 0;
     this.turretOffsetY = -0.3;
-    this.droneSpottingChanse = 5;
+    this.droneSpottingChanse = 9;
     this.fireRate = 10;
     this.fireDistance = 420;
     this.winScore = this.score;
@@ -565,7 +567,7 @@ export class KPVT extends Vehicle {
     this.static = true;
     this.fireDistance = 420;
     this.turretRotateRange = 45;
-    this.droneSpottingChanse = 8;
+    this.droneSpottingChanse = 10;
     this.winScore = this.score;
     this.looseScore = this.score;
     this.hasDriver = false;
@@ -603,6 +605,31 @@ export class Crate extends Vehicle {
   }
 }
 
+export class UAV extends Vehicle {
+  constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
+    super(x, y, layer, ctx, waypoints, navigaionsGrid);
+    this.image = uav;
+    this.x = x;
+    this.y = y;
+    this.width = 195;
+    this.height = 152;
+    this.type = "uav";
+    this.scale = 0.5;
+    this.speed = 0.3;
+    this.score = 1000;
+    this.winScore = this.score;
+    this.looseScore = this.score;
+    this.static = true;
+    this.proiected = false;
+    this.stoppedFrame = 1;
+    this.destroyedFrame = 2;
+    this.armor = 1;
+    this.protectionScale = 0.15;
+    this.hasDriver = false;
+    this.mark = "goal";
+  }
+}
+
 export class MTLBZU23 extends Vehicle {
   constructor(x, y, layer, ctx, waypoints, navigaionsGrid) {
     super(x, y, layer, ctx, waypoints, navigaionsGrid);
@@ -620,7 +647,7 @@ export class MTLBZU23 extends Vehicle {
     this.gassmokeoffsetX = 0.7;
     this.smokeScale = 0.6;
     this.armor = 2;
-    this.score = 650;
+    this.score = 850;
     this.hasCrew = true;
     this.hasGunner = true;
     this.hasTurret = true;
@@ -631,7 +658,7 @@ export class MTLBZU23 extends Vehicle {
     this.winScore = this.score;
     this.looseScore = this.score;
     this.fireDistance = 450;
-    this.droneSpottingChanse = 5;
+    this.droneSpottingChanse = 9;
     this.fireSound = new Audio("assets/audio/fire/zu23.mp3");
     this.driveSound = new VehicleSoundPlayer(
       "assets/audio/vehicle/tank.mp3",
@@ -656,7 +683,7 @@ export class ZU23 extends Vehicle {
     this.gassmokeoffsetY = -0.7;
     this.gassmokeoffsetX = 0.7;
     this.smokeScale = 0.6;
-    this.score = 550;
+    this.score = 750;
     this.hasGunner = true;
     this.hasTurret = true;
     this.turretOffsetX = 0;
@@ -666,7 +693,7 @@ export class ZU23 extends Vehicle {
     this.fireDistance = 450;
     this.turretRotateRange = 45;
     this.fireSound.volume = 1;
-    this.droneSpottingChanse = 5;
+    this.droneSpottingChanse = 10;
     this.fireSoundRateMin = 1;
     this.fireSoundRateMax = 2;
     this.winScore = this.score;
@@ -702,12 +729,12 @@ export class Shilka extends Vehicle {
     this.hasTurret = true;
     this.turretOffsetX = 0;
     this.turretOffsetY = -0.0;
-    this.fireRate = 30;
+    this.fireRate = 60;
     this.fireDistance = 450;
     this.vehiclefireOffsetY = 0.15;
     this.winScore = this.score;
     this.looseScore = this.score;
-    this.droneSpottingChanse = 6;
+    this.droneSpottingChanse = 15;
     this.fireSound = new Audio("assets/audio/fire/zu23.mp3");
     this.driveSound = new VehicleSoundPlayer(
       "assets/audio/vehicle/tank.mp3",
@@ -795,8 +822,8 @@ export class T62 extends Vehicle {
     this.width = 100;
     this.height = 173;
     this.type = "t62";
-    this.scale = 0.67;
-    this.turretScale = 0.67;
+    this.scale = 0.685;
+    this.turretScale = 0.685;
     this.speed = 0.3;
     this.gassmokeoffsetY = -0.7;
     this.gassmokeoffsetX = 0.7;

@@ -12,6 +12,7 @@ initGame({
   startLevel: startLevel,
   mapWidth: 2000,
   mapHeight: 3000,
+  startY: 1700,
 });
 
 function startLevel(
@@ -53,14 +54,14 @@ function startLevel(
   createEnemySquad(7, 2, 1, 1500);
 
   setTimeout(() => {
-    addVehicle(MTLBKPVT, 750, 2, 0, 0);
+    addVehicle(MTLBKPVT, 450, 2, 0, 0);
   }, 8500);
   setTimeout(() => {
-    addVehicle(BMP3, 400, 0, 0, 0, 2);
+    addVehicle(BMP3, 250, 0, 0, 0, 2);
   }, 6500);
 
   setTimeout(() => {
-    addVehicle(BTR82, 1000, 0, 0, 0, 1);
+    addVehicle(BTR82, 650, 0, 0, 0, 1);
   }, 6000);
   setTimeout(() => {
     addVehicle(BMP2, 1150, 1, 0, 0, 0);

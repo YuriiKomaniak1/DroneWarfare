@@ -21,6 +21,7 @@ initGame({
   startLevel: startLevel,
   mapWidth: 3000,
   mapHeight: 3000,
+  startY: 2900,
 });
 
 function startLevel(
@@ -181,7 +182,7 @@ function startLevel(
     // === Шукаємо шлях один раз при створенні ===
     vehicle.path = findPath(vehicleNavGrid, waypoints[0], waypoints[1]);
     vehicle.currentPathIndex = 0;
-    if (vehicle.static) vehicle.winScore;
+    if (vehicle.static) vehicle.winScore = 0;
     vehicle.speed = 0.4;
     vehicle.embark(enemies, navGrid, riflemans, mashinegunners, grenadiers, 0);
     vehicles.push(vehicle);

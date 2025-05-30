@@ -638,7 +638,7 @@ export class TankMine extends Bomb {
 }
 // магнітна міна
 export class MagnetMine extends Bomb {
-  static weight = 0.8 * difficulty.weight;
+  static weight = 1.1 * difficulty.weight;
   static type = "magnetMine";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);

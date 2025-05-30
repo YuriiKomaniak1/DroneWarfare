@@ -2,12 +2,12 @@ import { createRifleSquad } from "./enemies/enemy.js";
 import { NavigationGrid, findPath } from "./logic/navigation.js";
 import { createAnimationLoop } from "./logic/gameloop.js";
 import { initGame } from "./utils/initGame.js";
-import { BTR82, BMP1, MTLBKPVT, T55 } from "./enemies/vehicle.js";
+import { Guntruck, BMP1, MTLBZU23, T72, Tigr } from "./enemies/vehicle.js";
 initGame({
   levelId: "level13",
   mapId: "level5",
-  winScore: 5864,
-  looseScore: 1466,
+  winScore: 7712,
+  looseScore: 1361,
   startLevel: startLevel,
   mapWidth: 2000,
   mapHeight: 3500,
@@ -28,30 +28,39 @@ function startLevel(
   let enemies = [];
 
   setTimeout(() => {
-    addVehicle(MTLBKPVT, 350, 2, 1, 0, 1);
+    addVehicle(MTLBZU23, 350, 4, 1, 1, 1);
   }, 11000);
 
   setTimeout(() => {
-    addVehicle(BTR82, 1200, 4, 1, 1, 1);
+    addVehicle(BMP1, 1200, 4, 1, 1, 1);
   }, 29000);
 
   setTimeout(() => {
-    addVehicle(MTLBKPVT, 1650, 2, 1, 0, 1);
+    addVehicle(MTLBZU23, 1650, 4, 1, 1, 1);
   }, 18500);
 
   addVehicle(BMP1, 500, 4, 1, 1, 2);
 
   setTimeout(() => {
-    addVehicle(BTR82, 1000, 4, 1, 1, 2);
+    addVehicle(Tigr, 1000, 2, 1, 0, 0);
   }, 8000);
 
   setTimeout(() => {
-    addVehicle(T55, 1400, 0, 0, 0, 2);
+    addVehicle(T72, 1400, 0, 0, 0, 2);
   }, 21000);
 
   setTimeout(() => {
-    addVehicle(T55, 750, 0, 0, 0, 2);
+    addVehicle(T72, 750, 0, 0, 0, 2);
   }, 34000);
+  setTimeout(() => {
+    addVehicle(T72, 350, 0, 0, 0, 2);
+  }, 44000);
+  setTimeout(() => {
+    addVehicle(Guntruck, 1200, 1, 0, 0, 0);
+  }, 59000);
+  setTimeout(() => {
+    addVehicle(Guntruck, 600, 1, 0, 0, 0);
+  }, 59000);
 
   function addVehicle(
     Class,

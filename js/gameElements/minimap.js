@@ -85,11 +85,13 @@ export class Minimap {
             enemy.type === "grenadier" ||
             enemy.type === "crew"
           ) {
-            this.ctx.fillStyle = "rgb(255, 0, 0)";
+            this.ctx.fillStyle =
+              enemy.mark !== "goal" ? "rgb(255, 0, 0)" : "rgb(214, 202, 37)";
             this.ctx.fillRect(tempX, tempY, 3, 3);
           }
           if (enemy.type === "machinegunner") {
-            this.ctx.fillStyle = "rgb(123, 2, 2)";
+            this.ctx.fillStyle =
+              enemy.mark !== "goal" ? "rgb(123, 2, 2)" : "rgb(214, 202, 37)";
             this.ctx.fillRect(tempX, tempY, 3, 3);
           }
         }

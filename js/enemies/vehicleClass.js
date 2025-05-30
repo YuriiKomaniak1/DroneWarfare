@@ -545,7 +545,7 @@ export class Vehicle {
           drone.size *
           difficulty.accuracy;
 
-        if (Math.random() * 150 < chance && drone.hp >= 1) {
+        if (Math.random() * 120 < chance && drone.hp >= 1) {
           --drone.hp;
         }
         this.fireTimer = 0;
@@ -838,7 +838,7 @@ export class Vehicle {
       const newGrid = new NavigationGrid(
         this.layer,
         this.navigationsGrid.cellSize,
-        gameData.obstacles
+        gameData.bigObstacles
       );
 
       // Передати її всім юнітам

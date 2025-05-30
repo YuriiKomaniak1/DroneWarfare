@@ -11,6 +11,7 @@ initGame({
   startLevel: startLevel,
   mapWidth: 2500,
   mapHeight: 2500,
+  startY: 2200,
 });
 
 function startLevel(

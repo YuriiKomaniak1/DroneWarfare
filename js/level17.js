@@ -2,17 +2,17 @@ import { createRifleSquad } from "./enemies/enemy.js";
 import { NavigationGrid, findPath } from "./logic/navigation.js";
 import { createAnimationLoop } from "./logic/gameloop.js";
 import { initGame } from "./utils/initGame.js";
-import { BTR82, BMP1, MTLBKPVT, T55 } from "./enemies/vehicle.js";
+import { BMP3, T62, T72, BTR82, MTLBKPVT } from "./enemies/vehicle.js";
+
 initGame({
-  levelId: "level13",
-  mapId: "level5",
-  winScore: 5864,
-  looseScore: 1466,
+  levelId: "level1",
+  mapId: "level1",
+  winScore: 5352,
+  looseScore: 1338,
   startLevel: startLevel,
   mapWidth: 2000,
-  mapHeight: 3500,
+  mapHeight: 3000,
   startY: 1700,
-  rotationDegrees: 180,
 });
 
 function startLevel(
@@ -27,31 +27,58 @@ function startLevel(
   let vehicles = [];
   let enemies = [];
 
+  function createEnemySquad(riflemans, mashinegunners, grenadiers, startX) {
+    let waypoints = [];
+    waypoints = [
+      { x: startX, y: 60 },
+      { x: startX + Math.random() * 200 - 100, y: 1500 },
+      { x: startX + Math.random() * 200 - 100, y: 3000 },
+    ];
+
+    const squad = createRifleSquad(
+      600,
+      50,
+      layer1,
+      ctx,
+      navGrid,
+      waypoints,
+      riflemans,
+      mashinegunners,
+      grenadiers,
+      0
+    );
+    enemies.push(...squad);
+  }
+  createEnemySquad(9, 2, 2, 500);
+  createEnemySquad(9, 2, 2, 1000);
+  createEnemySquad(9, 2, 2, 1500);
+
   setTimeout(() => {
-    addVehicle(MTLBKPVT, 350, 2, 1, 0, 1);
+    addVehicle(MTLBKPVT, 450, 2, 0, 0);
+  }, 8500);
+  setTimeout(() => {
+    addVehicle(BMP3, 250, 0, 0, 0, 2);
+  }, 6500);
+  setTimeout(() => {
+    addVehicle(T62, 620, 0, 0, 0, 1);
   }, 11000);
 
   setTimeout(() => {
-    addVehicle(BTR82, 1200, 4, 1, 1, 1);
-  }, 29000);
+    addVehicle(T72, 850, 0, 0, 0, 1);
+  }, 6000);
+  setTimeout(() => {
+    addVehicle(MTLBKPVT, 1150, 1, 0, 0, 0);
+  }, 9000);
+  setTimeout(() => {
+    addVehicle(T62, 1000, 0, 0, 0, 1);
+  }, 6000);
 
   setTimeout(() => {
-    addVehicle(MTLBKPVT, 1650, 2, 1, 0, 1);
-  }, 18500);
-
-  addVehicle(BMP1, 500, 4, 1, 1, 2);
-
+    addVehicle(BMP3, 1600, 0, 0, 0, 2);
+  }, 7000);
   setTimeout(() => {
-    addVehicle(BTR82, 1000, 4, 1, 1, 2);
-  }, 8000);
-
-  setTimeout(() => {
-    addVehicle(T55, 1400, 0, 0, 0, 2);
-  }, 21000);
-
-  setTimeout(() => {
-    addVehicle(T55, 750, 0, 0, 0, 2);
-  }, 34000);
+    addVehicle(MTLBKPVT, 1750, 2, 0, 0);
+  }, 8500);
 
   function addVehicle(
     Class,
@@ -65,7 +92,7 @@ function startLevel(
       { x: startX, y: 50 },
       { x: startX, y: 101 },
       { x: startX, y: 1000 },
-      { x: startX, y: 3500 },
+      { x: startX, y: 3000 },
     ];
     let vehicle = new Class(
       waypoints[0].x,
@@ -77,6 +104,7 @@ function startLevel(
     );
     // === Шукаємо шлях один раз при створенні ===
     vehicle.path = findPath(vehicleNavGrid, waypoints[0], waypoints[1]);
+    vehicle.speed = 0.18;
     vehicle.currentPathIndex = 0;
     vehicle.embark(
       enemies,
@@ -88,7 +116,6 @@ function startLevel(
     );
     vehicles.push(vehicle);
   }
-
   const winLoseConditions = {
     win: (gameState, gameData, enemies, vehicles) => {
       return gameData.winScore <= 0;

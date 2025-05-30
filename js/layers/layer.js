@@ -1,15 +1,23 @@
 export class Layer {
-  constructor(image, canvas, mapWidth, mapHeight, ctx, rotationDegrees = 0) {
+  constructor(
+    image,
+    canvas,
+    mapWidth,
+    mapHeight,
+    ctx,
+    startY,
+    rotationDegrees = 0
+  ) {
     this.canvas = canvas;
     this.x = canvas.width / 2 - mapWidth / 2;
-    this.y = canvas.height - mapHeight;
+    this.y = canvas.height - startY;
     this.width = mapWidth;
     this.height = mapHeight;
     this.image = image;
     this.speedX = 0;
     this.speedY = 0;
-    this.acceleration = 0.01;
-    this.deceleration = 0.007;
+    this.acceleration = 0;
+    this.deceleration = 0;
     this.ctx = ctx;
     this.rotation = (rotationDegrees * Math.PI) / 180; // з градусів у радіани
   }
