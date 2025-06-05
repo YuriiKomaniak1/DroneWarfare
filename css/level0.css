@@ -1,0 +1,70 @@
+@import "global.css";
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--menu-background-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#canvas1 {
+  border: 3px solid black;
+  background-color: var(--canvas-background-color);
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  max-width: 1500px;
+  z-index: 1;
+  position: relative;
+}
+.tmodal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--modal-window-background-color);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  visibility: hidden;
+}
+
+.text__block {
+  text-align: left;
+}
+
+.modal__content {
+  background-color: var(--modal-window-main-color);
+  padding: 20px;
+  max-width: 500px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  color: black; /* якщо потрібно, заміни */
+}
+
+.modal__button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  background-color: var(--modal-buttons-color);
+  color: var(--modal-buttons-text-color);
+  border-radius: 5px;
+  cursor: pointer;
+}
+#modal1 {
+  visibility: visible;
+}

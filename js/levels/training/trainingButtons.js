@@ -7,9 +7,7 @@ let pressedButtonIndex = null;
 
 export function drawMenuButtons(ctx, minimap, training) {
   let labels = []; // Змінна для збереження міток кнопок
-  if (training) {
-    labels = ["Меню", "Навчання", "Вороги"];
-  } else if (getWinCondition()) {
+  if (getWinCondition()) {
     labels = ["Меню", "Перемога"];
   } else {
     labels = ["Меню"]; // для звичайних місій
@@ -79,12 +77,6 @@ export function handleMenuClick(e, canvas, gameData, openTrainingModal) {
       pressedButtonIndex = index;
       setTimeout(() => {
         switch (button.label) {
-          case "Навчання":
-            openTrainingModal();
-            break;
-          case "Вороги":
-            openEnemiesModal();
-            break;
           case "Меню":
             const pauseModal = document.getElementById("pauseModal");
             if (pauseModal) pauseModal.style.visibility = "visible";
@@ -94,9 +86,7 @@ export function handleMenuClick(e, canvas, gameData, openTrainingModal) {
             localStorage.setItem("playBriefingMusic", "true");
             window.location.href = "briefing.html";
             break;
-          case "Пауза":
-            togglePause();
-            break;
+
           case "Перемога":
             gameData.currentMission++;
             localStorage.setItem("playBriefingMusic", "true");
@@ -143,18 +133,4 @@ function isInsideButton(mouseX, mouseY, button) {
     mouseY >= button.y &&
     mouseY <= button.y + button.height
   );
-}
-
-function openEnemiesModal() {
-  const modal = document.getElementById("enemiesModal");
-  if (modal) {
-    modal.style.visibility = "visible";
-  }
-}
-
-export function closeEnemiesModal() {
-  const modal = document.getElementById("enemiesModal");
-  if (modal) {
-    modal.style.visibility = "hidden";
-  }
 }

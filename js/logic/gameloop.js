@@ -311,8 +311,8 @@ export function createAnimationLoop(
       slider.fadeOutStep();
       slider.draw();
 
+      gameState.drawScore(ctx, canvas, gameData);
       if (!training) {
-        gameState.drawScore(ctx, canvas, gameData);
         if (condition.start) {
           winLoseTest(
             winLoseConditions,

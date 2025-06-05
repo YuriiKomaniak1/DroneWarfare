@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dronETerra - тренування</title>
+    <link rel="stylesheet" href="./css/level0.css" />
+  </head>
+  <body class="body">
+    <canvas id="canvas1"></canvas>
+
+    <div id="modal1" class="tmodal">
+      <div class="modal__content" id="modal1__content">
+        <h2>Вітаю!</h2>
+        <div class="text__block">
+          <p>
+            Це навчальна місія гри dronETerra. В ній не зберігаються бали, та
+            вона не впливає на проходження гри.
+          </p>
+          <p>
+            Гравець керує дроном, який може літати над полем бою. Гравець не
+            бачить самого дрону, лише його приціл. Завдання гравця - знищити
+            ворогів, та ворожу техніку. Гравець може використовувати різні види
+            боєприпасів та різні дрони.
+          </p>
+        </div>
+        <button id="modal1Button" class="modal__button">Далі</button>
+      </div>
+    </div>
+
+    <div id="modal2" class="tmodal">
+      <div class="modal__content" id="modal2__content">
+        <h2>Вітаю!</h2>
+        <div class="text__block">
+          <p>
+            Погляньте на нижню частину екрану, щоб побачити кнопки управління
+            дроном
+          </p>
+          <ul>
+            <li>
+              <strong>1-Джойстик</strong> -керує рухом дрону (вгору, вниз,
+              вліво, вправо)
+            </li>
+            <li><strong>2-Скидання бомби</strong> - скидання активної бомби</li>
+            <li>
+              <strong>3- Зміна бомби</strong> - зміна типу бомб з наявних на
+              дроні
+            </li>
+          </ul>
+        </div>
+        <img
+          src="./assets/img/trainingInfo/bottomButtons.png"
+          alt="Кнопки управління дроном"
+          width="200px"
+        />
+        <button id="modal2Button" class="modal__button">Далі</button>
+      </div>
+    </div>
+
+    <script>
+      fetch("common-ui.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.body.insertAdjacentHTML("beforeend", html);
+
+          // Підключаємо CSS вручну
+          const link = document.createElement("link");
+          link.rel = "stylesheet";
+          link.href = "./css/common-ui.css"; // шлях до CSS
+          document.head.appendChild(link);
+        });
+    </script>
+    <script type="module">
+      import { setupDebugConsole } from "./js/utils/debugConsole.js";
+      setupDebugConsole();
+    </script>
+    <script src="./js/level0.js" type="module"></script>
+  </body>
+</html>
