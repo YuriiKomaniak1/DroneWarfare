@@ -225,7 +225,7 @@ class Drone {
 
     if (this.remainingCapacity >= weight && this.hangers >= 1) {
       this.bombStorage[type].push("bomb");
-      this.remainingCapacity -= weight;
+      this.remainingCapacity = (this.remainingCapacity - weight).toFixed(4);
       this.hangers--;
     }
   }
@@ -325,8 +325,8 @@ export class MediumDrone extends Drone {
     this.initialHangers = 16;
     this.type = "medium";
     this.imageScale = 0.5;
-    this.size = 2;
-    this.reloadingTime = 1000 * 60 * 1.8;
+    this.size = 4;
+    this.reloadingTime = 1000 * 60 * 2;
   }
 }
 
@@ -347,7 +347,7 @@ export class BigDrone extends Drone {
     this.initialHangers = 40;
     this.type = "big";
     this.imageScale = 3;
-    this.size = 10;
+    this.size = 12;
     this.reloadingTime = 1000 * 60 * 2.5;
   }
 }

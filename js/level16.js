@@ -97,7 +97,7 @@ function startLevel(
       vehicleNavGrid
     );
     // === Шукаємо шлях один раз при створенні ===
-    if (vehicle.type !== "grad" || vehicle.type !== "mtlbZU23") {
+    if (vehicle.type !== "grad" && vehicle.type !== "mtlbZU23") {
       vehicle.winScore = 0;
       vehicle.looseScore = 0;
     }
@@ -123,7 +123,7 @@ function startLevel(
       return allDronesDead || scoreTooLow;
     },
 
-    addedFunction(vehicles, enemies) {},
+    addedFunction(vehicles, enemies, bombs) {},
   };
 
   createAnimationLoop(

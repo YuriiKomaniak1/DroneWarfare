@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dronETerra training - рівень 24</title>
+    <link rel="stylesheet" href="./css/level1.css" />
+  </head>
+  <body class="body">
+    <canvas id="canvas1"></canvas>
+    <script>
+      fetch("common-ui.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.body.insertAdjacentHTML("beforeend", html);
+
+          // Підключаємо CSS вручну
+          const link = document.createElement("link");
+          link.rel = "stylesheet";
+          link.href = "./css/common-ui.css"; // шлях до CSS
+          document.head.appendChild(link);
+        });
+    </script>
+    <script type="module">
+      import { setupDebugConsole } from "./js/utils/debugConsole.js";
+      setupDebugConsole();
+    </script>
+    <script src="./js/level24.js" type="module"></script>
+  </body>
+</html>

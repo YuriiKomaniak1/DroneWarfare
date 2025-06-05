@@ -20,10 +20,27 @@
 
       <div id="button-panel">
         <button id="back-button" class="briefing-button">Назад</button>
+        <button id="save-button" class="briefing-button">Зберегти</button>
         <button id="upgrade-button" class="briefing-button">Апгрейди</button>
         <button id="start-button" class="briefing-button">Старт</button>
       </div>
     </div>
+
+    <div id="saveModal" class="container">
+      <div class="save_menu">
+        <h2>Зберегти гру</h2>
+        <div class="save_menu" id="saveContent"></div>
+        <button id="back" class="briefing-button">Назад</button>
+      </div>
+    </div>
+
+    <div id="saveOkModal" class="container">
+      <div class="save_menu">
+        <p>Гру успішно збережено!</p>
+        <button id="back1" class="briefing-button">Назад</button>
+      </div>
+    </div>
+
     <script type="module">
       import { setupDebugConsole } from "./js/utils/debugConsole.js";
       setupDebugConsole();

@@ -29,3 +29,43 @@ body {
   max-width: 900px;
   width: 100%;
 }
+
+.save_menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  min-width: 230px;
+  margin-bottom: 20px;
+}
+
+#back {
+  margin-top: 15px;
+}
+
+.saveButton {
+  min-width: 220px;
+  width: 100%;
+  height: 30px;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--button-color);
+  color: black;
+  font-size: 12px;
+  font-weight: 500;
+  /* text-transform: uppercase; */
+  border: none;
+  cursor: pointer;
+}
+#saveButton:hover {
+  background-color: var(--button-hover-color);
+}
+#saveModal {
+  visibility: hidden;
+}
+
+#saveOkModal {
+  visibility: hidden;
+}

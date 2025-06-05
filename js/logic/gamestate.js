@@ -85,12 +85,12 @@ class GameState {
 
 class GameData {
   constructor() {
-    this.score = 100000;
+    this.score = 140000;
     this.looseScore = 1000;
     this.winScore = 1000;
     this.initialLooseScore = 0;
     this.initialWinScore = 0;
-    this.currentMission = 19;
+    this.currentMission = 26;
     this.drones = [];
     this.obstacles = [];
     this.bigObstacles = [];
@@ -124,19 +124,19 @@ class GameData {
     this.bigDroneHPUpgrade = 0;
     this.bigDroneHPUpgradeGap = 1000;
     this.fragBombUpgrade = 0;
-    this.fragBombUpgradeGap = 1000;
+    this.fragBombUpgradeGap = 750;
     this.heBombUpgrade = 0;
-    this.heBombUpgradeGap = 1000;
+    this.heBombUpgradeGap = 750;
     this.shapedBombUpgrade = 0;
-    this.shapedBombUpgradeGap = 1000;
+    this.shapedBombUpgradeGap = 750;
     this.magnetMineUpgrade = 0;
     this.magnetMineUpgradeGap = 1000;
     this.shrapnelBombUpgrade = 0;
-    this.shrapnelBombUpgradeGap = 1000;
+    this.shrapnelBombUpgradeGap = 1500;
     this.clusterBombUpgrade = 0;
-    this.clusterBombUpgradeGap = 1000;
+    this.clusterBombUpgradeGap = 2000;
     this.shapedClusterBombUpgrade = 0;
-    this.shapedClusterBombUpgradeGap = 1000;
+    this.shapedClusterBombUpgradeGap = 2000;
     this.upgradeGap = 0;
     this.gapScale = 250;
     this.trenches = null;

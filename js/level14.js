@@ -285,13 +285,16 @@ function startLevel(
       return allDronesDead || scoreTooLow;
     },
 
-    addedFunction(vehicles, enemies) {
+    addedFunction(vehicles, enemies, bombs) {
       if (enemies[0].looseScore !== 22) {
         enemies.forEach((enemy) => {
           if (enemy.isFiring) enemies[0].looseScore = 22;
         });
         vehicles.forEach((vehicle) => {
           if (vehicle.isFiring) enemies[0].looseScore = 22;
+        });
+        bombs.forEach((bomb) => {
+          if (bomb.exploded) enemies[0].looseScore = 22;
         });
       }
       const Guntrucks = vehicles.filter(

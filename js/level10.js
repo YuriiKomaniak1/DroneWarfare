@@ -218,7 +218,7 @@ function startLevel(
 
       return allDronesDead || scoreTooLow || timeLimitExceeded;
     },
-    addedFunction(vehicles, enemies) {
+    addedFunction(vehicles, enemies, bombs) {
       enemies.forEach((enemy) => {
         if (enemy.currentWaypointIndex === 2) enemy.static = true;
       });

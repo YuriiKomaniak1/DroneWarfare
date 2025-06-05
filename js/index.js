@@ -91,17 +91,16 @@ function goToSettings(withMusic) {
   window.location.href = "settings.html";
 }
 
-// Побудова збереженнь
-const savesContainer = document.getElementById("loadContent");
-const gameSave = JSON.parse(localStorage.getItem("gameSave")) || { saves: [] };
-if (gameSave.saves.length === 0) {
+// Побудова збереженнь в автозбереженнях
+const autosavesContainer = document.getElementById("autoloadContent");
+const autoSave = JSON.parse(localStorage.getItem("autoSave")) || { saves: [] };
+if (autoSave.saves.length === 0) {
   const noSavesMessage = document.createElement("p");
   noSavesMessage.textContent = "Немає збережень";
-  savesContainer.appendChild(noSavesMessage);
+  autosavesContainer.appendChild(noSavesMessage);
 }
-gameSave.saves.forEach((save, index) => {
+autoSave.saves.forEach((save, index) => {
   const missionId = save.mission;
-  const score = save.data?.score ?? 0;
   const date = new Date(save.date).toLocaleString(undefined, {
     year: "numeric",
     month: "2-digit",
@@ -120,5 +119,55 @@ gameSave.saves.forEach((save, index) => {
     window.location.href = "briefing.html";
   });
 
-  savesContainer.appendChild(btn);
+  autosavesContainer.appendChild(btn);
+});
+
+// Побудова збереженнь в збереженнях
+const gameSave = JSON.parse(localStorage.getItem("gameSave")) || {
+  saves: [],
+};
+
+const loadContent = document.getElementById("loadContent");
+loadContent.innerHTML = ""; // 🧹 очищення перед додаванням нових кнопок
+for (let i = 0; i < 10; i++) {
+  let load = gameSave.saves[i];
+
+  const btn = document.createElement("button");
+  btn.className = "loadButton";
+  if (load) {
+    const missionId = load.mission;
+    const difficulty = load.difficulty?.level || "medium";
+    const date = new Date(load.date).toLocaleString(undefined, {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    btn.textContent = `Місія ${missionId} — ${difficulty} — ${date}`;
+
+    loadContent.appendChild(btn);
+  } else {
+    btn.textContent = `Слот ${i + 1} — порожній`;
+    loadContent.appendChild(btn);
+  }
+  btn.addEventListener("click", () => {
+    localStorage.setItem("gameData", JSON.stringify(load.data));
+    localStorage.setItem("Difficulty", JSON.stringify(load.difficulty));
+    window.location.href = "briefing.html";
+  });
+}
+
+document.getElementById("gameSave").addEventListener("click", () => {
+  document.getElementById("autoText").style.display = "none";
+  document.getElementById("gameText").style.display = "block";
+  document.getElementById("autoloadContent").style.display = "none";
+  document.getElementById("loadContent").style.display = "block";
+});
+document.getElementById("autoSave").addEventListener("click", () => {
+  document.getElementById("gameText").style.display = "none";
+  document.getElementById("autoText").style.display = "block";
+  document.getElementById("loadContent").style.display = "none";
+  document.getElementById("autoloadContent").style.display = "block";
 });

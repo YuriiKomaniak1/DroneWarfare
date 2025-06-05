@@ -57,7 +57,7 @@ export function createAnimationLoop(
   gameData,
   training = false
 ) {
-  let gameSave = JSON.parse(localStorage.getItem("gameSave") || "{}");
+  let autoSave = JSON.parse(localStorage.getItem("autoSave") || "{}");
 
   window.addEventListener("click", enableDroneSound, { once: true });
   window.addEventListener("keydown", enableDroneSound, { once: true });
@@ -99,7 +99,7 @@ export function createAnimationLoop(
       gameData
     );
   }, canvas);
-  buttons(gameData, gameSave);
+  buttons(gameData, autoSave);
 
   const condition = { start: false };
   setTimeout(() => {
@@ -191,9 +191,11 @@ export function createAnimationLoop(
       vehicles.forEach((vehicle) => {
         if (vehicle.hasGunner) {
           if (
-            checkVehicleVisibility(currentDrone, vehicle, canvas, gameFrame)
+            checkVehicleVisibility(currentDrone, vehicle, canvas, gameFrame) &&
+            !vehicle.isCovered(gameData)
           ) {
             vehicle.isFiring = true;
+            vehicle.frameX = 0;
           }
           if (
             vehicle.isFiring &&
@@ -320,7 +322,7 @@ export function createAnimationLoop(
             vehicles
           );
         }
-        winLoseConditions.addedFunction(vehicles, enemies);
+        winLoseConditions.addedFunction(vehicles, enemies, bombs);
       }
       gameFrame++;
     }

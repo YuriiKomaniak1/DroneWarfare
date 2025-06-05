@@ -2,13 +2,13 @@ import { createRifleSquad } from "./enemies/enemy.js";
 import { NavigationGrid, findPath } from "./logic/navigation.js";
 import { createAnimationLoop } from "./logic/gameloop.js";
 import { initGame } from "./utils/initGame.js";
-import { BMP3, T62, T72, BTR82, MTLBKPVT } from "./enemies/vehicle.js";
+import { BMP3, T62, T72, MTLBKPVT } from "./enemies/vehicle.js";
 
 initGame({
   levelId: "level1",
   mapId: "level1",
-  winScore: 5352,
-  looseScore: 1338,
+  winScore: 8194,
+  looseScore: 1446,
   startLevel: startLevel,
   mapWidth: 2000,
   mapHeight: 3000,
@@ -128,7 +128,7 @@ function startLevel(
 
       return allDronesDead || scoreTooLow;
     },
-    addedFunction(vehicles, enemies) {},
+    addedFunction(vehicles, enemies, bombs) {},
   };
 
   createAnimationLoop(

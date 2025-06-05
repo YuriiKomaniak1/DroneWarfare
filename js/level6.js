@@ -429,7 +429,7 @@ function startLevel(
     win: (gameState, gameData, enemies, vehicles) => {
       return gameData.winScore <= 0;
     },
-    lose: (gameState, gameData, enemies, vehicles) => {
+    lose: (gameState, gameData, enemies, vehicles, bombs) => {
       const allDronesDead = gameState.drones.every(
         (drone) => !drone || !drone.isAlive
       );

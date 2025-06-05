@@ -248,7 +248,7 @@ export class Enemy {
           this.skullTimerStarted = true;
           setTimeout(() => {
             this.showSkull = false;
-          }, 5000); // 3 секунди і зникне повністю
+          }, 5000);
         }
       }
     } else {
@@ -573,6 +573,109 @@ export function createRifleSquad(
   }
   for (let i = 0; i < crew; i++) {
     pushSquadMember(Crew);
+  }
+
+  return squad;
+}
+
+export function createEqualRifleSquad(
+  spreadX,
+  layer,
+  ctx,
+  navGrid,
+  waypoints,
+  riflemans,
+  mashinegunners,
+  grenadiers,
+  crew
+) {
+  const squad = [];
+
+  function pushSquadMember(Class, number) {
+    // Створити копії waypoints з унікальними зміщеннями
+    const shiftedWaypoints = waypoints.map((wp, i) => ({
+      x: wp.x,
+      y: wp.y,
+    }));
+    const enemy = new Class(
+      shiftedWaypoints[0].x + spreadX * number,
+      shiftedWaypoints[0].y,
+      layer,
+      ctx,
+      shiftedWaypoints,
+      navGrid
+    );
+
+    squad.push(enemy);
+  }
+  let number = 0;
+  for (let i = 0; i < riflemans; i++) {
+    pushSquadMember(Rifleman, number);
+    number++;
+  }
+  for (let i = 0; i < mashinegunners; i++) {
+    pushSquadMember(Machinegunner, number);
+    number++;
+  }
+  for (let i = 0; i < grenadiers; i++) {
+    pushSquadMember(Grenadier, number);
+    number++;
+  }
+  for (let i = 0; i < crew; i++) {
+    pushSquadMember(Crew, number);
+    number++;
+  }
+
+  return squad;
+}
+
+export function createEqualRifleSquadM(
+  spreadX,
+  spreadY,
+  layer,
+  ctx,
+  navGrid,
+  waypoints,
+  riflemans,
+  mashinegunners,
+  grenadiers,
+  crew
+) {
+  const squad = [];
+
+  function pushSquadMember(Class, number) {
+    // Створити копії waypoints з унікальними зміщеннями
+    const shiftedWaypoints = waypoints.map((wp, i) => ({
+      x: wp.x + spreadX * number,
+      y: wp.y,
+    }));
+    const enemy = new Class(
+      shiftedWaypoints[0].x,
+      shiftedWaypoints[0].y + spreadY * number,
+      layer,
+      ctx,
+      shiftedWaypoints,
+      navGrid
+    );
+
+    squad.push(enemy);
+  }
+  let number = 0;
+  for (let i = 0; i < riflemans; i++) {
+    pushSquadMember(Rifleman, number);
+    number++;
+  }
+  for (let i = 0; i < mashinegunners; i++) {
+    pushSquadMember(Machinegunner, number);
+    number++;
+  }
+  for (let i = 0; i < grenadiers; i++) {
+    pushSquadMember(Grenadier, number);
+    number++;
+  }
+  for (let i = 0; i < crew; i++) {
+    pushSquadMember(Crew, number);
+    number++;
   }
 
   return squad;

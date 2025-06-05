@@ -9,43 +9,43 @@ let gameSpeed = 1;
 let gameFrame = 0;
 
 // Завантаження фонового зображення
-const backgroundLayer1 = new Image();
-backgroundLayer1.src = "./assets/img/index/mainBackgroundIndex.png";
+// const backgroundLayer1 = new Image();
+// backgroundLayer1.src = "./assets/img/index/mainBackgroundIndex.png";
 
-// Клас для фону
-class BackgroundLayer {
-  constructor(image, speedModifier) {
-    this.x = 0;
-    this.y = 0;
-    this.width = 3000;
-    this.height = backHeight;
-    this.image = image;
-    this.speedModifier = speedModifier;
-    this.speed = gameSpeed * this.speedModifier;
-  }
+// // Клас для фону
+// class BackgroundLayer {
+//   constructor(image, speedModifier) {
+//     this.x = 0;
+//     this.y = 0;
+//     this.width = 3000;
+//     this.height = backHeight;
+//     this.image = image;
+//     this.speedModifier = speedModifier;
+//     this.speed = gameSpeed * this.speedModifier;
+//   }
 
-  update() {
-    this.speed = gameSpeed * this.speedModifier;
-    if (this.x <= -this.width) this.x = 0;
-    this.x -= this.speed;
-  }
+//   update() {
+//     this.speed = gameSpeed * this.speedModifier;
+//     if (this.x <= -this.width) this.x = 0;
+//     this.x -= this.speed;
+//   }
 
-  draw() {
-    ctx.globalAlpha = 0.6; // Прозорість фону
-    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-    ctx.drawImage(
-      this.image,
-      this.x + this.width,
-      this.y,
-      this.width,
-      this.height
-    );
-    ctx.globalAlpha = 1; // Відновлюємо нормальну прозорість
-  }
-}
+//   draw() {
+//     ctx.globalAlpha = 0.6; // Прозорість фону
+//     ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+//     ctx.drawImage(
+//       this.image,
+//       this.x + this.width,
+//       this.y,
+//       this.width,
+//       this.height
+//     );
+//     ctx.globalAlpha = 1; // Відновлюємо нормальну прозорість
+//   }
+// }
 
-const backGroundLayer1 = new BackgroundLayer(backgroundLayer1, 0.8);
-const gameObjects = [backGroundLayer1];
+// const backGroundLayer1 = new BackgroundLayer(backgroundLayer1, 0.8);
+// const gameObjects = [backGroundLayer1];
 
 // Завантаження зображення дрона
 const smallDrone = new Image();
@@ -121,11 +121,11 @@ function animate(timestamp) {
     lastTime = timestamp - (deltaTime % FRAME_TIME);
     ctx.clearRect(0, 0, backWidth, backHeight);
 
-    // Малюємо фон
-    gameObjects.forEach((object) => {
-      object.update();
-      object.draw();
-    });
+    // // Малюємо фон
+    // gameObjects.forEach((object) => {
+    //   object.update();
+    //   object.draw();
+    // });
 
     // Малюємо дронів
     updateDrones();

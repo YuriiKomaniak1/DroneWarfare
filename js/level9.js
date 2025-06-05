@@ -96,7 +96,7 @@ function startLevel(
 
       return allDronesDead || scoreTooLow;
     },
-    addedFunction(vehicles, enemies) {},
+    addedFunction(vehicles, enemies, bombs) {},
   };
 
   createAnimationLoop(

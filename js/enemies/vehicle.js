@@ -209,7 +209,7 @@ export class Buk extends Vehicle {
     this.width = 100;
     this.height = 220;
     this.type = "buk";
-    this.scale = 0.7;
+    this.scale = 0.8;
     this.speed = 0.28;
     this.score = 3000;
     this.gassmokeoffsetY = -0.7;
@@ -925,7 +925,7 @@ export class T90 extends Vehicle {
     this.height = 180;
     this.type = "t90";
     this.scale = 0.67;
-    this.turretScale = 0.58;
+    this.turretScale = 0.6;
     this.speed = 0.3;
     this.gassmokeoffsetY = -0.7;
     this.gassmokeoffsetX = 0.7;

@@ -687,6 +687,7 @@ export class Vehicle {
             safeSpot.y >= this.layer.height
           ) {
             safeSpot = { x: this.baseX, y: this.baseY };
+            enemy.looseScore = 0; // не списуємо очки за викидання
           }
 
           enemy.baseX = safeSpot.x;
@@ -908,5 +909,18 @@ export class Vehicle {
         }
       });
     }
+  }
+  isCovered(gameData) {
+    for (const cover of gameData.covers) {
+      if (
+        this.baseX >= cover.x &&
+        this.baseX <= cover.x + cover.width &&
+        this.baseY >= cover.y &&
+        this.baseY <= cover.y + cover.height
+      ) {
+        return true;
+      }
+    }
+    return false;
   }
 }

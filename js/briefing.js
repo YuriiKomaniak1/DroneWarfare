@@ -27,6 +27,58 @@ document.getElementById("briefing-text").innerHTML = briefingText[missionKey];
 document.getElementById("back-button").addEventListener("click", () => {
   window.location.href = "index.html";
 });
+document.getElementById("back").addEventListener("click", () => {
+  document.getElementById("saveModal").style.visibility = "hidden";
+});
+document.getElementById("back1").addEventListener("click", () => {
+  document.getElementById("saveOkModal").style.visibility = "hidden";
+});
+document.getElementById("save-button").addEventListener("click", () => {
+  document.getElementById("saveModal").style.visibility = "visible";
+  const gameSave = JSON.parse(localStorage.getItem("gameSave")) || {
+    saves: [],
+  };
+  let difficulty = JSON.parse(localStorage.getItem("Difficulty")) || {};
+  const saveContent = document.getElementById("saveContent");
+  saveContent.innerHTML = ""; // 🧹 очищення перед додаванням нових кнопок
+  for (let i = 0; i < 10; i++) {
+    let save = gameSave.saves[i];
+    const btn = document.createElement("button");
+    btn.className = "saveButton";
+    if (save) {
+      const missionId = save.mission;
+      const difficulty = save.difficulty?.level || "medium";
+      const date = new Date(save.date).toLocaleString(undefined, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      btn.textContent = `Місія ${missionId} — ${difficulty} — ${date}`;
+
+      saveContent.appendChild(btn);
+    } else {
+      btn.textContent = `Слот ${i + 1} — порожній`;
+      saveContent.appendChild(btn);
+    }
+    btn.addEventListener("click", () => {
+      save = {
+        data: JSON.parse(JSON.stringify(gameData)),
+        date: Date.now(),
+        mission: gameData.currentMission,
+        difficulty: JSON.parse(JSON.stringify(difficulty)),
+      };
+      gameSave.saves[i] = save;
+      console.log("Збереження гри в слот", i + 1, save);
+      localStorage.setItem("gameSave", JSON.stringify(gameSave));
+      document.getElementById("saveModal").style.visibility = "hidden";
+      document.getElementById("saveOkModal").style.visibility = "visible";
+    });
+  }
+});
+
 document.getElementById("upgrade-button").addEventListener("click", () => {
   localStorage.setItem("playUpgradeMusic", "true");
   window.location.href = "upgrades.html";

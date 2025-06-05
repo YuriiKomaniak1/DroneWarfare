@@ -727,13 +727,13 @@ export class ShrapnelBomb extends Bomb {
         if (Math.random() > 0.25 - this.gameData.shrapnelBombUpgrade * 0.015)
           hitStatus = true;
       } else if (distance < 80 + this.gameData.shrapnelBombUpgrade * 2) {
-        if (Math.random() > 0.45 - this.gameData.shrapnelBombUpgrade * 0.015)
+        if (Math.random() > 0.55 - this.gameData.shrapnelBombUpgrade * 0.015)
           hitStatus = true;
       } else if (distance < 120 + this.gameData.shrapnelBombUpgrade * 2) {
-        if (Math.random() > 0.6 - this.gameData.shrapnelBombUpgrade * 0.015)
+        if (Math.random() > 0.7 - this.gameData.shrapnelBombUpgrade * 0.015)
           hitStatus = true;
       } else if (distance < 160 + this.gameData.shrapnelBombUpgrade * 3) {
-        if (Math.random() > 0.75 - this.gameData.shrapnelBombUpgrade * 0.015)
+        if (Math.random() > 0.85 - this.gameData.shrapnelBombUpgrade * 0.015)
           hitStatus = true;
       }
     } else if (enemy.vehicle.armor === 0) {
@@ -849,7 +849,7 @@ export class HeClusterMunition extends Bomb {
     if (vehicle.armor === 0) {
       if (this.distanceToVehicle(0, vehicle)) {
         vehicle.isBurningF(vehicles, gameData, NavigationGrid);
-      } else if (this.distanceToVehicle(32, vehicle) && Math.random() > 0.3) {
+      } else if (this.distanceToVehicle(25, vehicle) && Math.random() > 0.3) {
         vehicle.isStoppedF(vehicles, gameData, NavigationGrid);
       }
     } else {
@@ -860,7 +860,7 @@ export class HeClusterMunition extends Bomb {
         vehicle.isBurningF(vehicles, gameData, NavigationGrid);
       } else if (
         this.distanceToVehicle(10, vehicle) &&
-        this.checkHEArmorPenetration(this.armorPenetration + 0.05, vehicle)
+        this.checkHEArmorPenetration(this.armorPenetration, vehicle)
       ) {
         vehicle.isStoppedF(vehicles, gameData, NavigationGrid);
       }
@@ -879,7 +879,7 @@ export class ShapedClusterMunition extends Bomb {
     this.explosionScale = 30;
     this.scale = 0.3;
     this.shrinkRate = 1.003;
-    this.armorPenetration = 0.87 + this.gameData.shapedBombUpgrade * 0.01;
+    this.armorPenetration = 0.86 + this.gameData.shapedBombUpgrade * 0.01;
     this.explosionSound.volume = 0.65 * volumeSettings.soundVolume;
     this.explosionSound = new Audio("assets/audio/drone/shaped.mp3");
     this.explosionSound.volume = 0.45 * volumeSettings.soundVolume;
@@ -988,29 +988,7 @@ export class ShapedClusterBomb extends Bomb {
     this.explosionSound = new Audio("assets/audio/drone/cluster.mp3");
   }
   dropClusterBombs(bombs, layer1) {
-    for (let i = 0; i < 16; i++) {
-      const delay = Math.random() * 1800; // випадкова затримка до 0.5 секунди
-
-      setTimeout(() => {
-        const theta = Math.random() * 2 * Math.PI; // випадковий напрямок
-        const speed = 0.15 + Math.random() * 0.9;
-
-        const bomb = new HeClusterMunition(
-          this.x,
-          this.y,
-          layer1,
-          this.ctx,
-          this.gameData
-        );
-
-        // додаємо швидкість у випадковому напрямку
-        bomb.velocityX = Math.cos(theta) * speed;
-        bomb.velocityY = Math.sin(theta) * speed;
-
-        bombs.push(bomb);
-      }, delay);
-    }
-    for (let i = 0; i < 14 + this.gameData.shapedClusterBombUpgrade; i++) {
+    for (let i = 0; i < 26 + this.gameData.shapedClusterBombUpgrade; i++) {
       const delay = Math.random() * 1500; // випадкова затримка до 0.5 секунди
 
       setTimeout(() => {

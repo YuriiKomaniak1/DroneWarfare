@@ -143,7 +143,7 @@ function startLevel(
       return allDronesDead || scoreTooLow;
     },
 
-    addedFunction(vehicles, enemies) {
+    addedFunction(vehicles, enemies, bombs) {
       vehicles.forEach((vehicle) => {
         if (vehicle.currentWaypointIndex === 4 && vehicle.type !== "guntruck")
           vehicle.disembark(1450, 1650, navGrid);

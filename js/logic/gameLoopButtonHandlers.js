@@ -13,9 +13,10 @@ const music = new Audio("./assets/audio/music/upgrade-music.mp3");
 music.loop = true;
 music.volume = volumeSettings.musicVolume * 0.15;
 
-export function buttons(gameData, gameSave) {
+export function buttons(gameData, autoSave) {
   document.getElementById("backToMenu").addEventListener("click", () => {
-    location.href = "briefing.html";
+    localStorage.setItem("playBriefingMusic", "true");
+    location.href = "briefing.html?refresh=" + Date.now();
   });
   document.getElementById("backToGame").addEventListener("click", () => {
     const winModal = document.getElementById("winModal");
@@ -30,21 +31,25 @@ export function buttons(gameData, gameSave) {
       localStorage.setItem("gameData", JSON.stringify(gameData));
 
       // Завантажуємо сейви або створюємо нові
-      let gameSave = JSON.parse(localStorage.getItem("gameSave")) || {
+      let autoSave = JSON.parse(localStorage.getItem("autoSave")) || {
         saves: [],
       };
       let difficulty = JSON.parse(localStorage.getItem("Difficulty")) || {};
 
       // Додаємо сейв з копією gameData
-      gameSave.saves.push({
+      autoSave.saves.unshift({
         data: JSON.parse(JSON.stringify(gameData)),
         date: Date.now(),
         mission: gameData.currentMission,
         difficulty: JSON.parse(JSON.stringify(difficulty)),
       });
+      while (autoSave.saves.length > 10) {
+        autoSave.saves.pop();
+      }
 
       // Зберігаємо сейви
-      localStorage.setItem("gameSave", JSON.stringify(gameSave));
+      localStorage.setItem("autoSave", JSON.stringify(autoSave));
+      localStorage.setItem("playBriefingMusic", "true");
       location.href = "briefing.html";
     });
   });

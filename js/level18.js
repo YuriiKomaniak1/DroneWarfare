@@ -225,7 +225,7 @@ function startLevel(
       return allDronesDead || scoreTooLow;
     },
 
-    addedFunction(vehicles, enemies) {
+    addedFunction(vehicles, enemies, bombs) {
       vehicles.forEach((vehicle) => {
         if (vehicle.currentWaypointIndex === 5 && vehicle.type !== "guntruck") {
           vehicle.static = true;

@@ -49,12 +49,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const tankMineOpenCost = 3000;
   const magnetMineOpenCost = 5000;
   const shrapnelBombOpenCost = 3000;
-  const clusterBombOpenCost = 5000;
-  const shapedClusterBombOpenCost = 10000;
+  const clusterBombOpenCost = 10000;
+  const shapedClusterBombOpenCost = 20000;
   const smallDroneSpeedUpgradeCost =
     1000 + gameData.smallDroneSpeedUpgradeGap * gameData.smallDroneSpeedUpgrade;
   const mediumDroneSpeedUpgradeCost =
-    1000 + gameData.mediumDroneSpeedUpgradeGap;
+    1000 +
+    gameData.mediumDroneSpeedUpgradeGap * gameData.mediumDroneSpeedUpgrade;
   const bigDroneSpeedUpgradeCost =
     1000 + gameData.bigDroneSpeedUpgradeGap * gameData.bigDroneSpeedUpgrade;
   const smallDroneCapacityUpgradeCost =
@@ -791,15 +792,15 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   document.getElementById("shapedClusterBombCurrentState").textContent =
-    14 + gameData.shapedClusterBombUpі;
+    26 + gameData.shapedClusterBombUpgrade;
   document.getElementById("shapedClusterBombNextState").textContent =
-    14 + (gameData.shapedClusterBombUpgrade + 1);
+    26 + (gameData.shapedClusterBombUpgrade + 1);
   document.getElementById("shapedClusterBombCurrentAPState").textContent = (
-    0.87 +
+    0.86 +
     gameData.shapedClusterBombUpgrade * 0.01
   ).toFixed(2);
   document.getElementById("shapedClusterBombNextAPState").textContent = (
-    0.87 +
+    0.86 +
     (gameData.shapedClusterBombUpgrade + 1) * 0.01
   ).toFixed(2);
   document.getElementById("shapedClusterBombUpgradeCount").textContent =
