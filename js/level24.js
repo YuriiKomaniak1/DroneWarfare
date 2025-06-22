@@ -4,6 +4,11 @@ import { createAnimationLoop } from "./logic/gameloop.js";
 import { initGame } from "./utils/initGame.js";
 import { Guntruck } from "./enemies/vehicle.js";
 
+const volumeSettings = JSON.parse(localStorage.getItem("Volume")) || {
+  soundVolume: 0.1,
+  musicVolume: 0.6,
+};
+
 initGame({
   levelId: "level24",
   mapId: "level12",
@@ -42,8 +47,7 @@ function startLevel(
     );
     squad.forEach((enemy) => {
       enemy.static = true;
-      enemy.distance = 0.4;
-      enemy.speed = 0.22;
+      enemy.distance = 0.4 + Math.random() * 0.2;
     });
     enemies.push(...squad);
   }
@@ -355,7 +359,7 @@ function startLevel(
         enemies[1].looseScore = 50;
 
         const alarmSound = new Audio("assets/audio/vehicle/alarm.mp3");
-        alarmSound.volume = 0.05;
+        alarmSound.volume = 0.3 * volumeSettings.soundVolume;
         alarmSound.play();
 
         enemies.forEach((enemy) => {

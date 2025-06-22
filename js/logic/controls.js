@@ -11,7 +11,7 @@ import {
   shapedClusterBombIcon,
   changeArrowImage,
 } from "../gameElements/droneIcons.js";
-let joystickVisible = false;
+
 const bombIcons = {
   frag: fragBombIcon,
   he: heBombIcon,
@@ -23,6 +23,8 @@ const bombIcons = {
   cluster: clusterBombIcon,
   shapedCluster: shapedClusterBombIcon,
 };
+
+export let isControlSetupMode = false;
 
 // СТАН КЛАВІШ (клавіатура)
 export const keys = {
@@ -51,6 +53,7 @@ export const selectionState = {
 // Функція для ініціалізації клавіатури
 export function setupControls(dropBomb) {
   window.addEventListener("keydown", (e) => {
+    if (isControlSetupMode) return;
     switch (e.key) {
       case "ArrowUp":
         keys.up = true;
@@ -107,6 +110,7 @@ export function setupDroneSelectionByClick(canvas, droneIcons) {
   canvas.addEventListener("touchstart", handleSelection);
 
   function handleSelection(e) {
+    if (isControlSetupMode) return;
     e.preventDefault();
     let clientX, clientY;
     if (e.type === "touchstart") {
@@ -130,8 +134,8 @@ export function setupDroneSelectionByClick(canvas, droneIcons) {
         mouseY <= icon.y + icon.height
       ) {
         if (!gameState.drones[index].isReloading) {
-          switchToNextAvailableBomb(false);
           selectionState.selectedDroneIndex = index;
+          switchToNextAvailableBomb(false);
           console.log(`🚁 Вибрано дрона #${index + 1}`);
         }
       }
@@ -141,10 +145,10 @@ export function setupDroneSelectionByClick(canvas, droneIcons) {
 // СТАН ДЖОЙСТИКА І КНОПОК
 export const joystick = {
   baseX: 90,
-  baseY: 0,
+  baseY: window.innerHeight - 150,
   baseRadius: 70,
   stickX: 90,
-  stickY: 0,
+  stickY: window.innerHeight - 150,
   stickRadius: 26,
   active: false,
   touchId: null,
@@ -164,137 +168,97 @@ export const buttonSwitch = {
   pressed: false,
 };
 // МАЛЮВАННЯ ДЖОЙСТИКА І КНОПОК
-export function drawJoystickAndButtons(ctx, canvas) {
-  joystick.baseY = canvas.height - 120;
-  if (!joystick.active) {
-    joystick.stickY = joystick.baseY;
-  }
-
-  buttonDrop.x = canvas.width - 170;
-  buttonDrop.y = canvas.height - 70;
-
-  buttonSwitch.x = canvas.width - 60;
-  buttonSwitch.y = canvas.height - 120;
-
+export function drawJoystickAndButtons(ctx) {
   ctx.globalAlpha = 0.6;
-  if (joystickVisible) {
-    // Джойстик база
-    ctx.fillStyle = "gray";
-    ctx.beginPath();
-    ctx.arc(
-      joystick.baseX,
-      joystick.baseY,
-      joystick.baseRadius,
-      0,
-      Math.PI * 2
-    );
-    ctx.fill();
 
-    // Стiк
+  ctx.fillStyle = "gray";
+  ctx.beginPath();
+  ctx.arc(joystick.baseX, joystick.baseY, joystick.baseRadius, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = "white";
+  ctx.beginPath();
+  ctx.arc(
+    joystick.stickX,
+    joystick.stickY,
+    joystick.stickRadius,
+    0,
+    Math.PI * 2
+  );
+  ctx.fill();
+
+  const activeDrone = gameState.drones[selectionState.selectedDroneIndex];
+  if (!activeDrone || activeDrone.countBombs() === 0) {
+    ctx.globalAlpha = 1;
+    return;
+  }
+
+  ctx.globalAlpha = 0.8;
+  ctx.fillStyle = buttonDrop.pressed
+    ? "rgba(139,0,0,0.7)"
+    : "rgba(247, 198, 0, 0.2)";
+  ctx.beginPath();
+  ctx.arc(
+    buttonDrop.x,
+    buttonDrop.y,
+    buttonDrop.pressed ? buttonDrop.radius * 1.2 : buttonDrop.radius,
+    0,
+    Math.PI * 2
+  );
+  ctx.fill();
+
+  const icon = bombIcons[selectionState.selectedBombType];
+  if (icon.complete) {
+    ctx.drawImage(icon, buttonDrop.x - 12, buttonDrop.y - 25, 25, 50);
+  } else {
     ctx.fillStyle = "white";
-    ctx.beginPath();
-    ctx.arc(
-      joystick.stickX,
-      joystick.stickY,
-      joystick.stickRadius,
-      0,
-      Math.PI * 2
-    );
-    ctx.fill();
+    ctx.font = "24px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("💣", buttonDrop.x, buttonDrop.y);
   }
-  if (gameState.drones[selectionState.selectedDroneIndex].countBombs() > 0) {
-    // Кнопка Drop
-    ctx.globalAlpha = 0.8;
-    ctx.fillStyle = buttonDrop.pressed
-      ? "rgba(139,0,0,0.7)"
-      : "rgba(247, 198, 0, 0.2)";
-    ctx.beginPath();
-    ctx.arc(
-      buttonDrop.x,
-      buttonDrop.y,
-      buttonDrop.pressed ? buttonDrop.radius * 1.2 : buttonDrop.radius,
-      0,
-      Math.PI * 2
+
+  ctx.fillStyle = buttonSwitch.pressed
+    ? "rgba(0,0,139,0.7)"
+    : "rgba(0, 255, 0, 0.2)";
+  ctx.beginPath();
+  ctx.arc(
+    buttonSwitch.x,
+    buttonSwitch.y,
+    buttonSwitch.pressed ? buttonSwitch.radius * 1.2 : buttonSwitch.radius,
+    0,
+    Math.PI * 2
+  );
+  ctx.fill();
+
+  if (changeArrowImage.complete) {
+    ctx.globalAlpha = 0.45;
+    ctx.drawImage(
+      changeArrowImage,
+      buttonSwitch.x + 5,
+      buttonSwitch.y - 20,
+      20,
+      40
     );
-    ctx.fill();
-    const activeBombType = selectionState.selectedBombType;
-    const icon = bombIcons[activeBombType];
+  }
 
-    if (icon.complete) {
-      // Якщо картинка вже завантажена
-      const sizeX = 25;
-      const sizeY = 50;
-
-      ctx.drawImage(
-        icon,
-        buttonDrop.x - sizeX / 2,
-        buttonDrop.y - sizeY / 2,
-        sizeX,
-        sizeY
-      );
-    } else {
-      // Якщо ще не завантажена — резервне відображення тексту
-      ctx.fillStyle = "white";
-      ctx.font = "24px Arial";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText("💣", buttonDrop.x, buttonDrop.y);
-    }
-    // Кнопка Switch
-
-    ctx.fillStyle = buttonSwitch.pressed
-      ? "rgba(0,0,139,0.7)" // натиснута
-      : "rgba(0, 255, 0, 0.2)"; // звичайна
-    ctx.beginPath();
-    ctx.arc(
-      buttonSwitch.x,
-      buttonSwitch.y,
-      buttonSwitch.pressed ? buttonSwitch.radius * 1.2 : buttonSwitch.radius,
-      0,
-      Math.PI * 2
-    );
-    ctx.fill();
-
-    // Малюємо стрілочку заміни
-    if (changeArrowImage.complete) {
-      const sizeX = 20;
-      const sizeY = 40;
-      ctx.drawImage(
-        changeArrowImage,
-        buttonSwitch.x + sizeX * 0.1, // трохи правіше від центру
-        buttonSwitch.y - sizeY / 2 + 10,
-        sizeX,
-        sizeY
-      );
-    }
-
-    // Малюємо іконку наступної бомби
-    ctx.globalAlpha = 0.55;
-    const nextBombType = switchToNextAvailableBomb(true, true);
-    if (nextBombType) {
-      const nextIcon = bombIcons[nextBombType];
-      if (nextIcon && nextIcon.complete) {
-        const sizeX = 18;
-        const sizeY = 36;
-        ctx.drawImage(
-          nextIcon,
-          buttonSwitch.x - sizeX * 1.1, // трохи лівіше від центру
-          buttonSwitch.y - sizeY / 2 + 10,
-          sizeX,
-          sizeY
-        );
-      }
+  const nextBombType = switchToNextAvailableBomb(true, true);
+  if (nextBombType) {
+    const nextIcon = bombIcons[nextBombType];
+    if (nextIcon?.complete) {
+      ctx.globalAlpha = 0.55;
+      ctx.drawImage(nextIcon, buttonSwitch.x - 20, buttonSwitch.y - 18, 18, 36);
     }
   }
+
   ctx.globalAlpha = 1;
 }
 
 // НАЛАШТУВАННЯ сенсорного керування
 export function setupTouchControls(dropBomb, canvas) {
-  joystickVisible = true;
+  if (isControlSetupMode) return;
   const TOUCH_EXTRA_RADIUS = 10;
   canvas.addEventListener("touchstart", (e) => {
-    joystickVisible = true;
     for (let touch of e.touches) {
       const x = touch.clientX;
       const y = touch.clientY;
@@ -348,6 +312,7 @@ export function setupTouchControls(dropBomb, canvas) {
   });
 
   canvas.addEventListener("touchend", (e) => {
+    if (isControlSetupMode) return;
     for (let touch of e.changedTouches) {
       const x = touch.clientX;
       const y = touch.clientY;
@@ -421,4 +386,121 @@ export function switchToNextAvailableBomb(
 
   // console.warn("🚨 Усі типи бомб закінчилися!");
   return null;
+}
+
+const CONTROL_KEYS = ["joystick", "buttonDrop", "buttonSwitch"];
+let controlSetupIndex = 0;
+
+export function setupCustomControlPlacement(canvas) {
+  console.log("🛠️ Налаштування користувацьких елементів керування...");
+  isControlSetupMode = true;
+  controlSetupIndex = 0; // ← правильно використовує глобальну змінну
+
+  joystick.baseX = -9999;
+  joystick.baseY = -9999;
+  joystick.stickX = -9999; // динамічно встановлюємо baseY
+  joystick.stickY = -9999; // динамічно встановлюємо baseY
+  // динамічно встановлюємо baseY
+  buttonDrop.x = -9999;
+  buttonDrop.y = -9999;
+  buttonSwitch.x = -9999;
+  buttonSwitch.y = -9999;
+
+  canvas.removeEventListener("pointerdown", onCustomControlClick); // запобігає дублю
+  canvas.addEventListener("pointerdown", onCustomControlClick);
+
+  function onCustomControlClick(e) {
+    if (controlSetupIndex >= CONTROL_KEYS.length) {
+      isControlSetupMode = false;
+      canvas.removeEventListener("pointerdown", onCustomControlClick);
+      return;
+    }
+
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const controlKey = CONTROL_KEYS[controlSetupIndex];
+
+    if (controlKey === "joystick") {
+      joystick.baseX = x;
+      joystick.baseY = y;
+      joystick.stickX = x;
+      joystick.stickY = y;
+    } else if (controlKey === "buttonDrop") {
+      buttonDrop.x = x;
+      buttonDrop.y = y;
+    } else if (controlKey === "buttonSwitch") {
+      buttonSwitch.x = x;
+      buttonSwitch.y = y;
+    }
+
+    saveControlPositions();
+    controlSetupIndex++;
+  }
+}
+
+export function loadControlPositionsFromStorage() {
+  const saved = localStorage.getItem("customControlsPositions");
+
+  // Стандартні значення (як у drawJoystickAndButtons)
+  const defaultPositions = {
+    joystick: { x: 90, y: window.innerHeight - 150 }, // baseY буде динамічно = canvas.height - 120
+    buttonDrop: { x: window.innerWidth - 170, y: window.innerHeight - 70 },
+    buttonSwitch: { x: window.innerWidth - 60, y: window.innerHeight - 120 },
+  };
+
+  try {
+    const positions = saved ? JSON.parse(saved) : null;
+
+    if (positions?.joystick) {
+      joystick.baseX = positions.joystick.x;
+      joystick.baseY = positions.joystick.y;
+      joystick.stickX = positions.joystick.x;
+      joystick.stickY = positions.joystick.y;
+    } else {
+      joystick.baseX = defaultPositions.joystick.x;
+      joystick.baseY = defaultPositions.joystick.y;
+      joystick.stickX = defaultPositions.joystick.x;
+      joystick.stickY = defaultPositions.joystick.y;
+    }
+
+    if (positions?.buttonDrop) {
+      buttonDrop.x = positions.buttonDrop.x;
+      buttonDrop.y = positions.buttonDrop.y;
+    } else {
+      buttonDrop.x = defaultPositions.buttonDrop.x;
+      buttonDrop.y = defaultPositions.buttonDrop.y;
+    }
+
+    if (positions?.buttonSwitch) {
+      buttonSwitch.x = positions.buttonSwitch.x;
+      buttonSwitch.y = positions.buttonSwitch.y;
+    } else {
+      buttonSwitch.x = defaultPositions.buttonSwitch.x;
+      buttonSwitch.y = defaultPositions.buttonSwitch.y;
+    }
+  } catch (e) {
+    console.warn(
+      "❌ Помилка читання customControlsPositions. Встановлено значення за замовчуванням."
+    );
+    joystick.baseX = defaultPositions.joystick.x;
+    joystick.baseY = defaultPositions.joystick.y;
+    joystick.stickX = defaultPositions.joystick.x;
+    joystick.stickY = defaultPositions.joystick.y;
+
+    buttonDrop.x = defaultPositions.buttonDrop.x;
+    buttonDrop.y = defaultPositions.buttonDrop.y;
+    buttonSwitch.x = defaultPositions.buttonSwitch.x;
+    buttonSwitch.y = defaultPositions.buttonSwitch.y;
+  }
+}
+
+function saveControlPositions() {
+  const positions = {
+    joystick: { x: joystick.baseX, y: joystick.baseY },
+    buttonDrop: { x: buttonDrop.x, y: buttonDrop.y },
+    buttonSwitch: { x: buttonSwitch.x, y: buttonSwitch.y },
+  };
+  localStorage.setItem("customControlsPositions", JSON.stringify(positions));
 }

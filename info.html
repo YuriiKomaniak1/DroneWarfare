@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dronETerra - інформація</title>
+    <link rel="stylesheet" href="css/index.css" />
+  </head>
+  <body>
+    <!-- головне меню інфо -->
+    <div id="infoMenu" class="container">
+      <div class="info_menu">
+        <h2 id="infoTitle">Інформація про гру</h2>
+        <button id="game" class="loadButton">Ігровий процес</button>
+        <button id="mechanics" class="loadButton">Механіки</button>
+        <button id="drones" class="loadButton">Дрони</button>
+        <button id="ammo" class="loadButton">Боєприпаси</button>
+        <button id="enemies" class="loadButton">Вороги</button>
+        <button id="back" class="menu-button">Назад</button>
+      </div>
+    </div>
+    <!-- модалка ігровий процес -->
+    <div id="gameModal" class="load_container">
+      <div class="info_menu">
+        <h2 id="gameTitle">Інформація про гру</h2>
+        <div id="gameText">vzxc</div>
+        <button class="backMain menu-button">назад</button>
+      </div>
+    </div>
+    <!-- модалка механіки -->
+    <div id="mechanicsModal" class="load_container">
+      <div class="info_menu">
+        <h2 id="mechanicsTitle">Інформація про механіки</h2>
+        <button id="ap" class="loadButton">Бронепробиття</button>
+        <button id="visibility" class="loadButton">Помітність дрону</button>
+        <button id="droneFire" class="loadButton">Вогонь по дрону</button>
+        <button id="bombarding" class="loadButton">Скидання бомб</button>
+        <button id="mines" class="loadButton">Мінування</button>
+        <button class="backMain menu-button">назад</button>
+      </div>
+    </div>
+    <!-- модалка дрони -->
+    <div id="dronesModal" class="load_container">
+      <div class="info_menu">
+        <h2 id="dronesTitle">Інформація про дрони</h2>
+        <p id="dronesText">текст</p>
+        <button class="backMain menu-button">назад</button>
+      </div>
+    </div>
+    <!-- модалка боєприпаси -->
+    <div id="ammoModal" class="load_container">
+      <div class="info_menu">
+        <h2 id="ammoTitle">Інформація про боєприпаси</h2>
+        <button id="fragBomb" class="loadButton">
+          <div class="fragBomb_image_small"></div>
+          Уламкова Бомба
+        </button>
+        <button id="heBomb" class="loadButton">
+          <div class="heBomb_image_small"></div>
+          Фугасна бомба
+        </button>
+        <button id="shapedBomb" class="loadButton">
+          <div class="shapedBomb_image_small"></div>
+          Кумулятивна бомба
+        </button>
+        <button id="apMine" class="loadButton">
+          <div class="footMine_image_small"></div>
+          Протипіхотна міна
+        </button>
+        <button id="tankMine" class="loadButton">
+          <div class="tankMine_image_small"></div>
+          Фугасна міна
+        </button>
+        <button id="magnetMine" class="loadButton">
+          <div class="magnetMine_image_small"></div>
+          Магнітна міна
+        </button>
+        <button id="clusterBomb" class="loadButton">
+          <div class="clusterBomb_image_small"></div>
+          Касетна бомба
+        </button>
+        <button id="shapedClusterBomb" class="loadButton">
+          <div class="shapedClusterBomb_image_small"></div>
+          ПТ касетна бомба
+        </button>
+        <button class="backMain menu-button">назад</button>
+      </div>
+    </div>
+    <!-- модалка вороги -->
+    <div id="enemiesModal" class="load_container">
+      <div class="info_menu">
+        <h2 id="enemiesTitle">Інформація про ворогів</h2>
+
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th id="name">назва</th>
+              <th id="armor">броня</th>
+              <th id="speed">постр.<br />в сек.</th>
+              <th id="campaignPoints">бали<br />кампанія</th>
+              <th id="lastStandPoints">бали<br />ост. руб.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="rifleman_image"></div></td>
+              <td id="rifleman">Піхотинець</td>
+              <td>-</td>
+              <td>1</td>
+              <td>50</td>
+              <td>35</td>
+            </tr>
+            <tr>
+              <td><div class="machinegunner_image"></div></td>
+              <td id="machinegunner">Кулеметник</td>
+              <td>-</td>
+              <td>5</td>
+              <td>100</td>
+              <td>70</td>
+            </tr>
+            <tr>
+              <td><div class="grenadier_image"></div></td>
+              <td id="grenadier">Гранатометник</td>
+              <td>-</td>
+              <td>1</td>
+              <td>100</td>
+              <td>70</td>
+            </tr>
+            <tr>
+              <td><div class="crew_image"></div></td>
+              <td id="crew">Екіпаж</td>
+              <td>-</td>
+              <td>1</td>
+              <td>60</td>
+              <td>42</td>
+            </tr>
+            <tr>
+              <td><div class="ural_image"></div></td>
+              <td id="ural">Урал</td>
+              <td>-</td>
+              <td>-</td>
+              <td>220</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td><div class="uralSupply_image"></div></td>
+              <td id="uralSupply">Урал<br />постачання</td>
+              <td>-</td>
+              <td>-</td>
+              <td>400</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td><div class="gaz66_image"></div></td>
+              <td id="gaz66">ГАЗ-66</td>
+              <td>-</td>
+              <td>-</td>
+              <td>180</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td><div class="jeep_image"></div></td>
+              <td id="jeep">Позашляховик</td>
+              <td>-</td>
+              <td>-</td>
+              <td>180</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td><div class="uaz452_image"></div></td>
+              <td id="uaz452">УАЗ-452</td>
+              <td>-</td>
+              <td>-</td>
+              <td>160</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td><div class="guntruck_image"></div></td>
+              <td id="guntruck">Пікап з <br />кулеметом</td>
+              <td>-</td>
+              <td>10</td>
+              <td>400</td>
+              <td>280</td>
+            </tr>
+            <tr>
+              <td><div class="grad_image"></div></td>
+              <td id="grad">Град</td>
+              <td>-</td>
+              <td>-</td>
+              <td>1500</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td><div class="tigr_image"></div></td>
+              <td id="tigr">Тигр</td>
+              <td>1</td>
+              <td>5</td>
+              <td>350</td>
+              <td>245</td>
+            </tr>
+            <tr>
+              <td><div class="mtlb_image"></div></td>
+              <td id="mtlb">МТ-ЛБ</td>
+              <td>2</td>
+              <td>-</td>
+              <td>350</td>
+              <td>245</td>
+            </tr>
+            <tr>
+              <td><div class="mtlbKPVT_image"></div></td>
+              <td id="mtlbKPVT">МТ-ЛБ з<br />зенітним<br />кулеметом</td>
+              <td>2</td>
+              <td>12</td>
+              <td>650</td>
+              <td>455</td>
+            </tr>
+            <tr>
+              <td><div class="mtlbZU23_image"></div></td>
+              <td id="mtlbzu23">МТ-ЛБ з<br />зенітною<br />гарматою</td>
+              <td>2</td>
+              <td>20</td>
+              <td>850</td>
+              <td>595</td>
+            </tr>
+            <tr>
+              <td><div class="btr82_image"></div></td>
+              <td id="btr82">БТР-82</td>
+              <td>3</td>
+              <td>6</td>
+              <td>550</td>
+              <td>385</td>
+            </tr>
+            <tr>
+              <td><div class="bmp1_image"></div></td>
+              <td id="bmp1">БМП-1</td>
+              <td>4</td>
+              <td>-</td>
+              <td>350</td>
+              <td>245</td>
+            </tr>
+            <tr>
+              <td><div class="bukM2_image"></div></td>
+              <td id="bukM2">Бук</td>
+              <td>6</td>
+              <td>-</td>
+              <td>3000</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td><div class="bmp2_image"></div></td>
+              <td id="bmp2">БМП-2</td>
+              <td>8</td>
+              <td>-</td>
+              <td>600</td>
+              <td>420</td>
+            </tr>
+            <tr>
+              <td><div class="bmp3_image"></div></td>
+              <td id="bmp3">БМП-3</td>
+              <td>8</td>
+              <td>-</td>
+              <td>600</td>
+              <td>420</td>
+            </tr>
+            <tr>
+              <td><div class="shilka_image"></div></td>
+              <td id="shilka">Шилка</td>
+              <td>8</td>
+              <td>60</td>
+              <td>1300</td>
+              <td>910</td>
+            </tr>
+            <tr>
+              <td><div class="msta_image"></div></td>
+              <td id="msta">САУ</td>
+              <td>10</td>
+              <td>-</td>
+              <td>2000</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td><div class="T55_image"></div></td>
+              <td id="t55">Т55</td>
+              <td>10</td>
+              <td>-</td>
+              <td>800</td>
+              <td>560</td>
+            </tr>
+            <tr>
+              <td><div class="T62_image"></div></td>
+              <td id="t62">Т62</td>
+              <td>12</td>
+              <td>-</td>
+              <td>900</td>
+              <td>630</td>
+            </tr>
+            <tr>
+              <td><div class="T72_image"></div></td>
+              <td id="t72">Т72</td>
+              <td>14</td>
+              <td>-</td>
+              <td>1000</td>
+              <td>700</td>
+            </tr>
+            <tr>
+              <td><div class="T72B3_image"></div></td>
+              <td id="t72B3">Т72Б3</td>
+              <td>16</td>
+              <td>-</td>
+              <td>1200</td>
+              <td>840</td>
+            </tr>
+            <tr>
+              <td><div class="T90_image"></div></td>
+              <td id="t90">Т90</td>
+              <td>20</td>
+              <td>-</td>
+              <td>1500</td>
+              <td>1050</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button class="backMain menu-button">назад</button>
+      </div>
+    </div>
+
+    <!-- модалка бронепробиття -->
+    <div id="apModal" class="mech load_container">
+      <div class="info_menu">
+        <h2 id="apTitle">Інформація про бронепробиття</h2>
+        <div id="apText">текст</div>
+        <button class="backMechanics menu-button">назад</button>
+      </div>
+    </div>
+    <!-- модалка помітність -->
+    <div id="visibilityModal" class="mech load_container">
+      <div class="info_menu">
+        <h2 id="visibilityTitle">Інформація про помітність дрону</h2>
+        <div id="visibilityText">текст</div>
+        <button class="backMechanics menu-button">назад</button>
+      </div>
+    </div>
+    <!-- модалка вогонь по дрону -->
+    <div id="droneFireModal" class="mech load_container">
+      <div class="info_menu">
+        <h2 id="droneFireTitle">Інформація про вогонь по дрону</h2>
+        <p id="droneFireText">текст</p>
+        <button class="backMechanics menu-button">назад</button>
+      </div>
+    </div>
+    <!-- модалка скидання бомб -->
+    <div id="bombardingModal" class="mech load_container">
+      <div class="info_menu">
+        <h2 id="bombardingTitle">Інформація про скидання бомб</h2>
+        <p id="bombardingText">текст</p>
+        <button class="backMechanics menu-button">назад</button>
+      </div>
+    </div>
+    <!-- модалка мінування -->
+    <div id="minesModal" class="mech load_container">
+      <div class="info_menu">
+        <h2 id="minesTitle">Інформація про мінування</h2>
+        <p id="minesText">текст</p>
+        <button class="backMechanics menu-button">назад</button>
+      </div>
+    </div>
+    <!-- Уламкова бомба -->
+    <div id="fragBombModal" class="bombs load_container">
+      <div class="info_menu">
+        <h2 id="fragBombTitle">Уламкова бомба</h2>
+        <div class="fragBomb_image"></div>
+        <p id="fragBombText">текст</p>
+        <button class="backBombs menu-button">назад</button>
+      </div>
+    </div>
+    <!-- Фугасна бомба -->
+    <div id="heBombModal" class="bombs load_container">
+      <div class="info_menu">
+        <h2 id="heBombTitle">Фугасна бомба</h2>
+        <div class="heBomb_image"></div>
+        <p id="heBombText">текст</p>
+        <button class="backBombs menu-button">назад</button>
+      </div>
+    </div>
+    <!-- Кумулятивна бомба -->
+    <div id="shapedBombModal" class="bombs load_container">
+      <div class="info_menu">
+        <h2 id="shapedBombTitle">Кумулятивна бомба</h2>
+        <div class="shapedBomb_image"></div>
+        <p id="shapedBombText">текст</p>
+        <button class="backBombs menu-button">назад</button>
+      </div>
+    </div>
+    <!-- Протипіхотна міна -->
+    <div id="apMineModal" class="bombs load_container">
+      <div class="info_menu">
+        <h2 id="apMineTitle">Протипіхотна міна</h2>
+        <div class="footMine_image"></div>
+        <p id="apMineText">текст</p>
+        <button class="backBombs menu-button">назад</button>
+      </div>
+    </div>
+    <!-- Фугасна міна -->
+    <div id="tankMineModal" class="bombs load_container">
+      <div class="info_menu">
+        <h2 id="tankMineTitle">Фугасна міна</h2>
+        <div class="tankMine_image"></div>
+        <div id="tankMineText">текст</div>
+        <button class="backBombs menu-button">назад</button>
+      </div>
+    </div>
+    <!-- Магнітна міна -->
+    <div id="magnetMineModal" class="bombs load_container">
+      <div class="info_menu">
+        <h2 id="magnetMineTitle">Магнітна міна</h2>
+        <div class="magnetMine_image"></div>
+        <div id="magnetMineText">текст</div>
+        <button class="backBombs menu-button">назад</button>
+      </div>
+    </div>
+    <!-- Касетна бомба -->
+    <div id="clusterBombModal" class="bombs load_container">
+      <div class="info_menu">
+        <h2 id="clusterBombTitle">Касетна бомба</h2>
+        <div class="clusterBomb_image"></div>
+        <p id="clusterBombText">текст</p>
+        <button class="backBombs menu-button">назад</button>
+      </div>
+    </div>
+    <!-- ПТ касетна бомба -->
+    <div id="shapedClusterBombModal" class="bombs load_container">
+      <div class="info_menu">
+        <h2 id="shapedClusterBombTitle">ПТ касетна бомба</h2>
+        <div class="shapedClusterBomb_image"></div>
+        <p id="shapedClusterBombText">текст</p>
+        <button class="backBombs menu-button">назад</button>
+      </div>
+    </div>
+
+    <script type="module">
+      import { setupDebugConsole } from "./js/utils/debugConsole.js";
+      setupDebugConsole();
+    </script>
+    <script src="js/lang/langInfo.js"></script>
+    <script src="js/info.js" type="module"></script>
+  </body>
+</html>

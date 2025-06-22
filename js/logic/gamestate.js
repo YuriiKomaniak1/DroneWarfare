@@ -7,7 +7,7 @@ class GameState {
   }
   drawScore(ctx, canvas, gameData) {
     const fontSize = 14;
-    const text = `SCORE: ${gameData.score}`;
+    const text = `${gameData.score}`;
     ctx.save();
     ctx.font = `${fontSize}px "Press Start 2P", "Pixelify Sans", monospace`;
     ctx.fillStyle = "white";
@@ -58,8 +58,12 @@ class GameState {
   updateData(gameData) {
     this.drones.forEach((drone, index) => {
       if (drone && gameData.drones[index]) {
-        drone.bombStorage = gameData.drones[index].bombStorage;
-        drone.initialBombStorage = gameData.drones[index].initialBombStorage;
+        drone.bombStorage = drone.cloneBombStorage(
+          gameData.drones[index].bombStorage
+        );
+        drone.initialBombStorage = drone.cloneBombStorage(
+          gameData.drones[index].initialBombStorage
+        );
         drone.capacity = gameData.drones[index].capacity;
         drone.remainingCapacity = gameData.drones[index].remainingCapacity;
         drone.hangers = gameData.drones[index].hangers;
@@ -85,12 +89,12 @@ class GameState {
 
 class GameData {
   constructor() {
-    this.score = 140000;
+    this.score = 120000;
     this.looseScore = 1000;
     this.winScore = 1000;
     this.initialLooseScore = 0;
     this.initialWinScore = 0;
-    this.currentMission = 0;
+    this.currentMission = 10;
     this.drones = [];
     this.obstacles = [];
     this.bigObstacles = [];
@@ -129,14 +133,15 @@ class GameData {
     this.heBombUpgradeGap = 750;
     this.shapedBombUpgrade = 0;
     this.shapedBombUpgradeGap = 750;
+    this.tankMineUpgrade = false;
     this.magnetMineUpgrade = 0;
     this.magnetMineUpgradeGap = 1000;
     this.shrapnelBombUpgrade = 0;
     this.shrapnelBombUpgradeGap = 1500;
     this.clusterBombUpgrade = 0;
-    this.clusterBombUpgradeGap = 2000;
+    this.clusterBombUpgradeGap = 2500;
     this.shapedClusterBombUpgrade = 0;
-    this.shapedClusterBombUpgradeGap = 2000;
+    this.shapedClusterBombUpgradeGap = 2500;
     this.upgradeGap = 0;
     this.gapScale = 250;
     this.trenches = null;
@@ -169,28 +174,24 @@ if (saved) {
 } else {
   drones.forEach((drone, index) => {
     if (drone && Object.values(drone.bombStorage).flat().length === 0) {
-      while (
-        drone.remainingCapacity >=
-          Math.min(FragBomb.weight, HeBomb.weight, ShapedBomb.weight) &&
-        drone.hangers >= 1
-      ) {
-        Math.random() > 0.5
-          ? drone.addBomb(FragBomb)
-          : Math.random() > 0.4
-          ? drone.addBomb(HeBomb)
-          : drone.addBomb(ShapedBomb);
-      }
-      drone.initialBombStorage = {
-        frag: [...drone.bombStorage.frag],
-        he: [...drone.bombStorage.he],
-        shaped: [...drone.bombStorage.shaped],
-      };
+      drone.addBomb(FragBomb);
+      drone.addBomb(FragBomb);
+      drone.addBomb(FragBomb);
+      drone.addBomb(HeBomb);
+      drone.addBomb(HeBomb);
+      drone.addBomb(ShapedBomb);
+
+      drone.initialBombStorage = drone.cloneBombStorage(drone.bombStorage);
       gameState.drones[index] = drone;
       if (!gameData.drones[index]) {
         gameData.drones[index] = {};
       }
-      gameData.drones[index].bombStorage = drone.bombStorage;
-      gameData.drones[index].initialBombStorage = drone.initialBombStorage;
+      gameData.drones[index].bombStorage = drone.cloneBombStorage(
+        drone.bombStorage
+      );
+      gameData.drones[index].initialBombStorage = drone.cloneBombStorage(
+        drone.bombStorage
+      );
       gameData.drones[index].capacity = drone.capacity;
       gameData.drones[index].remainingCapacity = drone.remainingCapacity;
       gameData.drones[index].hangers = drone.hangers;

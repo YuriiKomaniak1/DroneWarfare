@@ -8,17 +8,29 @@
   </head>
   <body>
     <div class="container">
-      <h2>Налаштування</h2>
+      <h2 id="title">Налаштування</h2>
+
+      <div id="language-box">
+        <label for="languageSelect" id="languageLabel">Мова:</label>
+        <select id="languageSelect">
+          <option value="ua">Українська</option>
+          <option value="en">English</option>
+          <option value="de">Deutsch</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="pt">Português</option>
+          <option value="tr">Türkçe</option>
+          <option value="it">Italiano</option>
+          <option value="pl">Polski</option>
+        </select>
+      </div>
 
       <div id="sound-box">
-        <label
-          >Гучність музики:
-          <input type="range" min="0" max="1" step="0.01" id="musicVolume"
-        /></label>
-        <label
-          >Гучність звуку:
-          <input type="range" min="0" max="1" step="0.01" id="soundVolume"
-        /></label>
+        <label for="musicVolume" id="musicVolumeLabel">Гучність музики:</label>
+        <input type="range" min="0" max="1" step="0.01" id="musicVolume" />
+
+        <label for="soundVolume" id="soundVolumeLabel">Гучність звуку:</label>
+        <input type="range" min="0" max="1" step="0.01" id="soundVolume" />
       </div>
 
       <div id="button-panel">
@@ -28,6 +40,7 @@
         </button>
       </div>
     </div>
+    <script src="js/lang/langIndex.js"></script>
     <script src="js/settings.js" type="module"></script>
   </body>
 </html>

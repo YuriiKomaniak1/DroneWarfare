@@ -5,33 +5,74 @@ export const menuButtons = []; // Масив для збереження кно�
 let hoveredButtonIndex = null;
 let pressedButtonIndex = null;
 
-export function drawMenuButtons(ctx, minimap, training) {
-  let labels = []; // Змінна для збереження міток кнопок
-  if (getWinCondition()) {
-    labels = ["Меню", "Перемога"];
-  } else {
-    labels = ["Меню"]; // для звичайних місій
-  }
+// Локалізовані назви
+const labelsByLang = {
+  ua: {
+    menu: "Меню",
+    win: "Перемога",
+  },
+  en: {
+    menu: "Menu",
+    win: "Victory",
+  },
+  pl: {
+    menu: "Menu",
+    win: "Wygrana",
+  },
+  it: {
+    menu: "Menu",
+    win: "Vittoria",
+  },
+  es: {
+    menu: "Menú",
+    win: "Victoria",
+  },
+  fr: {
+    menu: "Menu",
+    win: "Victoire",
+  },
+  pt: {
+    menu: "Menu",
+    win: "Vitória",
+  },
+  tr: {
+    menu: "Menü",
+    win: "Zafer",
+  },
+  de: {
+    menu: "Menü",
+    win: "Sieg",
+  },
+};
+
+const currentLang = localStorage.getItem("lang") || "en";
+const labels = labelsByLang[currentLang] || labelsByLang.en;
+
+// Глобальний масив поточних міток кнопок
+let buttonLabels = [];
+
+export function drawMenuButtons(ctx, minimap) {
+  buttonLabels = getWinCondition() ? [labels.menu, labels.win] : [labels.menu];
+
   const buttonWidth = minimap.width;
   const buttonHeight = 36;
   const gap = 20;
   const startX = minimap.mapX;
   const startY = minimap.mapY + gap + minimap.height;
 
-  menuButtons.length = 0; // Очищаємо перед кожним малюванням
+  menuButtons.length = 0;
 
   ctx.save();
   ctx.font = "16px Arial";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
-  labels.forEach((label, index) => {
+  buttonLabels.forEach((label, index) => {
     const x = startX;
     const y = startY + index * (buttonHeight + gap);
 
     menuButtons.push({ x, y, width: buttonWidth, height: buttonHeight, label });
 
-    //  ВИБІР КОЛЬОРУ КНОПКИ:
     let bgColor = "rgba(177, 232, 59, 0.25)";
     if (hoveredButtonIndex === index) {
       bgColor = "rgba(177, 232, 59, 0.5)";
@@ -40,11 +81,9 @@ export function drawMenuButtons(ctx, minimap, training) {
       bgColor = "rgba(177, 232, 59, 0.7)";
     }
 
-    // Малюємо прямокутник із закругленими кутами
     ctx.fillStyle = bgColor;
     drawRoundedRect(ctx, x, y, buttonWidth, buttonHeight, 10);
 
-    // Текст всередині
     ctx.fillStyle = "rgba(0, 0, 0, 1)";
     ctx.fillText(label, x + buttonWidth / 2, y + buttonHeight / 2);
   });
@@ -52,7 +91,6 @@ export function drawMenuButtons(ctx, minimap, training) {
   ctx.restore();
 }
 
-// Функція для закругленого прямокутника
 function drawRoundedRect(ctx, x, y, width, height, radius) {
   ctx.beginPath();
   ctx.moveTo(x + radius, y);
@@ -76,26 +114,19 @@ export function handleMenuClick(e, canvas, gameData, openTrainingModal) {
     if (isInsideButton(mouseX, mouseY, button)) {
       pressedButtonIndex = index;
       setTimeout(() => {
-        switch (button.label) {
-          case "Меню":
-            const pauseModal = document.getElementById("pauseModal");
-            if (pauseModal) pauseModal.style.visibility = "visible";
-            togglePause();
-            break;
-          case "Назад":
-            localStorage.setItem("playBriefingMusic", "true");
-            window.location.href = "briefing.html";
-            break;
-
-          case "Перемога":
-            gameData.currentMission++;
-            localStorage.setItem("playBriefingMusic", "true");
-            localStorage.setItem("gameData", JSON.stringify(gameData));
-            location.href = "briefing.html";
-            break;
+        if (button.label === labels.menu) {
+          togglePause();
+          const pauseModal = document.getElementById("pauseModal");
+          if (pauseModal) pauseModal.style.visibility = "visible";
+        } else if (button.label === labels.win) {
+          gameData.currentMission++;
+          localStorage.setItem("playBriefingMusic", "true");
+          localStorage.setItem("gameData", JSON.stringify(gameData));
+          location.href = "briefing.html";
         }
+
         pressedButtonIndex = null;
-      }, 100); // Невелика затримка для візуального ефекту
+      }, 100);
     }
   });
 }
@@ -103,7 +134,7 @@ export function handleMenuClick(e, canvas, gameData, openTrainingModal) {
 export function handleMenuHover(e, canvas) {
   const { mouseX, mouseY } = getMousePosition(e, canvas);
 
-  hoveredButtonIndex = null; // Спочатку прибираємо
+  hoveredButtonIndex = null;
   menuButtons.forEach((button, index) => {
     if (isInsideButton(mouseX, mouseY, button)) {
       hoveredButtonIndex = index;

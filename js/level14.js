@@ -13,6 +13,11 @@ import {
   MTLBKPVT,
 } from "./enemies/vehicle.js";
 
+const volumeSettings = JSON.parse(localStorage.getItem("Volume")) || {
+  soundVolume: 0.1,
+  musicVolume: 0.6,
+};
+
 initGame({
   levelId: "level8",
   mapId: "level8",
@@ -335,7 +340,7 @@ function startLevel(
         if (!vehicles.some((vehicle) => vehicle.type === "uaz452"))
           gameData.looseScore = 0;
         const alarmSound = new Audio("assets/audio/vehicle/alarm.mp3");
-        alarmSound.volume = 0.6;
+        alarmSound.volume = 0.3 * volumeSettings.soundVolume;
         alarmSound.play();
         vehicles.forEach((vehicle) => {
           if (vehicle.type === "uaz452") {

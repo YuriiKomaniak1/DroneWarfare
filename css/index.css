@@ -3,7 +3,8 @@
 body {
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   width: 100%;
   height: 100%;
   background-color: var(--canvas-background-color);
@@ -48,10 +49,15 @@ canvas {
   flex-direction: column;
   align-items: center;
   min-width: 240px;
+  width: 95%;
+  max-width: 500px;
+  overflow-x: hidden;
   position: absolute;
-  top: 50%;
+  top: 10%; /* зміщення зверху */
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%); /* лише по горизонталі */
+  max-height: 80vh; /* обмеження по висоті */
+  overflow-y: auto;
   margin: 0 auto;
   background-color: var(--menu-background-color);
   padding: 20px;
@@ -59,18 +65,54 @@ canvas {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
   visibility: hidden;
 }
+
+.load2_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 240px;
+  width: 95%;
+  max-width: 500px;
+  overflow-x: hidden;
+  position: absolute;
+  top: 50%; /* зміщення зверху */
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  max-height: 80vh; /* обмеження по висоті */
+  overflow-y: auto;
+  margin: 0 auto;
+  background-color: var(--menu-background-color);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
+  visibility: hidden;
+}
+
 .load_menu {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 7px;
+  width: 95%;
+  max-width: 500px;
+  min-width: 230px;
+  margin-bottom: 20px;
+}
+.info_menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 95%;
+  max-width: 500px;
   min-width: 230px;
   margin-bottom: 20px;
 }
 
 .loadButton {
   min-width: 220px;
-  width: 100%;
+  width: 260px;
   height: 30px;
   text-decoration: none;
   display: flex;
@@ -108,7 +150,7 @@ canvas {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 15px;
 }
 .nav_menu {
   display: flex;
@@ -116,9 +158,447 @@ canvas {
   align-items: center;
   gap: 10px;
 }
-#gameText {
-  display: none;
-}
+
 #loadContent {
   display: none;
+}
+.premium-button {
+  font-size: 14px;
+  padding: 8px 16px;
+  background-color: #cbb26a;
+  color: black;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+}
+.premium-button:hover {
+  background-color: #e0c875;
+  transform: scale(1.02);
+}
+
+.fragBomb_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/fragBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.fragBomb_image_small {
+  width: 25px; /* ширина одного кадру */
+  height: 25px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/fragBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.heBomb_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/heBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.heBomb_image_small {
+  width: 25px; /* ширина одного кадру */
+  height: 25px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/heBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.shapedBomb_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/shapedBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.shapedBomb_image_small {
+  width: 25px; /* ширина одного кадру */
+  height: 25px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/shapedBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.footMine_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/footMineIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.footMine_image_small {
+  width: 25px; /* ширина одного кадру */
+  height: 25px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/footMineIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.tankMine_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/tankMineIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.tankMine_image_small {
+  width: 25px; /* ширина одного кадру */
+  height: 25px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/tankMineIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.magnetMine_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/magnetMineIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.magnetMine_image_small {
+  width: 25px; /* ширина одного кадру */
+  height: 25px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/magnetMineIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.shrapnelBomb_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/shrapnelBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.shrapnelBomb_image_small {
+  width: 25px; /* ширина одного кадру */
+  height: 25px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/shrapnelBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.clusterBomb_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/clusterBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.clusterBomb_image_small {
+  width: 25px; /* ширина одного кадру */
+  height: 25px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/clusterBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.shapedClusterBomb_image {
+  width: 50px; /* ширина одного кадру */
+  height: 50px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/shapedClusterBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.shapedClusterBomb_image_small {
+  width: 25px; /* ширина одного кадру */
+  height: 25px; /* висота одного кадру */
+  background-image: url("../assets/img/bombs/shapedClusterBombIcon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.rifleman_image {
+  width: 30px;
+  height: 30px;
+  background-image: url("../assets/img/enemies/rifleman.png");
+  background-size: 800% 400%;
+  background-position: 200% 500%; /* 3-й кадр 4-го ряду */
+}
+
+.machinegunner_image {
+  width: 30px;
+  height: 30px;
+  background-image: url("../assets/img/enemies/machinegunner.png");
+  background-size: 800% 400%;
+  background-position: 200% 500%;
+}
+
+.grenadier_image {
+  width: 30px;
+  height: 30px;
+  background-image: url("../assets/img/enemies/grenadier.png");
+  background-size: 800% 400%;
+  background-position: 200% 500%;
+}
+
+.crew_image {
+  width: 30px;
+  height: 30px;
+  background-image: url("../assets/img/enemies/crew.png");
+  background-size: 800% 400%;
+  background-position: 200% 500%;
+}
+
+.ural_image {
+  width: 23px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/uralZ.png");
+  background-size: 800% 100%;
+  background-position: 0% 0%;
+}
+
+.uralSupply_image {
+  width: 23px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/uralSupplyZ.png");
+  background-size: 800% 100%;
+  background-position: 0% 0%;
+}
+
+.gaz66_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/gaz66Z.png");
+  background-size: 800% 100%;
+  background-position: 0% 0%;
+}
+
+.grad_image {
+  width: 23px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/gradZ.png");
+  background-size: 800% 100%;
+  background-position: 0% 0%;
+}
+
+.bukM2_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/bukM2.png");
+  background-size: 800% 100%;
+  background-position: 0% 0%;
+}
+
+.jeep_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/jeepZ.png");
+  background-size: 800% 100%;
+  background-position: 0% 0%;
+}
+
+.uaz452_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/uaz452Z.png");
+  background-size: 800% 100%;
+  background-position: 0% 0%;
+}
+
+.guntruck_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/guntruckInfo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.tigr_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/tigrInfo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.mtlb_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/mtlbZ.png");
+  background-size: 800% 100%;
+  background-position: 0% 0%;
+}
+
+.mtlbKPVT_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/mtlbKPVTInfo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.mtlbZU23_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/mtlbZU23Info.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.kpvt_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/kpvtInfo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.zu23_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/zu23Info.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.btr82_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/btr82Info.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.bmp1_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/bmp1Info.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.bmp2_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/bmp2Info.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.bmp3_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/bmp3Info.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.msta_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/mstaInfo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.T55_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/t55Info.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.T62_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/t62Info.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.T72_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/t72Info.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.T72B3_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/t72B3Info.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.T90_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/t90Info.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.shilka_image {
+  width: 25px;
+  height: 50px;
+  background-image: url("../assets/img/vehicles/shilkaInfo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+table.custom-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table.custom-table th,
+table.custom-table td {
+  border: 1px solid black;
+  padding: 4px;
+  text-align: center;
+  background-color: var(--modal-window-main-color);
+  font-size: 11px;
 }

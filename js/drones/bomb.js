@@ -557,7 +557,7 @@ export class FootMine extends Bomb {
     this.type = this.constructor.type;
     this.explosionSound = new Audio("assets/audio/drone/footMine.mp3");
   }
-  checkMineCollision(enemy) {
+  checkMineCollision(enemy, enemies, gameData) {
     if (this.isOnRoof()) return false;
     if (
       Math.hypot(this.x - enemy.x, this.y - enemy.y) < 9 &&
@@ -576,7 +576,8 @@ export class FootMine extends Bomb {
     }
     return enemy;
   }
-  checkMineEffect(vehicle, vehicles, gameData, NavigationGrid) {
+
+  checkMineEffect(vehicle, vehicles, gameData, NavigationGrid, enemies) {
     if (this.isOnRoof()) return vehicle;
     if (this.checkMineUnderWheels(vehicle)) {
       if (!this.explosionSoundStarted) {
@@ -611,11 +612,53 @@ export class TankMine extends Bomb {
     this.type = this.constructor.type;
     this.explosionSound = new Audio("assets/audio/drone/tankMine.mp3");
   }
-  checkMineCollision(enemy) {
+  checkMineCollision(enemy, enemies, gameData) {
+    if (!gameData.tankMineUpgrade) return;
     if (this.isOnRoof()) return false;
-    return false;
+    if (
+      Math.hypot(this.x - enemy.x, this.y - enemy.y) < 9 &&
+      !enemy.dead &&
+      !enemy.vehicle
+    ) {
+      if (!this.explosionSoundStarted) {
+        this.explosionSound.volume = 0.65 * volumeSettings.soundVolume;
+        this.explosionSound.play();
+        this.explosionSoundStarted = true;
+      }
+      enemies.forEach((e) => {
+        this.mineExplosion(e);
+      });
+      this.exploded = true;
+      this.deployed = false;
+    }
   }
-  checkMineEffect(vehicle, vehicles, gameData, NavigationGrid) {
+  mineExplosion(enemy) {
+    if (this.gameData.trenches) {
+      const bombInTrench = this.isInTrench(
+        this.x - this.layer.x,
+        this.y - this.layer.y
+      );
+      const enemyInTrench = this.isInTrench(enemy.baseX, enemy.baseY);
+      if (bombInTrench !== enemyInTrench) return false;
+    }
+
+    let hitStatus = false;
+    const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
+    if (!enemy.vehicle) {
+      hitStatus = distance < 62;
+    } else if (enemy.vehicle.armor === 0) {
+      if (distance < 62) {
+        if (Math.random() > 0.6) hitStatus = true;
+      }
+    }
+    if (hitStatus) {
+      enemy.dead = true;
+      enemy.deathFrameIndex = 0;
+    }
+    return enemy;
+  }
+
+  checkMineEffect(vehicle, vehicles, gameData, NavigationGrid, enemies) {
     if (this.isOnRoof()) return vehicle;
     if (this.checkMineUnderWheels(vehicle)) {
       if (!this.explosionSoundStarted) {
@@ -625,11 +668,14 @@ export class TankMine extends Bomb {
         });
         this.explosionSoundStarted = true;
       }
+      enemies.forEach((e) => {
+        this.mineExplosion(e);
+      });
       this.exploded = true;
       this.deployed = false;
       if (vehicle.armor === 0 || Math.random() > 0.5 + vehicle.armor / 10) {
         vehicle.isBurningF(vehicles, gameData, NavigationGrid);
-      } else if (Math.random() > vehicle.armor / 12) {
+      } else if (Math.random() > 0.1 + vehicle.armor / 15) {
         vehicle.isStoppedF(vehicles, gameData, NavigationGrid);
       }
       return vehicle;
@@ -652,7 +698,7 @@ export class MagnetMine extends Bomb {
     this.armorPenetration = 0.95 + this.gameData.magnetMineUpgrade * 0.01;
     this.explosionSound = new Audio("assets/audio/drone/shaped.mp3");
   }
-  checkMineCollision(enemy) {
+  checkMineCollision(enemy, enemies, gameData) {
     if (this.isOnRoof()) return false;
     return false;
   }
@@ -679,7 +725,7 @@ export class MagnetMine extends Bomb {
 
     return isInsideLength && isInsideWidth;
   }
-  checkMineEffect(vehicle, vehicles, gameData, NavigationGrid) {
+  checkMineEffect(vehicle, vehicles, gameData, NavigationGrid, enemies) {
     if (this.checkMineUnderWheels(vehicle)) {
       if (!this.explosionSoundStarted) {
         this.explosionSound.play().catch((e) => {
@@ -783,7 +829,7 @@ export class HeClusterMunition extends Bomb {
     this.imageExplosion = imageExplosion;
     this.explosionScale = 60;
     this.scale = 0.3;
-    this.shrinkRate = 1.003;
+    this.shrinkRate = 1.0035;
     this.armorPenetration = 0.5;
     this.explosionSound = new Audio("assets/audio/drone/frag.mp3");
     this.explosionSound.volume = 0.45 * volumeSettings.soundVolume;
@@ -828,7 +874,7 @@ export class HeClusterMunition extends Bomb {
     let hitStatus = false;
     const distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
     if (!enemy.vehicle) {
-      hitStatus = distance < 48;
+      hitStatus = distance < 49;
     } else if (enemy.vehicle.armor === 0) {
       if (distance < 46) {
         if (Math.random() > 0.7) hitStatus = true;
@@ -878,8 +924,8 @@ export class ShapedClusterMunition extends Bomb {
     this.imageExplosion = imageExplosion;
     this.explosionScale = 30;
     this.scale = 0.3;
-    this.shrinkRate = 1.003;
-    this.armorPenetration = 0.86 + this.gameData.shapedBombUpgrade * 0.01;
+    this.shrinkRate = 1.0036;
+    this.armorPenetration = 0.9 + this.gameData.shapedBombUpgrade * 0.01;
     this.explosionSound.volume = 0.65 * volumeSettings.soundVolume;
     this.explosionSound = new Audio("assets/audio/drone/shaped.mp3");
     this.explosionSound.volume = 0.45 * volumeSettings.soundVolume;
@@ -927,7 +973,7 @@ export class ShapedClusterMunition extends Bomb {
 }
 //  фугасна кластерна бомба
 export class ClusterBomb extends Bomb {
-  static weight = 1.6 * difficulty.weight;
+  static weight = 0.65 * difficulty.weight;
   static type = "cluster";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
@@ -941,7 +987,7 @@ export class ClusterBomb extends Bomb {
     this.explosionSound = new Audio("assets/audio/drone/cluster.mp3");
   }
   dropClusterBombs(bombs, layer1) {
-    for (let i = 0; i < 26 + this.gameData.clusterBombUpgrade; i++) {
+    for (let i = 0; i < 7 + this.gameData.clusterBombUpgrade; i++) {
       const delay = Math.random() * 1800; // випадкова затримка до 0.5 секунди
 
       setTimeout(() => {
@@ -957,7 +1003,7 @@ export class ClusterBomb extends Bomb {
         );
 
         // додаємо швидкість у випадковому напрямку
-        bomb.velocityX = Math.cos(theta) * speed;
+        bomb.velocityX = Math.cos(theta) * speed * 0.3;
         bomb.velocityY = Math.sin(theta) * speed;
 
         bombs.push(bomb);
@@ -974,7 +1020,7 @@ export class ClusterBomb extends Bomb {
 }
 //  протитанкова кластерна бомба
 export class ShapedClusterBomb extends Bomb {
-  static weight = 1.8 * difficulty.weight;
+  static weight = 0.8 * difficulty.weight;
   static type = "shapedCluster";
   constructor(x, y, layer, ctx, gameData) {
     super(x, y, layer, ctx, gameData);
@@ -988,7 +1034,7 @@ export class ShapedClusterBomb extends Bomb {
     this.explosionSound = new Audio("assets/audio/drone/cluster.mp3");
   }
   dropClusterBombs(bombs, layer1) {
-    for (let i = 0; i < 26 + this.gameData.shapedClusterBombUpgrade; i++) {
+    for (let i = 0; i < 7 + this.gameData.shapedClusterBombUpgrade; i++) {
       const delay = Math.random() * 1500; // випадкова затримка до 0.5 секунди
 
       setTimeout(() => {
@@ -1004,7 +1050,7 @@ export class ShapedClusterBomb extends Bomb {
         );
 
         // додаємо швидкість у випадковому напрямку
-        bomb.velocityX = Math.cos(theta) * speed;
+        bomb.velocityX = Math.cos(theta) * speed * 0.3;
         bomb.velocityY = Math.sin(theta) * speed;
 
         bombs.push(bomb);

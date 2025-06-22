@@ -1,13 +1,19 @@
 import { togglePause } from "./gameloop.js";
 import { activeSounds } from "../gameElements/sounds.js";
+import {
+  setupCustomControlPlacement,
+  loadControlPositionsFromStorage,
+} from "../logic/controls.js";
+
 export const volumeSettings = JSON.parse(localStorage.getItem("Volume")) || {
   soundVolume: 0.8,
   musicVolume: 0.6,
 };
 let winCondition = false;
 let gameStopped = false;
-const soundBoxModal = document.getElementById("soundBoxModal");
+
 const pauseModal = document.getElementById("pauseModal");
+const gametype = localStorage.getItem("gametype");
 
 const music = new Audio("./assets/audio/music/upgrade-music.mp3");
 music.loop = true;
@@ -27,7 +33,9 @@ export function buttons(gameData, autoSave) {
     button.addEventListener("click", () => {
       // Оновлюємо основні дані
       gameData.currentMission++;
-      gameData.score += 1000 + gameData.currentMission * 100;
+      if (gametype === "missions") {
+        gameData.score += 1000 + gameData.currentMission * 100;
+      }
       localStorage.setItem("gameData", JSON.stringify(gameData));
 
       // Завантажуємо сейви або створюємо нові
@@ -42,6 +50,7 @@ export function buttons(gameData, autoSave) {
         date: Date.now(),
         mission: gameData.currentMission,
         difficulty: JSON.parse(JSON.stringify(difficulty)),
+        gametype: gametype,
       });
       while (autoSave.saves.length > 10) {
         autoSave.saves.pop();
@@ -65,47 +74,43 @@ export function buttons(gameData, autoSave) {
   document.getElementById("leave").addEventListener("click", () => {
     location.href = "briefing.html";
   });
+
+  document.getElementById("buttons").addEventListener("click", () => {
+    if (pauseModal) pauseModal.style.visibility = "hidden";
+    document.getElementById("buttonsModal").style.visibility = "visible";
+  });
+
   document.getElementById("restart").addEventListener("click", () => {
     window.location.href =
-      `level${gameData.currentMission}.html?refresh=` + Date.now();
+      gametype === "missions"
+        ? `level${gameData.currentMission}.html?refresh=` + Date.now()
+        : `survival.html?refresh=` + Date.now();
   });
-  document.getElementById("settings").addEventListener("click", () => {
-    music.play().catch((e) => {
-      console.warn("Автовідтворення музики заблоковано:", e);
-    });
-    if (pauseModal) pauseModal.style.visibility = "hidden";
-    if (soundBoxModal) soundBoxModal.style.visibility = "visible";
-  });
+
   document.getElementById("back").addEventListener("click", () => {
     if (pauseModal) pauseModal.style.visibility = "hidden";
     togglePause();
   });
-  document.getElementById("settingsBack").addEventListener("click", () => {
-    music.pause();
-    if (soundBoxModal) soundBoxModal.style.visibility = "hidden";
+
+  document.getElementById("putButtons").addEventListener("click", () => {
+    const canvas = document.getElementById("canvas1");
+    document.getElementById("buttonsModal").style.visibility = "hidden";
+    setupCustomControlPlacement(canvas);
     togglePause();
   });
 
-  document.getElementById("musicVolume").value = volumeSettings.musicVolume;
-  document.getElementById("soundVolume").value = volumeSettings.soundVolume;
-
-  document.getElementById("musicVolume").addEventListener("input", (e) => {
-    volumeSettings.musicVolume = parseFloat(e.target.value);
-    if (music) {
-      music.volume = volumeSettings.musicVolume * 0.3;
-    }
+  document.getElementById("reset").addEventListener("click", () => {
+    localStorage.removeItem("customControlsPositions");
+    loadControlPositionsFromStorage();
+    document.getElementById("buttonsModal").style.visibility = "hidden";
+    togglePause();
   });
 
-  document.getElementById("soundVolume").addEventListener("input", (e) => {
-    volumeSettings.soundVolume = parseFloat(e.target.value);
-    activeSounds.forEach((sound) => {
-      sound.volume = volumeSettings.soundVolume;
-    });
-
-    localStorage.setItem("Volume", JSON.stringify(volumeSettings));
+  document.getElementById("back1").addEventListener("click", () => {
+    document.getElementById("buttonsModal").style.visibility = "hidden";
+    togglePause();
   });
 }
-
 export function getWinCondition() {
   return winCondition;
 }

@@ -59,7 +59,7 @@ export class BriefingDrones {
         const textX = this.x + this.width / 2;
         const textY = this.y + this.height + 8 + this.height / 5 / 2;
 
-        this.ctx.fillText("Спорядити", textX, textY);
+        this.ctx.fillText(t("load"), textX, textY);
       }
       let currentOffset = 0;
       bombTypes.forEach(({ type, icon }) => {

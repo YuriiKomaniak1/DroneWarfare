@@ -11,17 +11,16 @@
 
     <div id="modal1" class="tmodal">
       <div class="modal__content" id="modal1__content">
-        <h2>Вітаю!</h2>
+        <h2 id="hello">Вітаю!</h2>
         <div class="text__block">
-          <p>
-            Це навчальна місія гри dronETerra. В ній не зберігаються бали, та
+          <p id="trainingInfo">
+            Це навчальна місія гри dronETerra. У ній не зберігаються бали, і
             вона не впливає на проходження гри.
           </p>
-          <p>
-            Гравець керує дроном, який може літати над полем бою. Гравець не
-            бачить самого дрону, лише його приціл. Завдання гравця - знищити
-            ворогів, та ворожу техніку. Гравець може використовувати різні види
-            боєприпасів та різні дрони.
+          <p id="trainingInfo2">
+            Гравець керує дроном, який може літати над полем бою. Сам дрон не
+            видно — лише його приціл. Завдання гравця — знищити ворогів і ворожу
+            техніку, використовуючи різні типи боєприпасів і дрони.
           </p>
         </div>
         <button id="modal1Button" class="modal__button">Далі</button>
@@ -30,30 +29,246 @@
 
     <div id="modal2" class="tmodal">
       <div class="modal__content" id="modal2__content">
-        <h2>Вітаю!</h2>
         <div class="text__block">
-          <p>
-            Погляньте на нижню частину екрану, щоб побачити кнопки управління
-            дроном
+          <p id="controlsInfo">
+            Погляньте на нижню частину екрана, щоб побачити кнопки управління
+            дроном.
           </p>
           <ul>
-            <li>
-              <strong>1-Джойстик</strong> -керує рухом дрону (вгору, вниз,
+            <li id="controlsList">
+              <strong>1 — Джойстик</strong> — керує рухом дрона (вгору, вниз,
               вліво, вправо)
             </li>
-            <li><strong>2-Скидання бомби</strong> - скидання активної бомби</li>
-            <li>
-              <strong>3- Зміна бомби</strong> - зміна типу бомб з наявних на
-              дроні
+            <li id="controlsList2">
+              <strong>2 — Скидання бомби</strong> — скидання активної бомби
+            </li>
+            <li id="controlsList3">
+              <strong>3 — Зміна бомби</strong> — перемикання між типами бомб,
+              які встановлені на дроні
             </li>
           </ul>
         </div>
         <img
           src="./assets/img/trainingInfo/bottomButtons.png"
           alt="Кнопки управління дроном"
+          width="260px"
+        />
+        <div class="text__block">
+          <p id="controlsInfo2">
+            Спробуйте порухатися та поскидати бомби. Зверніть увагу: якщо дрон
+            не рухається, бомби падають прямо вниз. Якщо дрон рухається — бомби
+            летять по траєкторії його руху.
+          </p>
+        </div>
+        <button id="modal2Button" class="modal__button">Далі</button>
+      </div>
+    </div>
+
+    <div id="modal3" class="tmodal">
+      <div class="modal__content" id="modal3__content">
+        <h2 id="minimapTitle">Мінікарта</h2>
+        <img
+          src="./assets/img/trainingInfo/minimap.png"
+          alt="Мінікарта"
           width="200px"
         />
-        <button id="modal2Button" class="modal__button">Далі</button>
+        <div class="text__block">
+          <ul>
+            <p id="minimapInfo">
+              Мінікарта знаходиться у верхньому лівому куті екрана:
+            </p>
+            <li id="minimapPlayerMarker">
+              <strong>Синя мітка</strong> — дрон гравця
+            </li>
+            <li id="minimapEnemyMarker">
+              <strong>Червоні мітки</strong> — вороги
+            </li>
+            <li id="minimapVisibleArea">
+              <strong>Сірий прямокутник</strong> — видима частина поля бою
+            </li>
+            <li id="minimapVictoryProgress">
+              <strong>Зелена смуга</strong> — прогрес до перемоги
+            </li>
+            <li id="minimapDefeatProgress">
+              <strong>Червона смуга</strong> — прогрес до поразки
+            </li>
+          </ul>
+        </div>
+        <button id="modal3Button" class="modal__button">Далі</button>
+      </div>
+    </div>
+
+    <div id="modal4" class="tmodal">
+      <div class="modal__content" id="modal4__content">
+        <h2 id="scrollTitle">Масштабування</h2>
+        <img
+          src="./assets/img/trainingInfo/scroll.png"
+          alt="Масштабування"
+          width="100px"
+        />
+        <div class="text__block">
+          <p id="scrollInfo">
+            Смуга прокрутки під мінікартою служить для збільшення або зменшення
+            масштабу гри.
+          </p>
+          <p id="scrollInfo2">
+            Спробуйте змінити масштаб і подивіться, як це відображається на
+            мінікарті.
+          </p>
+        </div>
+        <button id="modal4Button" class="modal__button">Далі</button>
+      </div>
+    </div>
+
+    <div id="modal5" class="tmodal">
+      <div class="modal__content" id="modal5__content">
+        <h2 id="dronesTitle">Дрони</h2>
+        <div class="text__block">
+          <p id="dronesInfo">
+            Іконки дронів розміщені у верхньому правому куті. Активний дрон
+            підсвічується яскравіше і має дві смуги збоку:
+          </p>
+          <ul>
+            <li id="droneHealth">
+              <strong>Зелена смуга</strong> — запас міцності дрона
+            </li>
+            <li id="droneVisibility">
+              <strong>Червона смуга</strong> — помітність: шанс, що вороги його
+              побачать і відкриють вогонь
+            </li>
+          </ul>
+          <p id="dronesInfo2">
+            Під іконкою дрона зображено кількість наявних бомб. Натисніть на
+            дрон — він стане активним, попередній полетить на перезарядку.
+          </p>
+        </div>
+        <img
+          src="./assets/img/trainingInfo/droneIcons.png"
+          alt="Іконки дронів"
+          width="90px"
+        />
+        <div class="text__block">
+          <p id="dronesInfo3">Спробуйте змінити дрони та скинути бомби.</p>
+        </div>
+        <button id="modal5Button" class="modal__button">Далі</button>
+      </div>
+    </div>
+
+    <div id="modal6" class="tmodal">
+      <div class="modal__content" id="modal6__content">
+        <h2 id="enemiesTitle">Вороги</h2>
+        <div class="text__block">
+          <p id="enemiesInfo">
+            Завдання ворогів — дістатися до визначеної точки. Завдання гравця —
+            знищити їх до цього моменту.
+          </p>
+          <p id="enemiesInfo2">Якщо ворог помітить дрон, він почне стріляти.</p>
+        </div>
+        <img
+          src="./assets/img/trainingInfo/enemies.png"
+          alt="Вороги"
+          width="280px"
+        />
+        <div class="text__block">
+          <p id="enemiesInfo3">
+            Кулеметники (з білими смугами) стріляють ефективніше і з більшої
+            відстані.
+          </p>
+        </div>
+        <button id="modal6Button" class="modal__button">Далі</button>
+      </div>
+    </div>
+
+    <div id="modal7" class="tmodal">
+      <div class="modal__content" id="modal7__content">
+        <h2 id="bombsTitle">Бомби</h2>
+        <div class="text__block">
+          <p id="bombsInfo">
+            У грі доступно багато типів бомб і мін. На початку доступні три:
+          </p>
+        </div>
+        <img
+          src="./assets/img/trainingInfo/bombs.png"
+          alt="Кнопки управління дроном"
+          width="260px"
+        />
+        <div class="text__block">
+          <ul>
+            <li id="bombFragmentation">
+              <strong>Осколкова (червона)</strong> — радіус вибуху 1 м, радіус
+              ураження осколками — 7 м. Не зачіпає ворогів, що повзають. Чим
+              ближче до епіцентру — тим вища ймовірність ураження.Ефективна
+              проти скупчення ворогів.
+            </li>
+            <li id="bombHighExplosive">
+              <strong>Фугасна (синя)</strong> — радіус вибуху 2,5 м. Без
+              осколків. Ефективна проти повзаючих ворогів та легкої техніки.
+            </li>
+            <li id="bombKumulation">
+              <strong>Кумулятивна (коричнева)</strong> — ефективна проти
+              бронетехніки. Піхоту уражає лише при прямому влучанні.
+            </li>
+          </ul>
+          <p id="bombsInfo4">Потренуйтеся скидати бомби по ворогах.</p>
+        </div>
+        <button id="modal7Button" class="modal__button">Далі</button>
+      </div>
+    </div>
+
+    <div id="modal8" class="tmodal">
+      <div class="modal__content" id="modal8__content">
+        <h2 id="fireTitle">Вогонь по дрону</h2>
+        <div class="text__block">
+          <p id="fireInfo">
+            Імовірність влучення по дрону залежить від його розміру, швидкості
+            та кількості ворогів. Нерухомий дрон — легка мішень.
+          </p>
+          <p id="fireInfo2">
+            Щоб знищити групу ворогів, краще скидати бомбу з розгону, не
+            зависаючи над ними.
+          </p>
+        </div>
+        <button id="modal8Button" class="modal__button">Далі</button>
+      </div>
+    </div>
+
+    <div id="modal9" class="tmodal">
+      <div class="modal__content" id="modal9__content">
+        <h2 id="techTitle">Техніка</h2>
+        <div class="text__block">
+          <p id="techInfo">
+            У грі є броньована та неброньована техніка. Вона містить екіпаж і
+            має різне озброєння.
+          </p>
+          <p id="techInfo2">
+            На мінікарті: неброньована — рожева, броньована — червона, та що
+            може стріляти по дрону — темно-червона.
+          </p>
+        </div>
+        <img
+          src="./assets/img/trainingInfo/vehicles.png"
+          alt="Техніка"
+          width="260px"
+        />
+        <div class="text__block">
+          <p id="techInfo3">
+            Проти неброньованої ефективна фугасна бомба, проти броньованої —
+            кумулятивна. Результат залежить від рівня броні та пробивної сили.
+          </p>
+          <p id="techInfo4">
+            Потренуйтеся знищувати техніку — навчальна місія завершиться
+            автоматично.
+          </p>
+        </div>
+        <button id="modal9Button" class="modal__button">Далі</button>
+      </div>
+    </div>
+
+    <div id="modal10" class="tmodal">
+      <div class="modal__content" id="modal10__content">
+        <h2 id="missionCompleteTitle">Місію завершено</h2>
+        <p id="missionCompleteInfo">Навчальну місію успішно завершено.</p>
+        <button id="modal10Button" class="modal__button">Далі</button>
       </div>
     </div>
 
@@ -74,6 +289,8 @@
       import { setupDebugConsole } from "./js/utils/debugConsole.js";
       setupDebugConsole();
     </script>
+    <script src="js/lang/langCommon.js"></script>
+    <script src="js/lang/langTraining.js"></script>
     <script src="./js/level0.js" type="module"></script>
   </body>
 </html>

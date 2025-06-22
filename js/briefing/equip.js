@@ -11,6 +11,17 @@ canvas.width = 120;
 canvas.height = 160;
 const ctx = canvas.getContext("2d");
 
+const briefingModal = JSON.parse(localStorage.getItem("briefingModal")) || {};
+
+if (briefingModal.equip) {
+  briefingModal.equip = false;
+  localStorage.setItem("briefingModal", JSON.stringify(briefingModal));
+  document.getElementById("startModal").style.visibility = "visible";
+}
+document.getElementById("back2").addEventListener("click", () => {
+  document.getElementById("startModal").style.visibility = "hidden";
+});
+
 // витягуємо індекс дрона з localStorage
 const droneIndex = parseInt(localStorage.getItem("droneToEquip") ?? 0);
 let oldDrone = gameState.drones[droneIndex];

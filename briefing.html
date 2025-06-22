@@ -19,16 +19,20 @@
       </div>
 
       <div id="button-panel">
-        <button id="back-button" class="briefing-button">Назад</button>
-        <button id="save-button" class="briefing-button">Зберегти</button>
-        <button id="upgrade-button" class="briefing-button">Апгрейди</button>
-        <button id="start-button" class="briefing-button">Старт</button>
+        <div class="buttons">
+          <button id="back-button" class="briefing-button">Назад</button>
+          <button id="save-button" class="briefing-button">Зберегти</button>
+        </div>
+        <div class="buttons">
+          <button id="upgrade-button" class="briefing-button">Апгрейди</button>
+          <button id="start-button" class="briefing-button">Старт</button>
+        </div>
       </div>
     </div>
 
     <div id="saveModal" class="container">
       <div class="save_menu">
-        <h2>Зберегти гру</h2>
+        <h2 id="save-title">Зберегти гру</h2>
         <div class="save_menu" id="saveContent"></div>
         <button id="back" class="briefing-button">Назад</button>
       </div>
@@ -36,8 +40,50 @@
 
     <div id="saveOkModal" class="container">
       <div class="save_menu">
-        <p>Гру успішно збережено!</p>
+        <p id="saveOkMessage">Гру успішно збережено!</p>
         <button id="back1" class="briefing-button">Назад</button>
+      </div>
+    </div>
+
+    <div id="startModal" class="container">
+      <div class="save_menu">
+        <div class="text__block">
+          <p id="start-text">
+            Це вікно брифігу перед місією. Тут можна ознайомитись з поточним
+            завданням.
+          </p>
+          <p id="start-text2">
+            Натиснувши на іконку дрону можна спорядити його необхідними для
+            місії бомбами.
+          </p>
+        </div>
+        <img
+          src="./assets/img/trainingInfo/equip.png"
+          alt="Кнопки управління дроном"
+          width="140px"
+        />
+        <div class="text__block">
+          <p id="start-text3">
+            Натиснувши кнопку апгрейд, можна за ігрові бали відкрити нові
+            технології або покращити існуючі.
+          </p>
+        </div>
+        <button id="back2" class="briefing-button">Далі</button>
+      </div>
+    </div>
+
+    <div id="premiumModal" class="container">
+      <div class="save_menu">
+        <h2 id="premiumTitle">Підтримай dronETerra</h2>
+        <p style="text-align: center" id="premiumText">
+          Ви пройшли 8 безкоштовних місій. <br />
+          Купіть преміум-версію за $1.59, щоб отримати доступ до 76 місій у 2
+          режимах, та можливість прокачати усі дрони та боєприпаси.
+        </p>
+        <button id="confirmPremium" class="briefing-button">
+          💎 Купити $1.59
+        </button>
+        <button id="cancelPremium" class="briefing-button">Скасувати</button>
       </div>
     </div>
 
@@ -45,6 +91,7 @@
       import { setupDebugConsole } from "./js/utils/debugConsole.js";
       setupDebugConsole();
     </script>
+    <script src="js/lang/langBriefing.js"></script>
     <script src="js/briefing.js" type="module"></script>
   </body>
 </html>

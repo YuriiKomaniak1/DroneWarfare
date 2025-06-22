@@ -530,7 +530,7 @@ export class MTLBKPVT extends Vehicle {
     this.turretOffsetX = 0;
     this.turretOffsetY = -0.3;
     this.droneSpottingChanse = 9;
-    this.fireRate = 10;
+    this.fireRate = 12;
     this.fireDistance = 420;
     this.winScore = this.score;
     this.looseScore = this.score;
@@ -563,7 +563,7 @@ export class KPVT extends Vehicle {
     this.hasTurret = true;
     this.turretOffsetX = 0;
     this.turretOffsetY = -0.0;
-    this.fireRate = 10;
+    this.fireRate = 12;
     this.static = true;
     this.fireDistance = 420;
     this.turretRotateRange = 45;

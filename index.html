@@ -13,17 +13,20 @@
         <h1>dronETerra</h1>
       </div>
       <div class="menu">
-        <a class="menu-button" id="start">НОВА ГРА</a>
+        <a class="menu-button" id="survival">ОСТАННІЙ РУБІЖ</a>
+        <a class="menu-button" id="start">КАМПАНІЯ</a>
         <a class="menu-button" id="continue">ПРОДОВЖИТИ</a>
         <a class="menu-button" id="load">ЗАВАНТАЖИТИ</a>
-        <a class="menu-button" id="training">НАВЧАННЯ</a>
+        <a class="menu-button" id="info">ІНФОРМАЦІЯ</a>
         <a class="menu-button" id="settings">НАЛАШТУВАННЯ</a>
+        <a class="menu-button" id="exit">ВИЙТИ</a>
+        <a class="premium-button" id="buyPremium">💎 ПІДТРИМАТИ</a>
       </div>
     </div>
 
-    <div id="loadModal" class="load_container">
+    <div id="loadModal" class="load2_container">
       <div class="load_menu">
-        <h2>Завантажити гру</h2>
+        <h2 id="loadTitle">Завантажити гру</h2>
         <div class="nav_menu">
           <button id="autoSave" class="navButton">Авто</button>
           <button id="gameSave" class="navButton">Гравець</button>
@@ -36,41 +39,60 @@
       </div>
     </div>
 
-    <div id="startModal" class="load_container">
+    <div id="trainingModal" class="load2_container">
       <div class="load_menu start">
-        <h2>Рівень складності</h2>
+        <h2 id="trainingMission">Тренувальна місія</h2>
+        <button id="goTraining" class="menu-button">Розпочати</button>
+        <button id="avoidTraining" class="menu-button">Пропустити</button>
+      </div>
+    </div>
+
+    <div id="startModal" class="load2_container">
+      <div class="load_menu start">
+        <div id="startDescription"></div>
+        <h3 id="difficultyTitle">Рівень складності</h3>
+
         <div class="startGroup">
           <button id="easy" class="loadButton">Легкий</button>
-          <p style="font-size: 10px">
+          <!-- <p style="font-size: 10px">
             вага бомб 75% влучність ворогів 50% від норми
-          </p>
+          </p> -->
         </div>
         <div class="startGroup">
           <button id="medium" class="loadButton">Середній</button>
-          <p style="font-size: 10px">
+          <!-- <p style="font-size: 10px">
             вага бомб 85% влучність ворогів 75% від норми
-          </p>
+          </p> -->
         </div>
         <div class="startGroup">
           <button id="hard" class="loadButton">Важкий</button>
-          <p style="font-size: 10px">
+          <!-- <p style="font-size: 10px">
             вага бомб 100% влучність ворогів 100% від норми
-          </p>
+          </p> -->
         </div>
         <div class="startGroup">
           <button id="veryHard" class="loadButton">Дуже важкий</button>
-          <p style="font-size: 10px">
+          <!-- <p style="font-size: 10px">
             вага бомб 100% влучність ворогів 125% від норми
-          </p>
+          </p> -->
         </div>
         <button id="startBack" class="menu-button">Назад</button>
       </div>
     </div>
 
-    <script type="module">
-      import { setupDebugConsole } from "./js/utils/debugConsole.js";
-      setupDebugConsole();
-    </script>
-    <script src="js/index.js" type="module"></script>
+    <div id="premiumModal" class="load2_container">
+      <div class="load_menu">
+        <h2 id="premiumTitle">Підтримай dronETerra</h2>
+        <p style="text-align: center" id="premiumText">
+          Купіть преміум-версію за $1.59, щоб отримати доступ до 76 місій у 2
+          режимах, та можливість прокачати усі дрони та боєприпаси.
+        </p>
+        <button id="confirmPremium" class="menu-button">💎 Купити $1.59</button>
+        <button id="cancelPremium" class="menu-button">Скасувати</button>
+      </div>
+    </div>
+
+    <script src="js/lang/langIndex.js"></script>
+    <script src="js/index.js"></script>
   </body>
 </html>

@@ -3,26 +3,61 @@ import { BriefingDrones } from "./gameElements/briefingDroneIcons.js";
 import { gameState } from "./logic/gamestate.js";
 import { SmallDrone, MediumDrone, BigDrone } from "./drones/drones.js";
 
+let userSettings = JSON.parse(localStorage.getItem("userSettings")) || {
+  isPremium: false,
+};
 // витягування даних з пам'яті
 const gameData = JSON.parse(localStorage.getItem("gameData"));
+const avoidTraining = JSON.parse(localStorage.getItem("avoidTraining"));
 const volumeSettings = JSON.parse(localStorage.getItem("Volume")) || {
   soundVolume: 0.8,
   musicVolume: 0.6,
 };
 
+console.log(avoidTraining);
+if (gameData.currentMission === 0 && avoidTraining) {
+  gameData.currentMission = 1;
+}
+const gametype = localStorage.getItem("gametype");
+const briefingModal = JSON.parse(localStorage.getItem("briefingModal")) || {};
+
+if (briefingModal.briefing) {
+  briefingModal.briefing = false;
+  localStorage.setItem("briefingModal", JSON.stringify(briefingModal));
+  document.getElementById("startModal").style.visibility = "visible";
+}
+
+if (gameData.currentMission === 0) {
+  localStorage.setItem("playDroneMusic", "true");
+  window.location.href = `level0.html`;
+}
+
 gameState.updateDrones(gameData, SmallDrone, MediumDrone, BigDrone);
 gameState.updateData(gameData);
-gameState.drones.forEach((drone) => {
-  if (drone?.resetAmmo) {
-    drone.resetAmmo();
-  }
-});
 
+// Після updateData — переклонвати initialBombStorage!
+gameState.drones.forEach((drone) => {
+  if (!drone) return;
+  // 🧠 ВАЖЛИВО: перезаписати initial як клон
+  drone.initialBombStorage = drone.cloneBombStorage(drone.bombStorage);
+  drone.resetAmmo();
+});
 const shouldPlayMusic = localStorage.getItem("playBriefingMusic") === "true";
 const missionKey = gameData.currentMission; // Сюди підставляється поточна місія
 // брифінг перед місією
-document.getElementById("briefing-text").innerHTML = briefingText[missionKey];
-
+const lang = localStorage.getItem("lang") || "en";
+if (gametype === "missions")
+  document.getElementById("briefing-text").innerHTML =
+    briefingText[lang]?.[missionKey] || "";
+if (gametype === "survival") {
+  if (missionKey <= 50) {
+    document.getElementById("briefing-text").innerHTML = `<strong>${t(
+      "wave"
+    )} ${missionKey} / 50</strong> `;
+  } else {
+    document.getElementById("briefing-text").innerHTML = t("victory");
+  }
+}
 // обробка кнопок внизу
 document.getElementById("back-button").addEventListener("click", () => {
   window.location.href = "index.html";
@@ -32,6 +67,9 @@ document.getElementById("back").addEventListener("click", () => {
 });
 document.getElementById("back1").addEventListener("click", () => {
   document.getElementById("saveOkModal").style.visibility = "hidden";
+});
+document.getElementById("back2").addEventListener("click", () => {
+  document.getElementById("startModal").style.visibility = "hidden";
 });
 document.getElementById("save-button").addEventListener("click", () => {
   document.getElementById("saveModal").style.visibility = "visible";
@@ -55,12 +93,12 @@ document.getElementById("save-button").addEventListener("click", () => {
         hour: "2-digit",
         minute: "2-digit",
       });
-
-      btn.textContent = `Місія ${missionId} — ${difficulty} — ${date}`;
+      const name = save.gametype === "missions" ? t("mission") : t("wave");
+      btn.textContent = `${name} ${missionId} — ${difficulty} — ${date}`;
 
       saveContent.appendChild(btn);
     } else {
-      btn.textContent = `Слот ${i + 1} — порожній`;
+      btn.textContent = `${t("slot")} ${i + 1} — ${t("empty")}`;
       saveContent.appendChild(btn);
     }
     btn.addEventListener("click", () => {
@@ -69,9 +107,9 @@ document.getElementById("save-button").addEventListener("click", () => {
         date: Date.now(),
         mission: gameData.currentMission,
         difficulty: JSON.parse(JSON.stringify(difficulty)),
+        gametype: gametype,
       };
       gameSave.saves[i] = save;
-      console.log("Збереження гри в слот", i + 1, save);
       localStorage.setItem("gameSave", JSON.stringify(gameSave));
       document.getElementById("saveModal").style.visibility = "hidden";
       document.getElementById("saveOkModal").style.visibility = "visible";
@@ -83,17 +121,43 @@ document.getElementById("upgrade-button").addEventListener("click", () => {
   localStorage.setItem("playUpgradeMusic", "true");
   window.location.href = "upgrades.html";
 });
+
+// старт місії
 document.getElementById("start-button").addEventListener("click", () => {
   gameState.drones.forEach((drone, index) => {
     gameState.rememberDrone(gameData, index);
   });
   localStorage.setItem("gameData", JSON.stringify(gameData));
   localStorage.setItem("playDroneMusic", "true");
-  window.location.href = `level${missionKey}.html`;
+  if (!userSettings.isPremium && gameData.currentMission >= 9) {
+    document.getElementById("premiumModal").style.visibility = "visible"; // Сховати модальне вікно
+  } else {
+    if (gametype === "missions" && gameData.currentMission < 27)
+      window.location.href = `level${missionKey}.html`;
+    if (gametype === "survival" && gameData.currentMission < 51)
+      window.location.href = `survival.html`;
+  }
 });
+
+const premiumModal = document.getElementById("premiumModal");
+const cancelButton = document.getElementById("cancelPremium");
+const confirmButton = document.getElementById("confirmPremium");
+
+cancelButton.addEventListener("click", () => {
+  premiumModal.style.visibility = "hidden";
+});
+
+confirmButton.addEventListener("click", () => {
+  // Тут можна додати виклик Google Play Billing API
+  alert("Преміум придбано ");
+  userSettings.isPremium = true;
+  localStorage.setItem("userSettings", JSON.stringify(userSettings));
+  premiumModal.style.visibility = "hidden";
+});
+let music;
 // обробка музики
 if (shouldPlayMusic) {
-  const music = new Audio("./assets/audio/music/briefing-music.mp3");
+  music = new Audio("./assets/audio/music/briefing-music.mp3");
   music.loop = true;
   music.volume = volumeSettings.musicVolume * 0.15;
 
@@ -101,7 +165,19 @@ if (shouldPlayMusic) {
   music.play().catch((e) => {
     console.warn("Автовідтворення музики заблоковано:", e);
   });
-
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      if (music && !music.paused) music.pause();
+    } else {
+      if (music && music.paused) {
+        music
+          .play()
+          .catch((e) =>
+            console.warn("Не вдалося відновити музику після повернення:", e)
+          );
+      }
+    }
+  });
   // Видаляємо прапорець, щоб не повторювалося
   localStorage.removeItem("playBriefingMusic");
 }
@@ -153,6 +229,7 @@ canvas.addEventListener("click", (e) => {
     }
   });
 });
+
 let lastTime = 0;
 function animate(timestamp) {
   const deltaTime = timestamp - lastTime;

@@ -13,23 +13,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const shouldPlayMusic = localStorage.getItem("playUpgradeMusic") === "true";
   const volumeSettings = JSON.parse(localStorage.getItem("Volume"));
 
-  // const rawData = localStorage.getItem("gameData");
-
-  // console.log("📦 raw gameData:", rawData);
-
-  // document.body.insertAdjacentHTML(
-  //   "beforeend",
-  //   `<div style="position:fixed;top:0;left:0;z-index:99999;color:#fff;background:#000;padding:10px;max-width:100vw;word-break:break-word;">
-  //      gameData:<br>${rawData}
-  //    </div>`
-  // );
-
   // програвання музики
   document.querySelectorAll(".score").forEach((el) => {
     el.textContent = gameData.score;
   });
+  let music;
   if (shouldPlayMusic && volumeSettings) {
-    const music = new Audio("./assets/audio/music/upgrade-music.mp3");
+    music = new Audio("./assets/audio/music/upgrade-music.mp3");
     music.loop = true;
     music.volume = volumeSettings.musicVolume * 0.3;
 
@@ -40,6 +30,20 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.removeItem("playBriefingMusic");
   }
 
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      if (music && !music.paused) music.pause();
+    } else {
+      if (music && music.paused) {
+        music
+          .play()
+          .catch((e) =>
+            console.warn("Не вдалося відновити музику після повернення:", e)
+          );
+      }
+    }
+  });
+
   // присвоєння цін
   const mediumDroneOpenCost = 8000;
   const bigDroneOpenCost = 10000;
@@ -49,8 +53,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const tankMineOpenCost = 3000;
   const magnetMineOpenCost = 5000;
   const shrapnelBombOpenCost = 3000;
-  const clusterBombOpenCost = 10000;
-  const shapedClusterBombOpenCost = 20000;
+  const clusterBombOpenCost = 12000;
+  const shapedClusterBombOpenCost = 15000;
   const smallDroneSpeedUpgradeCost =
     1000 + gameData.smallDroneSpeedUpgradeGap * gameData.smallDroneSpeedUpgrade;
   const mediumDroneSpeedUpgradeCost =
@@ -75,20 +79,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const bigDroneHPUpgradeCost =
     3000 + gameData.bigDroneHPUpgradeGap * gameData.bigDroneHPUpgrade;
   const fragBombUpgradeCost =
-    1000 + gameData.fragBombUpgradeGap * gameData.fragBombUpgrade;
+    750 + gameData.fragBombUpgradeGap * gameData.fragBombUpgrade;
   const heBombUpgradeCost =
-    1000 + gameData.heBombUpgradeGap * gameData.heBombUpgrade;
+    750 + gameData.heBombUpgradeGap * gameData.heBombUpgrade;
   const shapedBombUpgradeCost =
-    1000 + gameData.shapedBombUpgradeGap * gameData.shapedBombUpgrade;
-  const tankMineUpgradeCost = 1000;
+    750 + gameData.shapedBombUpgradeGap * gameData.shapedBombUpgrade;
+  const tankMineUpgradeCost = 5000;
   const magnetMineUpgradeCost =
     2000 + gameData.magnetMineUpgradeGap * gameData.magnetMineUpgrade;
   const shrapnelBombUpgradeCost =
-    1000 + gameData.shrapnelBombUpgradeGap * gameData.shrapnelBombUpgrade;
+    1500 + gameData.shrapnelBombUpgradeGap * gameData.shrapnelBombUpgrade;
   const clusterBombUpgradeCost =
-    1000 + gameData.clusterBombUpgradeGap * gameData.clusterBombUpgrade;
+    2000 + gameData.clusterBombUpgradeGap * gameData.clusterBombUpgrade;
   const shapedClusterBombUpgradeCost =
-    1000 +
+    2000 +
     gameData.shapedClusterBombUpgradeGap * gameData.shapedClusterBombUpgrade;
 
   // присвоєння цін в HTML
@@ -426,7 +430,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .addEventListener("click", () => {
       if (
         gameData.score >= mediumDroneSpeedUpgradeCost &&
-        gameData.mediumDroneSpeedUpgrade < 6
+        gameData.mediumDroneSpeedUpgrade < 7
       ) {
         gameData.mediumDroneSpeedUpgrade++;
         upgradeRoutine(
@@ -436,13 +440,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   document.getElementById("mediumDroneCurrentSpeed").textContent =
-    10 + gameData.mediumDroneSpeedUpgrade * 0.7;
+    10 + gameData.mediumDroneSpeedUpgrade * 0.8;
   document.getElementById("mediumDroneNextSpeed").textContent =
-    10 + (gameData.mediumDroneSpeedUpgrade + 1) * 0.7;
+    10 + (gameData.mediumDroneSpeedUpgrade + 1) * 0.8;
   document.getElementById("mediumDroneSpeedUpgradeCount").textContent =
     gameData.mediumDroneSpeedUpgrade;
 
-  if (gameData.mediumDroneSpeedUpgrade >= 6 || !gameData.mediumDroneAvailable)
+  if (gameData.mediumDroneSpeedUpgrade >= 7 || !gameData.mediumDroneAvailable)
     document.getElementById("mediumDroneSpeedUB").style.display = "none";
 
   // Модалка апгрейду вантажопідйомності середнього дрону
@@ -492,7 +496,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .addEventListener("click", () => {
       if (
         gameData.score >= mediumDroneHPUpgradeCost &&
-        gameData.mediumDroneHPUpgrade < 4
+        gameData.mediumDroneHPUpgrade < 5
       ) {
         gameData.mediumDroneHPUpgrade++;
         upgradeRoutine(mediumDroneHPUpgradeCost, ".mediumDroneHPUpgradeCost");
@@ -505,7 +509,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("mediumDroneHPUpgradeCount").textContent =
     gameData.mediumDroneHPUpgrade;
 
-  if (gameData.mediumDroneHPUpgrade >= 4 || !gameData.mediumDroneAvailable)
+  if (gameData.mediumDroneHPUpgrade >= 5 || !gameData.mediumDroneAvailable)
     document.getElementById("mediumDroneHPUB").style.display = "none";
 
   // Модалка апгрейду швидкості великого дрону
@@ -678,6 +682,23 @@ document.addEventListener("DOMContentLoaded", () => {
   if (gameData.shapedBombUpgrade >= 9)
     document.getElementById("shapedBombUpgradeUB").style.display = "none";
 
+  // Модалка апгрейду фугасної міни
+  document
+    .getElementById("tankMineUpgrade_image")
+    .addEventListener("click", () => {
+      document.getElementById("tankMineUpgradeModal").style.visibility =
+        "visible";
+    });
+  document.getElementById("tankMineUpgrade").addEventListener("click", () => {
+    if (gameData.score >= tankMineUpgradeCost && gameData.tankMineUpgrade < 1) {
+      gameData.tankMineUpgrade = true;
+      upgradeRoutine(tankMineUpgradeCost, ".tankMineUpgradeCost");
+    }
+  });
+
+  if (gameData.tankMineUpgrade === true || !gameData.tankMineAvailable)
+    document.getElementById("tankMineUpgradeUB").style.display = "none";
+
   // Модалка апгрейду мігнітної міни
   document
     .getElementById("magnetMineUpgrade_image")
@@ -753,20 +774,20 @@ document.addEventListener("DOMContentLoaded", () => {
     .addEventListener("click", () => {
       if (
         gameData.score >= clusterBombUpgradeCost &&
-        gameData.clusterBombUpgrade < 10
+        gameData.clusterBombUpgrade < 7
       ) {
         gameData.clusterBombUpgrade++;
         upgradeRoutine(clusterBombUpgradeCost, ".clusterBombUpgradeCost");
       }
     });
   document.getElementById("clusterBombCurrentState").textContent =
-    26 + gameData.clusterBombUpgrade;
+    7 + gameData.clusterBombUpgrade;
   document.getElementById("clusterBombNextState").textContent =
-    26 + (gameData.clusterBombUpgrade + 1);
+    7 + (gameData.clusterBombUpgrade + 1);
   document.getElementById("clusterBombUpgradeCount").textContent =
     gameData.clusterBombUpgrade;
 
-  if (gameData.clusterBombUpgrade >= 10 || !gameData.clusterBombAvailable)
+  if (gameData.clusterBombUpgrade >= 7 || !gameData.clusterBombAvailable)
     document.getElementById("clusterBombUpgradeUB").style.display = "none";
 
   // Модалка апгрейду ПТ касетної бомби
@@ -782,7 +803,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .addEventListener("click", () => {
       if (
         gameData.score >= shapedClusterBombUpgradeCost &&
-        gameData.shapedClusterBombUpgrade < 10
+        gameData.shapedClusterBombUpgrade < 7
       ) {
         gameData.shapedClusterBombUpgrade++;
         upgradeRoutine(
@@ -792,22 +813,22 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   document.getElementById("shapedClusterBombCurrentState").textContent =
-    26 + gameData.shapedClusterBombUpgrade;
+    7 + gameData.shapedClusterBombUpgrade;
   document.getElementById("shapedClusterBombNextState").textContent =
-    26 + (gameData.shapedClusterBombUpgrade + 1);
+    7 + (gameData.shapedClusterBombUpgrade + 1);
   document.getElementById("shapedClusterBombCurrentAPState").textContent = (
-    0.86 +
+    0.9 +
     gameData.shapedClusterBombUpgrade * 0.01
   ).toFixed(2);
   document.getElementById("shapedClusterBombNextAPState").textContent = (
-    0.86 +
+    0.9 +
     (gameData.shapedClusterBombUpgrade + 1) * 0.01
   ).toFixed(2);
   document.getElementById("shapedClusterBombUpgradeCount").textContent =
     gameData.shapedClusterBombUpgrade;
 
   if (
-    gameData.shapedClusterBombUpgrade >= 10 ||
+    gameData.shapedClusterBombUpgrade >= 7 ||
     !gameData.shapedClusterBombAvailable
   )
     document.getElementById("shapedClusterBombUpgradeUB").style.display =

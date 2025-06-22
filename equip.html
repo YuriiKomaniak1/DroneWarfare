@@ -8,48 +8,52 @@
   </head>
   <body>
     <div class="container">
-      <h2>Спорядження дрона №<span id="drone_number">1</span></h2>
+      <h2>
+        <span id="missionTitle"> Спорядження дрона №</span
+        ><span id="drone_number">1</span>
+      </h2>
       <!-- вибір типу дрона-->
-      <h3>Вибір типу дрона</h3>
+      <h3 id="chooseDroneType">Вибір типу дрона</h3>
       <div id="choose__drone__type">
         <div class="drone-box">
           <div id="small_drone_image"></div>
-          <p>малий дрон</p>
+          <p id="smallDroneText">малий дрон</p>
         </div>
         <div class="drone-box">
           <div id="medium_drone_image"></div>
-          <p>середній дрон</p>
+          <p id="mediumDroneText">середній дрон</p>
         </div>
         <div class="drone-box">
           <div id="big_drone_image"></div>
-          <p>великий дрон</p>
+          <p id="bigDroneText">великий дрон</p>
         </div>
       </div>
       <!-- Канвас і характеристики дрона-->
       <div id="equip-canvas-container">
         <div id="text-container">
           <p>
-            Вага<br />
+            <span id="droneWeightText"> Вага</span><br />
             <strong
               ><span id="remainingDroneWeight">1</span>/<span id="droneWeight"
                 >1</span
-              ></strong
+              ><span id="droneWeightUnit"> г.</span></strong
             >
-            г.
           </p>
           <p>
-            Підвіси<br />
+            <span id="hangarsText"> Підвіси</span><br />
             <strong
-              ><span id="hangers">1</span>/<span id="initialHangers">1</span>
-              шт.</strong
+              ><span id="hangers">1</span>/<span id="initialHangers">1</span
+              ><span id="hangarsUnit"> шт.</span></strong
             >
           </p>
           <p>
-            Швидкість<br />
-            <strong><span id="droneSpeed">1</span> м/с.</strong>
+            <span id="droneSpeedText"> Швидкість</span><br />
+            <strong
+              ><span id="droneSpeed">1</span><span id="droneSpeedUnit"> </span
+            ></strong>
           </p>
           <p>
-            Міцність<br />
+            <span id="droneHPText"> Міцність </span><br />
             <strong><span id="droneHP">1</span> .</strong>
           </p>
         </div>
@@ -264,6 +268,45 @@
           </div>
         </div>
       </div>
+
+      <div id="startModal" class="container">
+        <div class="save_menu">
+          <div class="text__block">
+            <p id="equipDescription">
+              Це вікно спорядження дрона. У верхній частині — кнопки вибору типу
+              дрона. На початку доступний лише малий дрон.
+            </p>
+          </div>
+          <img
+            src="./assets/img/trainingInfo/chooseDrone.png"
+            alt="Кнопки вибору дрона"
+            width="220px"
+          />
+          <div class="text__block">
+            <p id="equipDescription2">
+              Наступний блок складається з трьох частин: характеристик дрона,
+              його зображення та кнопок управління (наступний дрон, копіювати
+              бомби з цього дрона на наступний, очистити).
+            </p>
+          </div>
+          <img
+            src="./assets/img/trainingInfo/droneDescription.png"
+            alt="Опис дрона"
+            width="260px"
+          />
+          <div class="text__block">
+            <p id="equipDescription3">
+              У нижній частині — кнопки для додавання бомб до дрона.
+            </p>
+          </div>
+          <img
+            src="./assets/img/trainingInfo/bombEquip.png"
+            alt="Секція додавання бомб"
+            width="280px"
+          />
+        </div>
+        <button id="back2" class="briefing-button">Далі</button>
+      </div>
       <!-- кнопки управління-->
       <div class="button-panel">
         <button id="back-button" class="briefing-button">Назад</button>
@@ -274,6 +317,7 @@
       import { setupDebugConsole } from "./js/utils/debugConsole.js";
       setupDebugConsole();
     </script>
+    <script src="js/lang/langEquip.js"></script>
     <script src="js/briefing/equip.js" type="module"></script>
   </body>
 </html>

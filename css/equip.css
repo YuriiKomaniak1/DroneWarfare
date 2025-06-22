@@ -95,3 +95,11 @@ body {
   align-items: center;
   justify-content: space-around;
 }
+
+#startModal {
+  visibility: hidden;
+}
+
+.text__block {
+  text-align: left;
+}

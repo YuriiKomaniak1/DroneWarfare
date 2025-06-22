@@ -15,6 +15,11 @@ initGame({
   startY: 3400,
 });
 
+const volumeSettings = JSON.parse(localStorage.getItem("Volume")) || {
+  soundVolume: 0.1,
+  musicVolume: 0.6,
+};
+
 function startLevel(
   gameData,
   layer1,
@@ -203,7 +208,7 @@ function startLevel(
       if (vehicles[0].looseScore === 22 && vehicles[1].looseScore !== 22) {
         vehicles[1].looseScore = 22;
         const alarmSound = new Audio("assets/audio/vehicle/alarm.mp3");
-        alarmSound.volume = 0.6;
+        alarmSound.volume = 0.3 * volumeSettings.soundVolume;
         alarmSound.play();
         vehicles.forEach((vehicle) => {
           if (vehicle.type === "buk" || vehicle.type === "mtlbKPVT") {

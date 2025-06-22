@@ -21,3 +21,7 @@ input[type="range"] {
   height: 15px;
   accent-color: var(--menu-background-color); /* Працює в нових браузерах */
 }
+
+#title {
+  margin-bottom: 15px;
+}

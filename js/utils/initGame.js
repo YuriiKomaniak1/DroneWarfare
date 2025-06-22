@@ -1,6 +1,7 @@
 import { initGameDataStrict } from "./initGameData.js";
 import { Layer } from "../layers/layer.js";
 import { NavigationGrid } from "../logic/navigation.js";
+import { loadControlPositionsFromStorage } from "../logic/controls.js";
 
 export async function initGame({
   levelId,
@@ -14,7 +15,7 @@ export async function initGame({
   rotationDegrees = 0,
 }) {
   let gameData = JSON.parse(localStorage.getItem("gameData") || "{}");
-
+  loadControlPositionsFromStorage();
   try {
     const basePath = `js/levels/${levelId}`;
     const [trenches, obstacles, bigObstacles, bombObstacles, covers] =

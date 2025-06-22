@@ -142,7 +142,7 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
     }
   });
   document.getElementById("fragBombWeight").textContent =
-    Math.round(FragBomb.weight * 1000) + "г.";
+    Math.round(FragBomb.weight * 1000) + t("g");
   // фугасна бомба
   addClickAndTouch(hePlus, () => {
     if (drone.remainingCapacity >= HeBomb.weight) {
@@ -158,7 +158,7 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
     }
   });
   document.getElementById("heBombWeight").textContent =
-    Math.round(HeBomb.weight * 1000) + "г.";
+    Math.round(HeBomb.weight * 1000) + t("g");
   // кумулятивна бомба
   addClickAndTouch(shapedPlus, () => {
     if (drone.remainingCapacity >= ShapedBomb.weight) {
@@ -174,7 +174,7 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
     }
   });
   document.getElementById("shapedBombWeight").textContent =
-    Math.round(ShapedBomb.weight * 1000) + "г.";
+    Math.round(ShapedBomb.weight * 1000) + t("g");
   // протипіхотна міна
   addClickAndTouch(footMinePlus, () => {
     if (drone.remainingCapacity >= FootMine.weight) {
@@ -190,7 +190,7 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
     }
   });
   document.getElementById("footMineWeight").textContent =
-    Math.round(FootMine.weight * 1000) + "г.";
+    Math.round(FootMine.weight * 1000) + t("g");
   // фугасна міна
   addClickAndTouch(tankMinePlus, () => {
     if (drone.remainingCapacity >= TankMine.weight) {
@@ -206,7 +206,7 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
     }
   });
   document.getElementById("tankMineWeight").textContent =
-    Math.round(TankMine.weight * 1000) + "г.";
+    Math.round(TankMine.weight * 1000) + t("g");
   // магнітна міна
   addClickAndTouch(magnetMinePlus, () => {
     if (drone.remainingCapacity >= MagnetMine.weight) {
@@ -222,7 +222,7 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
     }
   });
   document.getElementById("magnetMineWeight").textContent =
-    Math.round(MagnetMine.weight * 1000) + "г.";
+    Math.round(MagnetMine.weight * 1000) + t("g");
   // шрапнельна бомба
   addClickAndTouch(shrapnelBombPlus, () => {
     if (drone.remainingCapacity >= ShrapnelBomb.weight) {
@@ -238,7 +238,7 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
     }
   });
   document.getElementById("shrapnelBombWeight").textContent =
-    Math.round(ShrapnelBomb.weight * 1000) + "г.";
+    Math.round(ShrapnelBomb.weight * 1000) + t("g");
   // касетна бомба
   addClickAndTouch(clusterBombPlus, () => {
     if (drone.remainingCapacity >= ClusterBomb.weight) {
@@ -254,7 +254,7 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
     }
   });
   document.getElementById("clusterBombWeight").textContent =
-    Math.round(ClusterBomb.weight * 1000) + "г.";
+    Math.round(ClusterBomb.weight * 1000) + t("g");
 
   // протитанкова касетна бомба
   addClickAndTouch(shapedClusterBombPlus, () => {
@@ -271,7 +271,7 @@ export function setupEquipButtons(drone, gameData, gameState, droneIndex) {
     }
   });
   document.getElementById("shapedClusterBombWeight").textContent =
-    Math.round(ShapedClusterBomb.weight * 1000) + "г.";
+    Math.round(ShapedClusterBomb.weight * 1000) + t("g");
 
   // характеристики дронів
   showDroneData();

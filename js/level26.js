@@ -256,7 +256,7 @@ function startLevel(
         });
       }
 
-      if (enemies[0].looseScore === 22 && enemies[1].looseScore === 22) {
+      if (enemies[0].looseScore === 23 && enemies[1].looseScore === 22) {
         enemies[1].looseScore = 50;
 
         const alarmSound = new Audio("assets/audio/vehicle/alarm.mp3");

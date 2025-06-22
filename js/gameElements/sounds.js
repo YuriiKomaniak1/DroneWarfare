@@ -23,6 +23,7 @@ export function pauseAllSounds() {
 }
 
 export function resumeAllSounds() {
+  if (pauseState?.isPaused) return;
   activeSounds.forEach((sound) => {
     if (sound._wasPlayingBeforePause) {
       sound.play().catch((e) => {
@@ -110,41 +111,37 @@ export function enableDroneSound() {
 }
 export function tryStartDroneSound(currentDrone) {
   // 🟢 Якщо дрон живий, активний і має бомби — запускаємо звук
-  if (
-    soundState.allowDroneMusic &&
-    currentDrone &&
-    currentDrone.isAlive &&
-    currentDrone.isActive &&
-    currentDrone.countBombs() > 0 &&
-    !soundState.droneMusicStarted
-  ) {
-    const droneSound = new Audio("assets/audio/drone/drone-sound.mp3");
-    droneSound.loop = true;
-    droneSound.volume = 0.15 * volumeSettings.soundVolume;
-    console.log(droneSound.volume);
-
-    droneSound
-      .play()
-      .then(() => {
-        soundState.droneMusic = droneSound;
-        soundState.droneMusicStarted = true;
-        activeSounds.push(droneSound);
-      })
-      .catch((e) => console.warn("❌ Не вдалося відтворити звук дрона:", e));
-  }
-
-  // 🔴 Якщо дрон знищено або немає бомб — зупиняємо звук
-  if (
-    soundState.droneMusic &&
-    (!currentDrone?.isAlive || currentDrone.countBombs() <= 0)
-  ) {
-    soundState.droneMusic.pause();
-    soundState.droneMusic.currentTime = 0;
-    soundState.droneMusicStarted = false;
-
-    const index = activeSounds.indexOf(soundState.droneMusic);
-    if (index !== -1) activeSounds.splice(index, 1);
-
-    soundState.droneMusic = null;
-  }
+  // if (
+  //   soundState.allowDroneMusic &&
+  //   currentDrone &&
+  //   currentDrone.isAlive &&
+  //   currentDrone.isActive &&
+  //   currentDrone.countBombs() > 0 &&
+  //   !soundState.droneMusicStarted
+  // ) {
+  //   const droneSound = new Audio("assets/audio/drone/drone-sound.mp3");
+  //   droneSound.loop = true;
+  //   droneSound.volume = 0.15 * volumeSettings.soundVolume;
+  //   console.log(droneSound.volume);
+  //   droneSound
+  //     .play()
+  //     .then(() => {
+  //       soundState.droneMusic = droneSound;
+  //       soundState.droneMusicStarted = true;
+  //       activeSounds.push(droneSound);
+  //     })
+  //     .catch((e) => console.warn("❌ Не вдалося відтворити звук дрона:", e));
+  // }
+  // // 🔴 Якщо дрон знищено або немає бомб — зупиняємо звук
+  // if (
+  //   soundState.droneMusic &&
+  //   (!currentDrone?.isAlive || currentDrone.countBombs() <= 0)
+  // ) {
+  //   soundState.droneMusic.pause();
+  //   soundState.droneMusic.currentTime = 0;
+  //   soundState.droneMusicStarted = false;
+  //   const index = activeSounds.indexOf(soundState.droneMusic);
+  //   if (index !== -1) activeSounds.splice(index, 1);
+  //   soundState.droneMusic = null;
+  // }
 }

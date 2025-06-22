@@ -59,6 +59,24 @@ body {
   border: none;
   cursor: pointer;
 }
+
+#button-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
 #saveButton:hover {
   background-color: var(--button-hover-color);
 }
@@ -67,5 +85,17 @@ body {
 }
 
 #saveOkModal {
+  visibility: hidden;
+}
+
+.text__block {
+  text-align: left;
+}
+
+#startModal {
+  visibility: hidden;
+}
+
+#premiumModal {
   visibility: hidden;
 }

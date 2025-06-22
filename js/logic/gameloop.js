@@ -36,6 +36,7 @@ import {
 } from "../gameElements/sounds.js";
 import { ScaleSlider } from "../gameElements/ScaleSlider.js";
 import { initUIControls } from "../logic/uicontrols.js";
+import { FragBomb, HeBomb, ShapedBomb } from "../drones/bomb.js";
 export const pauseState = { isPaused: false };
 export function togglePause() {
   pauseState.isPaused = !pauseState.isPaused;
@@ -59,11 +60,29 @@ export function createAnimationLoop(
 ) {
   let autoSave = JSON.parse(localStorage.getItem("autoSave") || "{}");
 
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      // Гравець згорнув або змінив вкладку
+      pauseAllSounds();
+      // Можеш також ставити гру на паузу
+      if (typeof togglePause === "function") togglePause(true);
+    } else {
+      // Вкладка знову активна
+      if (typeof togglePause === "function") togglePause(false);
+    }
+  });
+
   window.addEventListener("click", enableDroneSound, { once: true });
   window.addEventListener("keydown", enableDroneSound, { once: true });
   gameState.updateDrones(gameData, SmallDrone, MediumDrone, BigDrone);
   gameState.updateData(gameData);
-
+  if (training) {
+    gameState.drones.forEach((drone) => {
+      if (drone) {
+        drone.reloadingTime = 1000 * 60 * 0.4;
+      }
+    });
+  }
   const FPS = 60;
   const FRAME_TIME = 1000 / FPS;
   const slider = new ScaleSlider(canvas);
@@ -73,9 +92,10 @@ export function createAnimationLoop(
   let currentDrone = gameState.drones[selectionState.selectedDroneIndex];
   gameState.drones[0].isActive = true;
   switchToNextAvailableBomb(true);
+  console.log(gameState.drones);
   const droneScope = new DroneScope(canvas, ctx);
   const minimap = new Minimap(canvas, enemies, vehicles, ctx, layer1, bombs);
-  const droneIcons = createDroneIcons(gameState.drones, canvas, ctx);
+  let droneIcons = createDroneIcons(gameState.drones, canvas, ctx);
   setupControls(() => {
     dropBomb(
       currentDrone,
@@ -109,9 +129,9 @@ export function createAnimationLoop(
   initUIControls({
     canvas,
     gameData,
-    training: false, // НЕ тренування
   });
-
+  let previousDroneHP = currentDrone.hp;
+  let damageFlashTimer = 0;
   //----------------початок анімації-------------------
   function animate(timestamp) {
     if (pauseState.isPaused) {
@@ -119,7 +139,7 @@ export function createAnimationLoop(
       ctx.fillStyle = "white";
       ctx.font = "48px Arial";
       ctx.textAlign = "center";
-      ctx.fillText("ПАУЗА", canvas.width / 2, canvas.height / 2);
+      ctx.fillText("PAUSE", canvas.width / 2, canvas.height / 2);
       requestAnimationFrame(animate); // просто чекаємо без оновлення гри
       return;
     }
@@ -228,10 +248,16 @@ export function createAnimationLoop(
         bomb.drop(bombs, layer1);
         if (bomb.deployed) {
           enemies.forEach((enemy) => {
-            bomb.checkMineCollision(enemy);
+            bomb.checkMineCollision(enemy, enemies, gameData);
           });
           vehicles.forEach((vehicle) => {
-            bomb.checkMineEffect(vehicle, vehicles, gameData, NavigationGrid);
+            bomb.checkMineEffect(
+              vehicle,
+              vehicles,
+              gameData,
+              NavigationGrid,
+              enemies
+            );
             // bomb.drawDebugWheels(ctx, vehicle);
           });
         }
@@ -301,6 +327,60 @@ export function createAnimationLoop(
       // drawRoofs(ctx, layer1, gameData);
       // відмалльовка інтерфейсу
       ctx.restore();
+      // console.log(gameState.drones);
+      if (training) {
+        const allDronesDead = gameState.drones.every(
+          (drone) => !drone || !drone.isAlive || drone.isReloading
+        );
+        if (allDronesDead) {
+          setTimeout(() => {
+            // 🔁 Повне перезавантаження дронів
+            gameState.drones.length = 0;
+
+            gameState.updateDrones(gameData, SmallDrone, MediumDrone, BigDrone);
+            gameState.drones[0].isActive = true;
+            console.log(gameState.drones);
+            selectionState.selectedDroneIndex = 0;
+            currentDrone = gameState.drones[0];
+            gameState.drones.forEach((drone, index) => {
+              if (
+                drone &&
+                Object.values(drone.bombStorage).flat().length === 0
+              ) {
+                drone.addBomb(FragBomb);
+                drone.addBomb(FragBomb);
+                drone.addBomb(FragBomb);
+                drone.addBomb(HeBomb);
+                drone.addBomb(HeBomb);
+                drone.addBomb(ShapedBomb);
+
+                drone.initialBombStorage = drone.cloneBombStorage(
+                  drone.bombStorage
+                );
+                gameState.drones[index] = drone;
+                if (!gameData.drones[index]) {
+                  gameData.drones[index] = {};
+                }
+                gameData.drones[index].bombStorage = drone.cloneBombStorage(
+                  drone.bombStorage
+                );
+                gameData.drones[index].initialBombStorage =
+                  drone.cloneBombStorage(drone.bombStorage);
+                gameData.drones[index].capacity = drone.capacity;
+                gameData.drones[index].remainingCapacity =
+                  drone.remainingCapacity;
+                gameData.drones[index].hangers = drone.hangers;
+                gameData.drones[index].initialHangers = drone.initialHangers;
+                gameData.drones[index].type = "small";
+              }
+            });
+
+            // // 🔁 Оновлення UI
+            droneIcons = createDroneIcons(gameState.drones, canvas, ctx);
+            // setupDroneSelectionByClick(canvas, droneIcons);
+          }, 4000);
+        }
+      }
       droneScope.draw(currentDrone);
       minimap.draw(gameData, slider);
       droneIcons.forEach((object) => {
@@ -326,7 +406,18 @@ export function createAnimationLoop(
       }
       gameFrame++;
     }
+    // Перевірка зменшення HP
+    if (currentDrone.hp < previousDroneHP) {
+      damageFlashTimer = 10; // кількість кадрів для моргання
+    }
+    previousDroneHP = currentDrone.hp;
 
+    // Якщо треба моргати — малюємо червоний фільтр
+    if (damageFlashTimer > 0) {
+      ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      damageFlashTimer--;
+    }
     requestAnimationFrame(animate);
   }
 
