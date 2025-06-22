@@ -20,6 +20,7 @@ export class Layer {
     this.deceleration = 0;
     this.ctx = ctx;
     this.rotation = (rotationDegrees * Math.PI) / 180; // з градусів у радіани
+    this.currentSpeed = 0;
   }
 
   update(keys, drone) {
@@ -47,9 +48,9 @@ export class Layer {
     this.speedX = Math.max(-drone.speed, Math.min(drone.speed, this.speedX));
     this.speedY = Math.max(-drone.speed, Math.min(drone.speed, this.speedY));
 
-    const currentSpeed = Math.sqrt(this.speedX ** 2 + this.speedY ** 2);
-    if (currentSpeed > drone.speed) {
-      const scale = drone.speed / currentSpeed;
+    this.currentSpeed = Math.sqrt(this.speedX ** 2 + this.speedY ** 2);
+    if (this.currentSpeed > drone.speed) {
+      const scale = drone.speed / this.currentSpeed;
       this.speedX *= scale;
       this.speedY *= scale;
     }

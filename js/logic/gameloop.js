@@ -389,7 +389,7 @@ export function createAnimationLoop(
       drawJoystickAndButtons(ctx, canvas, gameState.drones);
       drawMenuButtons(ctx, minimap, training);
       slider.fadeOutStep();
-      slider.draw();
+      slider.draw(layer1);
 
       gameState.drawScore(ctx, canvas, gameData);
       if (!training) {

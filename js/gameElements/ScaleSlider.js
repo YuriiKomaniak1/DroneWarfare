@@ -37,7 +37,7 @@ export class ScaleSlider {
     }
   }
 
-  draw() {
+  draw(layer) {
     const ctx = this.ctx;
 
     ctx.save();
@@ -54,6 +54,20 @@ export class ScaleSlider {
     ctx.arc(handleX, handleY, this.handleRadius, 0, Math.PI * 2);
     ctx.fillStyle = "#333";
     ctx.fill();
+
+    ctx.fillStyle = "white";
+    ctx.font = "14px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("Speed: ", this.x + 10, this.y - 50);
+
+    ctx.fillStyle = "white";
+    ctx.font = "14px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(
+      (layer.currentSpeed * 10).toFixed(1) + " m/s",
+      this.x + 10,
+      this.y - 30
+    );
 
     // Текст
     ctx.fillStyle = "white";
