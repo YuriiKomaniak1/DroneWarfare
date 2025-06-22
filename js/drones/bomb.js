@@ -55,15 +55,15 @@ export class Bomb {
     this.mineImage = null;
     this.width = 300;
     this.height = 300;
-    this.scale = 3;
-    this.initialScale = 3;
+    this.scale = 1;
+    this.initialScale = 1;
     this.explosionScale = 64;
     this.frames = 10;
     this.frameX = 0;
     this.explosionFrame = 0;
     this.imageWidth = 64;
     this.imageHeight = 64;
-    this.spread = 1.8;
+    this.spread = 2.5; // розкид бомби
     this.exploded = false;
     this.friction = 0.997;
     this.shrinkRate = 1.009;
@@ -79,12 +79,39 @@ export class Bomb {
     this.explosionSoundStarted = false;
     this.explosionSound = new Audio("assets/audio/drone/frag.mp3");
     this.explosionSound.volume = 0.65 * volumeSettings.soundVolume;
+    this.gravity = 9.8; // м/с²
+    this.flightTime = Math.sqrt((2 * this.dropHeight) / this.gravity); // секунди
+    this.flightDurationFrames = this.flightTime * 60; // кількість кадрів (якщо 60fps)
+    this.currentFrame = 0;
   }
 
-  drop(bombs, layer1) {
+  drop(bombs, layer, slider) {
     if (!this.exploded && !this.deployed) {
-      this.velocityX *= this.friction ** 1.6;
-      this.velocityY *= this.friction ** 1.6;
+      const rho = 1.225; // кг/м^3
+      const Cd = 0.6; // коеф. опору для бомби
+      const A = 0.01; // площа перерізу м² (приблизно)
+
+      const speed = Math.sqrt(this.velocityX ** 2 + this.velocityY ** 2);
+      const dragForce = 0.5 * rho * speed * speed * Cd * A;
+
+      const accelDrag = dragForce / 1;
+
+      const angle = Math.atan2(this.velocityY, this.velocityX);
+      this.velocityX -= Math.cos(angle) * accelDrag;
+      this.velocityY -= Math.sin(angle) * accelDrag;
+
+      this.flightTime = slider.flightTime; // секунди
+      this.flightDurationFrames = this.flightTime * 60; // кількість кадрів (якщо 60fps)
+
+      // Відсоток шляху, який пройшла бомба
+      const progress = this.currentFrame / this.flightDurationFrames;
+      this.currentFrame++;
+
+      // Обмежуємо прогрес до 1.0
+      const clampedProgress = Math.min(progress, 1);
+
+      // Зменшуємо масштаб поступово залежно від висоти
+      this.scale = this.initialScale * (1 - clampedProgress);
 
       this.x +=
         this.layer.speedX -
@@ -95,9 +122,7 @@ export class Bomb {
         this.velocityY +
         (Math.random() * this.spread - this.spread / 2);
 
-      this.scale /= this.shrinkRate;
-
-      if (this.scale <= this.initialScale * 0.05) {
+      if (this.currentFrame >= this.flightDurationFrames) {
         if (this.class == "bomb") {
           this.exploded = true;
           if (!this.explosionSoundStarted) {
@@ -113,7 +138,7 @@ export class Bomb {
       }
       if (
         (this.type === "cluster" || this.type === "shapedCluster") &&
-        this.scale <= this.initialScale * 0.3 &&
+        this.currentFrame >= this.flightDurationFrames * 0.5 &&
         !this.clusterDropped
       ) {
         this.exploded = true;
@@ -123,7 +148,7 @@ export class Bomb {
           });
           this.explosionSoundStarted = true;
         }
-        this.dropClusterBombs(bombs, layer1);
+        this.dropClusterBombs(bombs, layer);
         this.clusterDropped = true;
       }
     }
@@ -133,10 +158,10 @@ export class Bomb {
     if (!this.exploded && !this.deployed) {
       this.ctx.drawImage(
         this.image,
-        this.x - (150 * this.scale) / this.initialScale,
-        this.y - (150 * this.scale) / this.initialScale,
-        (this.width * this.scale) / this.initialScale,
-        (this.height * this.scale) / this.initialScale
+        this.x - (150 * this.scale ** 1.4) / this.initialScale,
+        this.y - (150 * this.scale ** 1.4) / this.initialScale,
+        (this.width * this.scale ** 1.4) / this.initialScale,
+        (this.height * this.scale ** 1.4) / this.initialScale
       );
     } else if (this.exploded) {
       if (this.explosionFrame % 10 === 0) {
@@ -828,8 +853,8 @@ export class HeClusterMunition extends Bomb {
     this.image = clusterSubmunitionImage;
     this.imageExplosion = imageExplosion;
     this.explosionScale = 60;
-    this.scale = 0.3;
-    this.shrinkRate = 1.0035;
+    this.scale = 0.35;
+    this.shrinkRate = 1.0052;
     this.armorPenetration = 0.5;
     this.explosionSound = new Audio("assets/audio/drone/frag.mp3");
     this.explosionSound.volume = 0.45 * volumeSettings.soundVolume;
@@ -923,8 +948,8 @@ export class ShapedClusterMunition extends Bomb {
     this.image = shapedBombImage;
     this.imageExplosion = imageExplosion;
     this.explosionScale = 30;
-    this.scale = 0.3;
-    this.shrinkRate = 1.0036;
+    this.scale = 0.35;
+    this.shrinkRate = 1.0052;
     this.armorPenetration = 0.9 + this.gameData.shapedBombUpgrade * 0.01;
     this.explosionSound.volume = 0.65 * volumeSettings.soundVolume;
     this.explosionSound = new Audio("assets/audio/drone/shaped.mp3");
@@ -1003,7 +1028,7 @@ export class ClusterBomb extends Bomb {
         );
 
         // додаємо швидкість у випадковому напрямку
-        bomb.velocityX = Math.cos(theta) * speed * 0.3;
+        bomb.velocityX = Math.cos(theta) * speed * 0.28;
         bomb.velocityY = Math.sin(theta) * speed;
 
         bombs.push(bomb);
@@ -1050,7 +1075,7 @@ export class ShapedClusterBomb extends Bomb {
         );
 
         // додаємо швидкість у випадковому напрямку
-        bomb.velocityX = Math.cos(theta) * speed * 0.3;
+        bomb.velocityX = Math.cos(theta) * speed * 0.25;
         bomb.velocityY = Math.sin(theta) * speed;
 
         bombs.push(bomb);

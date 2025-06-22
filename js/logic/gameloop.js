@@ -181,7 +181,7 @@ export function createAnimationLoop(
       // піхота обчислення і малювання
       enemies.forEach((enemy) => {
         if (
-          checkVisibility(currentDrone, enemy, canvas, gameFrame) &&
+          checkVisibility(currentDrone, enemy, canvas, gameFrame, slider) &&
           !enemy.isCovered(gameData)
         ) {
           enemy.isFiring = true;
@@ -198,7 +198,7 @@ export function createAnimationLoop(
         enemy.update(enemies, canvas, gameState, gameData, training);
         if (!enemy.dead) {
           enemy.draw();
-          enemy.fire(currentDrone, layer1, canvas);
+          enemy.fire(currentDrone, layer1, canvas, slider);
         }
       });
       // знищена техніка
@@ -211,7 +211,13 @@ export function createAnimationLoop(
       vehicles.forEach((vehicle) => {
         if (vehicle.hasGunner) {
           if (
-            checkVehicleVisibility(currentDrone, vehicle, canvas, gameFrame) &&
+            checkVehicleVisibility(
+              currentDrone,
+              vehicle,
+              canvas,
+              gameFrame,
+              slider
+            ) &&
             !vehicle.isCovered(gameData)
           ) {
             vehicle.isFiring = true;
@@ -235,7 +241,7 @@ export function createAnimationLoop(
         if (vehicle.isMoving) {
           vehicle.draw();
         }
-        vehicle.fire(currentDrone, layer1, canvas);
+        vehicle.fire(currentDrone, layer1, canvas, slider);
       });
       // бомби обчислення і малювання в нижній частині польоту
       bombs.forEach((bomb) => {
@@ -245,7 +251,7 @@ export function createAnimationLoop(
           !bomb.deployed
         )
           bomb.draw();
-        bomb.drop(bombs, layer1);
+        bomb.drop(bombs, layer1, slider);
         if (bomb.deployed) {
           enemies.forEach((enemy) => {
             bomb.checkMineCollision(enemy, enemies, gameData);
@@ -389,7 +395,8 @@ export function createAnimationLoop(
       drawJoystickAndButtons(ctx, canvas, gameState.drones);
       drawMenuButtons(ctx, minimap, training);
       slider.fadeOutStep();
-      slider.draw(layer1);
+      slider.update();
+      slider.draw(layer1, currentDrone);
 
       gameState.drawScore(ctx, canvas, gameData);
       if (!training) {

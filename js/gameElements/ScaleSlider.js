@@ -9,15 +9,19 @@ export class ScaleSlider {
     this.height = 200;
     this.handleRadius = 18;
 
-    this.min = 0.5;
+    this.min = 0.6;
     this.max = 1.25;
     this.value = 1.0;
+    this.altitude = 120; // висота в метрах
 
     this.opacity = 1; // <-- нова змінна
 
     this.dragging = false;
 
     this._setupListeners();
+
+    this.targetValue = this.value; // цільове значення
+    this.smoothStep = 0.05 / 60; // 0.1 за секунду при 60 fps
   }
   _valueToY(value) {
     const percent = (value - this.min) / (this.max - this.min);
@@ -37,10 +41,15 @@ export class ScaleSlider {
     }
   }
 
-  draw(layer) {
+  draw(layer, currentDrone) {
     const ctx = this.ctx;
-
+    this.altitude = Math.round((1 / this.value) * 150); // висота в метрах
+    this.targetAltitude = Math.round((1 / this.targetValue) * 150); // висота в метрах
+    this.flightTime = Math.sqrt((2 * this.altitude) / 9.81); // час польоту в секундах
     ctx.save();
+    // Виведення часу польоту трохи нижче правіше центра
+    const screenCenterX = this.canvas.width / 2;
+    const screenCenterY = this.canvas.height / 2;
     ctx.globalAlpha = this.opacity;
 
     // Лінія
@@ -48,36 +57,55 @@ export class ScaleSlider {
     ctx.fillRect(this.x, this.y, this.width, this.height);
     ctx.globalAlpha = this.opacity > 0.6 ? this.opacity : 0.6;
     // Ручка
-    const handleY = this._valueToY(this.value);
+    const handleY = this._valueToY(this.targetValue);
     const handleX = this.x + this.width / 2;
     ctx.beginPath();
     ctx.arc(handleX, handleY, this.handleRadius, 0, Math.PI * 2);
     ctx.fillStyle = "#333";
     ctx.fill();
 
+    // Висота
     ctx.fillStyle = "white";
     ctx.font = "14px sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("Speed: ", this.x + 10, this.y - 50);
-
-    ctx.fillStyle = "white";
-    ctx.font = "14px sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText(
-      (layer.currentSpeed * 10).toFixed(1) + " m/s",
-      this.x + 10,
-      this.y - 30
-    );
+    ctx.fillText("Alt: ", this.x + 10, this.y - 30);
 
     // Текст
     ctx.fillStyle = "white";
     ctx.font = "14px sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("Scale: " + this.value.toFixed(2), this.x + 10, this.y - 10);
-
+    ctx.fillText(this.targetAltitude + " m", this.x + 10, this.y - 10);
     ctx.restore();
+    if (currentDrone.countBombs() > 0 && currentDrone.isActive) {
+      //час польоту
+      ctx.fillStyle = "white";
+      ctx.font = "12px sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText(
+        `${this.flightTime.toFixed(2)} s`,
+        screenCenterX + 10,
+        screenCenterY + 16
+      );
+      //швидкість
+      ctx.fillStyle = "white";
+      ctx.font = "12px sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText(
+        `${(layer.currentSpeed * 10).toFixed(2)} m/s`,
+        screenCenterX + 10,
+        screenCenterY + 30
+      );
+      //висота
+      ctx.fillStyle = "white";
+      ctx.font = "12px sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText(
+        `${this.altitude} m`,
+        screenCenterX + 10,
+        screenCenterY + 46
+      );
+    }
   }
-
   _setupListeners() {
     this.canvas.addEventListener("pointerdown", (e) => {
       const rect = this.canvas.getBoundingClientRect();
@@ -95,7 +123,7 @@ export class ScaleSlider {
       if (this.dragging) {
         const rect = this.canvas.getBoundingClientRect();
         const y = e.clientY - rect.top;
-        this.value = this._yToValue(y);
+        this.targetValue = this._yToValue(y);
       }
     });
 
@@ -104,5 +132,15 @@ export class ScaleSlider {
       "pointercancel",
       () => (this.dragging = false)
     );
+  }
+  update() {
+    const diff = this.targetValue - this.value;
+    const maxStep = this.smoothStep;
+
+    if (Math.abs(diff) > maxStep) {
+      this.value += Math.sign(diff) * maxStep;
+    } else {
+      this.value = this.targetValue;
+    }
   }
 }

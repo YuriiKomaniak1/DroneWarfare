@@ -49,7 +49,7 @@ const languages = {
       " Він може нести білбше бомб ніж малий, але повільніший і більш вразливий. Дрон має такі стартові характеристики:",
     middleDroneWeight: "<strong>Вага боєприпасів</strong> - 1600г.",
     middleDroneSuspensionCount: "<strong>Кількість підвісів</strong> - 16шт.",
-    middleDroneMaxSpeed: "<strong>Макс. швидкість</strong> - 10 м.с.",
+    middleDroneMaxSpeed: "<strong>Макс. швидкість</strong> - 13 м.с.",
     middleDroneDurability: "<strong>Міцність</strong> - 5.",
     bigDroneOpenTitle: "Дослідити великий дрон",
     bigDroneOpenDescription:
@@ -58,7 +58,7 @@ const languages = {
       " Він може нести найбільше бомб, але повільніший і більш вразливий. Дрон має такі стартові характеристики:",
     bigDroneWeight: "<strong>Вага боєприпасів</strong> - 6400г.",
     bigDroneSuspensionCount: "<strong>Кількість підвісів</strong> - 50шт.",
-    bigDroneMaxSpeed: "<strong>Макс. швидкість</strong> - 8 м.с.",
+    bigDroneMaxSpeed: "<strong>Макс. швидкість</strong> - 10 м.с.",
     bigDroneDurability: "<strong>Міцність</strong> - 9.",
     slot4OpenTitle: "Відкрити слот 4",
     slot5OpenTitle: "Відкрити слот 5",
@@ -242,7 +242,7 @@ const languages = {
     middleDroneOpenAdditionalInfo: ` It can carry more bombs than the small drone, but is slower and more vulnerable. The drone has the following starting characteristics:`,
     middleDroneWeight: "<strong>Ammo Weight</strong> - 1600g.",
     middleDroneSuspensionCount: "<strong>Number of Hangers</strong> - 16pcs.",
-    middleDroneMaxSpeed: "<strong>Max Speed</strong> - 10 m/s.",
+    middleDroneMaxSpeed: "<strong>Max Speed</strong> - 13 m/s.",
     middleDroneDurability: "<strong>HP</strong> - 5.",
     bigDroneOpenTitle: "Research Big Drone",
     bigDroneOpenDescription:
@@ -251,7 +251,7 @@ const languages = {
       The drone has the following starting characteristics:`,
     bigDroneWeight: "<strong>Ammo Weight</strong> - 6400g.",
     bigDroneSuspensionCount: "<strong>Number of Hangers</strong> - 50pcs.",
-    bigDroneMaxSpeed: "<strong>Max Speed</strong> - 8 m/s.",
+    bigDroneMaxSpeed: "<strong>Max Speed</strong> - 10 m/s.",
     bigDroneDurability: "<strong>HP</strong> - 9.",
     slot4OpenTitle: "Unlock Slot 4",
     slot5OpenTitle: "Unlock Slot 5",
@@ -433,7 +433,7 @@ const languages = {
       " Sie kann mehr Bomben tragen als die kleine, ist aber langsamer und weniger widerstandsfähig. Die Drohne startet mit folgenden Werten:",
     middleDroneWeight: "<strong>Munitionsgewicht</strong> – 1600 g.",
     middleDroneSuspensionCount: "<strong>Aufhängungen</strong> – 16 Stk.",
-    middleDroneMaxSpeed: "<strong>Max. Geschwindigkeit</strong> – 10 m/s.",
+    middleDroneMaxSpeed: "<strong>Max. Geschwindigkeit</strong> – 13 m/s.",
     middleDroneDurability: "<strong>Haltbarkeit</strong> – 5.",
     bigDroneOpenTitle: "Große Drohne erforschen",
     bigDroneOpenDescription:
@@ -442,7 +442,7 @@ const languages = {
       " Sie kann die meisten Bomben tragen, ist aber langsamer und weniger widerstandsfähig. Die Drohne startet mit:",
     bigDroneWeight: "<strong>Munitionsgewicht</strong> – 6400 g.",
     bigDroneSuspensionCount: "<strong>Aufhängungen</strong> – 50 Stk.",
-    bigDroneMaxSpeed: "<strong>Max. Geschwindigkeit</strong> – 8 m/s.",
+    bigDroneMaxSpeed: "<strong>Max. Geschwindigkeit</strong> – 10 m/s.",
     bigDroneDurability: "<strong>Haltbarkeit</strong> – 9.",
     slot4OpenTitle: "Slot 4 freischalten",
     slot5OpenTitle: "Slot 5 freischalten",
@@ -605,7 +605,7 @@ const languages = {
     middleDroneWeight: "<strong>Peso de munición</strong> - 1600 g.",
     middleDroneSuspensionCount:
       "<strong>Nº de puntos de sujeción</strong> - 16 uds.",
-    middleDroneMaxSpeed: "<strong>Velocidad máxima</strong> - 10 m/s.",
+    middleDroneMaxSpeed: "<strong>Velocidad máxima</strong> - 13 m/s.",
     middleDroneDurability: "<strong>Durabilidad</strong> - 5.",
     bigDroneOpenTitle: "Investigar dron grande",
     bigDroneOpenDescription:
@@ -615,7 +615,7 @@ const languages = {
     bigDroneWeight: "<strong>Peso de munición</strong> - 6400 g.",
     bigDroneSuspensionCount:
       "<strong>Nº de puntos de sujeción</strong> - 50 uds.",
-    bigDroneMaxSpeed: "<strong>Velocidad máxima</strong> - 8 m/s.",
+    bigDroneMaxSpeed: "<strong>Velocidad máxima</strong> - 10 m/s.",
     bigDroneDurability: "<strong>Durabilidad</strong> - 9.",
     slot4OpenTitle: "Desbloquear ranura 4",
     slot5OpenTitle: "Desbloquear ranura 5",
@@ -778,7 +778,7 @@ const languages = {
     middleDroneWeight: "<strong>Poids des munitions</strong> - 1600 g.",
     middleDroneSuspensionCount:
       "<strong>Nombre de points d'attache</strong> - 16 ud.",
-    middleDroneMaxSpeed: "<strong>Vitesse max.</strong> - 10 m/s.",
+    middleDroneMaxSpeed: "<strong>Vitesse max.</strong> - 13 m/s.",
     middleDroneDurability: "<strong>Durabilité</strong> - 5.",
     bigDroneOpenTitle: "Rechercher grand drone",
     bigDroneOpenDescription:
@@ -787,7 +787,7 @@ const languages = {
       " Il peut transporter le plus de bombes, mais est plus lent et plus fragile. Le drone a :",
     bigDroneWeight: "<strong>Poids des munitions</strong> - 6400 g.",
     bigDroneSuspensionCount: "<strong>Points d'attache</strong> - 50 ud.",
-    bigDroneMaxSpeed: "<strong>Vitesse max.</strong> - 8 m/s.",
+    bigDroneMaxSpeed: "<strong>Vitesse max.</strong> - 10 m/s.",
     bigDroneDurability: "<strong>Durabilité</strong> - 9.",
     slot4OpenTitle: "Déverrouiller l'emplacement 4",
     slot5OpenTitle: "Déverrouiller l'emplacement 5",
@@ -950,7 +950,7 @@ const languages = {
     middleDroneWeight: "<strong>Peso da munição</strong> - 1600 g.",
     middleDroneSuspensionCount:
       "<strong>Pontos de suspensão</strong> - 16 unid.",
-    middleDroneMaxSpeed: "<strong>Velocidade máx.</strong> - 10 m/s.",
+    middleDroneMaxSpeed: "<strong>Velocidade máx.</strong> - 13 m/s.",
     middleDroneDurability: "<strong>Durabilidade</strong> - 5.",
     bigDroneOpenTitle: "Pesquisar drone grande",
     bigDroneOpenDescription:
@@ -959,7 +959,7 @@ const languages = {
       " Ele pode carregar o maior número de bombas, mas é mais lento e frágil. O drone começa com:",
     bigDroneWeight: "<strong>Peso da munição</strong> - 6400 g.",
     bigDroneSuspensionCount: "<strong>Pontos de suspensão</strong> - 50 unid.",
-    bigDroneMaxSpeed: "<strong>Velocidade máx.</strong> - 8 m/s.",
+    bigDroneMaxSpeed: "<strong>Velocidade máx.</strong> - 10 m/s.",
     bigDroneDurability: "<strong>Durabilidade</strong> - 9.",
     slot4OpenTitle: "Desbloquear slot 4",
     slot5OpenTitle: "Desbloquear slot 5",
@@ -1121,7 +1121,7 @@ const languages = {
     middleDroneWeight: "<strong>Mühimmat Ağırlığı</strong> - 1600 g.",
     middleDroneSuspensionCount:
       "<strong>Asılı Nokta Sayısı</strong> - 16 adet.",
-    middleDroneMaxSpeed: "<strong>Maks. Hız</strong> - 10 m/s.",
+    middleDroneMaxSpeed: "<strong>Maks. Hız</strong> - 13 m/s.",
     middleDroneDurability: "<strong>Dayanıklılık</strong> - 5.",
     bigDroneOpenTitle: "Büyük Dronu Araştır",
     bigDroneOpenDescription:
@@ -1130,7 +1130,7 @@ const languages = {
       " En fazla bomba taşıyabilir, ancak daha yavaş ve daha kırılgan. Başlangıç özellikleri:",
     bigDroneWeight: "<strong>Mühimmat Ağırlığı</strong> - 6400 g.",
     bigDroneSuspensionCount: "<strong>Asılı Nokta Sayısı</strong> - 50 adet.",
-    bigDroneMaxSpeed: "<strong>Maks. Hız</strong> - 8 m/s.",
+    bigDroneMaxSpeed: "<strong>Maks. Hız</strong> - 10 m/s.",
     bigDroneDurability: "<strong>Dayanıklılık</strong> - 9.",
     slot4OpenTitle: "Yuvaslot 4’ü Aç",
     slot5OpenTitle: "Yuvaslot 5’i Aç",
@@ -1291,7 +1291,7 @@ const languages = {
     middleDroneWeight: "<strong>Peso munizioni</strong> - 1600 g.",
     middleDroneSuspensionCount:
       "<strong>Punti di sospensione</strong> - 16 pz.",
-    middleDroneMaxSpeed: "<strong>Velocità max.</strong> - 10 m/s.",
+    middleDroneMaxSpeed: "<strong>Velocità max.</strong> - 13 m/s.",
     middleDroneDurability: "<strong>Durabilità</strong> - 5.",
     bigDroneOpenTitle: "Ricerca drone grande",
     bigDroneOpenDescription:
@@ -1300,7 +1300,7 @@ const languages = {
       " Può trasportare più bombe, ma è più lento e fragile. Caratteristiche iniziali:",
     bigDroneWeight: "<strong>Peso munizioni</strong> - 6400 g.",
     bigDroneSuspensionCount: "<strong>Punti di sospensione</strong> - 50 pz.",
-    bigDroneMaxSpeed: "<strong>Velocità max.</strong> - 8 m/s.",
+    bigDroneMaxSpeed: "<strong>Velocità max.</strong> - 10 m/s.",
     bigDroneDurability: "<strong>Durabilità</strong> - 9.",
     slot4OpenTitle: "Sblocca slot 4",
     slot5OpenTitle: "Sblocca slot 5",
@@ -1460,7 +1460,7 @@ const languages = {
       " Może przenosić więcej bomb niż mały, ale jest wolniejszy i mniej wytrzymały. Posiada następujące cechy początkowe:",
     middleDroneWeight: "<strong>Waga amunicji</strong> - 1600 g.",
     middleDroneSuspensionCount: "<strong>Liczba zaczepów</strong> - 16 szt.",
-    middleDroneMaxSpeed: "<strong>Maks. prędkość</strong> - 10 m/s.",
+    middleDroneMaxSpeed: "<strong>Maks. prędkość</strong> - 13 m/s.",
     middleDroneDurability: "<strong>Wytrzymałość</strong> - 5.",
     bigDroneOpenTitle: "Zbadaj dużego drona",
     bigDroneOpenDescription: "Po tym badaniu duży dron będzie dostępny",
@@ -1468,7 +1468,7 @@ const languages = {
       " Może przenosić najwięcej bomb, ale jest wolniejszy i mniej wytrzymały. Posiada:",
     bigDroneWeight: "<strong>Waga amunicji</strong> - 6400 g.",
     bigDroneSuspensionCount: "<strong>Liczba zaczepów</strong> - 50 szt.",
-    bigDroneMaxSpeed: "<strong>Maks. prędkość</strong> - 8 m/s.",
+    bigDroneMaxSpeed: "<strong>Maks. prędkość</strong> - 10 m/s.",
     bigDroneDurability: "<strong>Wytrzymałość</strong> - 9.",
     slot4OpenTitle: "Odblokuj slot 4",
     slot5OpenTitle: "Odblokuj slot 5",

@@ -361,7 +361,7 @@ export class Enemy {
     }
   }
 
-  fire(drone, layer, canvas) {
+  fire(drone, layer, canvas, slider) {
     if (!this.vehicle) {
       if (
         this.dead ||
@@ -387,9 +387,9 @@ export class Enemy {
         const chance =
           (5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2)) *
           drone.size *
-          difficulty.accuracy;
+          difficulty.accuracy *
+          slider.value;
         let shot = Math.random() * 120;
-        console.log(shot, chance);
 
         if (shot < chance && drone.hp >= 1) {
           --drone.hp;

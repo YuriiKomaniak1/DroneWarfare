@@ -116,7 +116,7 @@ const languages = {
     але й від <strong>розміру дрона</strong> та його <strong>бойової активності</strong>.
   </p>
   <p>
-    Кожен дрон має базовий рівень <strong>помітності</strong>, який визначається його габаритами:
+    Кожен дрон має базовий рівень <strong>помітності</strong>, який визначається його габаритами та висотою на якій він летить.
     великі дрони виявляються швидше, малі — рідше. Але вирішальний вплив має нещодавня активність —
     кожне скидання бомби тимчасово підвищує рівень помітності дрона. Що більше боєприпасів було скинуто за короткий час —
     то вищим є ризик бути виявленим. Ефект накопичується, але з часом поступово зменшується.
@@ -128,7 +128,7 @@ const languages = {
     minesTitle: "Інформація про мінування",
     droneFireText: ` <p>
     У <strong>dronETerra</strong> реалізовано систему вогню по дронах, яка враховує
-    <strong>розмір дрона</strong>, його <strong>швидкість</strong> та <strong>характеристики ворога</strong>.
+    <strong>розмір дрона</strong>, його <strong>швидкість, висоту </strong> та <strong>характеристики ворога</strong>.
     Кожна ворожа одиниця має показник <strong>скорострільності</strong> (пострілів на секунду)
     і виконує періодичні спроби влучити по дрону, якщо той в зоні ураження.
   </p>
@@ -428,11 +428,10 @@ const languages = {
     but also on its <strong>size</strong> and recent <strong>combat activity</strong>.
   </p>
   <p>
-    Each drone has a base <strong>visibility</strong> level determined by its physical size:
-    larger drones are detected more easily, while smaller ones are harder to notice.
-    However, recent activity plays a crucial role — each time a bomb is dropped,
-    the drone’s visibility temporarily increases. The more munitions dropped in a short time,
-    the higher the risk of being detected. This effect accumulates, but gradually fades over time.
+   Each drone has a base level of <strong>visibility</strong>, determined by its size and flying altitude.
+Large drones are detected more quickly, small ones — less frequently. But the decisive factor is recent activity —
+every bomb drop temporarily increases the drone’s visibility. The more ordnance dropped in a short time,
+the higher the risk of detection. The effect accumulates but gradually fades over time.
   </p>`,
     apTitle: "Armor Penetration Information",
     visibilityTitle: "Drone Visibility Information",
@@ -440,11 +439,11 @@ const languages = {
     bombardingTitle: "Bomb Dropping Information",
     minesTitle: "Mine Information",
     droneFireText: ` <p>
-    <strong>dronETerra</strong> features a drone targeting system that takes into account the drone’s
-    <strong>size</strong>, <strong>speed</strong>, and <strong>enemy characteristics</strong>.
-    Each enemy unit has a defined <strong>rate of fire</strong> (shots per second)
-    and periodically attempts to hit the drone when it enters its engagement zone.
-  </p>
+  <strong>dronETerra</strong> features a drone fire system that takes into account
+  the drone’s <strong>size</strong>, its <strong>speed, altitude</strong>, and the <strong>enemy’s characteristics</strong>.
+  Each enemy unit has a <strong>rate of fire</strong> (shots per second)
+  and periodically attempts to hit the drone if it is within the strike zone.
+</p>
   <p>
     The chance to hit decreases as the drone’s speed increases and is lower for smaller models —
     fast and small drones are harder to hit, while stationary ones are easy targets.
@@ -734,18 +733,18 @@ capable of neutralizing several threats with a single drop.
       <strong>dronETerra</strong> verfügt über ein dynamisches Erkennungssystem für Drohnen durch Feinde. Die Wahrscheinlichkeit, entdeckt zu werden, hängt nicht nur von der Entfernung zum Feind ab, sondern auch von der <strong>Größe der Drohne</strong> und kürzlichen <strong>Gefechtsaktivitäten</strong>.
     </p>
     <p>
-      Jede Drohne hat einen Basis‑<strong>Sichtbarkeitswert</strong>, der von ihrer Größe abhängt: Große Drohnen werden schneller entdeckt, Kleine seltener. Kampfhandlungen erhöhen die Sichtbarkeit kurzfristig – jeder Bombenabwurf erhöht das Risiko. Je mehr Munition in kurzer Zeit abgeworfen wird, desto höher das Risiko. Dieser Effekt baut sich auf, verliert aber allmählich an Wirkung.
-    </p>`,
+    Jede Drohne hat ein Grundniveau an <strong>Sichtbarkeit</strong>, das durch ihre Größe und Flughöhe bestimmt wird.
+Große Drohnen werden schneller entdeckt, kleine — seltener. Ausschlaggebend ist jedoch die jüngste Aktivität —
+jeder Bombenabwurf erhöht vorübergehend die Sichtbarkeit der Drohne. Je mehr Bomben in kurzer Zeit abgeworfen werden,
+desto höher ist das Entdeckungsrisiko. Der Effekt summiert sich, nimmt aber mit der Zeit allmählich ab.
+     </p>`,
 
     droneFireText: `<p>
-      <strong>dronETerra</strong> nutzt ein Zielsystem, das die Drohnengröße, -geschwindigkeit und gegnerische Eigenschaften berücksichtigt. Jede feindliche Einheit hat eine definierte <strong>Feuerrate</strong> (Schüsse pro Sekunde) und versucht periodisch, die Drohne in Reichweite zu treffen.
-    </p>
-    <p>
-      Die Treffwahrscheinlichkeit sinkt bei höherer Drohnengeschwindigkeit und kleineren Modellen – schnelle, kleine Drohnen sind schwerer zu treffen. Stationäre Drohnen sind leichte Beute. Gegner mit hoher Feuerrate haben mehr Trefferchancen pro Zeiteinheit.
-    </p>
-    <p>
-      Ein Treffer reduziert die <strong>Gesundheitspunkte</strong> der Drohne. Wenn diese auf null sinken, wird die Drohne zerstört. Das System fordert den Spieler, nicht über feindlichen Gruppen zu verharren, sondern Tempo und Risiken abzuwägen.
-    </p>`,
+  In <strong>dronETerra</strong> ist ein Drohnen-Feuersystem implementiert, das die
+  <strong>Größe der Drohne</strong>, ihre <strong>Geschwindigkeit, Flughöhe</strong> und die <strong>Eigenschaften des Gegners</strong> berücksichtigt.
+  Jede feindliche Einheit hat eine <strong>Feuerrate</strong> (Schüsse pro Sekunde)
+  und versucht regelmäßig, die Drohne zu treffen, wenn sie sich in der Gefahrenzone befindet.
+</p>`,
 
     bombardingText: `<p>
       In <strong>dronETerra</strong> ist der Bombenabwurf ein zentraler Kampfmechanismus, der Präzision, Planung und Flugverhalten berücksichtigt. Wird die Bombe aus einer stationären Drohne abgeworfen, fällt sie senkrecht. In Bewegung wird die Flugbahn beeinflusst – der Spieler muss das beim Zielen berücksichtigen.
@@ -1029,18 +1028,18 @@ capable of neutralizing several threats with a single drop.
       <strong>dronETerra</strong> cuenta con un sistema dinámico de detección de drones por parte del enemigo. La probabilidad de ser detectado depende de la distancia, el <strong>tamaño del dron</strong> y su reciente <strong>actividad de combate</strong>.
     </p>
     <p>
-      Cada dron tiene un nivel base de <strong>visibilidad</strong>, según su tamaño: los grandes se detectan más rápido; los pequeños, menos. Pero tras lanzar bombas la visibilidad aumenta temporalmente. Cuantas más bombas sueltas en poco tiempo, mayor es el riesgo. El efecto se acumula y disminuye con el tiempo.
-    </p>`,
+    Cada dron tiene un nivel base de <strong>visibilidad</strong>, determinado por su tamaño y altitud de vuelo.
+Los drones grandes se detectan más rápido, los pequeños — con menor frecuencia. Pero el factor decisivo es la actividad reciente —
+cada bomba lanzada incrementa temporalmente la visibilidad del dron. Cuantas más bombas se suelten en poco tiempo,
+mayor será el riesgo de detección. El efecto se acumula, pero disminuye gradualmente con el tiempo.
+</p>`,
 
     droneFireText: `<p>
-      <strong>dronETerra</strong> implementa un sistema donde el tamaño, la velocidad del dron y los datos del enemigo determinan el fuego enemigo. Cada unidad enemiga tiene una cadencia de fuego en <strong>disparos por segundo</strong> y dispara si el dron está dentro del alcance.
-    </p>
-    <p>
-      La probabilidad de impacto disminuye con más velocidad y menor tamaño del dron — los drones rápidos y pequeños son más difíciles de golpear. Si estática, es un blanco fácil. Los enemigos de alta cadencia hacen más daño en menos tiempo.
-    </p>
-    <p>
-      Un impacto reduce los <strong>puntos de salud</strong> del dron. Si llegan a cero, es destruido. Esto anima al jugador a no quedarse sobre grupos enemigos, sino a moverse con cautela y ritmo.
-    </p>`,
+  En <strong>dronETerra</strong> se ha implementado un sistema de fuego contra drones que tiene en cuenta
+  el <strong>tamaño del dron</strong>, su <strong>velocidad, altitud</strong> y las <strong>características del enemigo</strong>.
+  Cada unidad enemiga tiene una <strong>cadencia de fuego</strong> (disparos por segundo)
+  y realiza intentos periódicos de alcanzar al dron si está en la zona de alcance.
+</p>`,
 
     bombardingText: `<p>
       En <strong>dronETerra</strong>, soltar bombas es una mecánica clave que exige precisión, planificación y tener en cuenta el movimiento del dron. Si se suelta desde un dron estático, la bomba cae verticalmente. Si se suelta en movimiento, su trayectoria se inclina en la dirección del dron.
@@ -1324,12 +1323,18 @@ capable of neutralizing several threats with a single drop.
       <strong>dronETerra</strong> intègre un système dynamique de détection des drones par les ennemis. La probabilité d'être repéré dépend non seulement de la distance, mais aussi de la <strong>taille du drone</strong> et de son activité <strong>récent</strong> en combat.
     </p>
     <p>
-      Chaque drone possède une valeur de <strong>visibilité de base</strong> déterminée par sa taille : les gros drones sont détectés plus vite, les petits moins. Chaque largage de bombe augmente temporairement cette visibilité. Plus de bombes larguées en peu de temps = plus de risque. Cet effet s'accumule et s'atténue avec le temps.
-    </p>`,
+    Chaque drone possède un niveau de base de <strong>visibilité</strong>, déterminé par sa taille et son altitude de vol.
+Les gros drones sont détectés plus rapidement, les petits — moins souvent. Mais le facteur déterminant est l’activité récente —
+chaque largage de bombe augmente temporairement la visibilité du drone. Plus de bombes sont larguées en peu de temps,
+plus le risque de détection est élevé. L’effet s’accumule, mais diminue progressivement avec le temps.
+      </p>`,
 
     droneFireText: `<p>
-      <strong>dronETerra</strong> calcule les tirs ennemis en fonction de la taille, de la vitesse du drone et des caractéristiques de l'ennemi. Chaque unité ennemie a un taux de feu en <strong>tirs par seconde</strong> et tire périodiquement si le drone est à portée.
-    </p>
+  <strong>dronETerra</strong> intègre un système de tir sur drones prenant en compte
+  la <strong>taille du drone</strong>, sa <strong>vitesse, altitude</strong> et les <strong>caractéristiques de l’ennemi</strong>.
+  Chaque unité ennemie possède une <strong>cadence de tir</strong> (tirs par seconde)
+  et tente périodiquement d’atteindre le drone s’il se trouve dans la zone de tir.
+</p>
     <p>
       La probabilité de toucher diminue si le drone est rapide ou petit — un drone rapide et petit est plus difficile à toucher. Un drone immobile est une cible facile. Les ennemis à haute cadence infligent plus de dégâts sur une même période.
     </p>
@@ -1613,12 +1618,18 @@ capable of neutralizing several threats with a single drop.
       O <strong>dronETerra</strong> conta com um sistema dinâmico de detecção de drones por inimigos. A chance de ser detectado depende não só da distância, mas também do <strong>tamanho do drone</strong> e da sua atividade <strong>recente</strong>.
     </p>
     <p>
-      Cada drone possui um nível base de <strong>visibilidade</strong> definido por seu porte: drones grandes são detectados mais facilmente, os pequenos menos. Porém, cada lançamento de bomba aumenta temporariamente essa visibilidade. Quanto mais bombas largadas em pouco tempo, maior o risco. Esse efeito se acumula e é reduzido com o tempo.
-    </p>`,
+    Cada drone possui um nível base de <strong>visibilidade</strong>, determinado pelo seu tamanho e altitude de voo.
+Drones grandes são detectados mais rapidamente, pequenos — com menos frequência. Mas o fator decisivo é a atividade recente —
+cada bomba lançada aumenta temporariamente a visibilidade do drone. Quanto mais bombas forem lançadas em pouco tempo,
+maior o risco de detecção. O efeito se acumula, mas diminui gradualmente com o tempo.
+      </p>`,
 
     droneFireText: `<p>
-      O <strong>dronETerra</strong> modela os disparos inimigos com base no tamanho, velocidade do drone e nas características dos inimigos. Cada unidade inimiga possui uma taxa de fogo em <strong>disparos por segundo</strong> e atira periodicamente se o drone estiver ao alcance.
-    </p>
+  Em <strong>dronETerra</strong> foi implementado um sistema de fogo contra drones que considera
+  o <strong>tamanho do drone</strong>, sua <strong>velocidade, altitude</strong> e as <strong>características do inimigo</strong>.
+  Cada unidade inimiga possui uma <strong>cadência de tiro</strong> (tiros por segundo)
+  e tenta periodicamente atingir o drone se ele estiver na zona de ataque.
+</p>
     <p>
       A probabilidade de acerto diminui se o drone for rápido ou pequeno — drones rápidos e pequenos são mais difíceis de acertar. Drones parados são alvos fáceis. Inimigos com alta cadência causam mais dano ao longo do tempo.
     </p>
@@ -1906,8 +1917,11 @@ capable of neutralizing several threats with a single drop.
     </p>`,
 
     droneFireText: `<p>
-      <strong>dronETerra</strong>, düşman ateş sistemini drone'un boyutu, hızı ve düşman özelliklerine göre modelleyen bir sistem kullanır. Her düşman biriminin saniye başına düşen <strong>ateş hızı</strong> vardır ve drone menzindeyse periyodik olarak ateş etmeye çalışır.
-    </p>
+  <strong>dronETerra</strong> oyununda, dronun <strong>boyutu</strong>, <strong>hızı, irtifası</strong> ve <strong>düşmanın özellikleri</strong>
+  dikkate alınarak bir drone ateş sistemi uygulanmıştır.
+  Her düşman biriminin bir <strong>atış hızı</strong> (saniyede atış sayısı) vardır
+  ve dron hedef alanındaysa onu vurmak için periyodik olarak ateş eder.
+</p>
     <p>
       Hızlı ve küçük drone'lar vurulması zor hedeflerdir; yerde duranlar kolay hedef olur. Yüksek ateş hızına sahip düşmanlar zaman içinde daha fazla hasar verir.
     </p>
@@ -2201,18 +2215,18 @@ capable of neutralizing several threats with a single drop.
       ma anche dalla sua <strong>dimensione</strong> e dalla <strong>recente attività</strong>.
     </p>
     <p>
-      Ogni drone ha un valore base di <strong>visibilità</strong> in base alla taglia:
-      i droni grandi vengono scoperti prima, quelli piccoli più difficilmente.
-      Tuttavia ogni bombardamento aumenta temporaneamente la visibilità.
-      Più bombe vengono sganciate in poco tempo, maggiore è il rischio.
-      Questo effetto si accumula, ma svanisce gradualmente.
+      Ogni drone ha un livello base di <strong>visibilità</strong>, determinato dalle sue dimensioni e dall'altitudine di volo.
+I droni grandi vengono rilevati più facilmente, quelli piccoli — più raramente. Ma il fattore decisivo è l’attività recente —
+ogni sgancio di bomba aumenta temporaneamente la visibilità del drone. Più munizioni vengono rilasciate in poco tempo,
+maggiore è il rischio di essere individuati. L’effetto si accumula, ma si riduce gradualmente col tempo.
     </p>`,
 
     droneFireText: `<p>
-      In <strong>dronETerra</strong> il fuoco nemico sui droni dipende dalla <strong>taglia</strong>, <strong>velocità</strong>
-      e dalle <strong>caratteristiche nemiche</strong>. Ogni unità nemica ha una <strong>frequenza di fuoco</strong>
-      (colpi al secondo) e tenta di colpire il drone quando è a portata.
-    </p>
+  In <strong>dronETerra</strong> è stato implementato un sistema di fuoco contro i droni che tiene conto
+  delle <strong>dimensioni del drone</strong>, della sua <strong>velocità, altitudine</strong> e delle <strong>caratteristiche del nemico</strong>.
+  Ogni unità nemica ha una <strong>cadenza di fuoco</strong> (colpi al secondo)
+  ed effettua tentativi periodici di colpire il drone se si trova nella zona di attacco.
+</p>
     <p>
       La probabilità di colpire diminuisce all’aumentare della velocità e se il drone è piccolo.
       I droni fermi sono facili bersagli. Nemici con alta frequenza di fuoco possono causare molti danni.
@@ -2514,18 +2528,20 @@ capable of neutralizing several threats with a single drop.
       ale też od <strong>rozmiaru drona</strong> i jego <strong>ostatnich działań bojowych</strong>.
     </p>
     <p>
-      Każdy dron ma bazowy poziom <strong>widoczności</strong>, zależny od jego rozmiaru:
-      duże są wykrywane szybciej, małe trudniej. Ale największy wpływ ma aktywność:
-      każde zrzucenie bomby tymczasowo zwiększa widoczność.
-      Im więcej bomb w krótkim czasie — tym większe ryzyko wykrycia.
-      Efekt się kumuluje, ale z czasem maleje.
+      Każdy dron ma podstawowy poziom <strong>widoczności</strong>, który zależy od jego rozmiaru i wysokości lotu.
+Duże drony są wykrywane szybciej, małe — rzadziej. Kluczowe znaczenie ma jednak ostatnia aktywność —
+każde zrzucenie bomby tymczasowo zwiększa widoczność drona. Im więcej bomb zrzucono w krótkim czasie,
+tym większe ryzyko wykrycia. Efekt się kumuluje, ale z czasem stopniowo maleje.
+
+
     </p>`,
 
     droneFireText: `<p>
-      W <strong>dronETerra</strong> system ostrzału dronów uwzględnia <strong>rozmiar</strong>, <strong>prędkość</strong>
-      oraz <strong>statystyki przeciwnika</strong>. Każda jednostka ma określoną <strong>szybkostrzelność</strong> (strzały na sekundę)
-      i regularnie próbuje trafić drona, jeśli jest w zasięgu.
-    </p>
+  W <strong>dronETerra</strong> zaimplementowano system ognia przeciwko dronom, który uwzględnia
+  <strong>wielkość drona</strong>, jego <strong>prędkość, wysokość</strong> oraz <strong>charakterystyki wroga</strong>.
+  Każda jednostka wroga ma <strong>szybkostrzelność</strong> (strzały na sekundę)
+  i okresowo próbuje trafić drona, jeśli znajduje się w strefie rażenia.
+</p>
     <p>
       Szansa trafienia spada przy większej prędkości drona i jest mniejsza dla małych modeli.
       Nieruchomy dron to łatwy cel. Wrogowie z wysoką szybkostrzelnością mają więcej okazji do zadania obrażeń.

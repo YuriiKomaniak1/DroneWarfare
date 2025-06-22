@@ -17,9 +17,9 @@ const languages = {
     minimapVisibleArea: `<strong>Сірий прямокутник</strong> — видима частина поля бою`,
     minimapVictoryProgress: `<strong>Зелена смуга</strong> — прогрес до перемоги`,
     minimapDefeatProgress: `<strong>Червона смуга</strong> — прогрес до поразки`,
-    scrollTitle: "Масштабування",
-    scrollInfo: `Смуга прокрутки під мінікартою служить для збільшення або зменшення масштабу гри.`,
-    scrollInfo2: `Спробуй змінити масштаб і подивися, як це відображається на мінікарті.`,
+    scrollTitle: "Зміна висоти",
+    scrollInfo: `Смуга прокрутки під мінікартою служить для збільшення або зменшення висоти дрона.`,
+    scrollInfo2: `Спробуй змінити висоту і подивися, як це відображається на мінікарті. Коло прицілу дрона відображаються швидкість та висота дрона та час падіння бомби.`,
     dronesTitle: "Дрони",
     dronesInfo: `Іконки дронів розміщені у верхньому правому куті. Активний дрон підсвічується яскравіше і має дві смуги збоку:`,
     droneHealth: `<strong>Зелена смуга</strong> — запас міцності дрона`,
@@ -71,10 +71,9 @@ const languages = {
     minimapVictoryProgress:
       "<strong>Green bar</strong> — progress toward victory",
     minimapDefeatProgress: "<strong>Red bar</strong> — progress toward defeat",
-    scrollTitle: "Zoom",
-    scrollInfo:
-      "The slider below the minimap lets you zoom the game view in and out.",
-    scrollInfo2: "Try adjusting the zoom and see how it affects the minimap.",
+    scrollTitle: "Altitude",
+    scrollInfo: `The sli  der below the minimap lets you increase or decrease the drone's altitude.`,
+    scrollInfo2: `Try changing the altitude and see how it is shown on the minimap. The drone's reticle displays speed, altitude, and bomb drop time.`,
     dronesTitle: "Drones",
     dronesInfo:
       "Drone icons are shown in the top-right corner. The active drone is highlighted and has two bars next to it:",
@@ -145,11 +144,11 @@ const languages = {
       "<strong>Grüner Balken</strong> — Fortschritt zum Sieg",
     minimapDefeatProgress:
       "<strong>Roter Balken</strong> — Fortschritt zur Niederlage",
-    scrollTitle: "Zoom",
+    scrollTitle: "Höhe ändern",
     scrollInfo:
-      "Der Schieberegler unter der Minikarte dient zum Vergrößern oder Verkleinern des Spielbereichs.",
+      "Der Schieberegler unter der Minikarte dient dazu, die Flughöhe der Drohne zu erhöhen oder zu verringern.",
     scrollInfo2:
-      "Probiere den Zoom aus und beobachte die Auswirkung auf die Minikarte.",
+      "Probiere aus, die Höhe zu ändern, und beobachte, wie sich das auf die Minikarte auswirkt. Im Fadenkreuz der Drohne werden Geschwindigkeit, Höhe und Bombenfallzeit angezeigt.",
     dronesTitle: "Drohnen",
     dronesInfo:
       "Drohnen-Icons befinden sich oben rechts. Die aktive Drohne ist hervorgehoben und hat zwei Balken daneben:",
@@ -170,7 +169,7 @@ const languages = {
     bombsInfo:
       "Im Spiel gibt es viele Bomben- und Minentypen. Zu Beginn sind drei verfügbar:",
     bombFragmentation:
-      "<strong>Splitterbombe (rot)</strong> — Explosionsradius 1 m, Splitterwirkung 7 m. Trifft keine kriechenden Feinde. Je näher am Zentrum, desto höher der Schaden. Effektiv gegen Gruppen.",
+      "<strong>Splitterbombe (rot)</strong> — Explosionsradius 1 m, Splitterwirkung 7 m. Trifft keine kriechende Feinde. Je näher am Zentrum, desto höher der Schaden. Effektiv gegen Gruppen.",
     bombHighExplosive:
       "<strong>Sprengbombe (blau)</strong> — Explosionsradius 2,5 m. Keine Splitter. Effektiv gegen kriechende Feinde und leichte Fahrzeuge.",
     bombKumulation:
@@ -221,10 +220,9 @@ const languages = {
       "<strong>Barra verde</strong> — progreso hacia la victoria",
     minimapDefeatProgress:
       "<strong>Barra roja</strong> — progreso hacia la derrota",
-    scrollTitle: "Zoom",
-    scrollInfo:
-      "La barra debajo del minimapa permite aumentar o reducir el zoom del juego.",
-    scrollInfo2: "Prueba ajustar el zoom y observa cómo cambia el minimapa.",
+    scrollTitle: "Altura",
+    scrollInfo: `La barra debajo del minimapa permite aumentar o reducir la altura del dron.`,
+    scrollInfo2: `Prueba cambiar la altura y observa cómo se refleja en el minimapa. En la mira del dron se muestran la velocidad, la altura y el tiempo de caída de la bomba.`,
     dronesTitle: "Drones",
     dronesInfo:
       "Los íconos de los drones están en la esquina superior derecha. El dron activo está resaltado y tiene dos barras a su lado:",
@@ -295,11 +293,9 @@ const languages = {
       "<strong>Barre verte</strong> — progression vers la victoire",
     minimapDefeatProgress:
       "<strong>Barre rouge</strong> — progression vers la défaite",
-    scrollTitle: "Zoom",
-    scrollInfo:
-      "La barre sous la mini-carte permet de zoomer ou dézoomer la vue du jeu.",
-    scrollInfo2:
-      "Essayez d'ajuster le zoom et observez son effet sur la mini-carte.",
+    scrollTitle: "Altitude",
+    scrollInfo: `La barre sous la mini-carte permet d’augmenter ou de diminuer l’altitude du drone.`,
+    scrollInfo2: `Essayez de modifier l’altitude et observez l’effet sur la mini-carte. Le réticule du drone affiche la vitesse, l’altitude et le temps de chute de la bombe.`,
     dronesTitle: "Drones",
     dronesInfo:
       "Les icônes des drones se trouvent en haut à droite. Le drone actif est mis en surbrillance et a deux barres à côté :",
@@ -368,10 +364,9 @@ const languages = {
       "<strong>Barra verde</strong> — progresso em direção à vitória",
     minimapDefeatProgress:
       "<strong>Barra vermelha</strong> — progresso em direção à derrota",
-    scrollTitle: "Zoom",
-    scrollInfo:
-      "A barra abaixo do minimapa permite aumentar ou diminuir o zoom da visão do jogo.",
-    scrollInfo2: "Tente ajustar o zoom e veja como isso afeta o minimapa.",
+    scrollTitle: "Altitude",
+    scrollInfo: `A barra abaixo do minimapa serve para aumentar ou diminuir a altitude do drone.`,
+    scrollInfo2: `Tente mudar a altitude e veja como isso aparece no minimapa. O círculo de mira do drone mostra velocidade, altitude e tempo de queda da bomba.`,
     dronesTitle: "Drones",
     dronesInfo:
       "Os ícones dos drones estão no canto superior direito. O drone ativo está destacado e tem duas barras ao lado:",
@@ -437,10 +432,11 @@ const languages = {
     minimapVictoryProgress: "<strong>Yeşil çubuk</strong> — zafer ilerlemesi",
     minimapDefeatProgress:
       "<strong>Kırmızı çubuk</strong> — yenilgi ilerlemesi",
-    scrollTitle: "Yakınlaştırma",
+    scrollTitle: "İrtifa",
     scrollInfo:
-      "Mini haritanın altındaki kaydırıcı ile oyunun yakınlaştırma seviyesini ayarlayabilirsin.",
-    scrollInfo2: "Yakınlaştırmayı dene ve mini haritaya etkisini gözlemle.",
+      "Mini haritanın altındaki kaydırıcı, drone'un irtifasını artırıp azaltmak için kullanılır.",
+    scrollInfo2:
+      "İrtifayı değiştir ve bunun mini haritaya nasıl yansıdığını gör. Drone nişangahında hız, irtifa ve bomba düşüş süresi gösterilir.",
     dronesTitle: "Dronlar",
     dronesInfo:
       "Drone simgeleri ekranın sağ üst köşesindedir. Aktif drone daha parlak görünür ve yanında iki çubuk bulunur:",
@@ -511,11 +507,9 @@ const languages = {
       "<strong>Barra verde</strong> — progresso verso la vittoria",
     minimapDefeatProgress:
       "<strong>Barra rossa</strong> — progresso verso la sconfitta",
-    scrollTitle: "Zoom",
-    scrollInfo:
-      "La barra sotto la minimappa serve per aumentare o diminuire lo zoom del gioco.",
-    scrollInfo2:
-      "Prova a cambiare lo zoom e osserva come influisce sulla minimappa.",
+    scrollTitle: "Altitudine",
+    scrollInfo: `La barra sotto la minimappa serve per aumentare o diminuire l'altitudine del drone.`,
+    scrollInfo2: `Prova a cambiare l'altitudine e osserva come viene mostrata sulla minimappa. Nel mirino del drone sono visualizzati velocità, altitudine e tempo di caduta della bomba.`,
     dronesTitle: "Droni",
     dronesInfo:
       "Le icone dei droni si trovano nell'angolo in alto a destra. Il drone attivo è evidenziato e ha due barre accanto:",
@@ -585,11 +579,11 @@ const languages = {
       "<strong>Zielony pasek</strong> — postęp do zwycięstwa",
     minimapDefeatProgress:
       "<strong>Czerwony pasek</strong> — postęp do porażki",
-    scrollTitle: "Powiększenie",
+    scrollTitle: "Wysokość",
     scrollInfo:
-      "Pasek poniżej minimapy służy do przybliżania i oddalania widoku gry.",
+      "Pasek pod minimapą służy do zwiększania lub zmniejszania wysokości drona.",
     scrollInfo2:
-      "Spróbuj zmienić powiększenie i zobacz, jak wpływa to na minimapę.",
+      "Spróbuj zmienić wysokość i zobacz, jak to wpływa na minimapę. W celowniku drona wyświetlane są prędkość, wysokość i czas spadania bomby.",
     dronesTitle: "Drony",
     dronesInfo:
       "Ikony dronów znajdują się w prawym górnym rogu. Aktywny dron jest podświetlony i ma obok dwa paski:",

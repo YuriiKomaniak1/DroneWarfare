@@ -351,9 +351,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   document.getElementById("smallDroneCurrentSpeed").textContent =
-    13 + gameData.smallDroneSpeedUpgrade;
+    18 + gameData.smallDroneSpeedUpgrade;
   document.getElementById("smallDroneNextSpeed").textContent =
-    13 + gameData.smallDroneSpeedUpgrade + 1;
+    18 + gameData.smallDroneSpeedUpgrade + 1;
   document.getElementById("smallDroneSpeedUpgradeCount").textContent =
     gameData.smallDroneSpeedUpgrade;
 
@@ -440,9 +440,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   document.getElementById("mediumDroneCurrentSpeed").textContent =
-    10 + gameData.mediumDroneSpeedUpgrade * 0.8;
+    13 + gameData.mediumDroneSpeedUpgrade * 0.8;
   document.getElementById("mediumDroneNextSpeed").textContent =
-    10 + (gameData.mediumDroneSpeedUpgrade + 1) * 0.8;
+    13 + (gameData.mediumDroneSpeedUpgrade + 1) * 0.8;
   document.getElementById("mediumDroneSpeedUpgradeCount").textContent =
     gameData.mediumDroneSpeedUpgrade;
 
@@ -531,9 +531,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   document.getElementById("bigDroneCurrentSpeed").textContent =
-    8 + gameData.bigDroneSpeedUpgrade * 0.4;
+    10 + gameData.bigDroneSpeedUpgrade * 0.4;
   document.getElementById("bigDroneNextSpeed").textContent =
-    8 + (gameData.bigDroneSpeedUpgrade + 1) * 0.4;
+    10 + (gameData.bigDroneSpeedUpgrade + 1) * 0.4;
   document.getElementById("bigDroneSpeedUpgradeCount").textContent =
     gameData.bigDroneSpeedUpgrade;
 

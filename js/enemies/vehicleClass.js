@@ -518,7 +518,7 @@ export class Vehicle {
       this.ctx.restore();
     }
   }
-  fire(drone, layer, canvas) {
+  fire(drone, layer, canvas, slider) {
     if (this.hasGunner) {
       if (
         !this.gunner.vehicle ||
@@ -543,7 +543,8 @@ export class Vehicle {
         const chance =
           (5 - 2.2 * Math.sqrt(layer.speedX ** 2 + layer.speedY ** 2)) *
           drone.size *
-          difficulty.accuracy;
+          difficulty.accuracy *
+          slider.value;
 
         if (Math.random() * 120 < chance && drone.hp >= 1) {
           --drone.hp;

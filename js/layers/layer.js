@@ -24,8 +24,8 @@ export class Layer {
   }
 
   update(keys, drone) {
-    this.acceleration = drone.speed / 100;
-    this.deceleration = drone.speed / 100;
+    this.acceleration = drone.speed / 220;
+    this.deceleration = drone.speed / 220;
 
     if (keys.up && this.y < this.canvas.height / 2) {
       this.speedY += this.acceleration;

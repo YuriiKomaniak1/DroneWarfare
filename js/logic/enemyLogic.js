@@ -9,27 +9,35 @@ export function checkEffect(bomb, enemy) {
   return effectStatus;
 }
 
-export function checkVisibility(drone, enemy, canvas, gameFrame) {
+export function checkVisibility(drone, enemy, canvas, gameFrame, slider) {
   const distance = checkDistance(enemy, canvas);
   let effectStatus = false;
   if (gameFrame % 60 === 0) {
     if (
       distance < enemy.fireDistance &&
       !enemy.crawl &&
-      Math.random() * 150 < drone.visibility * enemy.droneSpottingChanse
+      Math.random() * 150 <
+        drone.visibility * enemy.droneSpottingChanse * slider.value
     ) {
       effectStatus = true;
     }
   }
   return effectStatus;
 }
-export function checkVehicleVisibility(drone, vehicle, canvas, gameFrame) {
+export function checkVehicleVisibility(
+  drone,
+  vehicle,
+  canvas,
+  gameFrame,
+  slider
+) {
   const distance = checkDistance(vehicle, canvas);
   let effectStatus = false;
   if (gameFrame % 60 === 0) {
     if (
       distance < vehicle.fireDistance &&
-      Math.random() * 150 < drone.visibility * vehicle.droneSpottingChanse
+      Math.random() * 150 <
+        drone.visibility * vehicle.droneSpottingChanse * slider.value
     ) {
       effectStatus = true;
     }
